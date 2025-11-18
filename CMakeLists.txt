@@ -77,7 +77,7 @@ add_definitions(-DPROJECT_VERSION="${CMAKE_PROJECT_VERSION}")
 add_custom_command(TARGET  GoblinERR POST_BUILD
   COMMAND ${CMAKE_COMMAND} -E copy -t $<TARGET_FILE_DIR:GoblinERR>
   ${CMAKE_SOURCE_DIR}/LICENSE.txt
-  ${CMAKE_SOURCE_DIR}/GoblinERR_new.ini
+  ${CMAKE_SOURCE_DIR}/GoblinERR.ini
   COMMAND_EXPAND_LISTS)
 
 target_link_libraries( GoblinERR

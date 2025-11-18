@@ -28,6 +28,9 @@ namespace goblin::mapPoint {
 			: mapFragmentId(fragmentId), mapFragmentTile(mapChunks) {}
 	};
 
+	/// <summary>
+	/// Range with lowerBound (inclusive) and upperBound (exclusive)
+	/// </summary>
 	struct ParamRange {
 		int lowerBound;
 		int upperBound;

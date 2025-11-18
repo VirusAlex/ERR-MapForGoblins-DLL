@@ -444,6 +444,7 @@ MapFragments(goblin::flag::StoryErdtreeOnFire,
 MapFragments(goblin::flag::GravesitePlain,
 	{
 		MapTile(20), // Belurat
+		MapTile(20, 1), // Enir-Ilim
 		MapTile(41), // Belurat Gaol
 		MapTile(43), // Rivermouth Cave
 		MapTile(42), // Ruined Forge Lava Intake
@@ -482,6 +483,9 @@ MapFragments(goblin::flag::GravesitePlain,
 	}),
 MapFragments(goblin::flag::ScaduAltus,
 	{
+		MapTile(21), // Shadow Keep
+		MapTile(21, 1), // Specimen Storehouse
+		MapTile(21, 2), // Specimen Storehouse (West Rampart)
 		MapTile(25), // Metyr arena
 		MapTile(41, 1), // Bonny Gaol
 		MapTile(40, 2), // Darklight Catacombs
@@ -526,6 +530,7 @@ MapFragments(goblin::flag::ScaduAltus,
 	}),
 MapFragments(goblin::flag::SouthernShore,
 	{
+		MapTile(22), // Stone Coffin Fissure
 		MapTile(61, 49, 40),
 		MapTile(61, 50, 40),
 		MapTile(61, 51, 40),
@@ -599,16 +604,5 @@ MapFragments(goblin::flag::Abyss,
 		MapTile(61, 51, 41),
 		MapTile(61, 52, 41),
 		MapTile(61, 53, 41),
-	}),
-	MapFragments(goblin::flag::StoryCharmBroken,
-	{
-		MapTile(21), // Shadow Keep
-		MapTile(21, 1), // Specimen Storehouse
-		MapTile(21, 2), // Specimen Storehouse (West Rampart)
-		MapTile(22), // Stone Coffin Fissure
-	}),
-	MapFragments(goblin::flag::StorySealingTreeBurnt,
-	{
-		MapTile(20, 1), // Enir-Ilim
-	}),
+	})
 };

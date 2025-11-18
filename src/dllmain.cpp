@@ -14,6 +14,7 @@
 #include "goblin_main.hpp"
 
 static std::thread mod_thread;
+using namespace goblin::config;
 
 static void setup_logger(std::filesystem::path log_file)
 {
@@ -40,70 +41,12 @@ static void setup_mod()
 {
     modutils::initialize();
     from::params::initialize();
-    std::string delayInfo = "Sleeping an extra " + std::to_string(goblin::config::loadDelay) + " to work potential compatibility issues...";
+    std::string delayInfo = "Sleeping an extra " + std::to_string(loadDelay) + " to work potential compatibility issues...";
     spdlog::info(delayInfo);
-    std::this_thread::sleep_for(std::chrono::seconds(goblin::config::loadDelay));
-
-    if (goblin::config::disableGoblin)
-    {
-        goblin::config::showBossIcons = false;
-        goblin::config::showCampIcons = false;
-        goblin::config::showOverworldIcons = false;
-        goblin::config::showMerchants = false;
-
-        goblin::config::hideBossesOnCompletion = false;
-        goblin::config::hideCampsOnCompletion = false;
-        goblin::config::hideOverworldOnCompletion = false;
-
-        goblin::config::showReforgedIncantations = false;
-        goblin::config::showReforgedSorceries = false;
-        goblin::config::showReforgedArmaments = false;
-        goblin::config::showReforgedSpiritAshes = false;
-        goblin::config::showReforgedAshesOfWar = false;
-        goblin::config::showReforgedCrystalTears = false;
-        goblin::config::showReforgedTalismans = false;
-        goblin::config::showReforgedFortunes = false;
-        goblin::config::showReforgedApparel = false;
-        goblin::config::showReforgedChanges = false;
-        goblin::config::showReforgedGraces = false;
-        goblin::config::showReforgedArcheryChallenges = false;
-
-        goblin::config::showGoblinGraces = false;
-        goblin::config::showGoblinSpiritSprings = false;
-        goblin::config::showGoblinSummoningPools = false;
-        goblin::config::showGoblinUniqueDrops = false;
-        goblin::config::showGoblinHostileNPC = false;
-        goblin::config::showGoblinImpStatues = false;
-        goblin::config::showGoblinTeardropScarabs = false;
-        goblin::config::showGoblinNonRespawningMaterials = false;
-        goblin::config::showGoblinKeyAndUnique = false;
-        goblin::config::showGoblinPrayerbooks = false;
-        goblin::config::showGoblinCookbooks = false;
-        goblin::config::showGoblinMemoryStones = false;
-        goblin::config::showGoblinCrystalTears = false;
-        goblin::config::showGoblinPotsAndPerfumes = false;
-        goblin::config::showGoblinLostAshesOfWar = false;
-        goblin::config::showGoblinLarvalTears = false;
-        goblin::config::showGoblinCelestialDew = false;
-        goblin::config::showGoblinStoneswordKeys = false;
-        goblin::config::showGoblinPaintings = false;
-        goblin::config::showGoblinPlayerUpgrades = false;
-        goblin::config::showGoblinSmithingStones = false;
-        goblin::config::showGoblinGloveworts = false;
-        goblin::config::showGoblinArmaments = false;
-        goblin::config::showGoblinApparel = false;
-        goblin::config::showGoblinTalismans = false;
-        goblin::config::showGoblinSpiritAsh = false;
-        goblin::config::showGoblinAshesOfWar = false;
-        goblin::config::showGoblinSorceries = false;
-        goblin::config::showGoblinIncantations = false;
-        goblin::config::showGoblinConsumables = false;
-        goblin::config::showGoblinCraftingMaterials = false;
-        goblin::config::showGoblinMultiplayerItems = false;
-    }
+    std::this_thread::sleep_for(std::chrono::seconds(loadDelay));
 
     spdlog::info("Running Goblin setup...");
-    goblin::mapPoint::Initialise();
+    goblin::Initialise();
 
     modutils::enable_hooks();
     spdlog::info("Mod init complete");

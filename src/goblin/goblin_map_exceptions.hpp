@@ -12,6 +12,6 @@ static std::unordered_map<int, int> ExceptionList = {
 	{38474500, GravesitePlain}, // Black Knight Garrew
 	{38494100, SouthernShore}, // Jagged Peak Drake
 	{38444500, StoryCharmBroken}, // Romina, Saint of the Bud
+	{14247, Altus}, // Greatshield talisman
 	{65535600, 62525}, // Vyke's being weird again
-
 };
