@@ -1,0 +1,6212 @@
+[
+  {
+    "map": "common",
+    "eventId": 1041612009,
+    "bank": 3,
+    "index": 0,
+    "lotId": 1034480800,
+    "type": "rune",
+    "argHex": "01010000a0eca83d",
+    "argLen": 8
+  },
+  {
+    "map": "common",
+    "eventId": 1041612009,
+    "bank": 3,
+    "index": 0,
+    "lotId": 1038510800,
+    "type": "rune",
+    "argHex": "01010000d06ae63d",
+    "argLen": 8
+  },
+  {
+    "map": "common",
+    "eventId": 1041612009,
+    "bank": 3,
+    "index": 0,
+    "lotId": 1040530800,
+    "type": "rune",
+    "argHex": "01010000703d053e",
+    "argLen": 8
+  },
+  {
+    "map": "common",
+    "eventId": 1042622000,
+    "bank": 2000,
+    "index": 0,
+    "lotId": 10302,
+    "type": "rune",
+    "argHex": "620000009426253e3062343e3862343e3962343e280000005000000000000000e09c4100e19c4100e29c4100e39c4100cb209002cc2090023762343ee99c41001d219002",
+    "argLen": 68
+  },
+  {
+    "map": "common",
+    "eventId": 1042622196,
+    "bank": 3,
+    "index": 12,
+    "lotId": 30208,
+    "type": "rune",
+    "argHex": "08000000342b623e1404000076000000",
+    "argLen": 16
+  },
+  {
+    "map": "common",
+    "eventId": 1042612000,
+    "bank": 2000,
+    "index": 0,
+    "lotId": 800012,
+    "type": "rune",
+    "argHex": "0a0000002bff243e64350c00db177a00503403000c350c00",
+    "argLen": 24
+  },
+  {
+    "map": "common",
+    "eventId": 1042612000,
+    "bank": 2000,
+    "index": 0,
+    "lotId": 800012,
+    "type": "rune",
+    "argHex": "0f0000002bff243e96350c00cf197a005a3403000c350c00",
+    "argLen": 24
+  },
+  {
+    "map": "common",
+    "eventId": 1042612000,
+    "bank": 2000,
+    "index": 0,
+    "lotId": 800012,
+    "type": "rune",
+    "argHex": "140000002bff243ec8350c00c31b7a00643403000c350c00",
+    "argLen": 24
+  },
+  {
+    "map": "common",
+    "eventId": 1042612000,
+    "bank": 2000,
+    "index": 0,
+    "lotId": 800012,
+    "type": "rune",
+    "argHex": "190000002bff243efa350c00b71d7a006e3403000c350c00",
+    "argLen": 24
+  },
+  {
+    "map": "common",
+    "eventId": 1042612000,
+    "bank": 2000,
+    "index": 0,
+    "lotId": 800012,
+    "type": "rune",
+    "argHex": "1e0000002bff243e2c360c00ab1f7a00783403000c350c00",
+    "argLen": 24
+  },
+  {
+    "map": "common",
+    "eventId": 1042612000,
+    "bank": 2000,
+    "index": 0,
+    "lotId": 800012,
+    "type": "rune",
+    "argHex": "230000002bff243e5e360c009f217a00823403000c350c00",
+    "argLen": 24
+  },
+  {
+    "map": "common",
+    "eventId": 1042612000,
+    "bank": 2000,
+    "index": 0,
+    "lotId": 800012,
+    "type": "rune",
+    "argHex": "280000002bff243e90360c0093237a008c3403000c350c00",
+    "argLen": 24
+  },
+  {
+    "map": "common",
+    "eventId": 1042612000,
+    "bank": 2000,
+    "index": 0,
+    "lotId": 800012,
+    "type": "rune",
+    "argHex": "2d0000002bff243ec2360c0087257a00963403000c350c00",
+    "argLen": 24
+  },
+  {
+    "map": "common",
+    "eventId": 1042612000,
+    "bank": 2000,
+    "index": 0,
+    "lotId": 800010,
+    "type": "rune",
+    "argHex": "640000002bff243ee8380c00033b7a00b43403000a350c00",
+    "argLen": 24
+  },
+  {
+    "map": "common",
+    "eventId": 1042612000,
+    "bank": 2000,
+    "index": 0,
+    "lotId": 800010,
+    "type": "rune",
+    "argHex": "690000002bff243e1a390c00f73c7a00be3403000a350c00",
+    "argLen": 24
+  },
+  {
+    "map": "common",
+    "eventId": 1042612000,
+    "bank": 2000,
+    "index": 0,
+    "lotId": 800010,
+    "type": "rune",
+    "argHex": "6e0000002bff243e4c390c00eb3e7a00c83403000a350c00",
+    "argLen": 24
+  },
+  {
+    "map": "common",
+    "eventId": 1042612000,
+    "bank": 2000,
+    "index": 0,
+    "lotId": 800010,
+    "type": "rune",
+    "argHex": "730000002bff243e7e390c00df407a00d23403000a350c00",
+    "argLen": 24
+  },
+  {
+    "map": "common",
+    "eventId": 1042612000,
+    "bank": 2000,
+    "index": 0,
+    "lotId": 800010,
+    "type": "rune",
+    "argHex": "c80000002bff243ed03c0c0013627a00183503000a350c00",
+    "argLen": 24
+  },
+  {
+    "map": "common",
+    "eventId": 1042612000,
+    "bank": 2000,
+    "index": 0,
+    "lotId": 800010,
+    "type": "rune",
+    "argHex": "cd0000002bff243e023d0c0007647a00223503000a350c00",
+    "argLen": 24
+  },
+  {
+    "map": "common",
+    "eventId": 1042612000,
+    "bank": 2000,
+    "index": 0,
+    "lotId": 800010,
+    "type": "rune",
+    "argHex": "d20000002bff243e343d0c00fb657a002c3503000a350c00",
+    "argLen": 24
+  },
+  {
+    "map": "common",
+    "eventId": 1042612000,
+    "bank": 2000,
+    "index": 0,
+    "lotId": 800010,
+    "type": "rune",
+    "argHex": "d70000002bff243e663d0c00ef677a00363503000a350c00",
+    "argLen": 24
+  },
+  {
+    "map": "common",
+    "eventId": 1042612000,
+    "bank": 2000,
+    "index": 0,
+    "lotId": 800010,
+    "type": "rune",
+    "argHex": "2c0100002bff243eb8400c0023897a007c3503000a350c00",
+    "argLen": 24
+  },
+  {
+    "map": "common",
+    "eventId": 1042612000,
+    "bank": 2000,
+    "index": 0,
+    "lotId": 800010,
+    "type": "rune",
+    "argHex": "310100002bff243eea400c00178b7a00863503000a350c00",
+    "argLen": 24
+  },
+  {
+    "map": "common",
+    "eventId": 1042612000,
+    "bank": 2000,
+    "index": 0,
+    "lotId": 800010,
+    "type": "rune",
+    "argHex": "360100002bff243e1c410c000b8d7a00903503000a350c00",
+    "argLen": 24
+  },
+  {
+    "map": "common",
+    "eventId": 1042612000,
+    "bank": 2000,
+    "index": 0,
+    "lotId": 800010,
+    "type": "rune",
+    "argHex": "3b0100002bff243e4e410c00ff8e7a009a3503000a350c00",
+    "argLen": 24
+  },
+  {
+    "map": "common",
+    "eventId": 1042612000,
+    "bank": 2000,
+    "index": 0,
+    "lotId": 800010,
+    "type": "rune",
+    "argHex": "900100002bff243ea0440c0033b07a00e03503000a350c00",
+    "argLen": 24
+  },
+  {
+    "map": "common",
+    "eventId": 1042612000,
+    "bank": 2000,
+    "index": 0,
+    "lotId": 800010,
+    "type": "rune",
+    "argHex": "950100002bff243ed2440c0027b27a00ea3503000a350c00",
+    "argLen": 24
+  },
+  {
+    "map": "common",
+    "eventId": 1042612000,
+    "bank": 2000,
+    "index": 0,
+    "lotId": 800010,
+    "type": "rune",
+    "argHex": "9a0100002bff243e04450c001bb47a00f43503000a350c00",
+    "argLen": 24
+  },
+  {
+    "map": "common",
+    "eventId": 1042612000,
+    "bank": 2000,
+    "index": 0,
+    "lotId": 800010,
+    "type": "rune",
+    "argHex": "9f0100002bff243e36450c000fb67a00fe3503000a350c00",
+    "argLen": 24
+  },
+  {
+    "map": "common",
+    "eventId": 1042612000,
+    "bank": 2000,
+    "index": 0,
+    "lotId": 800010,
+    "type": "rune",
+    "argHex": "f40100002bff243e88480c0043d77a00443603000a350c00",
+    "argLen": 24
+  },
+  {
+    "map": "common",
+    "eventId": 1042612000,
+    "bank": 2000,
+    "index": 0,
+    "lotId": 800010,
+    "type": "rune",
+    "argHex": "f90100002bff243eba480c0037d97a004e3603000a350c00",
+    "argLen": 24
+  },
+  {
+    "map": "common",
+    "eventId": 1042612000,
+    "bank": 2000,
+    "index": 0,
+    "lotId": 800010,
+    "type": "rune",
+    "argHex": "fe0100002bff243eec480c002bdb7a00583603000a350c00",
+    "argLen": 24
+  },
+  {
+    "map": "common",
+    "eventId": 1042612000,
+    "bank": 2000,
+    "index": 0,
+    "lotId": 800010,
+    "type": "rune",
+    "argHex": "030200002bff243e1e490c001fdd7a00623603000a350c00",
+    "argLen": 24
+  },
+  {
+    "map": "common",
+    "eventId": 1042612000,
+    "bank": 2000,
+    "index": 0,
+    "lotId": 800010,
+    "type": "rune",
+    "argHex": "580200002bff243e704c0c0053fe7a00a83603000a350c00",
+    "argLen": 24
+  },
+  {
+    "map": "common",
+    "eventId": 1042612000,
+    "bank": 2000,
+    "index": 0,
+    "lotId": 800010,
+    "type": "rune",
+    "argHex": "5d0200002bff243ea24c0c0047007b00b23603000a350c00",
+    "argLen": 24
+  },
+  {
+    "map": "common",
+    "eventId": 1042612000,
+    "bank": 2000,
+    "index": 0,
+    "lotId": 800010,
+    "type": "rune",
+    "argHex": "620200002bff243ed44c0c003b027b00bc3603000a350c00",
+    "argLen": 24
+  },
+  {
+    "map": "common",
+    "eventId": 1042612000,
+    "bank": 2000,
+    "index": 0,
+    "lotId": 800010,
+    "type": "rune",
+    "argHex": "670200002bff243e064d0c002f047b00c63603000a350c00",
+    "argLen": 24
+  },
+  {
+    "map": "common",
+    "eventId": 1042612000,
+    "bank": 2000,
+    "index": 0,
+    "lotId": 800010,
+    "type": "rune",
+    "argHex": "c10200002bff243e8a500c0057277b00163703000a350c00",
+    "argLen": 24
+  },
+  {
+    "map": "common",
+    "eventId": 1042612000,
+    "bank": 2000,
+    "index": 0,
+    "lotId": 800010,
+    "type": "rune",
+    "argHex": "c60200002bff243ebc500c004b297b00203703000a350c00",
+    "argLen": 24
+  },
+  {
+    "map": "common",
+    "eventId": 1045632900,
+    "bank": 2000,
+    "index": 0,
+    "lotId": 10102,
+    "type": "rune",
+    "argHex": "00000000be0f533e7c10533e940c533e74270000752700006414533e4c18533e762700003c2a2400",
+    "argLen": 40
+  },
+  {
+    "map": "common",
+    "eventId": 1045632900,
+    "bank": 2000,
+    "index": 0,
+    "lotId": 10111,
+    "type": "rune",
+    "argHex": "01000000be0f533e7d10533e950c533e7e2700007f2700006514533e4d18533e802700003c2e2600",
+    "argLen": 40
+  },
+  {
+    "map": "common",
+    "eventId": 1045632900,
+    "bank": 2000,
+    "index": 0,
+    "lotId": 10122,
+    "type": "rune",
+    "argHex": "02000000be0f533e7e10533e960c533e88270000892700006614533e4e18533e8a2700003c2b1f00",
+    "argLen": 40
+  },
+  {
+    "map": "common",
+    "eventId": 1045632900,
+    "bank": 2000,
+    "index": 0,
+    "lotId": 10142,
+    "type": "rune",
+    "argHex": "04000000be0f533e8010533e980c533e9c2700009d2700006814533e5018533e9e2700000e000000",
+    "argLen": 40
+  },
+  {
+    "map": "common",
+    "eventId": 1045632900,
+    "bank": 2000,
+    "index": 0,
+    "lotId": 10151,
+    "type": "rune",
+    "argHex": "05000000be0f533e8110533e990c533ea6270000a72700006914533e5118533ea82700003c272700",
+    "argLen": 40
+  },
+  {
+    "map": "common",
+    "eventId": 1045632900,
+    "bank": 2000,
+    "index": 0,
+    "lotId": 10161,
+    "type": "rune",
+    "argHex": "06000000be0f533e8210533e9a0c533eb0270000b12700006a14533e5218533eb22700003c2b2200",
+    "argLen": 40
+  },
+  {
+    "map": "common",
+    "eventId": 1045632900,
+    "bank": 2000,
+    "index": 0,
+    "lotId": 10172,
+    "type": "rune",
+    "argHex": "07000000be0f533e8310533e9b0c533eba270000bb2700006b14533e5318533ebc2700003c252e00",
+    "argLen": 40
+  },
+  {
+    "map": "common",
+    "eventId": 1045632900,
+    "bank": 2000,
+    "index": 0,
+    "lotId": 10192,
+    "type": "rune",
+    "argHex": "09000000be0f533e8510533e9d0c533ece270000cf2700006d14533e5518533ed02700000c020000",
+    "argLen": 40
+  },
+  {
+    "map": "common",
+    "eventId": 1045632900,
+    "bank": 2000,
+    "index": 0,
+    "lotId": 10202,
+    "type": "rune",
+    "argHex": "0a000000be0f533e8610533e9e0c533ed8270000d92700006e14533e5618533eda2700000c010000",
+    "argLen": 40
+  },
+  {
+    "map": "common",
+    "eventId": 1045632900,
+    "bank": 2000,
+    "index": 0,
+    "lotId": 10212,
+    "type": "rune",
+    "argHex": "0b000000be0f533e8710533e9f0c533ee2270000e32700006f14533e5718533ee42700000c030000",
+    "argLen": 40
+  },
+  {
+    "map": "common",
+    "eventId": 1045632900,
+    "bank": 2000,
+    "index": 0,
+    "lotId": 10222,
+    "type": "rune",
+    "argHex": "0c000000be0f533e8810533ea00c533eec270000ed2700007014533e5818533eee2700003c233300",
+    "argLen": 40
+  },
+  {
+    "map": "common",
+    "eventId": 1045632900,
+    "bank": 2000,
+    "index": 0,
+    "lotId": 10231,
+    "type": "rune",
+    "argHex": "0d000000be0f533e8910533ea10c533ef6270000f72700007114533e5918533ef82700003c263300",
+    "argLen": 40
+  },
+  {
+    "map": "common",
+    "eventId": 1045632900,
+    "bank": 2000,
+    "index": 0,
+    "lotId": 10251,
+    "type": "rune",
+    "argHex": "0f000000be0f533e8b10533ea30c533e0a2800000b2800007314533e5b18533e0c2800003c2b3400",
+    "argLen": 40
+  },
+  {
+    "map": "common",
+    "eventId": 1045632900,
+    "bank": 2000,
+    "index": 0,
+    "lotId": 10262,
+    "type": "rune",
+    "argHex": "10000000be0f533e8c10533ea40c533e14280000152800007414533e5c18533e162800003c273600",
+    "argLen": 40
+  },
+  {
+    "map": "common",
+    "eventId": 1045632900,
+    "bank": 2000,
+    "index": 0,
+    "lotId": 10282,
+    "type": "rune",
+    "argHex": "12000000be0f533e8e10533ea60c533e28280000292800007614533e5e18533e2a28000010000000",
+    "argLen": 40
+  },
+  {
+    "map": "common",
+    "eventId": 1045632900,
+    "bank": 2000,
+    "index": 0,
+    "lotId": 10291,
+    "type": "rune",
+    "argHex": "13000000be0f533e8f10533ea70c533e32280000332800007714533e5f18533e342800003c2e2800",
+    "argLen": 40
+  },
+  {
+    "map": "common",
+    "eventId": 1045632900,
+    "bank": 2000,
+    "index": 0,
+    "lotId": 10302,
+    "type": "rune",
+    "argHex": "14000000be0f533e9010533ea80c533e3c2800003d2800007814533e6018533e3e2800003c312600",
+    "argLen": 40
+  },
+  {
+    "map": "common",
+    "eventId": 1045632900,
+    "bank": 2000,
+    "index": 0,
+    "lotId": 10311,
+    "type": "rune",
+    "argHex": "15000000be0f533e9110533ea90c533e46280000472800007914533e6118533e482800003c332400",
+    "argLen": 40
+  },
+  {
+    "map": "common",
+    "eventId": 1045632900,
+    "bank": 2000,
+    "index": 0,
+    "lotId": 10321,
+    "type": "rune",
+    "argHex": "16000000be0f533e9210533eaa0c533e50280000512800007a14533e6218533e522800003c332b00",
+    "argLen": 40
+  },
+  {
+    "map": "common",
+    "eventId": 1045632900,
+    "bank": 1003,
+    "index": 1,
+    "lotId": 30208,
+    "type": "rune",
+    "argHex": "0501000076000000",
+    "argLen": 8
+  },
+  {
+    "map": "common",
+    "eventId": 1045632900,
+    "bank": 2000,
+    "index": 0,
+    "lotId": 10331,
+    "type": "rune",
+    "argHex": "17000000be0f533e9310533eab0c533e5a2800005b2800007b14533e6318533e5c2800000b000000",
+    "argLen": 40
+  },
+  {
+    "map": "common",
+    "eventId": 1045632900,
+    "bank": 2000,
+    "index": 0,
+    "lotId": 10342,
+    "type": "rune",
+    "argHex": "18000000be0f533e9410533eac0c533e64280000652800007c14533e6418533e662800000b000000",
+    "argLen": 40
+  },
+  {
+    "map": "common",
+    "eventId": 1045632900,
+    "bank": 2000,
+    "index": 0,
+    "lotId": 10351,
+    "type": "rune",
+    "argHex": "19000000be0f533e9510533ead0c533e6e2800006f2800007d14533e6518533e702800000b000000",
+    "argLen": 40
+  },
+  {
+    "map": "common",
+    "eventId": 1045632900,
+    "bank": 2000,
+    "index": 0,
+    "lotId": 10331,
+    "type": "rune",
+    "argHex": "49000000be0f533e9310533edd0c533e5a2800005b280000ad14533e9518533e5c2800000b050000",
+    "argLen": 40
+  },
+  {
+    "map": "common",
+    "eventId": 1045632900,
+    "bank": 2000,
+    "index": 0,
+    "lotId": 10342,
+    "type": "rune",
+    "argHex": "4a000000be0f533e9410533ede0c533e6428000065280000ae14533e9618533e662800000b050000",
+    "argLen": 40
+  },
+  {
+    "map": "common",
+    "eventId": 1045632900,
+    "bank": 2000,
+    "index": 0,
+    "lotId": 10351,
+    "type": "rune",
+    "argHex": "4b000000be0f533e9510533edf0c533e6e2800006f280000af14533e9718533e702800000b050000",
+    "argLen": 40
+  },
+  {
+    "map": "common",
+    "eventId": 1045632900,
+    "bank": 2000,
+    "index": 0,
+    "lotId": 10362,
+    "type": "rune",
+    "argHex": "1a000000be0f533e9610533eae0c533e78280000792800007e14533e6618533e7a28000023000000",
+    "argLen": 40
+  },
+  {
+    "map": "common",
+    "eventId": 1045632900,
+    "bank": 2000,
+    "index": 0,
+    "lotId": 10401,
+    "type": "ember",
+    "argHex": "1e000000be0f533e9a10533eb20c533ea0280000a12800008214533e6a18533ea22800003c333500",
+    "argLen": 40
+  },
+  {
+    "map": "common",
+    "eventId": 1045632900,
+    "bank": 2000,
+    "index": 0,
+    "lotId": 10421,
+    "type": "ember",
+    "argHex": "20000000be0f533e9c10533eb40c533eb4280000b52800008414533e6c18533eb62800003c363700",
+    "argLen": 40
+  },
+  {
+    "map": "common",
+    "eventId": 1045632900,
+    "bank": 2000,
+    "index": 0,
+    "lotId": 10431,
+    "type": "ember",
+    "argHex": "21000000be0f533e9d10533eb50c533ebe280000bf2800008514533e6d18533ec02800000c050000",
+    "argLen": 40
+  },
+  {
+    "map": "common",
+    "eventId": 1045632900,
+    "bank": 2000,
+    "index": 0,
+    "lotId": 10462,
+    "type": "ember",
+    "argHex": "24000000be0f533ea010533eb80c533edc280000dd2800008814533e7018533ede2800003d302900",
+    "argLen": 40
+  },
+  {
+    "map": "common",
+    "eventId": 1045632900,
+    "bank": 2000,
+    "index": 0,
+    "lotId": 10481,
+    "type": "ember",
+    "argHex": "26000000be0f533ea210533eba0c533ef0280000f12800008a14533e7218533ef22800003d2e2d00",
+    "argLen": 40
+  },
+  {
+    "map": "common",
+    "eventId": 1045632900,
+    "bank": 2000,
+    "index": 0,
+    "lotId": 10551,
+    "type": "ember",
+    "argHex": "2d000000be0f533ea910533ec10c533e36290000372900009114533e7918533e382900003d313000",
+    "argLen": 40
+  },
+  {
+    "map": "common",
+    "eventId": 1045632900,
+    "bank": 2000,
+    "index": 0,
+    "lotId": 10561,
+    "type": "ember",
+    "argHex": "2e000000be0f533eaa10533ec20c533e40290000412900009214533e7a18533e422900001c000000",
+    "argLen": 40
+  },
+  {
+    "map": "common",
+    "eventId": 1048630906,
+    "bank": 1003,
+    "index": 1,
+    "lotId": 30208,
+    "type": "rune",
+    "argHex": "1201000076000000",
+    "argLen": 8
+  },
+  {
+    "map": "common",
+    "eventId": 1048630906,
+    "bank": 2003,
+    "index": 66,
+    "lotId": 30208,
+    "type": "rune",
+    "argHex": "000000007600000001000000",
+    "argLen": 12
+  },
+  {
+    "map": "common",
+    "eventId": 1048630909,
+    "bank": 2003,
+    "index": 22,
+    "lotId": 30208,
+    "type": "rune",
+    "argHex": "6c0000007600000000000000",
+    "argLen": 12
+  },
+  {
+    "map": "common",
+    "eventId": 1048630909,
+    "bank": 2003,
+    "index": 24,
+    "lotId": 10102,
+    "type": "rune",
+    "argHex": "0300000076270000e8030000",
+    "argLen": 12
+  },
+  {
+    "map": "common",
+    "eventId": 1048630909,
+    "bank": 2003,
+    "index": 24,
+    "lotId": 10151,
+    "type": "rune",
+    "argHex": "03000000a727000010270000",
+    "argLen": 12
+  },
+  {
+    "map": "common",
+    "eventId": 1048630909,
+    "bank": 2003,
+    "index": 24,
+    "lotId": 10161,
+    "type": "rune",
+    "argHex": "03000000b1270000e8030000",
+    "argLen": 12
+  },
+  {
+    "map": "common",
+    "eventId": 1048630909,
+    "bank": 2003,
+    "index": 24,
+    "lotId": 10901,
+    "type": "ember",
+    "argHex": "03000000952a0000e8030000",
+    "argLen": 12
+  },
+  {
+    "map": "common",
+    "eventId": 1048630909,
+    "bank": 2003,
+    "index": 24,
+    "lotId": 10151,
+    "type": "rune",
+    "argHex": "03000000a7270000e8030000",
+    "argLen": 12
+  },
+  {
+    "map": "common",
+    "eventId": 1048630909,
+    "bank": 2003,
+    "index": 22,
+    "lotId": 15001201,
+    "type": "rune",
+    "argHex": "71e6e400cf08e50000000000",
+    "argLen": 12
+  },
+  {
+    "map": "common",
+    "eventId": 1048630909,
+    "bank": 2003,
+    "index": 22,
+    "lotId": 42010000,
+    "type": "ember",
+    "argHex": "900581029f2c810200000000",
+    "argLen": 12
+  },
+  {
+    "map": "common",
+    "eventId": 1048630909,
+    "bank": 2003,
+    "index": 22,
+    "lotId": 30208,
+    "type": "rune",
+    "argHex": "6c0000007600000000000000",
+    "argLen": 12
+  },
+  {
+    "map": "common",
+    "eventId": 1049632020,
+    "bank": 2007,
+    "index": 4,
+    "lotId": 30121,
+    "type": "rune",
+    "argHex": "a9750000",
+    "argLen": 4
+  },
+  {
+    "map": "common",
+    "eventId": 1049632020,
+    "bank": 2007,
+    "index": 4,
+    "lotId": 30121,
+    "type": "rune",
+    "argHex": "a9750000",
+    "argLen": 4
+  },
+  {
+    "map": "common",
+    "eventId": 1049632020,
+    "bank": 2007,
+    "index": 4,
+    "lotId": 30121,
+    "type": "rune",
+    "argHex": "a9750000",
+    "argLen": 4
+  },
+  {
+    "map": "common",
+    "eventId": 1049632020,
+    "bank": 2007,
+    "index": 4,
+    "lotId": 30121,
+    "type": "rune",
+    "argHex": "a9750000",
+    "argLen": 4
+  },
+  {
+    "map": "common",
+    "eventId": 1049632020,
+    "bank": 2007,
+    "index": 4,
+    "lotId": 30121,
+    "type": "rune",
+    "argHex": "a9750000",
+    "argLen": 4
+  },
+  {
+    "map": "common",
+    "eventId": 1049632020,
+    "bank": 2007,
+    "index": 4,
+    "lotId": 30121,
+    "type": "rune",
+    "argHex": "a9750000",
+    "argLen": 4
+  },
+  {
+    "map": "common",
+    "eventId": 1049632020,
+    "bank": 2007,
+    "index": 4,
+    "lotId": 30121,
+    "type": "rune",
+    "argHex": "a9750000",
+    "argLen": 4
+  },
+  {
+    "map": "common",
+    "eventId": 1049632020,
+    "bank": 2007,
+    "index": 4,
+    "lotId": 30121,
+    "type": "rune",
+    "argHex": "a9750000",
+    "argLen": 4
+  },
+  {
+    "map": "common",
+    "eventId": 1049632030,
+    "bank": 2007,
+    "index": 4,
+    "lotId": 30121,
+    "type": "rune",
+    "argHex": "a9750000",
+    "argLen": 4
+  },
+  {
+    "map": "common",
+    "eventId": 1049632030,
+    "bank": 2007,
+    "index": 4,
+    "lotId": 30121,
+    "type": "rune",
+    "argHex": "a9750000",
+    "argLen": 4
+  },
+  {
+    "map": "common",
+    "eventId": 1049632030,
+    "bank": 2007,
+    "index": 4,
+    "lotId": 30121,
+    "type": "rune",
+    "argHex": "a9750000",
+    "argLen": 4
+  },
+  {
+    "map": "common",
+    "eventId": 1049632030,
+    "bank": 2007,
+    "index": 4,
+    "lotId": 30121,
+    "type": "rune",
+    "argHex": "a9750000",
+    "argLen": 4
+  },
+  {
+    "map": "common",
+    "eventId": 1049632030,
+    "bank": 2007,
+    "index": 4,
+    "lotId": 30121,
+    "type": "rune",
+    "argHex": "a9750000",
+    "argLen": 4
+  },
+  {
+    "map": "common",
+    "eventId": 1049632030,
+    "bank": 2007,
+    "index": 4,
+    "lotId": 30121,
+    "type": "rune",
+    "argHex": "a9750000",
+    "argLen": 4
+  },
+  {
+    "map": "common",
+    "eventId": 1049632030,
+    "bank": 2007,
+    "index": 4,
+    "lotId": 30121,
+    "type": "rune",
+    "argHex": "a9750000",
+    "argLen": 4
+  },
+  {
+    "map": "common",
+    "eventId": 1049632030,
+    "bank": 2007,
+    "index": 4,
+    "lotId": 30121,
+    "type": "rune",
+    "argHex": "a9750000",
+    "argLen": 4
+  },
+  {
+    "map": "common",
+    "eventId": 1049632030,
+    "bank": 2007,
+    "index": 4,
+    "lotId": 30121,
+    "type": "rune",
+    "argHex": "a9750000",
+    "argLen": 4
+  },
+  {
+    "map": "common",
+    "eventId": 1049632140,
+    "bank": 3,
+    "index": 4,
+    "lotId": 10151,
+    "type": "rune",
+    "argHex": "00030000a727000001000000",
+    "argLen": 12
+  },
+  {
+    "map": "common",
+    "eventId": 1049632300,
+    "bank": 3,
+    "index": 4,
+    "lotId": 10151,
+    "type": "rune",
+    "argHex": "02030000a727000001000000",
+    "argLen": 12
+  },
+  {
+    "map": "common",
+    "eventId": 1049632300,
+    "bank": 2000,
+    "index": 0,
+    "lotId": 20812,
+    "type": "ember",
+    "argHex": "170000002d1e903e4c5100007316903e",
+    "argLen": 16
+  },
+  {
+    "map": "common",
+    "eventId": 1049632300,
+    "bank": 2000,
+    "index": 0,
+    "lotId": 20682,
+    "type": "rune",
+    "argHex": "1b0000002d1e903eca5000007716903e",
+    "argLen": 16
+  },
+  {
+    "map": "common",
+    "eventId": 1049632300,
+    "bank": 2000,
+    "index": 0,
+    "lotId": 20802,
+    "type": "ember",
+    "argHex": "1c0000002d1e903e425100007816903e",
+    "argLen": 16
+  },
+  {
+    "map": "common",
+    "eventId": 1049632300,
+    "bank": 2000,
+    "index": 0,
+    "lotId": 20652,
+    "type": "rune",
+    "argHex": "1d0000002d1e903eac5000007916903e",
+    "argLen": 16
+  },
+  {
+    "map": "common",
+    "eventId": 1049632600,
+    "bank": 2004,
+    "index": 8,
+    "lotId": 10002,
+    "type": "rune",
+    "argHex": "122700004a4c0200",
+    "argLen": 8
+  },
+  {
+    "map": "common",
+    "eventId": 1049632600,
+    "bank": 2004,
+    "index": 8,
+    "lotId": 10002,
+    "type": "rune",
+    "argHex": "12270000ab4c0200",
+    "argLen": 8
+  },
+  {
+    "map": "common",
+    "eventId": 1049632601,
+    "bank": 2004,
+    "index": 8,
+    "lotId": 10002,
+    "type": "rune",
+    "argHex": "122700004a4c0200",
+    "argLen": 8
+  },
+  {
+    "map": "common",
+    "eventId": 1049632601,
+    "bank": 2004,
+    "index": 8,
+    "lotId": 10002,
+    "type": "rune",
+    "argHex": "12270000ab4c0200",
+    "argLen": 8
+  },
+  {
+    "map": "common",
+    "eventId": 1049632602,
+    "bank": 2004,
+    "index": 8,
+    "lotId": 10002,
+    "type": "rune",
+    "argHex": "122700004a4c0200",
+    "argLen": 8
+  },
+  {
+    "map": "common",
+    "eventId": 1049632602,
+    "bank": 2004,
+    "index": 8,
+    "lotId": 10002,
+    "type": "rune",
+    "argHex": "12270000ab4c0200",
+    "argLen": 8
+  },
+  {
+    "map": "common",
+    "eventId": 900,
+    "bank": 1003,
+    "index": 101,
+    "lotId": 30208,
+    "type": "rune",
+    "argHex": "0100000076000000",
+    "argLen": 8
+  },
+  {
+    "map": "common",
+    "eventId": 900,
+    "bank": 2003,
+    "index": 66,
+    "lotId": 30208,
+    "type": "rune",
+    "argHex": "000000007600000001000000",
+    "argLen": 12
+  },
+  {
+    "map": "common",
+    "eventId": 9910,
+    "bank": 2003,
+    "index": 22,
+    "lotId": 1042330101,
+    "type": "rune",
+    "argHex": "f5b1203ef6b1203e00000000",
+    "argLen": 12
+  },
+  {
+    "map": "common",
+    "eventId": 3030,
+    "bank": 2003,
+    "index": 22,
+    "lotId": 42010000,
+    "type": "ember",
+    "argHex": "900581029f2c810200000000",
+    "argLen": 12
+  },
+  {
+    "map": "common",
+    "eventId": 3090,
+    "bank": 3,
+    "index": 0,
+    "lotId": 30208,
+    "type": "rune",
+    "argHex": "0201000076000000",
+    "argLen": 8
+  },
+  {
+    "map": "common",
+    "eventId": 3090,
+    "bank": 3,
+    "index": 0,
+    "lotId": 30208,
+    "type": "rune",
+    "argHex": "ff02000076000000",
+    "argLen": 8
+  },
+  {
+    "map": "common",
+    "eventId": 3499,
+    "bank": 1003,
+    "index": 1,
+    "lotId": 30208,
+    "type": "rune",
+    "argHex": "0500000076000000",
+    "argLen": 8
+  },
+  {
+    "map": "common",
+    "eventId": 3899,
+    "bank": 3,
+    "index": 0,
+    "lotId": 30208,
+    "type": "rune",
+    "argHex": "ff01000076000000",
+    "argLen": 8
+  },
+  {
+    "map": "common_func",
+    "eventId": 90005432,
+    "bank": 3,
+    "index": 3,
+    "lotId": 10002,
+    "type": "rune",
+    "argHex": "01000000000000001227000000005c4301000000",
+    "argLen": 20
+  },
+  {
+    "map": "common_func",
+    "eventId": 90005480,
+    "bank": 2003,
+    "index": 18,
+    "lotId": 20002,
+    "type": "rune",
+    "argHex": "00000000224e0000000100000000803f",
+    "argLen": 16
+  },
+  {
+    "map": "common_func",
+    "eventId": 90005705,
+    "bank": 2003,
+    "index": 18,
+    "lotId": 20022,
+    "type": "rune",
+    "argHex": "00000000364e0000000000000000803f",
+    "argLen": 16
+  },
+  {
+    "map": "common_func",
+    "eventId": 90005940,
+    "bank": 2003,
+    "index": 36,
+    "lotId": 800020,
+    "type": "rune",
+    "argHex": "14350c00",
+    "argLen": 4
+  },
+  {
+    "map": "common_func",
+    "eventId": 90006220,
+    "bank": 2003,
+    "index": 18,
+    "lotId": 20012,
+    "type": "rune",
+    "argHex": "000000002c4e0000000001000000803f",
+    "argLen": 16
+  },
+  {
+    "map": "m10_00_00_00",
+    "eventId": 11002291,
+    "bank": 2003,
+    "index": 18,
+    "lotId": 20002,
+    "type": "rune",
+    "argHex": "00000000224e0000000000000000803f",
+    "argLen": 16
+  },
+  {
+    "map": "m11_00_00_00",
+    "eventId": 50,
+    "bank": 2000,
+    "index": 6,
+    "lotId": 20002,
+    "type": "rune",
+    "argHex": "00000000d05e5d05a3d9a70032750000224e000073e1a7000000000000000000000000000000000000000000",
+    "argLen": 44
+  },
+  {
+    "map": "m11_00_00_00",
+    "eventId": 50,
+    "bank": 2000,
+    "index": 6,
+    "lotId": 20002,
+    "type": "rune",
+    "argHex": "00000000d05e5d05c0d9a70032750000224e000090e1a7000000000000000000010000000000000000000000",
+    "argLen": 44
+  },
+  {
+    "map": "m11_00_00_00",
+    "eventId": 50,
+    "bank": 2000,
+    "index": 6,
+    "lotId": 20002,
+    "type": "rune",
+    "argHex": "00000000d05e5d05c1d9a70032750000224e000001e3a7000000000000000000010000000000000000000000",
+    "argLen": 44
+  },
+  {
+    "map": "m11_00_00_00",
+    "eventId": 50,
+    "bank": 2000,
+    "index": 6,
+    "lotId": 20002,
+    "type": "rune",
+    "argHex": "00000000d05e5d051edaa70032750000224e0000eee1a7000000000000000000010000000000000000000000",
+    "argLen": 44
+  },
+  {
+    "map": "m11_00_00_00",
+    "eventId": 50,
+    "bank": 2000,
+    "index": 6,
+    "lotId": 20002,
+    "type": "rune",
+    "argHex": "00000000d05e5d0520daa70032750000224e000093e1a7000000000000000000010000000000000000000000",
+    "argLen": 44
+  },
+  {
+    "map": "m11_00_00_00",
+    "eventId": 50,
+    "bank": 2000,
+    "index": 6,
+    "lotId": 20002,
+    "type": "rune",
+    "argHex": "00000000d05e5d0572daa70032750000224e000041e2a7000000c04000000000000000000000000000000000",
+    "argLen": 44
+  },
+  {
+    "map": "m11_00_00_00",
+    "eventId": 50,
+    "bank": 2000,
+    "index": 6,
+    "lotId": 20002,
+    "type": "rune",
+    "argHex": "00000000d05e5d0574daa70032750000224e000043e2a7000000003f00000000000000000000000000000000",
+    "argLen": 44
+  },
+  {
+    "map": "m11_00_00_00",
+    "eventId": 50,
+    "bank": 2000,
+    "index": 6,
+    "lotId": 20002,
+    "type": "rune",
+    "argHex": "00000000d05e5d0597daa70032750000224e000067e2a7000000000000000000010000000000000000000000",
+    "argLen": 44
+  },
+  {
+    "map": "m11_00_00_00",
+    "eventId": 50,
+    "bank": 2000,
+    "index": 6,
+    "lotId": 20002,
+    "type": "rune",
+    "argHex": "00000000d05e5d0532dba70032750000224e000001e3a7000000000000000000010000000000000000000000",
+    "argLen": 44
+  },
+  {
+    "map": "m11_00_00_00",
+    "eventId": 11002497,
+    "bank": 2003,
+    "index": 18,
+    "lotId": 20002,
+    "type": "rune",
+    "argHex": "00000000224e0000000000000000803f",
+    "argLen": 16
+  },
+  {
+    "map": "m11_00_00_00",
+    "eventId": 11002860,
+    "bank": 2003,
+    "index": 18,
+    "lotId": 20002,
+    "type": "rune",
+    "argHex": "12dca700224e0000000000000000803f",
+    "argLen": 16
+  },
+  {
+    "map": "m11_00_00_00",
+    "eventId": 11002860,
+    "bank": 2003,
+    "index": 18,
+    "lotId": 20002,
+    "type": "rune",
+    "argHex": "12dca700224e0000000000000000803f",
+    "argLen": 16
+  },
+  {
+    "map": "m11_05_00_00",
+    "eventId": 50,
+    "bank": 2000,
+    "index": 6,
+    "lotId": 20002,
+    "type": "rune",
+    "argHex": "00000000db5e5d053c9da80032750000224e00000ca5a8000000a0400000000000000000000000000000000000000000",
+    "argLen": 48
+  },
+  {
+    "map": "m11_05_00_00",
+    "eventId": 50,
+    "bank": 2000,
+    "index": 6,
+    "lotId": 20002,
+    "type": "rune",
+    "argHex": "00000000db5e5d053d9da80032750000224e00000da5a8000000a0400000000000000000000000000000000000000000",
+    "argLen": 48
+  },
+  {
+    "map": "m11_05_00_00",
+    "eventId": 50,
+    "bank": 2000,
+    "index": 6,
+    "lotId": 20002,
+    "type": "rune",
+    "argHex": "00000000db5e5d053e9da80032750000224e00000ea5a8000000a0400000000000000000000000000000000000000000",
+    "argLen": 48
+  },
+  {
+    "map": "m11_05_00_00",
+    "eventId": 11053706,
+    "bank": 3,
+    "index": 0,
+    "lotId": 30208,
+    "type": "rune",
+    "argHex": "0201000076000000",
+    "argLen": 8
+  },
+  {
+    "map": "m11_10_00_00",
+    "eventId": 0,
+    "bank": 2000,
+    "index": 0,
+    "lotId": 30401,
+    "type": "rune",
+    "argHex": "010000001d6ba900447ba900c1760000497ba900",
+    "argLen": 20
+  },
+  {
+    "map": "m11_10_00_00",
+    "eventId": 11102200,
+    "bank": 2007,
+    "index": 4,
+    "lotId": 30121,
+    "type": "rune",
+    "argHex": "a9750000",
+    "argLen": 4
+  },
+  {
+    "map": "m11_10_00_00",
+    "eventId": 11102601,
+    "bank": 2004,
+    "index": 8,
+    "lotId": 30208,
+    "type": "rune",
+    "argHex": "1027000076000000",
+    "argLen": 8
+  },
+  {
+    "map": "m11_10_00_00",
+    "eventId": 11102986,
+    "bank": 2007,
+    "index": 4,
+    "lotId": 20022,
+    "type": "rune",
+    "argHex": "364e0000",
+    "argLen": 4
+  },
+  {
+    "map": "m11_10_00_00",
+    "eventId": 11102986,
+    "bank": 2007,
+    "index": 1,
+    "lotId": 20022,
+    "type": "rune",
+    "argHex": "364e0000000006000c64a90000004040",
+    "argLen": 16
+  },
+  {
+    "map": "m11_10_00_00",
+    "eventId": 11102992,
+    "bank": 2007,
+    "index": 1,
+    "lotId": 20022,
+    "type": "rune",
+    "argHex": "364e0000000006000967a90000004040",
+    "argLen": 16
+  },
+  {
+    "map": "m12_01_00_00",
+    "eventId": 0,
+    "bank": 2000,
+    "index": 6,
+    "lotId": 20022,
+    "type": "rune",
+    "argHex": "00000000d05e5d05e342b70039750000364e0000b34ab7000000000000000000000000000000000000000000",
+    "argLen": 44
+  },
+  {
+    "map": "m12_01_00_00",
+    "eventId": 0,
+    "bank": 2000,
+    "index": 6,
+    "lotId": 20022,
+    "type": "rune",
+    "argHex": "00000000d05e5d05e442b70039750000364e0000b34ab7000000204100000000000000000000000000000000",
+    "argLen": 44
+  },
+  {
+    "map": "m12_01_00_00",
+    "eventId": 0,
+    "bank": 2000,
+    "index": 6,
+    "lotId": 20002,
+    "type": "rune",
+    "argHex": "00000000d15e5d05b443b70032750000224e0000000070410000000000000000000000000000000000000000",
+    "argLen": 44
+  },
+  {
+    "map": "m12_01_00_00",
+    "eventId": 12012810,
+    "bank": 2003,
+    "index": 18,
+    "lotId": 20002,
+    "type": "rune",
+    "argHex": "3045b700224e0000000000000000803f",
+    "argLen": 16
+  },
+  {
+    "map": "m12_01_00_00",
+    "eventId": 12012810,
+    "bank": 2003,
+    "index": 18,
+    "lotId": 20002,
+    "type": "rune",
+    "argHex": "3045b700224e0000000000000000803f",
+    "argLen": 16
+  },
+  {
+    "map": "m12_02_00_00",
+    "eventId": 12022820,
+    "bank": 2003,
+    "index": 18,
+    "lotId": 20002,
+    "type": "rune",
+    "argHex": "406cb700224e0000000000000000803f",
+    "argLen": 16
+  },
+  {
+    "map": "m12_02_00_00",
+    "eventId": 12022820,
+    "bank": 2003,
+    "index": 18,
+    "lotId": 20002,
+    "type": "rune",
+    "argHex": "416cb700224e0000000000000000803f",
+    "argLen": 16
+  },
+  {
+    "map": "m12_02_00_00",
+    "eventId": 12022820,
+    "bank": 2003,
+    "index": 18,
+    "lotId": 20002,
+    "type": "rune",
+    "argHex": "406cb700224e0000000000000000803f",
+    "argLen": 16
+  },
+  {
+    "map": "m12_02_00_00",
+    "eventId": 12022822,
+    "bank": 2003,
+    "index": 18,
+    "lotId": 20002,
+    "type": "rune",
+    "argHex": "416cb700224e0000000000000000803f",
+    "argLen": 16
+  },
+  {
+    "map": "m12_02_00_00",
+    "eventId": 12022830,
+    "bank": 2003,
+    "index": 18,
+    "lotId": 20002,
+    "type": "rune",
+    "argHex": "5e6cb700224e0000000000000000803f",
+    "argLen": 16
+  },
+  {
+    "map": "m12_05_00_00",
+    "eventId": 0,
+    "bank": 2000,
+    "index": 6,
+    "lotId": 20002,
+    "type": "rune",
+    "argHex": "00000000db5e5d0530dfb70032750000224e000000e7b7000000803f0000004000000000000000000000000000000000",
+    "argLen": 48
+  },
+  {
+    "map": "m12_05_00_00",
+    "eventId": 0,
+    "bank": 2000,
+    "index": 6,
+    "lotId": 20002,
+    "type": "rune",
+    "argHex": "00000000db5e5d0531dfb70032750000224e000000e7b7000000803f0000904000000000000000000000000000000000",
+    "argLen": 48
+  },
+  {
+    "map": "m12_05_00_00",
+    "eventId": 0,
+    "bank": 2000,
+    "index": 6,
+    "lotId": 20002,
+    "type": "rune",
+    "argHex": "00000000db5e5d0532dfb70032750000224e000000e7b7000000803f0000804000000000000000000000000000000000",
+    "argLen": 48
+  },
+  {
+    "map": "m12_05_00_00",
+    "eventId": 0,
+    "bank": 2000,
+    "index": 6,
+    "lotId": 20002,
+    "type": "rune",
+    "argHex": "00000000db5e5d0533dfb70032750000224e000000e7b7000000803f0000803f00000000000000000000000000000000",
+    "argLen": 48
+  },
+  {
+    "map": "m12_05_00_00",
+    "eventId": 0,
+    "bank": 2000,
+    "index": 6,
+    "lotId": 20002,
+    "type": "rune",
+    "argHex": "00000000db5e5d0535dfb70032750000224e000000e7b7000000803f0000204000000000000000000000000000000000",
+    "argLen": 48
+  },
+  {
+    "map": "m12_05_00_00",
+    "eventId": 0,
+    "bank": 2000,
+    "index": 0,
+    "lotId": 20012,
+    "type": "rune",
+    "argHex": "010000001be7b7004bdfb70001000000b9dfb7003c7500002c4e0000",
+    "argLen": 28
+  },
+  {
+    "map": "m12_05_00_00",
+    "eventId": 12052820,
+    "bank": 4,
+    "index": 5,
+    "lotId": 10641,
+    "type": "ember",
+    "argHex": "0000000070e1b70091290000010000000000803f",
+    "argLen": 20
+  },
+  {
+    "map": "m12_09_00_00",
+    "eventId": 12092260,
+    "bank": 2003,
+    "index": 18,
+    "lotId": 20002,
+    "type": "rune",
+    "argHex": "00000000224e0000000100000000803f",
+    "argLen": 16
+  },
+  {
+    "map": "m13_00_00_00",
+    "eventId": 13002800,
+    "bank": 1003,
+    "index": 101,
+    "lotId": 30208,
+    "type": "rune",
+    "argHex": "0100000076000000",
+    "argLen": 8
+  },
+  {
+    "map": "m13_00_00_00",
+    "eventId": 13002610,
+    "bank": 2003,
+    "index": 18,
+    "lotId": 20002,
+    "type": "rune",
+    "argHex": "2f5fc600224e0000000000000000803f",
+    "argLen": 16
+  },
+  {
+    "map": "m14_00_00_00",
+    "eventId": 14002860,
+    "bank": 2003,
+    "index": 18,
+    "lotId": 20002,
+    "type": "rune",
+    "argHex": "d2a2d500224e0000000000000000803f",
+    "argLen": 16
+  },
+  {
+    "map": "m14_00_00_00",
+    "eventId": 14003880,
+    "bank": 4,
+    "index": 3,
+    "lotId": 10002,
+    "type": "rune",
+    "argHex": "0300000012270000010000000000803f",
+    "argLen": 16
+  },
+  {
+    "map": "m14_00_00_00",
+    "eventId": 14003880,
+    "bank": 2004,
+    "index": 42,
+    "lotId": 10002,
+    "type": "rune",
+    "argHex": "122700000100000000000000ffffffff00000000",
+    "argLen": 20
+  },
+  {
+    "map": "m14_00_00_00",
+    "eventId": 14003880,
+    "bank": 2004,
+    "index": 42,
+    "lotId": 10002,
+    "type": "rune",
+    "argHex": "122700000100000000000000ffffffff00000000",
+    "argLen": 20
+  },
+  {
+    "map": "m14_00_00_00",
+    "eventId": 14003880,
+    "bank": 2004,
+    "index": 42,
+    "lotId": 10002,
+    "type": "rune",
+    "argHex": "122700000100000000000000ffffffff00000000",
+    "argLen": 20
+  },
+  {
+    "map": "m15_00_00_00",
+    "eventId": 0,
+    "bank": 2000,
+    "index": 6,
+    "lotId": 20002,
+    "type": "rune",
+    "argHex": "00000000db5e5d052be3e40032750000224e000058ebe4000000803f0000000000000000000000000000000000000000",
+    "argLen": 48
+  },
+  {
+    "map": "m15_00_00_00",
+    "eventId": 0,
+    "bank": 2000,
+    "index": 6,
+    "lotId": 20002,
+    "type": "rune",
+    "argHex": "00000000dd5e5d058be2e40032750000224e00005beae400000040400000003f000000000000000000000000000000008ce2e4000000003f",
+    "argLen": 56
+  },
+  {
+    "map": "m15_00_00_00",
+    "eventId": 0,
+    "bank": 2000,
+    "index": 6,
+    "lotId": 20002,
+    "type": "rune",
+    "argHex": "00000000db5e5d058de2e40032750000224e00005deae400000040400000000000000000000000000000000000000000",
+    "argLen": 48
+  },
+  {
+    "map": "m15_00_00_00",
+    "eventId": 0,
+    "bank": 2000,
+    "index": 6,
+    "lotId": 20002,
+    "type": "rune",
+    "argHex": "00000000db5e5d058ee2e40032750000224e00005eeae400000040400000000000000000000000000000000000000000",
+    "argLen": 48
+  },
+  {
+    "map": "m15_00_00_00",
+    "eventId": 0,
+    "bank": 2000,
+    "index": 6,
+    "lotId": 20002,
+    "type": "rune",
+    "argHex": "00000000db5e5d058fe2e40032750000224e00005eeae400000040400000000000000000000000000000000000000000",
+    "argLen": 48
+  },
+  {
+    "map": "m15_00_00_00",
+    "eventId": 0,
+    "bank": 2000,
+    "index": 6,
+    "lotId": 20002,
+    "type": "rune",
+    "argHex": "00000000db5e5d0598e2e40032750000224e000068eae4000000c0400000000000000000000000000000000000000000",
+    "argLen": 48
+  },
+  {
+    "map": "m15_00_00_00",
+    "eventId": 0,
+    "bank": 2000,
+    "index": 6,
+    "lotId": 20002,
+    "type": "rune",
+    "argHex": "00000000db5e5d05a4e2e40032750000224e000000000000000040400000000000000000000000000000000000000000",
+    "argLen": 48
+  },
+  {
+    "map": "m15_00_00_00",
+    "eventId": 0,
+    "bank": 2000,
+    "index": 6,
+    "lotId": 20002,
+    "type": "rune",
+    "argHex": "00000000db5e5d05a5e2e40032750000224e000000000000000040400000000000000000000000000000000000000000",
+    "argLen": 48
+  },
+  {
+    "map": "m15_00_00_00",
+    "eventId": 0,
+    "bank": 2000,
+    "index": 6,
+    "lotId": 20002,
+    "type": "rune",
+    "argHex": "00000000d15e5d05bbe2e40032750000224e0000000040400000000000000000000000000000000000000000",
+    "argLen": 44
+  },
+  {
+    "map": "m15_00_00_00",
+    "eventId": 0,
+    "bank": 2000,
+    "index": 6,
+    "lotId": 20002,
+    "type": "rune",
+    "argHex": "00000000d15e5d05bce2e40032750000224e0000000040400000000000000000000000000000000000000000",
+    "argLen": 44
+  },
+  {
+    "map": "m15_00_00_00",
+    "eventId": 0,
+    "bank": 2000,
+    "index": 6,
+    "lotId": 20002,
+    "type": "rune",
+    "argHex": "00000000db5e5d05c2e2e40032750000224e000092eae4000000803f0000000000000000000000000000000000000000",
+    "argLen": 48
+  },
+  {
+    "map": "m15_00_00_00",
+    "eventId": 0,
+    "bank": 2000,
+    "index": 6,
+    "lotId": 20002,
+    "type": "rune",
+    "argHex": "00000000db5e5d05c3e2e40032750000224e000092eae4000000803f0000000000000000000000000000000000000000",
+    "argLen": 48
+  },
+  {
+    "map": "m15_00_00_00",
+    "eventId": 0,
+    "bank": 2000,
+    "index": 6,
+    "lotId": 20002,
+    "type": "rune",
+    "argHex": "00000000db5e5d054ee3e40032750000224e00001eebe400000020410000000000000000000000000000000000000000",
+    "argLen": 48
+  },
+  {
+    "map": "m15_00_00_00",
+    "eventId": 15002811,
+    "bank": 2003,
+    "index": 18,
+    "lotId": 20002,
+    "type": "rune",
+    "argHex": "e0e4e400224e0000000000000000803f",
+    "argLen": 16
+  },
+  {
+    "map": "m16_00_00_00",
+    "eventId": 16002810,
+    "bank": 2003,
+    "index": 18,
+    "lotId": 20002,
+    "type": "rune",
+    "argHex": "2127f400224e0000000000000000803f",
+    "argLen": 16
+  },
+  {
+    "map": "m16_00_00_00",
+    "eventId": 16002811,
+    "bank": 2003,
+    "index": 18,
+    "lotId": 20002,
+    "type": "rune",
+    "argHex": "2027f400224e0000000100000000803f",
+    "argLen": 16
+  },
+  {
+    "map": "m18_00_00_00",
+    "eventId": 0,
+    "bank": 2000,
+    "index": 0,
+    "lotId": 18000852,
+    "type": "rune",
+    "argHex": "02000000aeb31201d4ab12012b390000",
+    "argLen": 16
+  },
+  {
+    "map": "m18_00_00_00",
+    "eventId": 0,
+    "bank": 2000,
+    "index": 0,
+    "lotId": 18000852,
+    "type": "rune",
+    "argHex": "02000000b0b31201d4ab12011f390000db040000",
+    "argLen": 20
+  },
+  {
+    "map": "m18_00_00_00",
+    "eventId": 50,
+    "bank": 2000,
+    "index": 6,
+    "lotId": 20002,
+    "type": "rune",
+    "argHex": "00000000d05e5d05dea9120132750000224e0000aeb112010000000000000000000000000000000000000000",
+    "argLen": 44
+  },
+  {
+    "map": "m18_00_00_00",
+    "eventId": 50,
+    "bank": 2000,
+    "index": 6,
+    "lotId": 20002,
+    "type": "rune",
+    "argHex": "00000000d05e5d05dfa9120132750000224e0000aeb112010000404000000000000000000000000000000000",
+    "argLen": 44
+  },
+  {
+    "map": "m18_00_00_00",
+    "eventId": 18002861,
+    "bank": 2003,
+    "index": 18,
+    "lotId": 18000852,
+    "type": "rune",
+    "argHex": "d4ab12013a750000010000000000803f",
+    "argLen": 16
+  },
+  {
+    "map": "m18_00_00_00",
+    "eventId": 18002861,
+    "bank": 2004,
+    "index": 30,
+    "lotId": 18000852,
+    "type": "rune",
+    "argHex": "d4ab120100000000",
+    "argLen": 8
+  },
+  {
+    "map": "m18_00_00_00",
+    "eventId": 18002861,
+    "bank": 2004,
+    "index": 50,
+    "lotId": 18000852,
+    "type": "rune",
+    "argHex": "d4ab1201dc00000000000000",
+    "argLen": 12
+  },
+  {
+    "map": "m18_00_00_00",
+    "eventId": 18002861,
+    "bank": 2004,
+    "index": 34,
+    "lotId": 18000852,
+    "type": "rune",
+    "argHex": "d4ab120101000000",
+    "argLen": 8
+  },
+  {
+    "map": "m18_00_00_00",
+    "eventId": 18002861,
+    "bank": 2004,
+    "index": 1,
+    "lotId": 18000852,
+    "type": "rune",
+    "argHex": "d4ab120101000000",
+    "argLen": 8
+  },
+  {
+    "map": "m18_00_00_00",
+    "eventId": 18002861,
+    "bank": 2003,
+    "index": 18,
+    "lotId": 18000852,
+    "type": "rune",
+    "argHex": "d4ab1201cf0b0000000001000000803f",
+    "argLen": 16
+  },
+  {
+    "map": "m18_00_00_00",
+    "eventId": 18002861,
+    "bank": 2004,
+    "index": 50,
+    "lotId": 18000852,
+    "type": "rune",
+    "argHex": "d4ab1201dc00000001000000",
+    "argLen": 12
+  },
+  {
+    "map": "m18_00_00_00",
+    "eventId": 18002861,
+    "bank": 2004,
+    "index": 8,
+    "lotId": 18000852,
+    "type": "rune",
+    "argHex": "d4ab120164000000",
+    "argLen": 8
+  },
+  {
+    "map": "m18_00_00_00",
+    "eventId": 18002861,
+    "bank": 2003,
+    "index": 11,
+    "lotId": 18000852,
+    "type": "rune",
+    "argHex": "01000000d4ab1201000000008912cb35",
+    "argLen": 16
+  },
+  {
+    "map": "m18_00_00_00",
+    "eventId": 18002861,
+    "bank": 4,
+    "index": 14,
+    "lotId": 18000852,
+    "type": "rune",
+    "argHex": "00000000d4ab12010000000001000000000000000000803f",
+    "argLen": 24
+  },
+  {
+    "map": "m18_00_00_00",
+    "eventId": 18002861,
+    "bank": 2003,
+    "index": 18,
+    "lotId": 18000852,
+    "type": "rune",
+    "argHex": "d4ab1201b80b0000000001000000803f",
+    "argLen": 16
+  },
+  {
+    "map": "m18_00_00_00",
+    "eventId": 18002861,
+    "bank": 2004,
+    "index": 41,
+    "lotId": 18000852,
+    "type": "rune",
+    "argHex": "d4ab1201010000008cb71201ffffffff",
+    "argLen": 16
+  },
+  {
+    "map": "m18_00_00_00",
+    "eventId": 18002861,
+    "bank": 2003,
+    "index": 18,
+    "lotId": 18000852,
+    "type": "rune",
+    "argHex": "d4ab1201b90b0000000001000000803f",
+    "argLen": 16
+  },
+  {
+    "map": "m18_00_00_00",
+    "eventId": 18002861,
+    "bank": 2004,
+    "index": 41,
+    "lotId": 18000852,
+    "type": "rune",
+    "argHex": "d4ab1201010000008cb71201ffffffff",
+    "argLen": 16
+  },
+  {
+    "map": "m18_00_00_00",
+    "eventId": 18002861,
+    "bank": 2003,
+    "index": 18,
+    "lotId": 18000852,
+    "type": "rune",
+    "argHex": "d4ab1201b90b0000000001000000803f",
+    "argLen": 16
+  },
+  {
+    "map": "m18_00_00_00",
+    "eventId": 18002861,
+    "bank": 2003,
+    "index": 18,
+    "lotId": 18000852,
+    "type": "rune",
+    "argHex": "d4ab1201ba0b0000000001000000803f",
+    "argLen": 16
+  },
+  {
+    "map": "m20_00_00_00",
+    "eventId": 0,
+    "bank": 2000,
+    "index": 0,
+    "lotId": 20002,
+    "type": "rune",
+    "argHex": "00000000c12f3101c62f3101465131018011000098373101993731019737310100002041224e000037513101709940012f513101bb373101",
+    "argLen": 56
+  },
+  {
+    "map": "m20_00_00_00",
+    "eventId": 0,
+    "bank": 2000,
+    "index": 0,
+    "lotId": 20002,
+    "type": "rune",
+    "argHex": "00000000c42f3101c62f31014a513101b7373101224e0000b0373101375131019e3731012f513101",
+    "argLen": 40
+  },
+  {
+    "map": "m20_00_00_00",
+    "eventId": 0,
+    "bank": 2000,
+    "index": 6,
+    "lotId": 20002,
+    "type": "rune",
+    "argHex": "01000000f0605d05c62f3101ab37310152513101224e0000",
+    "argLen": 24
+  },
+  {
+    "map": "m20_00_00_00",
+    "eventId": 0,
+    "bank": 2000,
+    "index": 6,
+    "lotId": 20022,
+    "type": "rune",
+    "argHex": "07000000f0605d05c62f3101a237310152513101364e0000",
+    "argLen": 24
+  },
+  {
+    "map": "m20_00_00_00",
+    "eventId": 50,
+    "bank": 2000,
+    "index": 6,
+    "lotId": 20002,
+    "type": "rune",
+    "argHex": "00000000e55e5d050b2e310132750000224e00000000000000000000",
+    "argLen": 28
+  },
+  {
+    "map": "m20_00_00_00",
+    "eventId": 50,
+    "bank": 2000,
+    "index": 6,
+    "lotId": 20002,
+    "type": "rune",
+    "argHex": "01000000e55e5d05e72d310132750000224e00000000000000000000",
+    "argLen": 28
+  },
+  {
+    "map": "m20_00_00_00",
+    "eventId": 50,
+    "bank": 2000,
+    "index": 6,
+    "lotId": 20002,
+    "type": "rune",
+    "argHex": "00000000db5e5d05e92d310132750000224e0000b93531010000803f0000003f00000000000000000000000000000000",
+    "argLen": 48
+  },
+  {
+    "map": "m20_00_00_00",
+    "eventId": 50,
+    "bank": 2000,
+    "index": 6,
+    "lotId": 20002,
+    "type": "rune",
+    "argHex": "00000000db5e5d05ea2d310132750000224e0000b93531010000803f0000803f00000000000000000000000000000000",
+    "argLen": 48
+  },
+  {
+    "map": "m20_00_00_00",
+    "eventId": 50,
+    "bank": 2000,
+    "index": 6,
+    "lotId": 20002,
+    "type": "rune",
+    "argHex": "00000000db5e5d05eb2d310132750000224e0000b93531010000803f0000000000000000000000000000000000000000",
+    "argLen": 48
+  },
+  {
+    "map": "m20_00_00_00",
+    "eventId": 50,
+    "bank": 2000,
+    "index": 6,
+    "lotId": 20002,
+    "type": "rune",
+    "argHex": "00000000db5e5d05ec2d310132750000224e0000bc3531010000803f0000003f00000000000000000000000000000000",
+    "argLen": 48
+  },
+  {
+    "map": "m20_00_00_00",
+    "eventId": 50,
+    "bank": 2000,
+    "index": 6,
+    "lotId": 20002,
+    "type": "rune",
+    "argHex": "00000000db5e5d05ef2d310132750000224e0000bc3531010000803f0000003f00000000000000000000000000000000",
+    "argLen": 48
+  },
+  {
+    "map": "m20_00_00_00",
+    "eventId": 50,
+    "bank": 2000,
+    "index": 6,
+    "lotId": 20002,
+    "type": "rune",
+    "argHex": "00000000e55e5d05022e310132750000224e00000000000000000000",
+    "argLen": 28
+  },
+  {
+    "map": "m20_00_00_00",
+    "eventId": 50,
+    "bank": 2000,
+    "index": 6,
+    "lotId": 20002,
+    "type": "rune",
+    "argHex": "00000000e55e5d05032e310132750000224e00000000000000000000",
+    "argLen": 28
+  },
+  {
+    "map": "m20_00_00_00",
+    "eventId": 50,
+    "bank": 2000,
+    "index": 6,
+    "lotId": 20002,
+    "type": "rune",
+    "argHex": "00000000d15e5d05112e310132750000224e00000000803f0000000000000000000000000000000000000000",
+    "argLen": 44
+  },
+  {
+    "map": "m20_00_00_00",
+    "eventId": 50,
+    "bank": 2000,
+    "index": 6,
+    "lotId": 20002,
+    "type": "rune",
+    "argHex": "00000000db5e5d05612e310132750000224e0000313631010000803f0000000000000000000000000000000000000000",
+    "argLen": 48
+  },
+  {
+    "map": "m20_00_00_00",
+    "eventId": 50,
+    "bank": 2000,
+    "index": 6,
+    "lotId": 20002,
+    "type": "rune",
+    "argHex": "00000000db5e5d05622e310132750000224e0000313631010000803f0000003f00000000000000000000000000000000",
+    "argLen": 48
+  },
+  {
+    "map": "m20_00_00_00",
+    "eventId": 50,
+    "bank": 2000,
+    "index": 6,
+    "lotId": 20002,
+    "type": "rune",
+    "argHex": "00000000db5e5d05682e310132750000224e0000383631010000803fcdcccc3e00000000000000000000000000000000",
+    "argLen": 48
+  },
+  {
+    "map": "m20_00_00_00",
+    "eventId": 50,
+    "bank": 2000,
+    "index": 6,
+    "lotId": 20002,
+    "type": "rune",
+    "argHex": "00000000db5e5d05692e310132750000224e0000383631010000803f0000000000000000000000000000000000000000",
+    "argLen": 48
+  },
+  {
+    "map": "m20_00_00_00",
+    "eventId": 50,
+    "bank": 2000,
+    "index": 6,
+    "lotId": 20002,
+    "type": "rune",
+    "argHex": "00000000db5e5d056f2e310132750000224e00003f3631010000803fcdcc4c3e00000000000000000000000000000000",
+    "argLen": 48
+  },
+  {
+    "map": "m20_00_00_00",
+    "eventId": 50,
+    "bank": 2000,
+    "index": 6,
+    "lotId": 20002,
+    "type": "rune",
+    "argHex": "00000000db5e5d05752e310132750000224e00003f3631010000803fcdcc4c3e00000000000000000000000000000000",
+    "argLen": 48
+  },
+  {
+    "map": "m20_00_00_00",
+    "eventId": 50,
+    "bank": 2000,
+    "index": 6,
+    "lotId": 20002,
+    "type": "rune",
+    "argHex": "00000000db5e5d059a2e310132750000224e00006a3631010000803f0000000000000000000000000000000000000000",
+    "argLen": 48
+  },
+  {
+    "map": "m20_01_00_00",
+    "eventId": 0,
+    "bank": 2000,
+    "index": 6,
+    "lotId": 20010900,
+    "type": "ember",
+    "argHex": "00000000345f5d05d3553101d3553101945731010000000000000000",
+    "argLen": 28
+  },
+  {
+    "map": "m20_01_00_00",
+    "eventId": 0,
+    "bank": 2000,
+    "index": 6,
+    "lotId": 20010910,
+    "type": "ember",
+    "argHex": "00000000345f5d05d5553101d55531019e5731010000000000000000",
+    "argLen": 28
+  },
+  {
+    "map": "m20_01_00_00",
+    "eventId": 50,
+    "bank": 2000,
+    "index": 6,
+    "lotId": 20002,
+    "type": "rune",
+    "argHex": "00000000db5e5d054555310132750000224e0000145d3101000000000000000000000000000000000000000000000000",
+    "argLen": 48
+  },
+  {
+    "map": "m20_01_00_00",
+    "eventId": 50,
+    "bank": 2000,
+    "index": 6,
+    "lotId": 20002,
+    "type": "rune",
+    "argHex": "00000000db5e5d054255310132750000224e0000125d31010000803f0000803f00000000000000000000000000000000",
+    "argLen": 48
+  },
+  {
+    "map": "m20_01_00_00",
+    "eventId": 50,
+    "bank": 2000,
+    "index": 6,
+    "lotId": 20002,
+    "type": "rune",
+    "argHex": "00000000db5e5d054355310132750000224e0000125d31010000803f0000000000000000000000000000000000000000",
+    "argLen": 48
+  },
+  {
+    "map": "m20_01_00_00",
+    "eventId": 20012830,
+    "bank": 2003,
+    "index": 18,
+    "lotId": 20002,
+    "type": "rune",
+    "argHex": "00000000224e0000000000000000803f",
+    "argLen": 16
+  },
+  {
+    "map": "m20_01_00_00",
+    "eventId": 20010736,
+    "bank": 4,
+    "index": 3,
+    "lotId": 10002,
+    "type": "rune",
+    "argHex": "ff000000122700000f0000000000803f",
+    "argLen": 16
+  },
+  {
+    "map": "m20_01_00_00",
+    "eventId": 20010736,
+    "bank": 4,
+    "index": 3,
+    "lotId": 10002,
+    "type": "rune",
+    "argHex": "fe000000122700000f00000000000000",
+    "argLen": 16
+  },
+  {
+    "map": "m20_01_00_00",
+    "eventId": 20010736,
+    "bank": 4,
+    "index": 3,
+    "lotId": 10002,
+    "type": "rune",
+    "argHex": "fd000000122700000f0000000000803f",
+    "argLen": 16
+  },
+  {
+    "map": "m20_01_00_00",
+    "eventId": 20010736,
+    "bank": 4,
+    "index": 3,
+    "lotId": 10002,
+    "type": "rune",
+    "argHex": "fc000000122700000f00000000000000",
+    "argLen": 16
+  },
+  {
+    "map": "m20_01_00_00",
+    "eventId": 20010736,
+    "bank": 4,
+    "index": 3,
+    "lotId": 10002,
+    "type": "rune",
+    "argHex": "fb000000122700000f0000000000803f",
+    "argLen": 16
+  },
+  {
+    "map": "m20_01_00_00",
+    "eventId": 20010736,
+    "bank": 4,
+    "index": 3,
+    "lotId": 10002,
+    "type": "rune",
+    "argHex": "fa000000122700000f00000000000000",
+    "argLen": 16
+  },
+  {
+    "map": "m20_01_00_00",
+    "eventId": 20010777,
+    "bank": 4,
+    "index": 3,
+    "lotId": 10002,
+    "type": "rune",
+    "argHex": "ff000000122700000f0000000000803f",
+    "argLen": 16
+  },
+  {
+    "map": "m21_00_00_00",
+    "eventId": 50,
+    "bank": 2000,
+    "index": 6,
+    "lotId": 20002,
+    "type": "rune",
+    "argHex": "00000000db5e5d051270400132750000224e0000e27740010000803f0000803f00000000000000000000000000000000",
+    "argLen": 48
+  },
+  {
+    "map": "m21_00_00_00",
+    "eventId": 50,
+    "bank": 2000,
+    "index": 6,
+    "lotId": 20002,
+    "type": "rune",
+    "argHex": "00000000db5e5d056c70400132750000224e00003c7840010000803f0000003f01000000000000000000000000000000",
+    "argLen": 48
+  },
+  {
+    "map": "m21_00_00_00",
+    "eventId": 50,
+    "bank": 2000,
+    "index": 6,
+    "lotId": 20002,
+    "type": "rune",
+    "argHex": "00000000db5e5d057070400132750000224e00003e7840010000803fcdcccc3d01000000000000000000000000000000",
+    "argLen": 48
+  },
+  {
+    "map": "m21_00_00_00",
+    "eventId": 50,
+    "bank": 2000,
+    "index": 6,
+    "lotId": 20002,
+    "type": "rune",
+    "argHex": "00000000db5e5d057d70400132750000224e0000507840010000803f6666464001000000000000000000000000000000",
+    "argLen": 48
+  },
+  {
+    "map": "m21_00_00_00",
+    "eventId": 50,
+    "bank": 2000,
+    "index": 6,
+    "lotId": 20002,
+    "type": "rune",
+    "argHex": "00000000db5e5d051671400132750000224e0000e67840010000803fcdcccc3d01000000000000000000000000000000",
+    "argLen": 48
+  },
+  {
+    "map": "m21_00_00_00",
+    "eventId": 50,
+    "bank": 2000,
+    "index": 6,
+    "lotId": 20002,
+    "type": "rune",
+    "argHex": "00000000db5e5d051771400132750000224e0000e77840010000803fcdcccc3d01000000000000000000000000000000",
+    "argLen": 48
+  },
+  {
+    "map": "m21_00_00_00",
+    "eventId": 50,
+    "bank": 2000,
+    "index": 6,
+    "lotId": 20002,
+    "type": "rune",
+    "argHex": "00000000db5e5d051871400132750000224e0000e87840010000803fcdcccc3d01000000000000000000000000000000",
+    "argLen": 48
+  },
+  {
+    "map": "m21_00_00_00",
+    "eventId": 50,
+    "bank": 2000,
+    "index": 6,
+    "lotId": 20002,
+    "type": "rune",
+    "argHex": "00000000db5e5d051971400132750000224e0000e97840010000803fcdcccc3d01000000000000000000000000000000",
+    "argLen": 48
+  },
+  {
+    "map": "m21_01_00_00",
+    "eventId": 0,
+    "bank": 2000,
+    "index": 0,
+    "lotId": 20012,
+    "type": "rune",
+    "argHex": "0200000059a14001a6563101140000002c4e0000",
+    "argLen": 20
+  },
+  {
+    "map": "m30_01_00_00",
+    "eventId": 50,
+    "bank": 2000,
+    "index": 6,
+    "lotId": 20002,
+    "type": "rune",
+    "argHex": "00000000db5e5d0559ebc90132750000224e000029f3c9010000803f0000003f00000000000000000000000000000000",
+    "argLen": 48
+  },
+  {
+    "map": "m30_01_00_00",
+    "eventId": 50,
+    "bank": 2000,
+    "index": 6,
+    "lotId": 20002,
+    "type": "rune",
+    "argHex": "00000000db5e5d055bebc90132750000224e00002bf3c9010000803f0000204000000000000000000000000000000000",
+    "argLen": 48
+  },
+  {
+    "map": "m30_02_00_00",
+    "eventId": 50,
+    "bank": 2000,
+    "index": 6,
+    "lotId": 20002,
+    "type": "rune",
+    "argHex": "00000000db5e5d057012ca0132750000224e00003e1aca01000000000000803f00000000000000000000000000000000",
+    "argLen": 48
+  },
+  {
+    "map": "m30_03_00_00",
+    "eventId": 50,
+    "bank": 2000,
+    "index": 6,
+    "lotId": 20002,
+    "type": "rune",
+    "argHex": "00000000d05e5d058139ca0132750000224e00004f41ca010000404000000000000000000000000000000000",
+    "argLen": 44
+  },
+  {
+    "map": "m30_04_00_00",
+    "eventId": 50,
+    "bank": 2000,
+    "index": 6,
+    "lotId": 20002,
+    "type": "rune",
+    "argHex": "00000000d05e5d058960ca0132750000224e00005968ca010000803f01000000000000000000000000000000",
+    "argLen": 44
+  },
+  {
+    "map": "m30_06_00_00",
+    "eventId": 50,
+    "bank": 2000,
+    "index": 6,
+    "lotId": 20002,
+    "type": "rune",
+    "argHex": "00000000db5e5d05b0aeca0132750000224e000080b6ca010000a0403333334000000000000000000000000000000000",
+    "argLen": 48
+  },
+  {
+    "map": "m30_06_00_00",
+    "eventId": 50,
+    "bank": 2000,
+    "index": 6,
+    "lotId": 20002,
+    "type": "rune",
+    "argHex": "00000000d15e5d05b7aeca0132750000224e0000000000400000000000000000000000000000000000000000",
+    "argLen": 44
+  },
+  {
+    "map": "m30_07_00_00",
+    "eventId": 50,
+    "bank": 2000,
+    "index": 6,
+    "lotId": 20002,
+    "type": "rune",
+    "argHex": "00000000db5e5d05bed5ca0132750000224e00008dddca010000a0400000000000000000000000000000000000000000",
+    "argLen": 48
+  },
+  {
+    "map": "m30_08_00_00",
+    "eventId": 0,
+    "bank": 2000,
+    "index": 6,
+    "lotId": 20002,
+    "type": "rune",
+    "argHex": "00000000db5e5d0538fdca0132750000224e0000a204cb01000020410000000000000000000000000000000000000000",
+    "argLen": 48
+  },
+  {
+    "map": "m30_16_00_00",
+    "eventId": 50,
+    "bank": 2000,
+    "index": 6,
+    "lotId": 20002,
+    "type": "rune",
+    "argHex": "00000000d05e5d054c35cc0132750000224e00001c3dcc010000000000000000000000000000000000000000",
+    "argLen": 44
+  },
+  {
+    "map": "m30_17_00_00",
+    "eventId": 0,
+    "bank": 2000,
+    "index": 6,
+    "lotId": 20002,
+    "type": "rune",
+    "argHex": "00000000d05e5d05585ccc0132750000224e00002265cc010000003f00000000000000000000000000000000",
+    "argLen": 44
+  },
+  {
+    "map": "m30_17_00_00",
+    "eventId": 0,
+    "bank": 2000,
+    "index": 6,
+    "lotId": 20002,
+    "type": "rune",
+    "argHex": "01000000d05e5d05595ccc0132750000224e00002265cc010000000000000000000000000000000000000000",
+    "argLen": 44
+  },
+  {
+    "map": "m30_17_00_00",
+    "eventId": 0,
+    "bank": 2000,
+    "index": 6,
+    "lotId": 20002,
+    "type": "rune",
+    "argHex": "00000000d05e5d05625ccc0132750000224e00003264cc010000a04000000000000000000000000000000000",
+    "argLen": 44
+  },
+  {
+    "map": "m30_17_00_00",
+    "eventId": 0,
+    "bank": 2000,
+    "index": 6,
+    "lotId": 20002,
+    "type": "rune",
+    "argHex": "01000000d05e5d05635ccc0132750000224e00003264cc010000b04000000000000000000000000000000000",
+    "argLen": 44
+  },
+  {
+    "map": "m30_18_00_00",
+    "eventId": 0,
+    "bank": 2000,
+    "index": 6,
+    "lotId": 20002,
+    "type": "rune",
+    "argHex": "00000000d05e5d057583cc0132750000224e0000448bcc010000604000000000000000000000000000000000",
+    "argLen": 44
+  },
+  {
+    "map": "m30_18_00_00",
+    "eventId": 0,
+    "bank": 2000,
+    "index": 6,
+    "lotId": 20002,
+    "type": "rune",
+    "argHex": "00000000d05e5d057683cc0132750000224e0000448bcc01cdcc6c4000000000000000000000000000000000",
+    "argLen": 44
+  },
+  {
+    "map": "m30_18_00_00",
+    "eventId": 0,
+    "bank": 2000,
+    "index": 6,
+    "lotId": 20002,
+    "type": "rune",
+    "argHex": "00000000d05e5d057783cc0132750000224e0000448bcc010000003f00000000000000000000000000000000",
+    "argLen": 44
+  },
+  {
+    "map": "m30_18_00_00",
+    "eventId": 0,
+    "bank": 2000,
+    "index": 6,
+    "lotId": 20002,
+    "type": "rune",
+    "argHex": "00000000d05e5d058a83cc0132750000224e0000448bcc010000804000000000000000000000000000000000",
+    "argLen": 44
+  },
+  {
+    "map": "m30_18_00_00",
+    "eventId": 30182810,
+    "bank": 2003,
+    "index": 18,
+    "lotId": 20002,
+    "type": "rune",
+    "argHex": "c085cc01224e0000000000000000803f",
+    "argLen": 16
+  },
+  {
+    "map": "m30_18_00_00",
+    "eventId": 30182810,
+    "bank": 2003,
+    "index": 18,
+    "lotId": 20002,
+    "type": "rune",
+    "argHex": "c085cc01224e0000000000000000803f",
+    "argLen": 16
+  },
+  {
+    "map": "m30_19_00_00",
+    "eventId": 0,
+    "bank": 2000,
+    "index": 6,
+    "lotId": 20002,
+    "type": "rune",
+    "argHex": "00000000d05e5d0582aacc0132750000224e000052b2cc01cdcccc3d00000000000000000000000000000000",
+    "argLen": 44
+  },
+  {
+    "map": "m30_19_00_00",
+    "eventId": 0,
+    "bank": 2000,
+    "index": 6,
+    "lotId": 20002,
+    "type": "rune",
+    "argHex": "00000000d05e5d057caacc0132750000224e000052b2cc010000003f00000000000000000000000000000000",
+    "argLen": 44
+  },
+  {
+    "map": "m30_19_00_00",
+    "eventId": 0,
+    "bank": 2000,
+    "index": 6,
+    "lotId": 20002,
+    "type": "rune",
+    "argHex": "00000000d05e5d057daacc0132750000224e000052b2cc010000803f00000000000000000000000000000000",
+    "argLen": 44
+  },
+  {
+    "map": "m30_19_00_00",
+    "eventId": 0,
+    "bank": 2000,
+    "index": 6,
+    "lotId": 20002,
+    "type": "rune",
+    "argHex": "00000000db5e5d059daacc0132750000224e000056b2cc010000e0400000000000000000000000000000000000000000",
+    "argLen": 48
+  },
+  {
+    "map": "m30_20_00_00",
+    "eventId": 0,
+    "bank": 2000,
+    "index": 6,
+    "lotId": 20002,
+    "type": "rune",
+    "argHex": "00000000db5e5d0588d1cc0132750000224e000058d9cc010000803f0000000001000000000000000000000000000000",
+    "argLen": 48
+  },
+  {
+    "map": "m30_20_00_00",
+    "eventId": 0,
+    "bank": 2000,
+    "index": 6,
+    "lotId": 20002,
+    "type": "rune",
+    "argHex": "00000000db5e5d0589d1cc0132750000224e000059d9cc010000803f0000000001000000000000000000000000000000",
+    "argLen": 48
+  },
+  {
+    "map": "m30_20_00_00",
+    "eventId": 0,
+    "bank": 2000,
+    "index": 6,
+    "lotId": 20002,
+    "type": "rune",
+    "argHex": "00000000db5e5d058ad1cc0132750000224e00005ad9cc010000803f0000803f01000000000000000000000000000000",
+    "argLen": 48
+  },
+  {
+    "map": "m30_20_00_00",
+    "eventId": 0,
+    "bank": 2000,
+    "index": 6,
+    "lotId": 20002,
+    "type": "rune",
+    "argHex": "00000000db5e5d05b3d1cc0132750000224e000083d9cc010000803f0000803f00000000000000000000000000000000",
+    "argLen": 48
+  },
+  {
+    "map": "m30_20_00_00",
+    "eventId": 0,
+    "bank": 2000,
+    "index": 6,
+    "lotId": 20002,
+    "type": "rune",
+    "argHex": "00000000db5e5d05b4d1cc0132750000224e000083d9cc010000803f0000803f00000000000000000000000000000000",
+    "argLen": 48
+  },
+  {
+    "map": "m30_20_00_00",
+    "eventId": 0,
+    "bank": 2000,
+    "index": 6,
+    "lotId": 20002,
+    "type": "rune",
+    "argHex": "00000000db5e5d05b5d1cc0132750000224e000083d9cc010000803f0000004000000000000000000000000000000000",
+    "argLen": 48
+  },
+  {
+    "map": "m30_20_00_00",
+    "eventId": 0,
+    "bank": 2000,
+    "index": 6,
+    "lotId": 20002,
+    "type": "rune",
+    "argHex": "00000000db5e5d05bad1cc0132750000224e00008ad9cc010000803f0000803f00000000000000000000000000000000",
+    "argLen": 48
+  },
+  {
+    "map": "m30_20_00_00",
+    "eventId": 0,
+    "bank": 2000,
+    "index": 6,
+    "lotId": 20002,
+    "type": "rune",
+    "argHex": "00000000db5e5d05bbd1cc0132750000224e00008ad9cc01000000400000803f00000000000000000000000000000000",
+    "argLen": 48
+  },
+  {
+    "map": "m31_05_00_00",
+    "eventId": 50,
+    "bank": 2000,
+    "index": 6,
+    "lotId": 20002,
+    "type": "rune",
+    "argHex": "00000000db5e5d05ddc9d90132750000224e0000add1d901000000400000000000000000000000000000000000000000",
+    "argLen": 48
+  },
+  {
+    "map": "m31_05_00_00",
+    "eventId": 50,
+    "bank": 2000,
+    "index": 6,
+    "lotId": 20002,
+    "type": "rune",
+    "argHex": "00000000db5e5d05e1c9d90132750000224e0000b1d1d9010000a0400000803f00000000000000000000000000000000",
+    "argLen": 48
+  },
+  {
+    "map": "m31_07_00_00",
+    "eventId": 0,
+    "bank": 2000,
+    "index": 6,
+    "lotId": 20002,
+    "type": "rune",
+    "argHex": "00000000db5e5d05f917da0132750000224e0000c91fda01000000000000003f00000000000000000000000000000000",
+    "argLen": 48
+  },
+  {
+    "map": "m31_09_00_00",
+    "eventId": 0,
+    "bank": 2000,
+    "index": 6,
+    "lotId": 20002,
+    "type": "rune",
+    "argHex": "00000000db5e5d051a66da0132750000224e0000e96dda010000803f0000000000000000000000000000000000000000",
+    "argLen": 48
+  },
+  {
+    "map": "m31_09_00_00",
+    "eventId": 0,
+    "bank": 2000,
+    "index": 6,
+    "lotId": 20002,
+    "type": "rune",
+    "argHex": "00000000db5e5d052666da0132750000224e0000f66dda010000803f0000000000000000000000000000000000000000",
+    "argLen": 48
+  },
+  {
+    "map": "m31_09_00_00",
+    "eventId": 0,
+    "bank": 2000,
+    "index": 6,
+    "lotId": 20002,
+    "type": "rune",
+    "argHex": "00000000db5e5d052766da0132750000224e0000f66dda010000803f9a99993e00000000000000000000000000000000",
+    "argLen": 48
+  },
+  {
+    "map": "m31_09_00_00",
+    "eventId": 0,
+    "bank": 2000,
+    "index": 6,
+    "lotId": 20002,
+    "type": "rune",
+    "argHex": "00000000db5e5d054b66da0132750000224e0000f66dda010000803fcdcc4c3f00000000000000000000000000000000",
+    "argLen": 48
+  },
+  {
+    "map": "m31_09_00_00",
+    "eventId": 0,
+    "bank": 2000,
+    "index": 6,
+    "lotId": 20002,
+    "type": "rune",
+    "argHex": "00000000db5e5d055066da0132750000224e0000206eda010000a0400000000000000000000000000000000000000000",
+    "argLen": 48
+  },
+  {
+    "map": "m31_09_00_00",
+    "eventId": 31092300,
+    "bank": 2003,
+    "index": 18,
+    "lotId": 20002,
+    "type": "rune",
+    "argHex": "7c66da01224e0000000001000000803f",
+    "argLen": 16
+  },
+  {
+    "map": "m31_11_00_00",
+    "eventId": 50,
+    "bank": 2000,
+    "index": 6,
+    "lotId": 20002,
+    "type": "rune",
+    "argHex": "00000000db5e5d0542b4da0132750000224e000012bcda01000000400000000000000000000000000000000000000000",
+    "argLen": 48
+  },
+  {
+    "map": "m31_11_00_00",
+    "eventId": 50,
+    "bank": 2000,
+    "index": 6,
+    "lotId": 20002,
+    "type": "rune",
+    "argHex": "00000000db5e5d0548b4da0132750000224e000018bcda01000000400000000000000000000000000000000000000000",
+    "argLen": 48
+  },
+  {
+    "map": "m31_11_00_00",
+    "eventId": 50,
+    "bank": 2000,
+    "index": 6,
+    "lotId": 20002,
+    "type": "rune",
+    "argHex": "00000000db5e5d0549b4da0132750000224e000019bcda01000000400000000000000000000000000000000000000000",
+    "argLen": 48
+  },
+  {
+    "map": "m31_17_00_00",
+    "eventId": 50,
+    "bank": 2000,
+    "index": 6,
+    "lotId": 20002,
+    "type": "rune",
+    "argHex": "00000000db5e5d05249fdb0132750000224e0000f4a6db01000040400000000001000000000000000000000000000000",
+    "argLen": 48
+  },
+  {
+    "map": "m31_21_00_00",
+    "eventId": 50,
+    "bank": 2000,
+    "index": 6,
+    "lotId": 20002,
+    "type": "rune",
+    "argHex": "00000000d15e5d05123bdc0132750000224e0000000080400000000000000000000000000000000000000000",
+    "argLen": 44
+  },
+  {
+    "map": "m32_00_00_00",
+    "eventId": 0,
+    "bank": 2000,
+    "index": 0,
+    "lotId": 20002,
+    "type": "rune",
+    "argHex": "03000000ca50e801cd48e80132750000224e0000be4000000000000000000000000000000000000000000000b54ce801000000000000000000000000cd48e801",
+    "argLen": 64
+  },
+  {
+    "map": "m32_00_00_00",
+    "eventId": 0,
+    "bank": 2000,
+    "index": 0,
+    "lotId": 20002,
+    "type": "rune",
+    "argHex": "01000000ca50e801d848e80132750000224e0000be4000000000000000000000000000000000000000000000c04ce801000000000000000000000000d848e801",
+    "argLen": 64
+  },
+  {
+    "map": "m32_01_00_00",
+    "eventId": 0,
+    "bank": 2000,
+    "index": 0,
+    "lotId": 20002,
+    "type": "rune",
+    "argHex": "03000000da77e801e36fe80132750000224e0000be4000000000000000000000000000000000000000000000cb73e801000000000000000000000000e36fe801",
+    "argLen": 64
+  },
+  {
+    "map": "m32_02_00_00",
+    "eventId": 0,
+    "bank": 2000,
+    "index": 0,
+    "lotId": 20002,
+    "type": "rune",
+    "argHex": "00000000b89ee801ed96e80132750000224e000000000000000000000000000000000000000000006f9ce801709ce8010000000000000000",
+    "argLen": 56
+  },
+  {
+    "map": "m32_02_00_00",
+    "eventId": 0,
+    "bank": 2000,
+    "index": 0,
+    "lotId": 20002,
+    "type": "rune",
+    "argHex": "02000000b89ee801ef96e80132750000224e00000000000000000000000000000000000000000000729ce801739ce8010000000000000000",
+    "argLen": 56
+  },
+  {
+    "map": "m32_02_00_00",
+    "eventId": 0,
+    "bank": 2000,
+    "index": 0,
+    "lotId": 20002,
+    "type": "rune",
+    "argHex": "07000000b89ee801f896e80132750000224e00000000000000000000000000000000000000000000819ce801829ce801839ce80100000000",
+    "argLen": 56
+  },
+  {
+    "map": "m32_02_00_00",
+    "eventId": 0,
+    "bank": 2000,
+    "index": 0,
+    "lotId": 20002,
+    "type": "rune",
+    "argHex": "14000000b89ee8010997e80132750000224e00000000000000000000000000000000000000000000a59ce801a69ce8010000000000000000",
+    "argLen": 56
+  },
+  {
+    "map": "m32_05_00_00",
+    "eventId": 0,
+    "bank": 2000,
+    "index": 0,
+    "lotId": 20002,
+    "type": "rune",
+    "argHex": "00000000e813e901200ce90132750000224e000000000000000000000000000000000000000000009511e9019611e9019711e90100000000",
+    "argLen": 56
+  },
+  {
+    "map": "m32_07_00_00",
+    "eventId": 0,
+    "bank": 2000,
+    "index": 0,
+    "lotId": 20002,
+    "type": "rune",
+    "argHex": "030000000862e9013b5ae90132750000224e0000a65ae901be4000000000000000000000000000000000000000000000b25fe901b35fe901b45fe90100000000",
+    "argLen": 64
+  },
+  {
+    "map": "m32_07_00_00",
+    "eventId": 0,
+    "bank": 2000,
+    "index": 0,
+    "lotId": 20002,
+    "type": "rune",
+    "argHex": "040000000862e901425ae90132750000224e0000ac5ae901be4000000000803f00000000000000000000000000000000ba5fe901000000000000000000000000",
+    "argLen": 64
+  },
+  {
+    "map": "m34_12_00_00",
+    "eventId": 0,
+    "bank": 2000,
+    "index": 0,
+    "lotId": 20002,
+    "type": "rune",
+    "argHex": "01000000a877e8016ea2080232750000224e0000be400000000000000000000000000000000000000000000082a70802000000000000000000000000",
+    "argLen": 60
+  },
+  {
+    "map": "m35_00_00_00",
+    "eventId": 0,
+    "bank": 2000,
+    "index": 0,
+    "lotId": 30323,
+    "type": "rune",
+    "argHex": "03000000b71d1602ed11160273760000",
+    "argLen": 16
+  },
+  {
+    "map": "m35_00_00_00",
+    "eventId": 0,
+    "bank": 2000,
+    "index": 0,
+    "lotId": 30337,
+    "type": "rune",
+    "argHex": "07000000b71d1602f111160281760000",
+    "argLen": 16
+  },
+  {
+    "map": "m35_00_00_00",
+    "eventId": 50,
+    "bank": 2000,
+    "index": 6,
+    "lotId": 20002,
+    "type": "rune",
+    "argHex": "00000000db5e5d058a0f160232750000224e00005a171602000000000000000001000000000000000000000000000000",
+    "argLen": 48
+  },
+  {
+    "map": "m35_00_00_00",
+    "eventId": 50,
+    "bank": 2000,
+    "index": 6,
+    "lotId": 20002,
+    "type": "rune",
+    "argHex": "00000000db5e5d05900f160232750000224e0000601716020000803f0000804001000000000000000000000000000000",
+    "argLen": 48
+  },
+  {
+    "map": "m35_00_00_00",
+    "eventId": 50,
+    "bank": 2000,
+    "index": 6,
+    "lotId": 20002,
+    "type": "rune",
+    "argHex": "00000000db5e5d059a0f160232750000224e00006a1716020000003f0000404000000000000000000000000000000000",
+    "argLen": 48
+  },
+  {
+    "map": "m35_00_00_00",
+    "eventId": 50,
+    "bank": 2000,
+    "index": 6,
+    "lotId": 20002,
+    "type": "rune",
+    "argHex": "00000000db5e5d05ba0f160232750000224e00008a1716020000803f0000000000000000000000000000000000000000",
+    "argLen": 48
+  },
+  {
+    "map": "m35_00_00_00",
+    "eventId": 50,
+    "bank": 2000,
+    "index": 6,
+    "lotId": 20002,
+    "type": "rune",
+    "argHex": "00000000d15e5d057e10160232750000224e00000000a0400000000000000000000000000000000000000000",
+    "argLen": 44
+  },
+  {
+    "map": "m35_00_00_00",
+    "eventId": 50,
+    "bank": 2000,
+    "index": 6,
+    "lotId": 20002,
+    "type": "rune",
+    "argHex": "00000000d15e5d057d10160232750000224e00000000a0400000000000000000000000000000000000000000",
+    "argLen": 44
+  },
+  {
+    "map": "m35_00_00_00",
+    "eventId": 50,
+    "bank": 2000,
+    "index": 6,
+    "lotId": 20002,
+    "type": "rune",
+    "argHex": "00000000d05e5d058910160232750000224e0000581816020000204000000000000000000000000000000000",
+    "argLen": 44
+  },
+  {
+    "map": "m35_00_00_00",
+    "eventId": 35002203,
+    "bank": 2003,
+    "index": 18,
+    "lotId": 20002,
+    "type": "rune",
+    "argHex": "8b0f1602224e0000010000000000803f",
+    "argLen": 16
+  },
+  {
+    "map": "m39_20_00_00",
+    "eventId": 50,
+    "bank": 2000,
+    "index": 0,
+    "lotId": 20002,
+    "type": "rune",
+    "argHex": "00000000b62d5602f425560232750000224e0000be4000000000000000000000000000000000000000000000452b5602000000000000000000000000f4255602",
+    "argLen": 64
+  },
+  {
+    "map": "m40_00_00_00",
+    "eventId": 0,
+    "bank": 2000,
+    "index": 6,
+    "lotId": 20002,
+    "type": "rune",
+    "argHex": "00000000d15e5d05cb5a620232750000224e0000000088410000000000000000000000000000000000000000",
+    "argLen": 44
+  },
+  {
+    "map": "m40_00_00_00",
+    "eventId": 0,
+    "bank": 2000,
+    "index": 6,
+    "lotId": 20002,
+    "type": "rune",
+    "argHex": "00000000d05e5d05eb5a620232750000224e0000bb6262020000000000000000000000000000000000000000",
+    "argLen": 44
+  },
+  {
+    "map": "m40_00_00_00",
+    "eventId": 0,
+    "bank": 2000,
+    "index": 6,
+    "lotId": 20002,
+    "type": "rune",
+    "argHex": "00000000d05e5d05f25a620232750000224e0000c06262020000000000000000000000000000000000000000",
+    "argLen": 44
+  },
+  {
+    "map": "m40_00_00_00",
+    "eventId": 0,
+    "bank": 2000,
+    "index": 6,
+    "lotId": 20002,
+    "type": "rune",
+    "argHex": "00000000d05e5d05f65a620232750000224e0000c56262020000000000000000000000000000000000000000",
+    "argLen": 44
+  },
+  {
+    "map": "m40_01_00_00",
+    "eventId": 50,
+    "bank": 2000,
+    "index": 6,
+    "lotId": 20002,
+    "type": "rune",
+    "argHex": "00000000d05e5d05e481620232750000224e0000b28962020000003f00000000000000000000000000000000",
+    "argLen": 44
+  },
+  {
+    "map": "m40_01_00_00",
+    "eventId": 50,
+    "bank": 2000,
+    "index": 6,
+    "lotId": 20002,
+    "type": "rune",
+    "argHex": "00000000d05e5d050682620232750000224e0000d68962020000000000000000000000000000000000000000",
+    "argLen": 44
+  },
+  {
+    "map": "m40_01_00_00",
+    "eventId": 50,
+    "bank": 2000,
+    "index": 6,
+    "lotId": 20002,
+    "type": "rune",
+    "argHex": "00000000d05e5d051a82620232750000224e0000e88962020000404000000000000000000000000000000000",
+    "argLen": 44
+  },
+  {
+    "map": "m40_01_00_00",
+    "eventId": 50,
+    "bank": 2000,
+    "index": 6,
+    "lotId": 20002,
+    "type": "rune",
+    "argHex": "00000000d05e5d051582620232750000224e0000e38962023333333f00000000000000000000000000000000",
+    "argLen": 44
+  },
+  {
+    "map": "m40_01_00_00",
+    "eventId": 40012381,
+    "bank": 2003,
+    "index": 18,
+    "lotId": 20002,
+    "type": "rune",
+    "argHex": "00000000224e0000000001000000803f",
+    "argLen": 16
+  },
+  {
+    "map": "m40_02_00_00",
+    "eventId": 50,
+    "bank": 2000,
+    "index": 6,
+    "lotId": 20002,
+    "type": "rune",
+    "argHex": "00000000d05e5d05fda8620232750000224e0000cdb062020000000000000000000000000000000000000000",
+    "argLen": 44
+  },
+  {
+    "map": "m41_00_00_00",
+    "eventId": 0,
+    "bank": 2000,
+    "index": 6,
+    "lotId": 20052,
+    "type": "rune",
+    "argHex": "00000000e55e5d054c9d710246750000544e00000000000000000000",
+    "argLen": 28
+  },
+  {
+    "map": "m41_00_00_00",
+    "eventId": 0,
+    "bank": 2000,
+    "index": 6,
+    "lotId": 20052,
+    "type": "rune",
+    "argHex": "00000000e55e5d054d9d710246750000544e00000000000000000000",
+    "argLen": 28
+  },
+  {
+    "map": "m41_00_00_00",
+    "eventId": 41002361,
+    "bank": 2003,
+    "index": 18,
+    "lotId": 20052,
+    "type": "rune",
+    "argHex": "4c9d7102544e0000010000000000803f",
+    "argLen": 16
+  },
+  {
+    "map": "m41_00_00_00",
+    "eventId": 41002361,
+    "bank": 2003,
+    "index": 18,
+    "lotId": 20052,
+    "type": "rune",
+    "argHex": "4d9d7102544e0000010000000000803f",
+    "argLen": 16
+  },
+  {
+    "map": "m41_01_00_00",
+    "eventId": 50,
+    "bank": 2000,
+    "index": 6,
+    "lotId": 20002,
+    "type": "rune",
+    "argHex": "00000000e55e5d0522c4710232750000224e00000000000000000000",
+    "argLen": 28
+  },
+  {
+    "map": "m41_01_00_00",
+    "eventId": 50,
+    "bank": 2000,
+    "index": 6,
+    "lotId": 20002,
+    "type": "rune",
+    "argHex": "00000000db5e5d059bc4710232750000224e00006bcc71020000803f0000000000000000000000000000000000000000",
+    "argLen": 48
+  },
+  {
+    "map": "m41_01_00_00",
+    "eventId": 50,
+    "bank": 2000,
+    "index": 6,
+    "lotId": 20002,
+    "type": "rune",
+    "argHex": "00000000c55f5d054cc4710232750000224e00001ccc71029a99993e0000000000000000000000000000000034c87102",
+    "argLen": 48
+  },
+  {
+    "map": "m41_01_00_00",
+    "eventId": 50,
+    "bank": 2000,
+    "index": 6,
+    "lotId": 20002,
+    "type": "rune",
+    "argHex": "00000000c65f5d054ec4710232750000224e000000000041000000000000000000000000000000000000000036c87102",
+    "argLen": 48
+  },
+  {
+    "map": "m41_01_00_00",
+    "eventId": 50,
+    "bank": 2000,
+    "index": 6,
+    "lotId": 20002,
+    "type": "rune",
+    "argHex": "00000000c55f5d0558c4710232750000224e000028cc7102000000000000000000000000000000000000000040c87102",
+    "argLen": 48
+  },
+  {
+    "map": "m41_02_00_00",
+    "eventId": 50,
+    "bank": 2000,
+    "index": 6,
+    "lotId": 20002,
+    "type": "rune",
+    "argHex": "00000000db5e5d053aeb710232750000224e000008f371020000803fcdcc4c3f00000000000000000000000000000000",
+    "argLen": 48
+  },
+  {
+    "map": "m41_02_00_00",
+    "eventId": 50,
+    "bank": 2000,
+    "index": 6,
+    "lotId": 20002,
+    "type": "rune",
+    "argHex": "00000000db5e5d0566eb710232750000224e000036f371020000803f0000000000000000000000000000000000000000",
+    "argLen": 48
+  },
+  {
+    "map": "m41_02_00_00",
+    "eventId": 50,
+    "bank": 2000,
+    "index": 6,
+    "lotId": 20052,
+    "type": "rune",
+    "argHex": "00000000e55e5d057eeb710246750000544e00000000000000000000",
+    "argLen": 28
+  },
+  {
+    "map": "m41_02_00_00",
+    "eventId": 50,
+    "bank": 2000,
+    "index": 6,
+    "lotId": 20052,
+    "type": "rune",
+    "argHex": "00000000e55e5d057feb710246750000544e00000000000000000000",
+    "argLen": 28
+  },
+  {
+    "map": "m41_02_00_00",
+    "eventId": 50,
+    "bank": 2000,
+    "index": 6,
+    "lotId": 20052,
+    "type": "rune",
+    "argHex": "00000000e55e5d0580eb710246750000544e00000000000000000000",
+    "argLen": 28
+  },
+  {
+    "map": "m41_02_00_00",
+    "eventId": 50,
+    "bank": 2000,
+    "index": 6,
+    "lotId": 20052,
+    "type": "rune",
+    "argHex": "00000000e55e5d0581eb710246750000544e00000000000000000000",
+    "argLen": 28
+  },
+  {
+    "map": "m41_02_00_00",
+    "eventId": 50,
+    "bank": 2000,
+    "index": 6,
+    "lotId": 20052,
+    "type": "rune",
+    "argHex": "00000000e55e5d0582eb710246750000544e00000000000000000000",
+    "argLen": 28
+  },
+  {
+    "map": "m41_02_00_00",
+    "eventId": 50,
+    "bank": 2000,
+    "index": 6,
+    "lotId": 20052,
+    "type": "rune",
+    "argHex": "00000000e55e5d0583eb710246750000544e00000000000000000000",
+    "argLen": 28
+  },
+  {
+    "map": "m41_02_00_00",
+    "eventId": 50,
+    "bank": 2000,
+    "index": 6,
+    "lotId": 20052,
+    "type": "rune",
+    "argHex": "00000000e55e5d0584eb710246750000544e00000000000000000000",
+    "argLen": 28
+  },
+  {
+    "map": "m41_02_00_00",
+    "eventId": 50,
+    "bank": 2000,
+    "index": 6,
+    "lotId": 20052,
+    "type": "rune",
+    "argHex": "00000000e55e5d0585eb710246750000544e00000000000000000000",
+    "argLen": 28
+  },
+  {
+    "map": "m42_00_00_00",
+    "eventId": 50,
+    "bank": 2000,
+    "index": 6,
+    "lotId": 20002,
+    "type": "rune",
+    "argHex": "00000000d05e5d0549df800232750000224e000019e780020000000000000000000000000000000000000000",
+    "argLen": 44
+  },
+  {
+    "map": "m42_00_00_00",
+    "eventId": 50,
+    "bank": 2000,
+    "index": 6,
+    "lotId": 20002,
+    "type": "rune",
+    "argHex": "00000000d05e5d054adf800232750000224e00001ae780020000000000000000000000000000000000000000",
+    "argLen": 44
+  },
+  {
+    "map": "m42_01_00_00",
+    "eventId": 0,
+    "bank": 2009,
+    "index": 3,
+    "lotId": 42010000,
+    "type": "ember",
+    "argHex": "900581022e0d81020000000000000000000000000000a040",
+    "argLen": 24
+  },
+  {
+    "map": "m42_01_00_00",
+    "eventId": 0,
+    "bank": 2000,
+    "index": 6,
+    "lotId": 20002,
+    "type": "rune",
+    "argHex": "00000000d05e5d057906810232750000224e0000490e81020000000000000000000000000000000000000000",
+    "argLen": 44
+  },
+  {
+    "map": "m42_01_00_00",
+    "eventId": 0,
+    "bank": 2000,
+    "index": 6,
+    "lotId": 20002,
+    "type": "rune",
+    "argHex": "00000000d05e5d057a06810232750000224e00004a0e81020000000000000000000000000000000000000000",
+    "argLen": 44
+  },
+  {
+    "map": "m42_01_00_00",
+    "eventId": 42012610,
+    "bank": 2003,
+    "index": 36,
+    "lotId": 42010000,
+    "type": "ember",
+    "argHex": "90058102",
+    "argLen": 4
+  },
+  {
+    "map": "m42_01_00_00",
+    "eventId": 42012801,
+    "bank": 2000,
+    "index": 6,
+    "lotId": 42010000,
+    "type": "ember",
+    "argHex": "0000000033605d05e820810290058102da0b8102",
+    "argLen": 20
+  },
+  {
+    "map": "m42_02_00_00",
+    "eventId": 0,
+    "bank": 2000,
+    "index": 6,
+    "lotId": 20002,
+    "type": "rune",
+    "argHex": "00000000d05e5d05922d810232750000224e0000623581020000000000000000000000000000000000000000",
+    "argLen": 44
+  },
+  {
+    "map": "m42_02_00_00",
+    "eventId": 0,
+    "bank": 2000,
+    "index": 6,
+    "lotId": 20002,
+    "type": "rune",
+    "argHex": "00000000d15e5d05952d810232750000224e00000000803f0000000000000000000000000000000000000000",
+    "argLen": 44
+  },
+  {
+    "map": "m42_02_00_00",
+    "eventId": 0,
+    "bank": 2000,
+    "index": 6,
+    "lotId": 20002,
+    "type": "rune",
+    "argHex": "00000000d05e5d05942d810232750000224e0000643581020000003f00000000000000000000000000000000",
+    "argLen": 44
+  },
+  {
+    "map": "m42_03_00_00",
+    "eventId": 50,
+    "bank": 2000,
+    "index": 6,
+    "lotId": 20002,
+    "type": "rune",
+    "argHex": "00000000d05e5d05dd54810232750000224e0000ad5c81020000003f00000000000000000000000000000000",
+    "argLen": 44
+  },
+  {
+    "map": "m42_03_00_00",
+    "eventId": 42032304,
+    "bank": 2003,
+    "index": 18,
+    "lotId": 20002,
+    "type": "rune",
+    "argHex": "00000000224e0000000000000000803f",
+    "argLen": 16
+  },
+  {
+    "map": "m42_03_00_00",
+    "eventId": 42032304,
+    "bank": 2003,
+    "index": 18,
+    "lotId": 20002,
+    "type": "rune",
+    "argHex": "00000000224e0000000000000000803f",
+    "argLen": 16
+  },
+  {
+    "map": "m42_03_00_00",
+    "eventId": 42032304,
+    "bank": 2003,
+    "index": 18,
+    "lotId": 20002,
+    "type": "rune",
+    "argHex": "00000000224e0000000000000000803f",
+    "argLen": 16
+  },
+  {
+    "map": "m42_03_00_00",
+    "eventId": 42032304,
+    "bank": 2003,
+    "index": 18,
+    "lotId": 20002,
+    "type": "rune",
+    "argHex": "00000000224e0000000000000000803f",
+    "argLen": 16
+  },
+  {
+    "map": "m42_03_00_00",
+    "eventId": 42032304,
+    "bank": 2003,
+    "index": 18,
+    "lotId": 20002,
+    "type": "rune",
+    "argHex": "00000000224e0000000000000000803f",
+    "argLen": 16
+  },
+  {
+    "map": "m43_00_00_00",
+    "eventId": 0,
+    "bank": 2000,
+    "index": 6,
+    "lotId": 20022,
+    "type": "rune",
+    "argHex": "00000000d05e5d05ac2190023c750000364e00007d2990020000000000000000000000000000000000000000",
+    "argLen": 44
+  },
+  {
+    "map": "m43_00_00_00",
+    "eventId": 0,
+    "bank": 2000,
+    "index": 6,
+    "lotId": 20022,
+    "type": "rune",
+    "argHex": "00000000d05e5d05ad2190023c750000364e00007d2990020000000000000000000000000000000000000000",
+    "argLen": 44
+  },
+  {
+    "map": "m43_00_00_00",
+    "eventId": 0,
+    "bank": 2000,
+    "index": 6,
+    "lotId": 20022,
+    "type": "rune",
+    "argHex": "00000000d05e5d05ae2190023c750000364e00007d2990020000000000000000000000000000000000000000",
+    "argLen": 44
+  },
+  {
+    "map": "m60_34_44_00",
+    "eventId": 50,
+    "bank": 2000,
+    "index": 6,
+    "lotId": 20002,
+    "type": "rune",
+    "argHex": "00000000db5e5d05084ea83d32750000224e0000d855a83d000040400000004000000000000000000000000000000000",
+    "argLen": 48
+  },
+  {
+    "map": "m60_34_44_00",
+    "eventId": 50,
+    "bank": 2000,
+    "index": 6,
+    "lotId": 20002,
+    "type": "rune",
+    "argHex": "00000000db5e5d05094ea83d32750000224e0000d855a83d000040400000000000000000000000000000000000000000",
+    "argLen": 48
+  },
+  {
+    "map": "m60_34_44_00",
+    "eventId": 50,
+    "bank": 2000,
+    "index": 6,
+    "lotId": 20002,
+    "type": "rune",
+    "argHex": "00000000db5e5d050a4ea83d32750000224e0000d855a83d000040400000803f00000000000000000000000000000000",
+    "argLen": 48
+  },
+  {
+    "map": "m60_34_44_00",
+    "eventId": 50,
+    "bank": 2000,
+    "index": 6,
+    "lotId": 20002,
+    "type": "rune",
+    "argHex": "00000000db5e5d050b4ea83d32750000224e0000d855a83d000040400000803f00000000000000000000000000000000",
+    "argLen": 48
+  },
+  {
+    "map": "m60_34_48_00",
+    "eventId": 1034482800,
+    "bank": 1003,
+    "index": 2,
+    "lotId": 1034480800,
+    "type": "rune",
+    "argHex": "00010000a0eca83d",
+    "argLen": 8
+  },
+  {
+    "map": "m60_34_48_00",
+    "eventId": 1034482800,
+    "bank": 4,
+    "index": 14,
+    "lotId": 1034480800,
+    "type": "rune",
+    "argHex": "00000000a0eca83d0500000000000000000000000000803f",
+    "argLen": 24
+  },
+  {
+    "map": "m60_34_48_00",
+    "eventId": 1034482800,
+    "bank": 2010,
+    "index": 2,
+    "lotId": 1034480800,
+    "type": "rune",
+    "argHex": "a0eca83d05000000803bfb34",
+    "argLen": 12
+  },
+  {
+    "map": "m60_34_48_00",
+    "eventId": 1034482800,
+    "bank": 4,
+    "index": 0,
+    "lotId": 1034480800,
+    "type": "rune",
+    "argHex": "00000000a0eca83d010000000000803f",
+    "argLen": 16
+  },
+  {
+    "map": "m60_34_48_00",
+    "eventId": 1034482800,
+    "bank": 2003,
+    "index": 12,
+    "lotId": 1034480800,
+    "type": "rune",
+    "argHex": "a0eca83d12000000",
+    "argLen": 8
+  },
+  {
+    "map": "m60_34_48_00",
+    "eventId": 1034482800,
+    "bank": 2003,
+    "index": 66,
+    "lotId": 1034480800,
+    "type": "rune",
+    "argHex": "00000000a0eca83d01000000",
+    "argLen": 12
+  },
+  {
+    "map": "m60_34_48_00",
+    "eventId": 1034482800,
+    "bank": 2003,
+    "index": 4,
+    "lotId": 1034480800,
+    "type": "rune",
+    "argHex": "a0eca83d",
+    "argLen": 4
+  },
+  {
+    "map": "m60_34_48_00",
+    "eventId": 1034482810,
+    "bank": 1003,
+    "index": 101,
+    "lotId": 1034480800,
+    "type": "rune",
+    "argHex": "00000000a0eca83d",
+    "argLen": 8
+  },
+  {
+    "map": "m60_34_48_00",
+    "eventId": 1034482810,
+    "bank": 2004,
+    "index": 5,
+    "lotId": 1034480800,
+    "type": "rune",
+    "argHex": "a0eca83d00000000",
+    "argLen": 8
+  },
+  {
+    "map": "m60_34_48_00",
+    "eventId": 1034482810,
+    "bank": 2004,
+    "index": 39,
+    "lotId": 1034480800,
+    "type": "rune",
+    "argHex": "a0eca83d00000000",
+    "argLen": 8
+  },
+  {
+    "map": "m60_34_48_00",
+    "eventId": 1034482810,
+    "bank": 2004,
+    "index": 4,
+    "lotId": 1034480800,
+    "type": "rune",
+    "argHex": "a0eca83d00000000",
+    "argLen": 8
+  },
+  {
+    "map": "m60_34_48_00",
+    "eventId": 1034482810,
+    "bank": 2003,
+    "index": 18,
+    "lotId": 1034480800,
+    "type": "rune",
+    "argHex": "a0eca83d30750000010000000000803f",
+    "argLen": 16
+  },
+  {
+    "map": "m60_34_48_00",
+    "eventId": 1034482810,
+    "bank": 2004,
+    "index": 1,
+    "lotId": 1034480800,
+    "type": "rune",
+    "argHex": "a0eca83d00000000",
+    "argLen": 8
+  },
+  {
+    "map": "m60_34_48_00",
+    "eventId": 1034482810,
+    "bank": 2004,
+    "index": 1,
+    "lotId": 1034480800,
+    "type": "rune",
+    "argHex": "a0eca83d01000000",
+    "argLen": 8
+  },
+  {
+    "map": "m60_34_48_00",
+    "eventId": 1034482810,
+    "bank": 2004,
+    "index": 34,
+    "lotId": 1034480800,
+    "type": "rune",
+    "argHex": "a0eca83d01000000",
+    "argLen": 8
+  },
+  {
+    "map": "m60_34_48_00",
+    "eventId": 1034482810,
+    "bank": 2003,
+    "index": 18,
+    "lotId": 1034480800,
+    "type": "rune",
+    "argHex": "a0eca83d204e0000000000000000803f",
+    "argLen": 16
+  },
+  {
+    "map": "m60_34_48_00",
+    "eventId": 1034482810,
+    "bank": 2003,
+    "index": 11,
+    "lotId": 1034480800,
+    "type": "rune",
+    "argHex": "01000000a0eca83d000000003c42e235",
+    "argLen": 16
+  },
+  {
+    "map": "m60_34_48_00",
+    "eventId": 1034482849,
+    "bank": 2000,
+    "index": 6,
+    "lotId": 1034480800,
+    "type": "rune",
+    "argHex": "00000000e86a8900a0eca83d88f0a83d70f4a83d75f4a83d2800a93d102700000000000000000000",
+    "argLen": 40
+  },
+  {
+    "map": "m60_34_48_00",
+    "eventId": 1034482849,
+    "bank": 2000,
+    "index": 6,
+    "lotId": 1034480800,
+    "type": "rune",
+    "argHex": "00000000e96a8900a0eca83d88f0a83d70f4a83d75f4a83d76f4a83d10270000",
+    "argLen": 32
+  },
+  {
+    "map": "m60_34_48_00",
+    "eventId": 1034482849,
+    "bank": 2000,
+    "index": 6,
+    "lotId": 1034480800,
+    "type": "rune",
+    "argHex": "00000000f36a8900a0eca83d88f0a83d0300000000000000",
+    "argLen": 24
+  },
+  {
+    "map": "m60_34_48_00",
+    "eventId": 1034482849,
+    "bank": 2000,
+    "index": 6,
+    "lotId": 1034480800,
+    "type": "rune",
+    "argHex": "00000000fe6a8900a0eca83d440d0e0075f4a83d76f4a83d0000000072f4a83d0000000000000000",
+    "argLen": 40
+  },
+  {
+    "map": "m60_34_48_00",
+    "eventId": 1034482849,
+    "bank": 2000,
+    "index": 6,
+    "lotId": 1034480800,
+    "type": "rune",
+    "argHex": "00000000f46a8900a0eca83d89f0a83d030000000000000000000000",
+    "argLen": 28
+  },
+  {
+    "map": "m60_35_42_00",
+    "eventId": 1035420701,
+    "bank": 2003,
+    "index": 18,
+    "lotId": 20042,
+    "type": "rune",
+    "argHex": "000000004a4e0000000000000000803f",
+    "argLen": 16
+  },
+  {
+    "map": "m60_35_42_00",
+    "eventId": 1035423703,
+    "bank": 2003,
+    "index": 18,
+    "lotId": 20052,
+    "type": "rune",
+    "argHex": "00000000544e0000000000000000803f",
+    "argLen": 16
+  },
+  {
+    "map": "m60_35_45_00",
+    "eventId": 50,
+    "bank": 2000,
+    "index": 6,
+    "lotId": 20002,
+    "type": "rune",
+    "argHex": "00000000db5e5d0562b7b73d32750000224e000032bfb73d000040400000000000000000000000000000000000000000",
+    "argLen": 48
+  },
+  {
+    "map": "m60_35_53_00",
+    "eventId": 1035532340,
+    "bank": 2003,
+    "index": 18,
+    "lotId": 20002,
+    "type": "rune",
+    "argHex": "00000000224e0000010000000000803f",
+    "argLen": 16
+  },
+  {
+    "map": "m60_36_41_00",
+    "eventId": 1036413702,
+    "bank": 2003,
+    "index": 18,
+    "lotId": 20022,
+    "type": "rune",
+    "argHex": "00000000364e0000000000000000803f",
+    "argLen": 16
+  },
+  {
+    "map": "m60_36_44_00",
+    "eventId": 50,
+    "bank": 2000,
+    "index": 6,
+    "lotId": 20002,
+    "type": "rune",
+    "argHex": "00000000d15e5d0592d2c63d32750000224e00000000e0400000000000000000000000000000000000000000",
+    "argLen": 44
+  },
+  {
+    "map": "m60_37_53_00",
+    "eventId": 0,
+    "bank": 2000,
+    "index": 6,
+    "lotId": 20002,
+    "type": "rune",
+    "argHex": "01000000db5e5d05139cd73d32750000224e0000e2a3d73d0000a0400000c03f00000000000000000000000000000000",
+    "argLen": 48
+  },
+  {
+    "map": "m60_37_53_00",
+    "eventId": 0,
+    "bank": 2000,
+    "index": 6,
+    "lotId": 20002,
+    "type": "rune",
+    "argHex": "02000000db5e5d05149cd73d32750000224e0000e2a3d73d0000a0400000804000000000000000000000000000000000",
+    "argLen": 48
+  },
+  {
+    "map": "m60_38_44_00",
+    "eventId": 0,
+    "bank": 2000,
+    "index": 6,
+    "lotId": 20002,
+    "type": "rune",
+    "argHex": "00000000db5e5d051257e53d32750000224e0000e25ee53d000070410000803f00000000000000000000000000000000",
+    "argLen": 48
+  },
+  {
+    "map": "m60_38_44_00",
+    "eventId": 0,
+    "bank": 2000,
+    "index": 6,
+    "lotId": 20002,
+    "type": "rune",
+    "argHex": "00000000db5e5d051357e53d32750000224e0000e25ee53d000070410000000000000000000000000000000000000000",
+    "argLen": 48
+  },
+  {
+    "map": "m60_38_51_00",
+    "eventId": 50,
+    "bank": 2000,
+    "index": 6,
+    "lotId": 20002,
+    "type": "rune",
+    "argHex": "00000000db5e5d054069e63d32750000224e00001071e63d000000400000000000000000000000000000000000000000",
+    "argLen": 48
+  },
+  {
+    "map": "m60_38_51_00",
+    "eventId": 50,
+    "bank": 2000,
+    "index": 6,
+    "lotId": 20002,
+    "type": "rune",
+    "argHex": "00000000db5e5d054169e63d32750000224e00001071e63d000000400000000000000000000000000000000000000000",
+    "argLen": 48
+  },
+  {
+    "map": "m60_38_51_00",
+    "eventId": 50,
+    "bank": 2000,
+    "index": 6,
+    "lotId": 20002,
+    "type": "rune",
+    "argHex": "00000000db5e5d054269e63d32750000224e00001071e63d000000400000000000000000000000000000000000000000",
+    "argLen": 48
+  },
+  {
+    "map": "m60_38_51_00",
+    "eventId": 50,
+    "bank": 2000,
+    "index": 0,
+    "lotId": 20002,
+    "type": "rune",
+    "argHex": "050000001571e63d9a69e63d32750000224e0000000000400000000000000000000000000000000000000000",
+    "argLen": 44
+  },
+  {
+    "map": "m60_38_51_00",
+    "eventId": 1038512800,
+    "bank": 1003,
+    "index": 2,
+    "lotId": 1038510800,
+    "type": "rune",
+    "argHex": "00010000d06ae63d",
+    "argLen": 8
+  },
+  {
+    "map": "m60_38_51_00",
+    "eventId": 1038512800,
+    "bank": 4,
+    "index": 14,
+    "lotId": 1038510800,
+    "type": "rune",
+    "argHex": "00000000d06ae63d0500000000000000000000000000803f",
+    "argLen": 24
+  },
+  {
+    "map": "m60_38_51_00",
+    "eventId": 1038512800,
+    "bank": 2010,
+    "index": 2,
+    "lotId": 1038510800,
+    "type": "rune",
+    "argHex": "d06ae63d05000000803bfb34",
+    "argLen": 12
+  },
+  {
+    "map": "m60_38_51_00",
+    "eventId": 1038512800,
+    "bank": 4,
+    "index": 0,
+    "lotId": 1038510800,
+    "type": "rune",
+    "argHex": "00000000d06ae63d010000000000803f",
+    "argLen": 16
+  },
+  {
+    "map": "m60_38_51_00",
+    "eventId": 1038512800,
+    "bank": 2003,
+    "index": 12,
+    "lotId": 1038510800,
+    "type": "rune",
+    "argHex": "d06ae63d12000000",
+    "argLen": 8
+  },
+  {
+    "map": "m60_38_51_00",
+    "eventId": 1038512800,
+    "bank": 2003,
+    "index": 66,
+    "lotId": 1038510800,
+    "type": "rune",
+    "argHex": "00000000d06ae63d01000000",
+    "argLen": 12
+  },
+  {
+    "map": "m60_38_51_00",
+    "eventId": 1038512800,
+    "bank": 2003,
+    "index": 4,
+    "lotId": 1038510800,
+    "type": "rune",
+    "argHex": "d06ae63d",
+    "argLen": 4
+  },
+  {
+    "map": "m60_38_51_00",
+    "eventId": 1038512810,
+    "bank": 1003,
+    "index": 101,
+    "lotId": 1038510800,
+    "type": "rune",
+    "argHex": "00000000d06ae63d",
+    "argLen": 8
+  },
+  {
+    "map": "m60_38_51_00",
+    "eventId": 1038512810,
+    "bank": 2004,
+    "index": 5,
+    "lotId": 1038510800,
+    "type": "rune",
+    "argHex": "d06ae63d00000000",
+    "argLen": 8
+  },
+  {
+    "map": "m60_38_51_00",
+    "eventId": 1038512810,
+    "bank": 2004,
+    "index": 39,
+    "lotId": 1038510800,
+    "type": "rune",
+    "argHex": "d06ae63d00000000",
+    "argLen": 8
+  },
+  {
+    "map": "m60_38_51_00",
+    "eventId": 1038512810,
+    "bank": 2004,
+    "index": 4,
+    "lotId": 1038510800,
+    "type": "rune",
+    "argHex": "d06ae63d00000000",
+    "argLen": 8
+  },
+  {
+    "map": "m60_38_51_00",
+    "eventId": 1038512810,
+    "bank": 2004,
+    "index": 1,
+    "lotId": 1038510800,
+    "type": "rune",
+    "argHex": "d06ae63d00000000",
+    "argLen": 8
+  },
+  {
+    "map": "m60_38_51_00",
+    "eventId": 1038512810,
+    "bank": 2003,
+    "index": 18,
+    "lotId": 1038510800,
+    "type": "rune",
+    "argHex": "d06ae63d30750000010000000000803f",
+    "argLen": 16
+  },
+  {
+    "map": "m60_38_51_00",
+    "eventId": 1038512810,
+    "bank": 2003,
+    "index": 18,
+    "lotId": 1038510800,
+    "type": "rune",
+    "argHex": "d06ae63d204e0000000000000000803f",
+    "argLen": 16
+  },
+  {
+    "map": "m60_38_51_00",
+    "eventId": 1038512810,
+    "bank": 2004,
+    "index": 1,
+    "lotId": 1038510800,
+    "type": "rune",
+    "argHex": "d06ae63d01000000",
+    "argLen": 8
+  },
+  {
+    "map": "m60_38_51_00",
+    "eventId": 1038512810,
+    "bank": 2004,
+    "index": 34,
+    "lotId": 1038510800,
+    "type": "rune",
+    "argHex": "d06ae63d01000000",
+    "argLen": 8
+  },
+  {
+    "map": "m60_38_51_00",
+    "eventId": 1038512810,
+    "bank": 2003,
+    "index": 11,
+    "lotId": 1038510800,
+    "type": "rune",
+    "argHex": "01000000d06ae63d00000000ecefe335",
+    "argLen": 16
+  },
+  {
+    "map": "m60_38_51_00",
+    "eventId": 1038512849,
+    "bank": 2000,
+    "index": 6,
+    "lotId": 1038510800,
+    "type": "rune",
+    "argHex": "00000000e86a8900d06ae63db86ee63da072e63da572e63d587ee63d102700000000000000000000",
+    "argLen": 40
+  },
+  {
+    "map": "m60_38_51_00",
+    "eventId": 1038512849,
+    "bank": 2000,
+    "index": 6,
+    "lotId": 1038510800,
+    "type": "rune",
+    "argHex": "00000000e96a8900d06ae63db86ee63da072e63da572e63da672e63d10270000",
+    "argLen": 32
+  },
+  {
+    "map": "m60_38_51_00",
+    "eventId": 1038512849,
+    "bank": 2000,
+    "index": 6,
+    "lotId": 1038510800,
+    "type": "rune",
+    "argHex": "00000000f36a8900d06ae63db86ee63d0300000000000000",
+    "argLen": 24
+  },
+  {
+    "map": "m60_38_51_00",
+    "eventId": 1038512849,
+    "bank": 2000,
+    "index": 6,
+    "lotId": 1038510800,
+    "type": "rune",
+    "argHex": "00000000fe6a8900d06ae63db8340e00a572e63da672e63d00000000a272e63d0000000000000000",
+    "argLen": 40
+  },
+  {
+    "map": "m60_38_51_00",
+    "eventId": 1038512849,
+    "bank": 2000,
+    "index": 6,
+    "lotId": 1038510800,
+    "type": "rune",
+    "argHex": "00000000f46a8900d06ae63db96ee63d030000000000000000000000",
+    "argLen": 28
+  },
+  {
+    "map": "m60_39_50_00",
+    "eventId": 0,
+    "bank": 2000,
+    "index": 6,
+    "lotId": 20012,
+    "type": "rune",
+    "argHex": "000000007a615d050086f53d0586f53dd08df53d0086f53dd68df53d9299f53de889f53d0a86f53dda8df53db865ed35ffffffff2c4e0000da6df63d",
+    "argLen": 60
+  },
+  {
+    "map": "m60_39_51_00",
+    "eventId": 50,
+    "bank": 2000,
+    "index": 6,
+    "lotId": 1039510201,
+    "type": "rune",
+    "argHex": "00000000d15e5d05b9aaf53d30750000204e0000000040410000000000000000000000000000000000000000",
+    "argLen": 44
+  },
+  {
+    "map": "m60_39_53_00",
+    "eventId": 1039532610,
+    "bank": 2007,
+    "index": 1,
+    "lotId": 30101,
+    "type": "rune",
+    "argHex": "9575000000000600000000000000a040",
+    "argLen": 16
+  },
+  {
+    "map": "m60_39_54_00",
+    "eventId": 0,
+    "bank": 2000,
+    "index": 6,
+    "lotId": 20002,
+    "type": "rune",
+    "argHex": "00000000db5e5d050020f63d32750000224e0000d227f63d000000400000003f00000000000000000000000000000000",
+    "argLen": 48
+  },
+  {
+    "map": "m60_39_54_00",
+    "eventId": 0,
+    "bank": 2000,
+    "index": 6,
+    "lotId": 20002,
+    "type": "rune",
+    "argHex": "00000000db5e5d05ef1ff63d32750000224e0000bf27f63d0000803f0000000000000000000000000000000000000000",
+    "argLen": 48
+  },
+  {
+    "map": "m60_39_54_00",
+    "eventId": 0,
+    "bank": 2000,
+    "index": 6,
+    "lotId": 20002,
+    "type": "rune",
+    "argHex": "00000000d05e5d056b20f63d32750000224e00003a28f63d0000000000000000000000000000000000000000",
+    "argLen": 44
+  },
+  {
+    "map": "m60_39_54_00",
+    "eventId": 0,
+    "bank": 2000,
+    "index": 6,
+    "lotId": 20002,
+    "type": "rune",
+    "argHex": "00000000d05e5d056a20f63d32750000224e00003a28f63d0000803f00000000000000000000000000000000",
+    "argLen": 44
+  },
+  {
+    "map": "m60_40_52_00",
+    "eventId": 50,
+    "bank": 2000,
+    "index": 6,
+    "lotId": 20002,
+    "type": "rune",
+    "argHex": "00000000d15e5d057014053e32750000224e0000000080400000000000000000000000000000000000000000",
+    "argLen": 44
+  },
+  {
+    "map": "m60_40_53_00",
+    "eventId": 1040532800,
+    "bank": 1003,
+    "index": 2,
+    "lotId": 1040530800,
+    "type": "rune",
+    "argHex": "00010000703d053e",
+    "argLen": 8
+  },
+  {
+    "map": "m60_40_53_00",
+    "eventId": 1040532800,
+    "bank": 4,
+    "index": 14,
+    "lotId": 1040530800,
+    "type": "rune",
+    "argHex": "00000000703d053e0500000000000000000000000000803f",
+    "argLen": 24
+  },
+  {
+    "map": "m60_40_53_00",
+    "eventId": 1040532800,
+    "bank": 2010,
+    "index": 2,
+    "lotId": 1040530800,
+    "type": "rune",
+    "argHex": "703d053e05000000803bfb34",
+    "argLen": 12
+  },
+  {
+    "map": "m60_40_53_00",
+    "eventId": 1040532800,
+    "bank": 4,
+    "index": 0,
+    "lotId": 1040530800,
+    "type": "rune",
+    "argHex": "00000000703d053e010000000000803f",
+    "argLen": 16
+  },
+  {
+    "map": "m60_40_53_00",
+    "eventId": 1040532800,
+    "bank": 2003,
+    "index": 12,
+    "lotId": 1040530800,
+    "type": "rune",
+    "argHex": "703d053e12000000",
+    "argLen": 8
+  },
+  {
+    "map": "m60_40_53_00",
+    "eventId": 1040532800,
+    "bank": 2003,
+    "index": 66,
+    "lotId": 1040530800,
+    "type": "rune",
+    "argHex": "00000000703d053e01000000",
+    "argLen": 12
+  },
+  {
+    "map": "m60_40_53_00",
+    "eventId": 1040532800,
+    "bank": 2003,
+    "index": 4,
+    "lotId": 1040530800,
+    "type": "rune",
+    "argHex": "703d053e",
+    "argLen": 4
+  },
+  {
+    "map": "m60_40_53_00",
+    "eventId": 1040532810,
+    "bank": 1003,
+    "index": 101,
+    "lotId": 1040530800,
+    "type": "rune",
+    "argHex": "00000000703d053e",
+    "argLen": 8
+  },
+  {
+    "map": "m60_40_53_00",
+    "eventId": 1040532810,
+    "bank": 2004,
+    "index": 5,
+    "lotId": 1040530800,
+    "type": "rune",
+    "argHex": "703d053e00000000",
+    "argLen": 8
+  },
+  {
+    "map": "m60_40_53_00",
+    "eventId": 1040532810,
+    "bank": 2004,
+    "index": 39,
+    "lotId": 1040530800,
+    "type": "rune",
+    "argHex": "703d053e00000000",
+    "argLen": 8
+  },
+  {
+    "map": "m60_40_53_00",
+    "eventId": 1040532810,
+    "bank": 2004,
+    "index": 4,
+    "lotId": 1040530800,
+    "type": "rune",
+    "argHex": "703d053e00000000",
+    "argLen": 8
+  },
+  {
+    "map": "m60_40_53_00",
+    "eventId": 1040532810,
+    "bank": 2004,
+    "index": 1,
+    "lotId": 1040530800,
+    "type": "rune",
+    "argHex": "703d053e00000000",
+    "argLen": 8
+  },
+  {
+    "map": "m60_40_53_00",
+    "eventId": 1040532810,
+    "bank": 2003,
+    "index": 18,
+    "lotId": 1040530800,
+    "type": "rune",
+    "argHex": "703d053e30750000010000000000803f",
+    "argLen": 16
+  },
+  {
+    "map": "m60_40_53_00",
+    "eventId": 1040532810,
+    "bank": 2004,
+    "index": 34,
+    "lotId": 1040530800,
+    "type": "rune",
+    "argHex": "703d053e01000000",
+    "argLen": 8
+  },
+  {
+    "map": "m60_40_53_00",
+    "eventId": 1040532810,
+    "bank": 2003,
+    "index": 18,
+    "lotId": 1040530800,
+    "type": "rune",
+    "argHex": "703d053e204e0000000000000000803f",
+    "argLen": 16
+  },
+  {
+    "map": "m60_40_53_00",
+    "eventId": 1040532810,
+    "bank": 2004,
+    "index": 1,
+    "lotId": 1040530800,
+    "type": "rune",
+    "argHex": "703d053e01000000",
+    "argLen": 8
+  },
+  {
+    "map": "m60_40_53_00",
+    "eventId": 1040532810,
+    "bank": 2003,
+    "index": 11,
+    "lotId": 1040530800,
+    "type": "rune",
+    "argHex": "01000000703d053e000000004c16db35",
+    "argLen": 16
+  },
+  {
+    "map": "m60_40_53_00",
+    "eventId": 1040532849,
+    "bank": 2000,
+    "index": 6,
+    "lotId": 1040530800,
+    "type": "rune",
+    "argHex": "00000000e86a8900703d053e5841053e4045053e4545053ef850053e102700000000000000000000",
+    "argLen": 40
+  },
+  {
+    "map": "m60_40_53_00",
+    "eventId": 1040532849,
+    "bank": 2000,
+    "index": 6,
+    "lotId": 1040530800,
+    "type": "rune",
+    "argHex": "00000000e96a8900703d053e5841053e4045053e4545053e4645053e10270000",
+    "argLen": 32
+  },
+  {
+    "map": "m60_40_53_00",
+    "eventId": 1040532849,
+    "bank": 2000,
+    "index": 6,
+    "lotId": 1040530800,
+    "type": "rune",
+    "argHex": "00000000f36a8900703d053e5841053e0300000000000000",
+    "argLen": 24
+  },
+  {
+    "map": "m60_40_53_00",
+    "eventId": 1040532849,
+    "bank": 2000,
+    "index": 6,
+    "lotId": 1040530800,
+    "type": "rune",
+    "argHex": "00000000fe6a8900703d053e440d0e004545053e4645053e000000004245053e0000000000000000",
+    "argLen": 40
+  },
+  {
+    "map": "m60_40_53_00",
+    "eventId": 1040532849,
+    "bank": 2000,
+    "index": 6,
+    "lotId": 1040530800,
+    "type": "rune",
+    "argHex": "00000000f46a8900703d053e5941053e030000000000000000000000",
+    "argLen": 28
+  },
+  {
+    "map": "m60_42_33_00",
+    "eventId": 0,
+    "bank": 2000,
+    "index": 6,
+    "lotId": 20002,
+    "type": "rune",
+    "argHex": "000000007a615d05b0b4203eb5b4203e80bc203eb0b4203e86bc203e42c8203e98b8203ebab4203e8abc203e68411136ffffffff224e0000e56df63d",
+    "argLen": 60
+  },
+  {
+    "map": "m60_42_40_00",
+    "eventId": 1042402390,
+    "bank": 3,
+    "index": 8,
+    "lotId": 10282,
+    "type": "rune",
+    "argHex": "00013c2a28000000",
+    "argLen": 8
+  },
+  {
+    "map": "m60_42_53_00",
+    "eventId": 50,
+    "bank": 2000,
+    "index": 6,
+    "lotId": 20002,
+    "type": "rune",
+    "argHex": "00000000d05e5d0599bf233e32750000224e0000ccc7233e0000000000000000000000000000000000000000",
+    "argLen": 44
+  },
+  {
+    "map": "m60_43_39_00",
+    "eventId": 1043392390,
+    "bank": 1003,
+    "index": 107,
+    "lotId": 10282,
+    "type": "rune",
+    "argHex": "14013c2a28000000",
+    "argLen": 8
+  },
+  {
+    "map": "m60_44_33_00",
+    "eventId": 1044333700,
+    "bank": 2003,
+    "index": 18,
+    "lotId": 20022,
+    "type": "rune",
+    "argHex": "00000000364e0000000000000000803f",
+    "argLen": 16
+  },
+  {
+    "map": "m60_45_37_00",
+    "eventId": 0,
+    "bank": 2000,
+    "index": 6,
+    "lotId": 20002,
+    "type": "rune",
+    "argHex": "00000000d15e5d05fc154f3e32750000224e00000000a0400000000000000000000000000000000000000000",
+    "argLen": 44
+  },
+  {
+    "map": "m60_45_37_10",
+    "eventId": 0,
+    "bank": 2000,
+    "index": 6,
+    "lotId": 20002,
+    "type": "rune",
+    "argHex": "00000000d15e5d05fc154f3e32750000224e00000000a0400000000000000000000000000000000000000000",
+    "argLen": 44
+  },
+  {
+    "map": "m60_45_52_00",
+    "eventId": 1045522500,
+    "bank": 3,
+    "index": 0,
+    "lotId": 30208,
+    "type": "rune",
+    "argHex": "ff01000076000000",
+    "argLen": 8
+  },
+  {
+    "map": "m60_45_52_10",
+    "eventId": 1045522500,
+    "bank": 3,
+    "index": 0,
+    "lotId": 30208,
+    "type": "rune",
+    "argHex": "ff01000076000000",
+    "argLen": 8
+  },
+  {
+    "map": "m60_48_40_00",
+    "eventId": 1048402800,
+    "bank": 4,
+    "index": 14,
+    "lotId": 1048400801,
+    "type": "rune",
+    "argHex": "01000000a1537d3e0500000000000000000000000000803f",
+    "argLen": 24
+  },
+  {
+    "map": "m60_48_40_00",
+    "eventId": 1048402800,
+    "bank": 4,
+    "index": 0,
+    "lotId": 1048400801,
+    "type": "rune",
+    "argHex": "02000000a1537d3e010000000000803f",
+    "argLen": 16
+  },
+  {
+    "map": "m60_48_40_00",
+    "eventId": 1048402810,
+    "bank": 2004,
+    "index": 5,
+    "lotId": 1048400801,
+    "type": "rune",
+    "argHex": "a1537d3e00000000",
+    "argLen": 8
+  },
+  {
+    "map": "m60_48_40_00",
+    "eventId": 1048402810,
+    "bank": 2004,
+    "index": 39,
+    "lotId": 1048400801,
+    "type": "rune",
+    "argHex": "a1537d3e00000000",
+    "argLen": 8
+  },
+  {
+    "map": "m60_48_40_00",
+    "eventId": 1048402810,
+    "bank": 2004,
+    "index": 4,
+    "lotId": 1048400801,
+    "type": "rune",
+    "argHex": "a1537d3e00000000",
+    "argLen": 8
+  },
+  {
+    "map": "m60_48_40_00",
+    "eventId": 1048402810,
+    "bank": 2004,
+    "index": 1,
+    "lotId": 1048400801,
+    "type": "rune",
+    "argHex": "a1537d3e00000000",
+    "argLen": 8
+  },
+  {
+    "map": "m60_48_40_00",
+    "eventId": 1048402810,
+    "bank": 2004,
+    "index": 1,
+    "lotId": 1048400801,
+    "type": "rune",
+    "argHex": "a1537d3e01000000",
+    "argLen": 8
+  },
+  {
+    "map": "m60_48_40_00",
+    "eventId": 1048402810,
+    "bank": 2004,
+    "index": 34,
+    "lotId": 1048400801,
+    "type": "rune",
+    "argHex": "a1537d3e01000000",
+    "argLen": 8
+  },
+  {
+    "map": "m60_48_40_00",
+    "eventId": 1048402810,
+    "bank": 2003,
+    "index": 11,
+    "lotId": 1048400801,
+    "type": "rune",
+    "argHex": "01000000a1537d3e000000003e24e735",
+    "argLen": 16
+  },
+  {
+    "map": "m60_48_40_00",
+    "eventId": 1048402810,
+    "bank": 2003,
+    "index": 18,
+    "lotId": 1048400801,
+    "type": "rune",
+    "argHex": "a1537d3ec40b0000010000000000803f",
+    "argLen": 16
+  },
+  {
+    "map": "m60_49_38_00",
+    "eventId": 0,
+    "bank": 2000,
+    "index": 6,
+    "lotId": 20002,
+    "type": "rune",
+    "argHex": "00000000d05e5d05d7458c3e32750000224e0000a74d8c3e0000000000000000000000000000000000000000",
+    "argLen": 44
+  },
+  {
+    "map": "m60_49_39_00",
+    "eventId": 1049390800,
+    "bank": 4,
+    "index": 14,
+    "lotId": 1049390801,
+    "type": "rune",
+    "argHex": "01000000d16e8c3e0500000000000000000000000000803f",
+    "argLen": 24
+  },
+  {
+    "map": "m60_49_39_00",
+    "eventId": 1049392810,
+    "bank": 2004,
+    "index": 5,
+    "lotId": 1049390801,
+    "type": "rune",
+    "argHex": "d16e8c3e00000000",
+    "argLen": 8
+  },
+  {
+    "map": "m60_49_39_00",
+    "eventId": 1049392810,
+    "bank": 2004,
+    "index": 39,
+    "lotId": 1049390801,
+    "type": "rune",
+    "argHex": "d16e8c3e00000000",
+    "argLen": 8
+  },
+  {
+    "map": "m60_49_39_00",
+    "eventId": 1049392810,
+    "bank": 2004,
+    "index": 4,
+    "lotId": 1049390801,
+    "type": "rune",
+    "argHex": "d16e8c3e00000000",
+    "argLen": 8
+  },
+  {
+    "map": "m60_49_39_00",
+    "eventId": 1049392810,
+    "bank": 2004,
+    "index": 1,
+    "lotId": 1049390801,
+    "type": "rune",
+    "argHex": "d16e8c3e00000000",
+    "argLen": 8
+  },
+  {
+    "map": "m60_49_39_00",
+    "eventId": 1049392810,
+    "bank": 2004,
+    "index": 1,
+    "lotId": 1049390801,
+    "type": "rune",
+    "argHex": "d16e8c3e01000000",
+    "argLen": 8
+  },
+  {
+    "map": "m60_49_39_00",
+    "eventId": 1049392810,
+    "bank": 2004,
+    "index": 34,
+    "lotId": 1049390801,
+    "type": "rune",
+    "argHex": "d16e8c3e01000000",
+    "argLen": 8
+  },
+  {
+    "map": "m60_49_39_00",
+    "eventId": 1049392810,
+    "bank": 2003,
+    "index": 11,
+    "lotId": 1049390801,
+    "type": "rune",
+    "argHex": "01000000d16e8c3e01000000d145d735",
+    "argLen": 16
+  },
+  {
+    "map": "m60_49_54_00",
+    "eventId": 0,
+    "bank": 2000,
+    "index": 6,
+    "lotId": 20002,
+    "type": "rune",
+    "argHex": "000000000d5f5d0515b78e3e74be8e3e0000204100000000224e0000",
+    "argLen": 28
+  },
+  {
+    "map": "m60_50_40_00",
+    "eventId": 1050402800,
+    "bank": 4,
+    "index": 5,
+    "lotId": 10251,
+    "type": "rune",
+    "argHex": "03000000102700000b280000000000000000803f",
+    "argLen": 20
+  },
+  {
+    "map": "m60_50_40_00",
+    "eventId": 1050402800,
+    "bank": 2004,
+    "index": 8,
+    "lotId": 10251,
+    "type": "rune",
+    "argHex": "204e00000b280000",
+    "argLen": 8
+  },
+  {
+    "map": "m60_51_56_00",
+    "eventId": 1051563701,
+    "bank": 2003,
+    "index": 18,
+    "lotId": 20002,
+    "type": "rune",
+    "argHex": "00000000224e0000000000000000803f",
+    "argLen": 16
+  },
+  {
+    "map": "m61_45_41_00",
+    "eventId": 50,
+    "bank": 2000,
+    "index": 6,
+    "lotId": 20002,
+    "type": "rune",
+    "argHex": "00000000d05e5d059a7bea7932750000224e00006a83ea790000000000000000000000000000000000000000",
+    "argLen": 44
+  },
+  {
+    "map": "m61_45_44_00",
+    "eventId": 0,
+    "bank": 2000,
+    "index": 0,
+    "lotId": 20002,
+    "type": "rune",
+    "argHex": "00000000fbfaea7920f3ea7932750000224e000034f3ea79000070410000000000000000000000000000000000000000",
+    "argLen": 48
+  },
+  {
+    "map": "m61_45_44_10",
+    "eventId": 0,
+    "bank": 2000,
+    "index": 0,
+    "lotId": 20002,
+    "type": "rune",
+    "argHex": "00000000fbfaea7920f3ea7932750000224e000034f3ea79000070410000000000000000000000000000000000000000",
+    "argLen": 48
+  },
+  {
+    "map": "m61_45_46_00",
+    "eventId": 0,
+    "bank": 2000,
+    "index": 6,
+    "lotId": 20002,
+    "type": "rune",
+    "argHex": "00000000e55e5d05543feb7932750000224e00000000000000000000",
+    "argLen": 28
+  },
+  {
+    "map": "m61_45_46_00",
+    "eventId": 0,
+    "bank": 2000,
+    "index": 6,
+    "lotId": 20002,
+    "type": "rune",
+    "argHex": "00000000e55e5d05573feb7932750000224e00000000000000000000",
+    "argLen": 28
+  },
+  {
+    "map": "m61_45_46_00",
+    "eventId": 0,
+    "bank": 2000,
+    "index": 6,
+    "lotId": 20002,
+    "type": "rune",
+    "argHex": "00000000e55e5d055d3feb7932750000224e00000000000000000000",
+    "argLen": 28
+  },
+  {
+    "map": "m61_45_46_00",
+    "eventId": 0,
+    "bank": 2000,
+    "index": 6,
+    "lotId": 20002,
+    "type": "rune",
+    "argHex": "00000000e55e5d055e3feb7932750000224e00000000000000000000",
+    "argLen": 28
+  },
+  {
+    "map": "m61_45_46_00",
+    "eventId": 2045462210,
+    "bank": 3,
+    "index": 3,
+    "lotId": 10002,
+    "type": "rune",
+    "argHex": "0100000000000000122700000000aa4301000000",
+    "argLen": 20
+  },
+  {
+    "map": "m61_45_46_00",
+    "eventId": -2049505093,
+    "bank": 3,
+    "index": 3,
+    "lotId": 10002,
+    "type": "rune",
+    "argHex": "0100000000000000122700000000af4301000000",
+    "argLen": 20
+  },
+  {
+    "map": "m61_45_46_10",
+    "eventId": 0,
+    "bank": 2000,
+    "index": 6,
+    "lotId": 20002,
+    "type": "rune",
+    "argHex": "00000000e55e5d05543feb7932750000224e00000000000000000000",
+    "argLen": 28
+  },
+  {
+    "map": "m61_45_46_10",
+    "eventId": 0,
+    "bank": 2000,
+    "index": 6,
+    "lotId": 20002,
+    "type": "rune",
+    "argHex": "00000000e55e5d05573feb7932750000224e00000000000000000000",
+    "argLen": 28
+  },
+  {
+    "map": "m61_45_46_10",
+    "eventId": 0,
+    "bank": 2000,
+    "index": 6,
+    "lotId": 20002,
+    "type": "rune",
+    "argHex": "00000000e55e5d055d3feb7932750000224e00000000000000000000",
+    "argLen": 28
+  },
+  {
+    "map": "m61_45_46_10",
+    "eventId": 0,
+    "bank": 2000,
+    "index": 6,
+    "lotId": 20002,
+    "type": "rune",
+    "argHex": "00000000e55e5d055e3feb7932750000224e00000000000000000000",
+    "argLen": 28
+  },
+  {
+    "map": "m61_45_46_10",
+    "eventId": 2045462210,
+    "bank": 3,
+    "index": 3,
+    "lotId": 10002,
+    "type": "rune",
+    "argHex": "0100000000000000122700000000aa4301000000",
+    "argLen": 20
+  },
+  {
+    "map": "m61_45_46_10",
+    "eventId": -2049505093,
+    "bank": 3,
+    "index": 3,
+    "lotId": 10002,
+    "type": "rune",
+    "argHex": "0100000000000000122700000000af4301000000",
+    "argLen": 20
+  },
+  {
+    "map": "m61_45_48_00",
+    "eventId": 0,
+    "bank": 2000,
+    "index": 6,
+    "lotId": 20002,
+    "type": "rune",
+    "argHex": "00000000d05e5d05088deb7932750000224e0000d894eb790000000000000000000000000000000000000000",
+    "argLen": 44
+  },
+  {
+    "map": "m61_46_45_00",
+    "eventId": 0,
+    "bank": 2000,
+    "index": 6,
+    "lotId": 20002,
+    "type": "rune",
+    "argHex": "00000000e55e5d058f5afa7932750000224e00000000000000000000",
+    "argLen": 28
+  },
+  {
+    "map": "m61_46_45_00",
+    "eventId": 0,
+    "bank": 2000,
+    "index": 6,
+    "lotId": 20002,
+    "type": "rune",
+    "argHex": "00000000e55e5d05905afa7932750000224e00000000000000000000",
+    "argLen": 28
+  },
+  {
+    "map": "m61_46_45_00",
+    "eventId": 0,
+    "bank": 2000,
+    "index": 6,
+    "lotId": 20002,
+    "type": "rune",
+    "argHex": "00000000e55e5d05935afa7932750000224e00000000000000000000",
+    "argLen": 28
+  },
+  {
+    "map": "m61_46_45_00",
+    "eventId": 0,
+    "bank": 2000,
+    "index": 6,
+    "lotId": 20002,
+    "type": "rune",
+    "argHex": "00000000e55e5d05955afa7932750000224e00000000000000000000",
+    "argLen": 28
+  },
+  {
+    "map": "m61_46_45_00",
+    "eventId": 0,
+    "bank": 2000,
+    "index": 6,
+    "lotId": 20002,
+    "type": "rune",
+    "argHex": "00000000e55e5d05995afa7932750000224e00000000000000000000",
+    "argLen": 28
+  },
+  {
+    "map": "m61_46_45_00",
+    "eventId": 0,
+    "bank": 2000,
+    "index": 6,
+    "lotId": 20002,
+    "type": "rune",
+    "argHex": "00000000e55e5d059c5afa7932750000224e00000000000000000000",
+    "argLen": 28
+  },
+  {
+    "map": "m61_46_45_00",
+    "eventId": 0,
+    "bank": 2000,
+    "index": 6,
+    "lotId": 20002,
+    "type": "rune",
+    "argHex": "00000000e55e5d05a35afa7932750000224e00000000000000000000",
+    "argLen": 28
+  },
+  {
+    "map": "m61_46_45_00",
+    "eventId": 0,
+    "bank": 2000,
+    "index": 6,
+    "lotId": 20002,
+    "type": "rune",
+    "argHex": "00000000e55e5d05a65afa7932750000224e00000000000000000000",
+    "argLen": 28
+  },
+  {
+    "map": "m61_46_45_00",
+    "eventId": 0,
+    "bank": 2000,
+    "index": 6,
+    "lotId": 20002,
+    "type": "rune",
+    "argHex": "00000000e55e5d05a95afa7932750000224e00000000000000000000",
+    "argLen": 28
+  },
+  {
+    "map": "m61_46_45_00",
+    "eventId": 0,
+    "bank": 2000,
+    "index": 6,
+    "lotId": 20002,
+    "type": "rune",
+    "argHex": "00000000e55e5d05b15afa7932750000224e00000000000000000000",
+    "argLen": 28
+  },
+  {
+    "map": "m61_46_45_00",
+    "eventId": 0,
+    "bank": 2000,
+    "index": 6,
+    "lotId": 20002,
+    "type": "rune",
+    "argHex": "00000000e55e5d05b35afa7932750000224e00000000000000000000",
+    "argLen": 28
+  },
+  {
+    "map": "m61_46_45_00",
+    "eventId": 0,
+    "bank": 2000,
+    "index": 6,
+    "lotId": 20002,
+    "type": "rune",
+    "argHex": "00000000e55e5d05b45afa7932750000224e00000000000000000000",
+    "argLen": 28
+  },
+  {
+    "map": "m61_46_45_10",
+    "eventId": 0,
+    "bank": 2000,
+    "index": 6,
+    "lotId": 20002,
+    "type": "rune",
+    "argHex": "00000000e55e5d058f5afa7932750000224e00000000000000000000",
+    "argLen": 28
+  },
+  {
+    "map": "m61_46_45_10",
+    "eventId": 0,
+    "bank": 2000,
+    "index": 6,
+    "lotId": 20002,
+    "type": "rune",
+    "argHex": "00000000e55e5d05905afa7932750000224e00000000000000000000",
+    "argLen": 28
+  },
+  {
+    "map": "m61_46_45_10",
+    "eventId": 0,
+    "bank": 2000,
+    "index": 6,
+    "lotId": 20002,
+    "type": "rune",
+    "argHex": "00000000e55e5d05935afa7932750000224e00000000000000000000",
+    "argLen": 28
+  },
+  {
+    "map": "m61_46_45_10",
+    "eventId": 0,
+    "bank": 2000,
+    "index": 6,
+    "lotId": 20002,
+    "type": "rune",
+    "argHex": "00000000e55e5d05955afa7932750000224e00000000000000000000",
+    "argLen": 28
+  },
+  {
+    "map": "m61_46_45_10",
+    "eventId": 0,
+    "bank": 2000,
+    "index": 6,
+    "lotId": 20002,
+    "type": "rune",
+    "argHex": "00000000e55e5d05995afa7932750000224e00000000000000000000",
+    "argLen": 28
+  },
+  {
+    "map": "m61_46_45_10",
+    "eventId": 0,
+    "bank": 2000,
+    "index": 6,
+    "lotId": 20002,
+    "type": "rune",
+    "argHex": "00000000e55e5d059c5afa7932750000224e00000000000000000000",
+    "argLen": 28
+  },
+  {
+    "map": "m61_46_45_10",
+    "eventId": 0,
+    "bank": 2000,
+    "index": 6,
+    "lotId": 20002,
+    "type": "rune",
+    "argHex": "00000000e55e5d05a35afa7932750000224e00000000000000000000",
+    "argLen": 28
+  },
+  {
+    "map": "m61_46_45_10",
+    "eventId": 0,
+    "bank": 2000,
+    "index": 6,
+    "lotId": 20002,
+    "type": "rune",
+    "argHex": "00000000e55e5d05a65afa7932750000224e00000000000000000000",
+    "argLen": 28
+  },
+  {
+    "map": "m61_46_45_10",
+    "eventId": 0,
+    "bank": 2000,
+    "index": 6,
+    "lotId": 20002,
+    "type": "rune",
+    "argHex": "00000000e55e5d05a95afa7932750000224e00000000000000000000",
+    "argLen": 28
+  },
+  {
+    "map": "m61_46_45_10",
+    "eventId": 0,
+    "bank": 2000,
+    "index": 6,
+    "lotId": 20002,
+    "type": "rune",
+    "argHex": "00000000e55e5d05b15afa7932750000224e00000000000000000000",
+    "argLen": 28
+  },
+  {
+    "map": "m61_46_45_10",
+    "eventId": 0,
+    "bank": 2000,
+    "index": 6,
+    "lotId": 20002,
+    "type": "rune",
+    "argHex": "00000000e55e5d05b35afa7932750000224e00000000000000000000",
+    "argLen": 28
+  },
+  {
+    "map": "m61_46_45_10",
+    "eventId": 0,
+    "bank": 2000,
+    "index": 6,
+    "lotId": 20002,
+    "type": "rune",
+    "argHex": "00000000e55e5d05b45afa7932750000224e00000000000000000000",
+    "argLen": 28
+  },
+  {
+    "map": "m61_46_47_00",
+    "eventId": 0,
+    "bank": 2000,
+    "index": 6,
+    "lotId": 20002,
+    "type": "rune",
+    "argHex": "00000000e55e5d05a1a8fa7932750000224e00000000000000000000",
+    "argLen": 28
+  },
+  {
+    "map": "m61_46_47_00",
+    "eventId": 0,
+    "bank": 2000,
+    "index": 6,
+    "lotId": 20002,
+    "type": "rune",
+    "argHex": "00000000e55e5d05a8a8fa7932750000224e00000000000000000000",
+    "argLen": 28
+  },
+  {
+    "map": "m61_46_47_00",
+    "eventId": 0,
+    "bank": 2000,
+    "index": 6,
+    "lotId": 20002,
+    "type": "rune",
+    "argHex": "00000000e55e5d05a9a8fa7932750000224e00000000000000000000",
+    "argLen": 28
+  },
+  {
+    "map": "m61_46_47_00",
+    "eventId": 0,
+    "bank": 2000,
+    "index": 6,
+    "lotId": 20002,
+    "type": "rune",
+    "argHex": "00000000e55e5d05ada8fa7932750000224e00000000000000000000",
+    "argLen": 28
+  },
+  {
+    "map": "m61_46_47_00",
+    "eventId": 0,
+    "bank": 2000,
+    "index": 6,
+    "lotId": 20002,
+    "type": "rune",
+    "argHex": "00000000e55e5d05cfa8fa7932750000224e00000000000000000000",
+    "argLen": 28
+  },
+  {
+    "map": "m61_46_47_10",
+    "eventId": 0,
+    "bank": 2000,
+    "index": 6,
+    "lotId": 20002,
+    "type": "rune",
+    "argHex": "00000000e55e5d05a1a8fa7932750000224e00000000000000000000",
+    "argLen": 28
+  },
+  {
+    "map": "m61_46_47_10",
+    "eventId": 0,
+    "bank": 2000,
+    "index": 6,
+    "lotId": 20002,
+    "type": "rune",
+    "argHex": "00000000e55e5d05a8a8fa7932750000224e00000000000000000000",
+    "argLen": 28
+  },
+  {
+    "map": "m61_46_47_10",
+    "eventId": 0,
+    "bank": 2000,
+    "index": 6,
+    "lotId": 20002,
+    "type": "rune",
+    "argHex": "00000000e55e5d05a9a8fa7932750000224e00000000000000000000",
+    "argLen": 28
+  },
+  {
+    "map": "m61_46_47_10",
+    "eventId": 0,
+    "bank": 2000,
+    "index": 6,
+    "lotId": 20002,
+    "type": "rune",
+    "argHex": "00000000e55e5d05ada8fa7932750000224e00000000000000000000",
+    "argLen": 28
+  },
+  {
+    "map": "m61_46_47_10",
+    "eventId": 0,
+    "bank": 2000,
+    "index": 6,
+    "lotId": 20002,
+    "type": "rune",
+    "argHex": "00000000e55e5d05cfa8fa7932750000224e00000000000000000000",
+    "argLen": 28
+  },
+  {
+    "map": "m61_47_37_00",
+    "eventId": 0,
+    "bank": 2000,
+    "index": 6,
+    "lotId": 20002,
+    "type": "rune",
+    "argHex": "00000000d15e5d05e263087a32750000224e00000000a0410000000000000000000000000000000000000000",
+    "argLen": 44
+  },
+  {
+    "map": "m61_47_37_00",
+    "eventId": 0,
+    "bank": 2000,
+    "index": 6,
+    "lotId": 20002,
+    "type": "rune",
+    "argHex": "00000000d15e5d05e363087a32750000224e00000000a0410000000000000000000000000000000000000000",
+    "argLen": 44
+  },
+  {
+    "map": "m61_47_37_00",
+    "eventId": 0,
+    "bank": 2000,
+    "index": 6,
+    "lotId": 20002,
+    "type": "rune",
+    "argHex": "00000000d15e5d05e463087a32750000224e00000000a0410000000000000000000000000000000000000000",
+    "argLen": 44
+  },
+  {
+    "map": "m61_47_37_00",
+    "eventId": 0,
+    "bank": 2000,
+    "index": 6,
+    "lotId": 20002,
+    "type": "rune",
+    "argHex": "00000000d15e5d05e563087a32750000224e00000000a0410000000000000000000000000000000000000000",
+    "argLen": 44
+  },
+  {
+    "map": "m61_47_37_00",
+    "eventId": 0,
+    "bank": 2000,
+    "index": 6,
+    "lotId": 20002,
+    "type": "rune",
+    "argHex": "00000000d15e5d05e663087a32750000224e00000000a0410000000000000000000000000000000000000000",
+    "argLen": 44
+  },
+  {
+    "map": "m61_47_37_00",
+    "eventId": 0,
+    "bank": 2000,
+    "index": 6,
+    "lotId": 20002,
+    "type": "rune",
+    "argHex": "00000000d15e5d05ec63087a32750000224e00000000a0410000000000000000000000000000000000000000",
+    "argLen": 44
+  },
+  {
+    "map": "m61_47_37_00",
+    "eventId": 0,
+    "bank": 2000,
+    "index": 6,
+    "lotId": 20002,
+    "type": "rune",
+    "argHex": "00000000d15e5d05ed63087a32750000224e00000000a0410000000000000000000000000000000000000000",
+    "argLen": 44
+  },
+  {
+    "map": "m61_47_37_00",
+    "eventId": 0,
+    "bank": 2000,
+    "index": 6,
+    "lotId": 20002,
+    "type": "rune",
+    "argHex": "00000000d15e5d05ee63087a32750000224e00000000a0410000000000000000000000000000000000000000",
+    "argLen": 44
+  },
+  {
+    "map": "m61_47_37_00",
+    "eventId": 0,
+    "bank": 2000,
+    "index": 6,
+    "lotId": 20002,
+    "type": "rune",
+    "argHex": "00000000d15e5d05ef63087a32750000224e00000000a0410000000000000000000000000000000000000000",
+    "argLen": 44
+  },
+  {
+    "map": "m61_47_37_00",
+    "eventId": 0,
+    "bank": 2000,
+    "index": 6,
+    "lotId": 20002,
+    "type": "rune",
+    "argHex": "00000000d15e5d05f063087a32750000224e00000000a0410000000000000000000000000000000000000000",
+    "argLen": 44
+  },
+  {
+    "map": "m61_47_37_00",
+    "eventId": 0,
+    "bank": 2000,
+    "index": 6,
+    "lotId": 20002,
+    "type": "rune",
+    "argHex": "00000000d15e5d05f163087a32750000224e00000000a0410000000000000000000000000000000000000000",
+    "argLen": 44
+  },
+  {
+    "map": "m61_47_37_00",
+    "eventId": 0,
+    "bank": 2000,
+    "index": 6,
+    "lotId": 20002,
+    "type": "rune",
+    "argHex": "00000000d15e5d05f263087a32750000224e00000000a0410000000000000000000000000000000000000000",
+    "argLen": 44
+  },
+  {
+    "map": "m61_47_37_00",
+    "eventId": 0,
+    "bank": 2000,
+    "index": 6,
+    "lotId": 20002,
+    "type": "rune",
+    "argHex": "00000000d15e5d05f363087a32750000224e00000000a0410000000000000000000000000000000000000000",
+    "argLen": 44
+  },
+  {
+    "map": "m61_47_37_00",
+    "eventId": 0,
+    "bank": 2000,
+    "index": 6,
+    "lotId": 20002,
+    "type": "rune",
+    "argHex": "00000000d15e5d05f463087a32750000224e00000000c8410000000000000000000000000000000000000000",
+    "argLen": 44
+  },
+  {
+    "map": "m61_47_37_00",
+    "eventId": 0,
+    "bank": 2000,
+    "index": 6,
+    "lotId": 20002,
+    "type": "rune",
+    "argHex": "00000000d15e5d05f563087a32750000224e00000000c8410000000000000000000000000000000000000000",
+    "argLen": 44
+  },
+  {
+    "map": "m61_47_41_00",
+    "eventId": 0,
+    "bank": 2000,
+    "index": 6,
+    "lotId": 20002,
+    "type": "rune",
+    "argHex": "00000000e55e5d052f00097a32750000224e00000000000000000000",
+    "argLen": 28
+  },
+  {
+    "map": "m61_47_43_00",
+    "eventId": 0,
+    "bank": 2000,
+    "index": 6,
+    "lotId": 20002,
+    "type": "rune",
+    "argHex": "00000000db5e5d059c4e097a32750000224e00006c56097a0000a0410000000000000000000000000000000000000000",
+    "argLen": 48
+  },
+  {
+    "map": "m61_47_44_00",
+    "eventId": 0,
+    "bank": 2000,
+    "index": 6,
+    "lotId": 20002,
+    "type": "rune",
+    "argHex": "00000000d05e5d058875097a32750000224e0000577d097a0000003f00000000000000000000000000000000",
+    "argLen": 44
+  },
+  {
+    "map": "m61_47_44_00",
+    "eventId": 0,
+    "bank": 2000,
+    "index": 6,
+    "lotId": 20002,
+    "type": "rune",
+    "argHex": "00000000d05e5d058775097a32750000224e0000577d097a0000c03f00000000000000000000000000000000",
+    "argLen": 44
+  },
+  {
+    "map": "m61_47_44_10",
+    "eventId": 0,
+    "bank": 2000,
+    "index": 6,
+    "lotId": 20002,
+    "type": "rune",
+    "argHex": "00000000d05e5d058875097a32750000224e0000577d097a0000003f00000000000000000000000000000000",
+    "argLen": 44
+  },
+  {
+    "map": "m61_47_44_10",
+    "eventId": 0,
+    "bank": 2000,
+    "index": 6,
+    "lotId": 20002,
+    "type": "rune",
+    "argHex": "00000000d05e5d058775097a32750000224e0000577d097a0000c03f00000000000000000000000000000000",
+    "argLen": 44
+  },
+  {
+    "map": "m61_48_44_00",
+    "eventId": 0,
+    "bank": 2000,
+    "index": 6,
+    "lotId": 20002,
+    "type": "rune",
+    "argHex": "00000000d05e5d0548b8187a32750000224e000018c0187a0000000000000000000000000000000000000000",
+    "argLen": 44
+  },
+  {
+    "map": "m61_49_43_00",
+    "eventId": 2049430830,
+    "bank": 4,
+    "index": 3,
+    "lotId": 10002,
+    "type": "rune",
+    "argHex": "f800000012270000020000000000803f",
+    "argLen": 16
+  },
+  {
+    "map": "m61_49_43_00",
+    "eventId": 2049430830,
+    "bank": 4,
+    "index": 3,
+    "lotId": 10002,
+    "type": "rune",
+    "argHex": "f8000000122700000f0000000000803f",
+    "argLen": 16
+  },
+  {
+    "map": "m61_49_43_00",
+    "eventId": 2049430830,
+    "bank": 4,
+    "index": 3,
+    "lotId": 10002,
+    "type": "rune",
+    "argHex": "f800000012270000120000000000803f",
+    "argLen": 16
+  },
+  {
+    "map": "m61_49_43_00",
+    "eventId": 2049430830,
+    "bank": 4,
+    "index": 3,
+    "lotId": 10002,
+    "type": "rune",
+    "argHex": "f800000012270000100000000000803f",
+    "argLen": 16
+  },
+  {
+    "map": "m61_49_43_00",
+    "eventId": 2049430830,
+    "bank": 3,
+    "index": 3,
+    "lotId": 10002,
+    "type": "rune",
+    "argHex": "0501000012270000000000000000000001000000",
+    "argLen": 20
+  },
+  {
+    "map": "m61_49_44_00",
+    "eventId": 0,
+    "bank": 2000,
+    "index": 6,
+    "lotId": 20002,
+    "type": "rune",
+    "argHex": "00000000e55e5d05f1f9277a32750000224e00000000000000000000",
+    "argLen": 28
+  },
+  {
+    "map": "m61_49_44_00",
+    "eventId": 0,
+    "bank": 2000,
+    "index": 6,
+    "lotId": 20002,
+    "type": "rune",
+    "argHex": "00000000e55e5d05f2f9277a32750000224e00000000000000000000",
+    "argLen": 28
+  },
+  {
+    "map": "m61_49_44_00",
+    "eventId": 0,
+    "bank": 2000,
+    "index": 6,
+    "lotId": 20002,
+    "type": "rune",
+    "argHex": "00000000e55e5d05fbf9277a32750000224e00000000000000000000",
+    "argLen": 28
+  },
+  {
+    "map": "m61_49_44_00",
+    "eventId": 0,
+    "bank": 2000,
+    "index": 6,
+    "lotId": 20002,
+    "type": "rune",
+    "argHex": "00000000e55e5d05fcf9277a32750000224e00000000000000000000",
+    "argLen": 28
+  },
+  {
+    "map": "m61_49_44_00",
+    "eventId": 0,
+    "bank": 2000,
+    "index": 6,
+    "lotId": 20002,
+    "type": "rune",
+    "argHex": "00000000e55e5d05fdf9277a32750000224e00000000000000000000",
+    "argLen": 28
+  },
+  {
+    "map": "m61_49_44_00",
+    "eventId": 0,
+    "bank": 2000,
+    "index": 6,
+    "lotId": 20002,
+    "type": "rune",
+    "argHex": "00000000e55e5d05fef9277a32750000224e00000000000000000000",
+    "argLen": 28
+  },
+  {
+    "map": "m61_49_44_00",
+    "eventId": 0,
+    "bank": 2000,
+    "index": 6,
+    "lotId": 20002,
+    "type": "rune",
+    "argHex": "00000000e55e5d0506fa277a32750000224e00000000000000000000",
+    "argLen": 28
+  },
+  {
+    "map": "m61_49_44_00",
+    "eventId": 0,
+    "bank": 2000,
+    "index": 6,
+    "lotId": 20002,
+    "type": "rune",
+    "argHex": "00000000e55e5d051dfa277a32750000224e00000000000000000000",
+    "argLen": 28
+  },
+  {
+    "map": "m61_49_44_00",
+    "eventId": 0,
+    "bank": 2000,
+    "index": 6,
+    "lotId": 20002,
+    "type": "rune",
+    "argHex": "00000000e55e5d051efa277a32750000224e00000000000000000000",
+    "argLen": 28
+  },
+  {
+    "map": "m61_49_44_00",
+    "eventId": 0,
+    "bank": 2000,
+    "index": 6,
+    "lotId": 20002,
+    "type": "rune",
+    "argHex": "00000000e55e5d051ffa277a32750000224e00000000000000000000",
+    "argLen": 28
+  },
+  {
+    "map": "m61_49_44_00",
+    "eventId": 0,
+    "bank": 2000,
+    "index": 6,
+    "lotId": 20002,
+    "type": "rune",
+    "argHex": "00000000e55e5d0520fa277a32750000224e00000000000000000000",
+    "argLen": 28
+  },
+  {
+    "map": "m61_49_44_00",
+    "eventId": 0,
+    "bank": 2000,
+    "index": 6,
+    "lotId": 20002,
+    "type": "rune",
+    "argHex": "00000000e55e5d0521fa277a32750000224e00000000000000000000",
+    "argLen": 28
+  },
+  {
+    "map": "m61_49_44_00",
+    "eventId": 0,
+    "bank": 2000,
+    "index": 6,
+    "lotId": 20002,
+    "type": "rune",
+    "argHex": "00000000e55e5d0522fa277a32750000224e00000000000000000000",
+    "argLen": 28
+  },
+  {
+    "map": "m61_50_38_00",
+    "eventId": 0,
+    "bank": 2000,
+    "index": 6,
+    "lotId": 20002,
+    "type": "rune",
+    "argHex": "00000000d05e5d050d52367a32750000224e0000dd59367a0000000000000000000000000000000000000000",
+    "argLen": 44
+  },
+  {
+    "map": "m61_50_46_00",
+    "eventId": 2050462320,
+    "bank": 3,
+    "index": 3,
+    "lotId": 10002,
+    "type": "rune",
+    "argHex": "01000000000000001227000000005c4301000000",
+    "argLen": 20
+  },
+  {
+    "map": "m61_50_48_00",
+    "eventId": 2050480800,
+    "bank": 2003,
+    "index": 18,
+    "lotId": 20002,
+    "type": "rune",
+    "argHex": "a0da377a224e0000000000000000803f",
+    "argLen": 16
+  },
+  {
+    "map": "m61_51_45_00",
+    "eventId": 0,
+    "bank": 2000,
+    "index": 0,
+    "lotId": 2051450702,
+    "type": "ember",
+    "argHex": "000000004ea7467ae01000003aaf467af2100000",
+    "argLen": 20
+  },
+  {
+    "map": "m61_51_45_00",
+    "eventId": 0,
+    "bank": 2000,
+    "index": 0,
+    "lotId": 2051450702,
+    "type": "ember",
+    "argHex": "000000004da7467a4ea7467ae0100000e6100000f65f0100b0a7467aa3ca467aa4ca467af95f010094ca467a",
+    "argLen": 44
+  },
+  {
+    "map": "m61_51_45_00",
+    "eventId": 0,
+    "bank": 2000,
+    "index": 0,
+    "lotId": 2051450702,
+    "type": "ember",
+    "argHex": "0000000061a7467a4ea7467aa3ca467aa4ca467a000020415d6001000000804096ca467a9eca467a00002041",
+    "argLen": 44
+  },
+  {
+    "map": "m61_51_45_00",
+    "eventId": 0,
+    "bank": 2000,
+    "index": 0,
+    "lotId": 2051450702,
+    "type": "ember",
+    "argHex": "0000000053a7467a30af467a31af467a32af467a4ea7467ac702000036ab467ac70200003333b33e68600100ffffffffffffffffcdcc8c3f9a9919408fca467a35af467a91ca467acdcc4c3d9fca467a69600100a0ca467a",
+    "argLen": 88
+  },
+  {
+    "map": "m61_51_45_00",
+    "eventId": 0,
+    "bank": 2000,
+    "index": 0,
+    "lotId": 2051450702,
+    "type": "ember",
+    "argHex": "0000000054a7467a33af467a34af467a32af467a4ea7467a5a60010001000000ffffffff80250000000000009fca467a5b600100a0ca467a",
+    "argLen": 56
+  },
+  {
+    "map": "m61_52_40_00",
+    "eventId": 2052400202,
+    "bank": 4,
+    "index": 3,
+    "lotId": 10002,
+    "type": "rune",
+    "argHex": "fb00000012270000020000000000803f",
+    "argLen": 16
+  },
+  {
+    "map": "m61_52_40_00",
+    "eventId": 2052400202,
+    "bank": 4,
+    "index": 3,
+    "lotId": 10002,
+    "type": "rune",
+    "argHex": "fb000000122700000f0000000000803f",
+    "argLen": 16
+  },
+  {
+    "map": "m61_52_40_00",
+    "eventId": 2052400202,
+    "bank": 4,
+    "index": 3,
+    "lotId": 10002,
+    "type": "rune",
+    "argHex": "fb00000012270000120000000000803f",
+    "argLen": 16
+  },
+  {
+    "map": "m61_52_40_00",
+    "eventId": 2052400202,
+    "bank": 4,
+    "index": 3,
+    "lotId": 10002,
+    "type": "rune",
+    "argHex": "fb00000012270000100000000000803f",
+    "argLen": 16
+  },
+  {
+    "map": "m61_52_40_00",
+    "eventId": 2052400202,
+    "bank": 3,
+    "index": 3,
+    "lotId": 10002,
+    "type": "rune",
+    "argHex": "0501000012270000000000000000000001000000",
+    "argLen": 20
+  },
+  {
+    "map": "m61_52_47_00",
+    "eventId": 0,
+    "bank": 2000,
+    "index": 6,
+    "lotId": 20002,
+    "type": "rune",
+    "argHex": "00000000d05e5d051c36567a32750000224e0000ec3d567a0000000000000000000000000000000000000000",
+    "argLen": 44
+  },
+  {
+    "map": "m61_52_47_00",
+    "eventId": 0,
+    "bank": 2000,
+    "index": 6,
+    "lotId": 20002,
+    "type": "rune",
+    "argHex": "00000000d05e5d051d36567a32750000224e0000ec3d567a0000000000000000000000000000000000000000",
+    "argLen": 44
+  },
+  {
+    "map": "m61_52_47_00",
+    "eventId": 0,
+    "bank": 2000,
+    "index": 6,
+    "lotId": 20002,
+    "type": "rune",
+    "argHex": "00000000d05e5d051e36567a32750000224e0000ec3d567a0000000000000000000000000000000000000000",
+    "argLen": 44
+  },
+  {
+    "map": "m61_52_47_00",
+    "eventId": 0,
+    "bank": 2000,
+    "index": 6,
+    "lotId": 20002,
+    "type": "rune",
+    "argHex": "00000000d05e5d051f36567a32750000224e0000ec3d567a0000000000000000000000000000000000000000",
+    "argLen": 44
+  },
+  {
+    "map": "m61_52_47_00",
+    "eventId": 0,
+    "bank": 2000,
+    "index": 6,
+    "lotId": 20002,
+    "type": "rune",
+    "argHex": "00000000d05e5d052036567a32750000224e0000ec3d567a0000000000000000000000000000000000000000",
+    "argLen": 44
+  },
+  {
+    "map": "m61_52_47_00",
+    "eventId": 0,
+    "bank": 2000,
+    "index": 6,
+    "lotId": 20002,
+    "type": "rune",
+    "argHex": "00000000d05e5d052136567a32750000224e0000ec3d567a0000000000000000000000000000000000000000",
+    "argLen": 44
+  },
+  {
+    "map": "m61_52_47_00",
+    "eventId": 0,
+    "bank": 2000,
+    "index": 6,
+    "lotId": 20002,
+    "type": "rune",
+    "argHex": "00000000d05e5d052236567a32750000224e0000ec3d567a0000000000000000000000000000000000000000",
+    "argLen": 44
+  },
+  {
+    "map": "m61_52_47_00",
+    "eventId": 0,
+    "bank": 2000,
+    "index": 6,
+    "lotId": 20002,
+    "type": "rune",
+    "argHex": "00000000d05e5d052336567a32750000224e0000ec3d567a0000000000000000000000000000000000000000",
+    "argLen": 44
+  },
+  {
+    "map": "m61_52_47_00",
+    "eventId": 0,
+    "bank": 2000,
+    "index": 6,
+    "lotId": 20002,
+    "type": "rune",
+    "argHex": "00000000d05e5d052436567a32750000224e0000ec3d567a0000000000000000000000000000000000000000",
+    "argLen": 44
+  },
+  {
+    "map": "m61_52_47_00",
+    "eventId": 0,
+    "bank": 2000,
+    "index": 6,
+    "lotId": 20002,
+    "type": "rune",
+    "argHex": "00000000d05e5d052536567a32750000224e0000ec3d567a0000000000000000000000000000000000000000",
+    "argLen": 44
+  },
+  {
+    "map": "m61_52_47_00",
+    "eventId": 0,
+    "bank": 2000,
+    "index": 6,
+    "lotId": 20002,
+    "type": "rune",
+    "argHex": "00000000d05e5d052636567a32750000224e0000ec3d567a0000000000000000000000000000000000000000",
+    "argLen": 44
+  },
+  {
+    "map": "m61_52_47_00",
+    "eventId": 0,
+    "bank": 2000,
+    "index": 6,
+    "lotId": 20002,
+    "type": "rune",
+    "argHex": "00000000d05e5d052736567a32750000224e0000ec3d567a0000000000000000000000000000000000000000",
+    "argLen": 44
+  },
+  {
+    "map": "m61_52_47_00",
+    "eventId": 0,
+    "bank": 2000,
+    "index": 6,
+    "lotId": 20002,
+    "type": "rune",
+    "argHex": "00000000d05e5d052836567a32750000224e0000ec3d567a0000000000000000000000000000000000000000",
+    "argLen": 44
+  },
+  {
+    "map": "m61_53_46_00",
+    "eventId": 0,
+    "bank": 2000,
+    "index": 6,
+    "lotId": 20002,
+    "type": "rune",
+    "argHex": "00000000d15e5d05f150657a32750000224e00000000c8410000000000000000000000000000000000000000",
+    "argLen": 44
+  },
+  {
+    "map": "m61_53_47_00",
+    "eventId": 0,
+    "bank": 2000,
+    "index": 6,
+    "lotId": 20002,
+    "type": "rune",
+    "argHex": "00000000d05e5d050278657a32750000224e0000d27f657a0000000000000000000000000000000000000000",
+    "argLen": 44
+  },
+  {
+    "map": "m61_53_47_00",
+    "eventId": 0,
+    "bank": 2000,
+    "index": 6,
+    "lotId": 20002,
+    "type": "rune",
+    "argHex": "00000000d05e5d050378657a32750000224e0000d27f657a0000803f00000000000000000000000000000000",
+    "argLen": 44
+  },
+  {
+    "map": "m61_53_47_00",
+    "eventId": 0,
+    "bank": 2000,
+    "index": 6,
+    "lotId": 20002,
+    "type": "rune",
+    "argHex": "00000000d05e5d050478657a32750000224e0000d27f657a0000003f00000000000000000000000000000000",
+    "argLen": 44
+  },
+  {
+    "map": "m61_53_47_00",
+    "eventId": 0,
+    "bank": 2000,
+    "index": 6,
+    "lotId": 20002,
+    "type": "rune",
+    "argHex": "00000000d05e5d050578657a32750000224e0000d27f657acdcc4c3f00000000000000000000000000000000",
+    "argLen": 44
+  },
+  {
+    "map": "m61_53_47_00",
+    "eventId": 0,
+    "bank": 2000,
+    "index": 6,
+    "lotId": 20002,
+    "type": "rune",
+    "argHex": "00000000d05e5d050678657a32750000224e0000d27f657a9a99993e00000000000000000000000000000000",
+    "argLen": 44
+  },
+  {
+    "map": "m61_53_47_00",
+    "eventId": 0,
+    "bank": 2000,
+    "index": 6,
+    "lotId": 20002,
+    "type": "rune",
+    "argHex": "00000000d15e5d050778657a32750000224e00000000c8410000000000000000000000000000000000000000",
+    "argLen": 44
+  },
+  {
+    "map": "m61_53_47_00",
+    "eventId": 0,
+    "bank": 2000,
+    "index": 6,
+    "lotId": 20002,
+    "type": "rune",
+    "argHex": "00000000d15e5d050878657a32750000224e00000000c8410000000000000000000000000000000000000000",
+    "argLen": 44
+  },
+  {
+    "map": "m61_53_47_00",
+    "eventId": 0,
+    "bank": 2000,
+    "index": 6,
+    "lotId": 20002,
+    "type": "rune",
+    "argHex": "00000000d15e5d050978657a32750000224e00000000c8410000000000000000000000000000000000000000",
+    "argLen": 44
+  },
+  {
+    "map": "m61_54_39_00",
+    "eventId": 2054392482,
+    "bank": 2006,
+    "index": 4,
+    "lotId": 30101,
+    "type": "rune",
+    "argHex": "b886737a6400000095750000",
+    "argLen": 12
+  },
+  {
+    "map": "m61_54_47_00",
+    "eventId": 0,
+    "bank": 2000,
+    "index": 6,
+    "lotId": 20002,
+    "type": "rune",
+    "argHex": "00000000d15e5d0542ba747a32750000224e00000000c8410000000000000000000000000000000000000000",
+    "argLen": 44
+  },
+  {
+    "map": "m61_54_47_00",
+    "eventId": 0,
+    "bank": 2000,
+    "index": 6,
+    "lotId": 20002,
+    "type": "rune",
+    "argHex": "00000000d15e5d0543ba747a32750000224e00000000c8410000000000000000000000000000000000000000",
+    "argLen": 44
+  }
+]

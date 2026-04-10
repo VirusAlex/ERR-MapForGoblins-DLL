@@ -1,0 +1,2 @@
+pythonnet>=3.0
+pymem>=1.13

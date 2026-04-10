@@ -1,0 +1,1310 @@
+[
+  {
+    "ID": 10600100,
+    "Text": "Nomadic Warrior's Cookbook [25]"
+  },
+  {
+    "ID": 10600101,
+    "Text": "Eye of Death"
+  },
+  {
+    "ID": 10600102,
+    "Text": "Suncatcher"
+  },
+  {
+    "ID": 10600103,
+    "Text": "Iron Spike"
+  },
+  {
+    "ID": 10600104,
+    "Text": "Execrable Serpent's Exultation"
+  },
+  {
+    "ID": 10600105,
+    "Text": "Gracebound Dagger"
+  },
+  {
+    "ID": 10600106,
+    "Text": "Codex of the All-Knowing"
+  },
+  {
+    "ID": 10600107,
+    "Text": "Lucent Baldachin's Reliquary"
+  },
+  {
+    "ID": 10600108,
+    "Text": "Map: Ainsel River"
+  },
+  {
+    "ID": 10600109,
+    "Text": "Lost Ashes"
+  },
+  {
+    "ID": 10600110,
+    "Text": "Oracle's Remedy"
+  },
+  {
+    "ID": 10600111,
+    "Text": "Silver Attunement"
+  },
+  {
+    "ID": 10600112,
+    "Text": "Ranni's Scroll"
+  },
+  {
+    "ID": 10600113,
+    "Text": "Golden Rune [1600]"
+  },
+  {
+    "ID": 10600114,
+    "Text": "Golden Rune [200]"
+  },
+  {
+    "ID": 10600115,
+    "Text": "Mimic Pumpkin Helm"
+  },
+  {
+    "ID": 10600116,
+    "Text": "Burgeoning Root"
+  },
+  {
+    "ID": 10600117,
+    "Text": "Hero's Rune [20000]"
+  },
+  {
+    "ID": 10600118,
+    "Text": "Lord's Rune [50000]"
+  },
+  {
+    "ID": 10600119,
+    "Text": "Gracebound Halberd"
+  },
+  {
+    "ID": 10600120,
+    "Text": "Avionette Pig Sticker"
+  },
+  {
+    "ID": 10600121,
+    "Text": "Molten Armament"
+  },
+  {
+    "ID": 10600122,
+    "Text": "Brave's Leather Helm"
+  },
+  {
+    "ID": 10600123,
+    "Text": "Crafting Kit"
+  },
+  {
+    "ID": 10600124,
+    "Text": "Broken Straight Sword"
+  },
+  {
+    "ID": 10600125,
+    "Text": "Oracle Effigy"
+  },
+  {
+    "ID": 10600126,
+    "Text": "Goldvine Branchstaff"
+  },
+  {
+    "ID": 10600127,
+    "Text": "Disciple's Rotten Branch"
+  },
+  {
+    "ID": 10600128,
+    "Text": "Poisoned Miner's Bell Bearing"
+  },
+  {
+    "ID": 10600129,
+    "Text": "Gelmirian Scroll"
+  },
+  {
+    "ID": 10600130,
+    "Text": "Call of Tibia"
+  },
+  {
+    "ID": 10600131,
+    "Text": "Surging Frenzied Flame"
+  },
+  {
+    "ID": 10600132,
+    "Text": "Three Fingers' Scrawls"
+  },
+  {
+    "ID": 10600133,
+    "Text": "Ringmaster Ophidion"
+  },
+  {
+    "ID": 10600134,
+    "Text": "Frenzyflame Grease"
+  },
+  {
+    "ID": 10600135,
+    "Text": "Golden Rune [6000]"
+  },
+  {
+    "ID": 10600136,
+    "Text": "Golden Rune [4000]"
+  },
+  {
+    "ID": 10600137,
+    "Text": "Glintstone Miner's Bell Bearing"
+  },
+  {
+    "ID": 10600138,
+    "Text": "Rime Cascade"
+  },
+  {
+    "ID": 10600139,
+    "Text": "Crystal Chakram"
+  },
+  {
+    "ID": 10600140,
+    "Text": "Golden Rune [1200]"
+  },
+  {
+    "ID": 10600141,
+    "Text": "Glintstone Miner Ashes"
+  },
+  {
+    "ID": 10600142,
+    "Text": "Explosive Stone"
+  },
+  {
+    "ID": 10600143,
+    "Text": "Bomb Miner's Bell Bearing"
+  },
+  {
+    "ID": 10600144,
+    "Text": "Perfumer's Cookbook [6]"
+  },
+  {
+    "ID": 10600145,
+    "Text": "Glyph of Suppression"
+  },
+  {
+    "ID": 10600146,
+    "Text": "Ordered Disarray"
+  },
+  {
+    "ID": 10600147,
+    "Text": "Mark of the Beast"
+  },
+  {
+    "ID": 10600148,
+    "Text": "Sign of the All-Knowing"
+  },
+  {
+    "ID": 10600149,
+    "Text": "Poison Moth Flight"
+  },
+  {
+    "ID": 10600150,
+    "Text": "Duskflare Barrage"
+  },
+  {
+    "ID": 10600151,
+    "Text": "Arcane-knot Crystal Tear"
+  },
+  {
+    "ID": 10600152,
+    "Text": "Deep-Purple Lily"
+  },
+  {
+    "ID": 10600153,
+    "Text": "Potent Dreambrew"
+  },
+  {
+    "ID": 10600154,
+    "Text": "Lazuli Sorcerer Ashes"
+  },
+  {
+    "ID": 10600155,
+    "Text": "Monk's Flameblade"
+  },
+  {
+    "ID": 10600156,
+    "Text": "Frenzyspore Mist"
+  },
+  {
+    "ID": 10600157,
+    "Text": "Gracebound Longbow"
+  },
+  {
+    "ID": 10600158,
+    "Text": "Unstable Fissure"
+  },
+  {
+    "ID": 10600159,
+    "Text": "Marionette Spiked Spear"
+  },
+  {
+    "ID": 10600160,
+    "Text": "Gilded Greatshield"
+  },
+  {
+    "ID": 10600161,
+    "Text": "Monk's Flamemace"
+  },
+  {
+    "ID": 10600162,
+    "Text": "Decree of Haima"
+  },
+  {
+    "ID": 10600163,
+    "Text": "Snow Witch Scepter"
+  },
+  {
+    "ID": 10600164,
+    "Text": "Briars of Resentment"
+  },
+  {
+    "ID": 10600165,
+    "Text": "Gentle Starlight"
+  },
+  {
+    "ID": 10600166,
+    "Text": "Storied Glintstone Amulet"
+  },
+  {
+    "ID": 10600167,
+    "Text": "Lamp Oil"
+  },
+  {
+    "ID": 10600168,
+    "Text": "Host's Injured Finger"
+  },
+  {
+    "ID": 10600169,
+    "Text": "Redeemer's Plated Finger"
+  },
+  {
+    "ID": 10600170,
+    "Text": "Gracebound Greatsword"
+  },
+  {
+    "ID": 10600171,
+    "Text": "Crude Iron Claws"
+  },
+  {
+    "ID": 10600172,
+    "Text": "Nomadic Warrior's Cookbook [26]"
+  },
+  {
+    "ID": 10600173,
+    "Text": "Golden Star"
+  },
+  {
+    "ID": 10600174,
+    "Text": "Lordsworn's Spear"
+  },
+  {
+    "ID": 10600175,
+    "Text": "Godrick Knight Helm"
+  },
+  {
+    "ID": 10600176,
+    "Text": "Erdhewn Medallion"
+  },
+  {
+    "ID": 10600177,
+    "Text": "Dismounter"
+  },
+  {
+    "ID": 10600178,
+    "Text": "Gracebound Katana"
+  },
+  {
+    "ID": 10600179,
+    "Text": "Brass Shield"
+  },
+  {
+    "ID": 10600180,
+    "Text": "Creeping Rancor"
+  },
+  {
+    "ID": 10600181,
+    "Text": "Blazing Wall"
+  },
+  {
+    "ID": 10600182,
+    "Text": "Poison Bolt"
+  },
+  {
+    "ID": 10600183,
+    "Text": "Redmane Greatshield"
+  },
+  {
+    "ID": 10600184,
+    "Text": "Gracebound Greataxe"
+  },
+  {
+    "ID": 10600185,
+    "Text": "Gracebound Staff"
+  },
+  {
+    "ID": 10600186,
+    "Text": "Bloodrose Mist"
+  },
+  {
+    "ID": 10600187,
+    "Text": "Perfumer's Traveling Hat"
+  },
+  {
+    "ID": 10600188,
+    "Text": "Vulgar Militia Chain Sickle"
+  },
+  {
+    "ID": 10600189,
+    "Text": "Marionette Short Sword"
+  },
+  {
+    "ID": 10600190,
+    "Text": "Scarlet Papillon"
+  },
+  {
+    "ID": 10600191,
+    "Text": "Zamor Knight Lyedna"
+  },
+  {
+    "ID": 10600192,
+    "Text": "Perfumer's Cookbook [5]"
+  },
+  {
+    "ID": 10600193,
+    "Text": "Briars of Guilt"
+  },
+  {
+    "ID": 10600194,
+    "Text": "Gracebound Claws"
+  },
+  {
+    "ID": 10600195,
+    "Text": "Golden Rune [3000]"
+  },
+  {
+    "ID": 10600196,
+    "Text": "Beryl Hood"
+  },
+  {
+    "ID": 10600197,
+    "Text": "Eclipsed Sun"
+  },
+  {
+    "ID": 10600198,
+    "Text": "Sun Realm Sword"
+  },
+  {
+    "ID": 10600199,
+    "Text": "Flashfrost Cutter"
+  },
+  {
+    "ID": 10600200,
+    "Text": "Ash of War: Lord's Stomp"
+  },
+  {
+    "ID": 10600201,
+    "Text": "Lunar Princess' Exultation"
+  },
+  {
+    "ID": 10600202,
+    "Text": "Duelist Helm"
+  },
+  {
+    "ID": 10600203,
+    "Text": "Duelist Greaves"
+  },
+  {
+    "ID": 10600204,
+    "Text": "Assassin's Viridian Dagger"
+  },
+  {
+    "ID": 10600205,
+    "Text": "Fellthorn Clutches"
+  },
+  {
+    "ID": 10600206,
+    "Text": "Knowledge-Seeker's Cookbook"
+  },
+  {
+    "ID": 10600207,
+    "Text": "Blood Star Slicer"
+  },
+  {
+    "ID": 10600208,
+    "Text": "Fortune of the Bold"
+  },
+  {
+    "ID": 10600209,
+    "Text": "Fortune of the Wise"
+  },
+  {
+    "ID": 10600210,
+    "Text": "Fortune of the Cunning"
+  },
+  {
+    "ID": 10600211,
+    "Text": "Nox Flowing Fists"
+  },
+  {
+    "ID": 10600212,
+    "Text": "Fortune of the Dynasts"
+  },
+  {
+    "ID": 10600213,
+    "Text": "Ceruleanspill Crystal Tear"
+  },
+  {
+    "ID": 10600214,
+    "Text": "Electromagnetic Discharge"
+  },
+  {
+    "ID": 10600215,
+    "Text": "Raving Rancor"
+  },
+  {
+    "ID": 10600216,
+    "Text": "Gracebound Greatshield"
+  },
+  {
+    "ID": 10600217,
+    "Text": "Blessed Aeonia"
+  },
+  {
+    "ID": 10600218,
+    "Text": "Haligtree Crest Greatshield"
+  },
+  {
+    "ID": 10600219,
+    "Text": "Haligtree Knight Armor"
+  },
+  {
+    "ID": 10600220,
+    "Text": "Haligtree Knight Gauntlets"
+  },
+  {
+    "ID": 10600221,
+    "Text": "Haligtree Knight Greaves"
+  },
+  {
+    "ID": 10600222,
+    "Text": "Brave's Battlewear"
+  },
+  {
+    "ID": 10600223,
+    "Text": "Brave's Bracer"
+  },
+  {
+    "ID": 10600224,
+    "Text": "Brave's Legwraps"
+  },
+  {
+    "ID": 10600225,
+    "Text": "Somber Smithing Scadushard"
+  },
+  {
+    "ID": 10600226,
+    "Text": "Rada Fruit"
+  },
+  {
+    "ID": 10600227,
+    "Text": "Smithing Scadushard"
+  },
+  {
+    "ID": 10600228,
+    "Text": "Storeroom Key"
+  },
+  {
+    "ID": 10600229,
+    "Text": "Well Depths Key"
+  },
+  {
+    "ID": 10600230,
+    "Text": "Tower of Shadow Message"
+  },
+  {
+    "ID": 10600231,
+    "Text": "Sealed Gate Curio"
+  },
+  {
+    "ID": 10600232,
+    "Text": "Horned Warrior's Greatsword"
+  },
+  {
+    "ID": 10600233,
+    "Text": "Iris of Grace"
+  },
+  {
+    "ID": 10600234,
+    "Text": "Iris of Occultation"
+  },
+  {
+    "ID": 10600235,
+    "Text": "Death Mask Helm"
+  },
+  {
+    "ID": 10600236,
+    "Text": "Storehouse Cross Message"
+  },
+  {
+    "ID": 10600237,
+    "Text": "Secret Rite Scroll"
+  },
+  {
+    "ID": 10600238,
+    "Text": "Physician's Sealed Curio"
+  },
+  {
+    "ID": 10600239,
+    "Text": "St. Trina Disciple's Cookbook [3]"
+  },
+  {
+    "ID": 10600240,
+    "Text": "Scornful Gaze"
+  },
+  {
+    "ID": 10600241,
+    "Text": "Torn Diary Page"
+  },
+  {
+    "ID": 10600242,
+    "Text": "Favor of the Devoured"
+  },
+  {
+    "ID": 10600243,
+    "Text": "Forsaken Rancorflame"
+  },
+  {
+    "ID": 10600244,
+    "Text": "Tortured Rancorflame"
+  },
+  {
+    "ID": 10600245,
+    "Text": "Gladius of Ophidion"
+  },
+  {
+    "ID": 10600246,
+    "Text": "Coilheart"
+  },
+  {
+    "ID": 10600247,
+    "Text": "Ancient Rancorflame"
+  },
+  {
+    "ID": 10600248,
+    "Text": "Flamelost War Sword"
+  },
+  {
+    "ID": 10600249,
+    "Text": "Flamelost War Spear"
+  },
+  {
+    "ID": 10600250,
+    "Text": "Flamelost Greatblades"
+  },
+  {
+    "ID": 10600251,
+    "Text": "Godskin Noble Hood"
+  },
+  {
+    "ID": 10600252,
+    "Text": "Godskin Noble Robe"
+  },
+  {
+    "ID": 10600253,
+    "Text": "Godskin Noble Bracelets"
+  },
+  {
+    "ID": 10600254,
+    "Text": "Godskin Noble Trousers"
+  },
+  {
+    "ID": 10600255,
+    "Text": "Fortune of the Godslayers"
+  },
+  {
+    "ID": 10600256,
+    "Text": "Grave Keeper's Cookbook [3]"
+  },
+  {
+    "ID": 10600257,
+    "Text": "Death-Prince's Exultation"
+  },
+  {
+    "ID": 10600258,
+    "Text": "Gaol Upper Level Key"
+  },
+  {
+    "ID": 10600259,
+    "Text": "Gaol Lower Level Key"
+  },
+  {
+    "ID": 10600260,
+    "Text": "Smithscript Spear"
+  },
+  {
+    "ID": 10600261,
+    "Text": "Blaidd the Half-Wolf"
+  },
+  {
+    "ID": 10600262,
+    "Text": "Glintblade Hail"
+  },
+  {
+    "ID": 10600263,
+    "Text": "Crystal Volley"
+  },
+  {
+    "ID": 10600264,
+    "Text": "Pumpkin Sledge"
+  },
+  {
+    "ID": 10600265,
+    "Text": "Thunderous Beast Charm"
+  },
+  {
+    "ID": 10600266,
+    "Text": "Volcanic Storm"
+  },
+  {
+    "ID": 10600267,
+    "Text": "Briars of Penance"
+  },
+  {
+    "ID": 10600268,
+    "Text": "Fire Monk Hood"
+  },
+  {
+    "ID": 10600269,
+    "Text": "Fire Monk Armor"
+  },
+  {
+    "ID": 10600270,
+    "Text": "Fire Monk Gauntlets"
+  },
+  {
+    "ID": 10600271,
+    "Text": "Fire Monk Greaves"
+  },
+  {
+    "ID": 10600272,
+    "Text": "Carian Verge"
+  },
+  {
+    "ID": 10600273,
+    "Text": "Fortune of the Houses"
+  },
+  {
+    "ID": 10600274,
+    "Text": "Chelonian Mitre"
+  },
+  {
+    "ID": 10600275,
+    "Text": "Pilfered Mitre"
+  },
+  {
+    "ID": 10600276,
+    "Text": "Marionette Soldier Helm"
+  },
+  {
+    "ID": 10600277,
+    "Text": "Marionette Soldier Armor"
+  },
+  {
+    "ID": 10600278,
+    "Text": "Rancor"
+  },
+  {
+    "ID": 10600279,
+    "Text": "Godrick Soldier Helm"
+  },
+  {
+    "ID": 10600280,
+    "Text": "Tree-and-Beast Surcoat"
+  },
+  {
+    "ID": 10600281,
+    "Text": "Godrick Soldier Gauntlets"
+  },
+  {
+    "ID": 10600282,
+    "Text": "Godrick Soldier Greaves"
+  },
+  {
+    "ID": 10600283,
+    "Text": "Distant Stars"
+  },
+  {
+    "ID": 10600284,
+    "Text": "Eclipsed Blade"
+  },
+  {
+    "ID": 10600285,
+    "Text": "Dragonrend"
+  },
+  {
+    "ID": 10600286,
+    "Text": "Gracebound Round Shield"
+  },
+  {
+    "ID": 10600287,
+    "Text": "Fortune of the Warmaster"
+  },
+  {
+    "ID": 10600288,
+    "Text": "Leyndell Knight Helm"
+  },
+  {
+    "ID": 10600289,
+    "Text": "Leyndell Knight Armor"
+  },
+  {
+    "ID": 10600290,
+    "Text": "Leyndell Knight Gauntlets"
+  },
+  {
+    "ID": 10600291,
+    "Text": "Leyndell Knight Greaves"
+  },
+  {
+    "ID": 10600292,
+    "Text": "Iron Cleaver"
+  },
+  {
+    "ID": 10600293,
+    "Text": "Godrick Knight Armor"
+  },
+  {
+    "ID": 10600294,
+    "Text": "Godrick Knight Gauntlets"
+  },
+  {
+    "ID": 10600295,
+    "Text": "Godrick Knight Greaves"
+  },
+  {
+    "ID": 10600296,
+    "Text": "Fortune of the Bulwark"
+  },
+  {
+    "ID": 10600297,
+    "Text": "Kaiden Helm"
+  },
+  {
+    "ID": 10600298,
+    "Text": "Kaiden Armor"
+  },
+  {
+    "ID": 10600299,
+    "Text": "Kaiden Gauntlets"
+  },
+  {
+    "ID": 10600300,
+    "Text": "Kaiden Trousers"
+  },
+  {
+    "ID": 10600301,
+    "Text": "Grasp of Eochaid"
+  },
+  {
+    "ID": 10600302,
+    "Text": "Leyndell Soldier Helm"
+  },
+  {
+    "ID": 10600303,
+    "Text": "Erdtree Surcoat"
+  },
+  {
+    "ID": 10600304,
+    "Text": "Leyndell Soldier Gauntlets"
+  },
+  {
+    "ID": 10600305,
+    "Text": "Leyndell Soldier Greaves"
+  },
+  {
+    "ID": 10600306,
+    "Text": "Torrent Skin Godrick Knight"
+  },
+  {
+    "ID": 10600307,
+    "Text": "Miraculous Alchemic"
+  },
+  {
+    "ID": 10600308,
+    "Text": "Stormswept Palette"
+  },
+  {
+    "ID": 10600309,
+    "Text": "Flame-Singed Palette"
+  },
+  {
+    "ID": 10600310,
+    "Text": "Glintstone Palette"
+  },
+  {
+    "ID": 10600311,
+    "Text": "Dreaming Palette"
+  },
+  {
+    "ID": 10600312,
+    "Text": "Ill-Fated Palette"
+  },
+  {
+    "ID": 10600313,
+    "Text": "Divine Palette"
+  },
+  {
+    "ID": 10600314,
+    "Text": "Golden Rune [400]"
+  },
+  {
+    "ID": 10600315,
+    "Text": "Artifact Piece"
+  },
+  {
+    "ID": 10600316,
+    "Text": "Dread Essence"
+  },
+  {
+    "ID": 10600317,
+    "Text": "Artifact Enhancer Piece"
+  },
+  {
+    "ID": 10600318,
+    "Text": "Stone Sling"
+  },
+  {
+    "ID": 10600319,
+    "Text": "Stable Master's Cookbook"
+  },
+  {
+    "ID": 10600320,
+    "Text": "Viridianspill Crystal Tear"
+  },
+  {
+    "ID": 10600321,
+    "Text": "Kindling Spirit"
+  },
+  {
+    "ID": 10600322,
+    "Text": "Fortune of the Brave"
+  },
+  {
+    "ID": 10600323,
+    "Text": "Fist of the Heavens"
+  },
+  {
+    "ID": 10600324,
+    "Text": "Redmane Knight Helm"
+  },
+  {
+    "ID": 10600325,
+    "Text": "Redmane Knight Armor"
+  },
+  {
+    "ID": 10600326,
+    "Text": "Redmane Knight Gauntlets"
+  },
+  {
+    "ID": 10600327,
+    "Text": "Redmane Knight Greaves"
+  },
+  {
+    "ID": 10600328,
+    "Text": "Golden Rune [2500]"
+  },
+  {
+    "ID": 10600329,
+    "Text": "Perfumer's Traveling Gloves"
+  },
+  {
+    "ID": 10600330,
+    "Text": "Perfumer's Traveling Slops"
+  },
+  {
+    "ID": 10600331,
+    "Text": "Sacramental Burgeon"
+  },
+  {
+    "ID": 10600332,
+    "Text": "Golden Rune [800]"
+  },
+  {
+    "ID": 10600333,
+    "Text": "Golden Rune [5000]"
+  },
+  {
+    "ID": 10600334,
+    "Text": "Fortune of the Reeds"
+  },
+  {
+    "ID": 10600335,
+    "Text": "Avionette Scimitars"
+  },
+  {
+    "ID": 10600336,
+    "Text": "Fortune of Haima"
+  },
+  {
+    "ID": 10600337,
+    "Text": "Singularity"
+  },
+  {
+    "ID": 10600338,
+    "Text": "Fire Prelate Helm"
+  },
+  {
+    "ID": 10600339,
+    "Text": "Fire Prelate Armor"
+  },
+  {
+    "ID": 10600340,
+    "Text": "Fire Prelate Gauntlets"
+  },
+  {
+    "ID": 10600341,
+    "Text": "Fire Prelate Greaves"
+  },
+  {
+    "ID": 10600342,
+    "Text": "Ancient Tracer"
+  },
+  {
+    "ID": 10600343,
+    "Text": "Ash of War: Spinning Chain"
+  },
+  {
+    "ID": 10600344,
+    "Text": "Prodigious Crown Pendant"
+  },
+  {
+    "ID": 10600345,
+    "Text": "Essential Alchemic"
+  },
+  {
+    "ID": 10600346,
+    "Text": "Ingenious Alchemic"
+  },
+  {
+    "ID": 10600347,
+    "Text": "Shimmering Substance"
+  },
+  {
+    "ID": 10600348,
+    "Text": "Blazing Substance"
+  },
+  {
+    "ID": 10600349,
+    "Text": "Crackling Substance"
+  },
+  {
+    "ID": 10600350,
+    "Text": "Blessed Substance"
+  },
+  {
+    "ID": 10600351,
+    "Text": "Noxious Extract"
+  },
+  {
+    "ID": 10600352,
+    "Text": "Scarlet Extract"
+  },
+  {
+    "ID": 10600353,
+    "Text": "Bloody Extract"
+  },
+  {
+    "ID": 10600354,
+    "Text": "Blighted Extract"
+  },
+  {
+    "ID": 10600355,
+    "Text": "Rimed Extract"
+  },
+  {
+    "ID": 10600356,
+    "Text": "Sedative Extract"
+  },
+  {
+    "ID": 10600357,
+    "Text": "Maddening Extract"
+  },
+  {
+    "ID": 10600358,
+    "Text": "Gory Amalgam"
+  },
+  {
+    "ID": 10600359,
+    "Text": "Adhesive Amalgam"
+  },
+  {
+    "ID": 10600360,
+    "Text": "Fragrant Amalgam"
+  },
+  {
+    "ID": 10600361,
+    "Text": "Starry Amalgam"
+  },
+  {
+    "ID": 10600362,
+    "Text": "Silvery Amalgam"
+  },
+  {
+    "ID": 10600363,
+    "Text": "Mildewy Amalgam"
+  },
+  {
+    "ID": 10600364,
+    "Text": "Golden Amalgam"
+  },
+  {
+    "ID": 10600365,
+    "Text": "Crystalline Amalgam"
+  },
+  {
+    "ID": 10600366,
+    "Text": "Achievements"
+  },
+  {
+    "ID": 10600367,
+    "Text": "Retch Gore"
+  },
+  {
+    "ID": 10600368,
+    "Text": "Leather Headband"
+  },
+  {
+    "ID": 10600369,
+    "Text": "Gloried Attire"
+  },
+  {
+    "ID": 10600370,
+    "Text": "Leather Arm Wraps"
+  },
+  {
+    "ID": 10600371,
+    "Text": "Leather Leg Wraps"
+  },
+  {
+    "ID": 10600372,
+    "Text": "Sealed Poacher's Curio"
+  },
+  {
+    "ID": 10600373,
+    "Text": "Furnace Visage"
+  },
+  {
+    "ID": 10600374,
+    "Text": "Devonia's Hammer"
+  },
+  {
+    "ID": 10600375,
+    "Text": "Crucible Hammer Helm"
+  },
+  {
+    "ID": 10600376,
+    "Text": "Sword of Light"
+  },
+  {
+    "ID": 10600377,
+    "Text": "Sword of Darkness"
+  },
+  {
+    "ID": 10600378,
+    "Text": "Perfumed Oil of Ranah"
+  },
+  {
+    "ID": 10600379,
+    "Text": "Whirling Blades Charm"
+  },
+  {
+    "ID": 10600380,
+    "Text": "Oathseeker Knight Helm"
+  },
+  {
+    "ID": 10600381,
+    "Text": "Oathseeker Knight Armor"
+  },
+  {
+    "ID": 10600382,
+    "Text": "Oathseeker Knight Gauntlets"
+  },
+  {
+    "ID": 10600383,
+    "Text": "Oathseeker Knight Greaves"
+  },
+  {
+    "ID": 10600384,
+    "Text": "Gracebound Mace"
+  },
+  {
+    "ID": 10600385,
+    "Text": "Map: Rauh Ruins"
+  },
+  {
+    "ID": 10600386,
+    "Text": "Ancient Ruins Cross Message"
+  },
+  {
+    "ID": 10600387,
+    "Text": "Bondstone"
+  },
+  {
+    "ID": 10600388,
+    "Text": "Cerulean Sea"
+  },
+  {
+    "ID": 10600389,
+    "Text": "Greater Potentate's Cookbook [16]"
+  },
+  {
+    "ID": 10600390,
+    "Text": "Map: Gravesite Plain"
+  },
+  {
+    "ID": 10600391,
+    "Text": "Castle Cross Message"
+  },
+  {
+    "ID": 10600392,
+    "Text": "Royal Magic Grease"
+  },
+  {
+    "ID": 10600393,
+    "Text": "Sealed Fanatic's Curio"
+  },
+  {
+    "ID": 10600394,
+    "Text": "Messmer Soldier's Axe"
+  },
+  {
+    "ID": 10600395,
+    "Text": "Map: Southern Shore"
+  },
+  {
+    "ID": 10600396,
+    "Text": "Sealed Curio of Ranah"
+  },
+  {
+    "ID": 10600397,
+    "Text": "Black Steel Greathammer"
+  },
+  {
+    "ID": 10600398,
+    "Text": "Gravebird Bracelets"
+  },
+  {
+    "ID": 10600399,
+    "Text": "Pledged Blade"
+  },
+  {
+    "ID": 10600400,
+    "Text": "Map: Scadu Altus"
+  },
+  {
+    "ID": 10600401,
+    "Text": "Monk's Missive"
+  },
+  {
+    "ID": 10600402,
+    "Text": "Black Steel Twinblade"
+  },
+  {
+    "ID": 10600403,
+    "Text": "Sealed Dragonscale Curio"
+  },
+  {
+    "ID": 10600404,
+    "Text": "Broken Rune [500]"
+  },
+  {
+    "ID": 10600405,
+    "Text": "Fireproof Pickled Liver"
+  },
+  {
+    "ID": 10600406,
+    "Text": "Shadow Realm Rune [5000]"
+  },
+  {
+    "ID": 10600407,
+    "Text": "Shadow Realm Rune [7500]"
+  },
+  {
+    "ID": 10600408,
+    "Text": "Leather Crown"
+  },
+  {
+    "ID": 10600409,
+    "Text": "Highland Attire"
+  },
+  {
+    "ID": 10600410,
+    "Text": "Sealed Scadutear Curio"
+  },
+  {
+    "ID": 10600411,
+    "Text": "Sharpshot Talisman"
+  },
+  {
+    "ID": 10600412,
+    "Text": "Keep Wall Key"
+  },
+  {
+    "ID": 10600413,
+    "Text": "Revered Spirit Ash"
+  },
+  {
+    "ID": 10600414,
+    "Text": "Dryleaf Robe"
+  },
+  {
+    "ID": 10600415,
+    "Text": "Dryleaf Arm Wraps"
+  },
+  {
+    "ID": 10600416,
+    "Text": "Dryleaf Cuissardes"
+  },
+  {
+    "ID": 10600417,
+    "Text": "Sealed Academy Curio"
+  },
+  {
+    "ID": 10600418,
+    "Text": "O Mother"
+  },
+  {
+    "ID": 10600419,
+    "Text": "Stone-Sheathed Sword"
+  },
+  {
+    "ID": 10600420,
+    "Text": "Guiding Microcosm"
+  },
+  {
+    "ID": 10600421,
+    "Text": "Mad Craftsman's Cookbook [4]"
+  },
+  {
+    "ID": 10600422,
+    "Text": "Sealed Knifeprint Curio"
+  },
+  {
+    "ID": 10600423,
+    "Text": "Map: Abyss"
+  },
+  {
+    "ID": 10600424,
+    "Text": "Madding Hand"
+  },
+  {
+    "ID": 10600425,
+    "Text": "Warding Microcosm"
+  },
+  {
+    "ID": 10600426,
+    "Text": "Greater Potentate's Cookbook [15]"
+  }
+]

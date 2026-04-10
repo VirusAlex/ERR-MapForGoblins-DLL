@@ -1,0 +1,8 @@
+[paths]
+# Path to ERR mod directory (contains regulation.bin, map/, event/, msg/ etc.)
+# Example: C:\Games\ERR\ERRv2.2.1.2\mod
+err_mod_dir =
+
+# Path to Elden Ring game directory (contains eldenring.exe, oo2core_6_win64.dll)
+# Example: C:\Steam\steamapps\common\ELDEN RING\Game
+game_dir =

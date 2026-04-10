@@ -1,0 +1,35 @@
+# Build artifacts
+build/
+build_old/
+tracker/build/
+tools/fmg_patcher/build/
+
+# Release packages and built release
+ERR - MapForGoblins - DLL - v*/
+release/
+pre-release/
+*.zip
+
+# Backups
+backup/
+backup2/
+backup3/
+
+# External dependencies
+tools/DSMSPortable_src/
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+
+# Local config (user-specific paths)
+tools/config.ini
+
+# IDE / OS
+.vs/
+.vscode/
+.claude/
+.idea/
+Thumbs.db
+desktop.ini

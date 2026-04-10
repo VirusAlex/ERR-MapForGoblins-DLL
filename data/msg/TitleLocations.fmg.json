@@ -1,0 +1,7314 @@
+{
+  "Fmg": {
+    "Entries": [
+      {
+        "ID": 9000000,
+        "Text": "\u0022Champion\u0027s Song\u0022 Painting"
+      },
+      {
+        "ID": 9000100,
+        "Text": "\u0022Flightless Bird\u0022 Painting"
+      },
+      {
+        "ID": 9000200,
+        "Text": "\u0022Homing Instinct\u0022 Painting"
+      },
+      {
+        "ID": 9000300,
+        "Text": "\u0022Prophecy\u0022 Painting"
+      },
+      {
+        "ID": 9000400,
+        "Text": "\u0022Redmane\u0022 Painting"
+      },
+      {
+        "ID": 9000500,
+        "Text": "\u0022Resurrection\u0022 Painting"
+      },
+      {
+        "ID": 9000600,
+        "Text": "\u0022Sorcerer\u0022 Painting"
+      },
+      {
+        "ID": 9000700,
+        "Text": "Abandoned Merchant\u0027s Bell Bearing"
+      },
+      {
+        "ID": 9000800,
+        "Text": "Academy Glintstone Key"
+      },
+      {
+        "ID": 9000900,
+        "Text": "Academy Glintstone Staff"
+      },
+      {
+        "ID": 9001000,
+        "Text": "- Academy Scroll"
+      },
+      {
+        "ID": 9001100,
+        "Text": "- Adula\u0027s Moonblade"
+      },
+      {
+        "ID": 9001200,
+        "Text": "1 Aeonian Butterfly"
+      },
+      {
+        "ID": 9001201,
+        "Text": "2 Aeonian Butterfly"
+      },
+      {
+        "ID": 9001203,
+        "Text": "4 Aeonian Butterfly"
+      },
+      {
+        "ID": 9001300,
+        "Text": "- Alabaster Lord\u0027s Sword"
+      },
+      {
+        "ID": 9001400,
+        "Text": "Alberich\u0027s Bracers"
+      },
+      {
+        "ID": 9001500,
+        "Text": "Alberich\u0027s Pointed Hat"
+      },
+      {
+        "ID": 9001600,
+        "Text": "Alberich\u0027s Robe"
+      },
+      {
+        "ID": 9001700,
+        "Text": "Alberich\u0027s Trousers"
+      },
+      {
+        "ID": 9001800,
+        "Text": "Albinauric Ashes"
+      },
+      {
+        "ID": 9001900,
+        "Text": "1 Albinauric Bloodclot"
+      },
+      {
+        "ID": 9001901,
+        "Text": "2 Albinauric Bloodclot"
+      },
+      {
+        "ID": 9001905,
+        "Text": "6 Albinauric Bloodclot"
+      },
+      {
+        "ID": 9002000,
+        "Text": "Albinauric Mask"
+      },
+      {
+        "ID": 9002100,
+        "Text": "Albinauric Staff"
+      },
+      {
+        "ID": 9002200,
+        "Text": "Alexander\u0027s Innards"
+      },
+      {
+        "ID": 9002300,
+        "Text": "- All-Knowing Armor"
+      },
+      {
+        "ID": 9002400,
+        "Text": "- All-Knowing Gauntlets"
+      },
+      {
+        "ID": 9002500,
+        "Text": "- All-Knowing Greaves"
+      },
+      {
+        "ID": 9002600,
+        "Text": "- All-Knowing Helm"
+      },
+      {
+        "ID": 9002700,
+        "Text": "Altus Bloom"
+      },
+      {
+        "ID": 9002800,
+        "Text": "Amber Draught"
+      },
+      {
+        "ID": 9002900,
+        "Text": "Amber Starlight"
+      },
+      {
+        "ID": 9003000,
+        "Text": "Ambush Shard"
+      },
+      {
+        "ID": 9003100,
+        "Text": "- Ancestral Follower Ashes"
+      },
+      {
+        "ID": 9003200,
+        "Text": "Ancestral Infant\u0027s Head"
+      },
+      {
+        "ID": 9003300,
+        "Text": "- Ancient Death Rancor"
+      },
+      {
+        "ID": 9003400,
+        "Text": "Ancient Dragon Apostle\u0027s Cookbook [1]"
+      },
+      {
+        "ID": 9003500,
+        "Text": "Ancient Dragon Apostle\u0027s Cookbook [3]"
+      },
+      {
+        "ID": 9003600,
+        "Text": "Ancient Dragon Apostle\u0027s Cookbook [4]"
+      },
+      {
+        "ID": 9003700,
+        "Text": "- Ancient Dragon Knight Kristoff"
+      },
+      {
+        "ID": 9003800,
+        "Text": "Ancient Dragon Prayerbook"
+      },
+      {
+        "ID": 9003900,
+        "Text": "1 Ancient Dragon Smithing Stone"
+      },
+      {
+        "ID": 9004000,
+        "Text": "Ant\u0027s Skull Plate"
+      },
+      {
+        "ID": 9004100,
+        "Text": "- Antspur Rapier"
+      },
+      {
+        "ID": 9004200,
+        "Text": "Arbalest"
+      },
+      {
+        "ID": 9004300,
+        "Text": "Archer Ashes"
+      },
+      {
+        "ID": 9004400,
+        "Text": "Armorer\u0027s Cookbook [1]"
+      },
+      {
+        "ID": 9004500,
+        "Text": "Armorer\u0027s Cookbook [4]"
+      },
+      {
+        "ID": 9004600,
+        "Text": "Armorer\u0027s Cookbook [5]"
+      },
+      {
+        "ID": 9004700,
+        "Text": "Armorer\u0027s Cookbook [6]"
+      },
+      {
+        "ID": 9004800,
+        "Text": "Armorer\u0027s Cookbook [7]"
+      },
+      {
+        "ID": 9004909,
+        "Text": "10 Arrow"
+      },
+      {
+        "ID": 9005000,
+        "Text": "Arrow\u0027s Reach Talisman"
+      },
+      {
+        "ID": 9005100,
+        "Text": "Arrow\u0027s Sting Talisman"
+      },
+      {
+        "ID": 9005200,
+        "Text": "Arsenal Charm"
+      },
+      {
+        "ID": 9005300,
+        "Text": "Arsenal Charm \u002B1"
+      },
+      {
+        "ID": 9005400,
+        "Text": "1 Arteria Leaf"
+      },
+      {
+        "ID": 9005401,
+        "Text": "2 Arteria Leaf"
+      },
+      {
+        "ID": 9005402,
+        "Text": "3 Arteria Leaf"
+      },
+      {
+        "ID": 9005403,
+        "Text": "4 Arteria Leaf"
+      },
+      {
+        "ID": 9005404,
+        "Text": "5 Arteria Leaf"
+      },
+      {
+        "ID": 9005500,
+        "Text": "- Ash of War: Barbaric Roar"
+      },
+      {
+        "ID": 9005600,
+        "Text": "- Ash of War: Barrage"
+      },
+      {
+        "ID": 9005700,
+        "Text": "- Ash of War: Barricade"
+      },
+      {
+        "ID": 9005800,
+        "Text": "Ash of War: Beast\u0027s Roar"
+      },
+      {
+        "ID": 9005900,
+        "Text": "- Ash of War: Black Flame Tornado"
+      },
+      {
+        "ID": 9006000,
+        "Text": "- Ash of War: Blood Blade"
+      },
+      {
+        "ID": 9006100,
+        "Text": "- Ash of War: Blood Tax"
+      },
+      {
+        "ID": 9006200,
+        "Text": "- Ash of War: Bloodhound\u0027s Step"
+      },
+      {
+        "ID": 9006300,
+        "Text": "- Ash of War: Bloody Slash"
+      },
+      {
+        "ID": 9006400,
+        "Text": "Ash of War: Carian Grandeur"
+      },
+      {
+        "ID": 9006500,
+        "Text": "- Ash of War: Charge Forth"
+      },
+      {
+        "ID": 9006600,
+        "Text": "- Ash of War: Chilling Mist"
+      },
+      {
+        "ID": 9006700,
+        "Text": "- Ash of War: Cragblade"
+      },
+      {
+        "ID": 9006800,
+        "Text": "- Ash of War: Determination"
+      },
+      {
+        "ID": 9006900,
+        "Text": "- Ash of War: Double Slash"
+      },
+      {
+        "ID": 9007000,
+        "Text": "- Ash of War: Earthshaker"
+      },
+      {
+        "ID": 9007100,
+        "Text": "- Ash of War: Enchanted Shot"
+      },
+      {
+        "ID": 9007200,
+        "Text": "- Ash of War: Flame of the Redmanes"
+      },
+      {
+        "ID": 9007300,
+        "Text": "- Ash of War: Flaming Strike"
+      },
+      {
+        "ID": 9007400,
+        "Text": "- Ash of War: Giant Hunt"
+      },
+      {
+        "ID": 9007500,
+        "Text": "- Ash of War: Golden Land"
+      },
+      {
+        "ID": 9007600,
+        "Text": "- Ash of War: Golden Parry"
+      },
+      {
+        "ID": 9007700,
+        "Text": "- Ash of War: Golden Slam"
+      },
+      {
+        "ID": 9007800,
+        "Text": "- Ash of War: Golden Vow"
+      },
+      {
+        "ID": 9007900,
+        "Text": "- Ash of War: Gravitas"
+      },
+      {
+        "ID": 9008000,
+        "Text": "- Ash of War: Ground Slam"
+      },
+      {
+        "ID": 9008100,
+        "Text": "- Ash of War: Hoarfrost Stomp"
+      },
+      {
+        "ID": 9008200,
+        "Text": "- Ash of War: Holy Ground"
+      },
+      {
+        "ID": 9008300,
+        "Text": "- Ash of War: Ice Spear"
+      },
+      {
+        "ID": 9008400,
+        "Text": "- Ash of War: Lifesteal Fist"
+      },
+      {
+        "ID": 9008500,
+        "Text": "- Ash of War: Lightning Ram"
+      },
+      {
+        "ID": 9008600,
+        "Text": "- Ash of War: Lightning Slash"
+      },
+      {
+        "ID": 9008700,
+        "Text": "- Ash of War: Lion\u0027s Claw"
+      },
+      {
+        "ID": 9008800,
+        "Text": "- Ash of War: Loretta\u0027s Slash"
+      },
+      {
+        "ID": 9008900,
+        "Text": "- Ash of War: Mighty Shot"
+      },
+      {
+        "ID": 9009000,
+        "Text": "- Ash of War: Phantom Slash"
+      },
+      {
+        "ID": 9009100,
+        "Text": "- Ash of War: Poison Moth Flight"
+      },
+      {
+        "ID": 9009200,
+        "Text": "- Ash of War: Poisonous Mist"
+      },
+      {
+        "ID": 9009300,
+        "Text": "- Ash of War: Prayerful Strike"
+      },
+      {
+        "ID": 9009400,
+        "Text": "- Ash of War: Prelate\u0027s Charge"
+      },
+      {
+        "ID": 9009500,
+        "Text": "Ash of War: Rain of Arrows"
+      },
+      {
+        "ID": 9009600,
+        "Text": "- Ash of War: Raptor of the Mists"
+      },
+      {
+        "ID": 9009700,
+        "Text": "- Ash of War: Repeating Thrust"
+      },
+      {
+        "ID": 9009800,
+        "Text": "Ash of War: Royal Knight\u0027s Resolve"
+      },
+      {
+        "ID": 9009900,
+        "Text": "- Ash of War: Sacred Blade"
+      },
+      {
+        "ID": 9010000,
+        "Text": "- Ash of War: Sacred Order"
+      },
+      {
+        "ID": 9010100,
+        "Text": "- Ash of War: Sacred Ring of Light"
+      },
+      {
+        "ID": 9010200,
+        "Text": "- Ash of War: Seppuku"
+      },
+      {
+        "ID": 9010300,
+        "Text": "- Ash of War: Shared Order"
+      },
+      {
+        "ID": 9010400,
+        "Text": "- Ash of War: Shield Bash"
+      },
+      {
+        "ID": 9010500,
+        "Text": "- Ash of War: Shield Crash"
+      },
+      {
+        "ID": 9010600,
+        "Text": "- Ash of War: Sky Shot"
+      },
+      {
+        "ID": 9010700,
+        "Text": "- Ash of War: Spectral Lance"
+      },
+      {
+        "ID": 9010800,
+        "Text": "- Ash of War: Square Off"
+      },
+      {
+        "ID": 9010900,
+        "Text": "- Ash of War: Stamp (Sweep)"
+      },
+      {
+        "ID": 9011000,
+        "Text": "- Ash of War: Storm Assault"
+      },
+      {
+        "ID": 9011100,
+        "Text": "Ash of War: Storm Stomp"
+      },
+      {
+        "ID": 9011200,
+        "Text": "- Ash of War: Storm Wall"
+      },
+      {
+        "ID": 9011300,
+        "Text": "- Ash of War: Stormcaller"
+      },
+      {
+        "ID": 9011400,
+        "Text": "- Ash of War: Sword Dance"
+      },
+      {
+        "ID": 9011500,
+        "Text": "Ash of War: Thops\u0027s Barrier"
+      },
+      {
+        "ID": 9011600,
+        "Text": "- Ash of War: Through and Through"
+      },
+      {
+        "ID": 9011700,
+        "Text": "- Ash of War: Thunderbolt"
+      },
+      {
+        "ID": 9011800,
+        "Text": "Ash of War: Troll\u0027s Roar"
+      },
+      {
+        "ID": 9011900,
+        "Text": "- Ash of War: Unsheathe"
+      },
+      {
+        "ID": 9012000,
+        "Text": "Ash of War: Vacuum Slice"
+      },
+      {
+        "ID": 9012100,
+        "Text": "- Ash of War: Vow of the Indomitable"
+      },
+      {
+        "ID": 9012200,
+        "Text": "- Ash of War: White Shadow\u0027s Lure"
+      },
+      {
+        "ID": 9012300,
+        "Text": "- Ash of War: Wild Strikes"
+      },
+      {
+        "ID": 9012400,
+        "Text": "Ash-of-War Scarab"
+      },
+      {
+        "ID": 9012500,
+        "Text": "- Aspects of the Crucible: Breath"
+      },
+      {
+        "ID": 9012600,
+        "Text": "- Aspects of the Crucible: Horns"
+      },
+      {
+        "ID": 9012700,
+        "Text": "- Aspects of the Crucible: Tail"
+      },
+      {
+        "ID": 9012800,
+        "Text": "- Assassin\u0027s Cerulean Dagger"
+      },
+      {
+        "ID": 9012900,
+        "Text": "- Assassin\u0027s Crimson Dagger"
+      },
+      {
+        "ID": 9013000,
+        "Text": "Assassin\u0027s Prayerbook"
+      },
+      {
+        "ID": 9013100,
+        "Text": "Avionette Soldier Ashes"
+      },
+      {
+        "ID": 9013200,
+        "Text": "Axe Talisman"
+      },
+      {
+        "ID": 9013300,
+        "Text": "Azula Beastman Ashes"
+      },
+      {
+        "ID": 9013400,
+        "Text": "Azur\u0027s Glintstone Crown"
+      },
+      {
+        "ID": 9013500,
+        "Text": "Azur\u0027s Glintstone Robe"
+      },
+      {
+        "ID": 9013600,
+        "Text": "Azur\u0027s Glintstone Staff"
+      },
+      {
+        "ID": 9013700,
+        "Text": "Azur\u0027s Manchettes"
+      },
+      {
+        "ID": 9013800,
+        "Text": "Baldachin\u0027s Blessing"
+      },
+      {
+        "ID": 9013904,
+        "Text": "5 Ballista Bolt"
+      },
+      {
+        "ID": 9014000,
+        "Text": "- Banished Knight Oleg"
+      },
+      {
+        "ID": 9014100,
+        "Text": "- Banished Knight\u0027s Halberd \u002B8"
+      },
+      {
+        "ID": 9014200,
+        "Text": "- Barrier of Gold"
+      },
+      {
+        "ID": 9014300,
+        "Text": "- Rotten Battle Hammer"
+      },
+      {
+        "ID": 9014400,
+        "Text": "- Battlemage Hugues"
+      },
+      {
+        "ID": 9014500,
+        "Text": "- Battlemage Legwraps"
+      },
+      {
+        "ID": 9014600,
+        "Text": "- Battlemage Manchettes"
+      },
+      {
+        "ID": 9014700,
+        "Text": "- Battlemage Robe"
+      },
+      {
+        "ID": 9014800,
+        "Text": "1 Beast Blood"
+      },
+      {
+        "ID": 9014801,
+        "Text": "2 Beast Blood"
+      },
+      {
+        "ID": 9014802,
+        "Text": "3 Beast Blood"
+      },
+      {
+        "ID": 9014900,
+        "Text": "- Beast Champion Armor (Altered)"
+      },
+      {
+        "ID": 9015000,
+        "Text": "- Beast Champion Gauntlets"
+      },
+      {
+        "ID": 9015100,
+        "Text": "- Beast Champion Greaves"
+      },
+      {
+        "ID": 9015200,
+        "Text": "- Beast Champion Helm"
+      },
+      {
+        "ID": 9015300,
+        "Text": "Beast Claw"
+      },
+      {
+        "ID": 9015400,
+        "Text": "Beast Crest Heater Shield"
+      },
+      {
+        "ID": 9015500,
+        "Text": "Beast Eye"
+      },
+      {
+        "ID": 9015600,
+        "Text": "1 Beast Liver"
+      },
+      {
+        "ID": 9015602,
+        "Text": "3 Beast Liver"
+      },
+      {
+        "ID": 9015700,
+        "Text": "Beastclaw Greathammer"
+      },
+      {
+        "ID": 9015800,
+        "Text": "Bernahl\u0027s Bell Bearing"
+      },
+      {
+        "ID": 9015900,
+        "Text": "- Bestial Constitution"
+      },
+      {
+        "ID": 9016000,
+        "Text": "Bestial Sling"
+      },
+      {
+        "ID": 9016100,
+        "Text": "Bestial Vitality"
+      },
+      {
+        "ID": 9016202,
+        "Text": "3 Bewitching Branch"
+      },
+      {
+        "ID": 9016300,
+        "Text": "Black Bow"
+      },
+      {
+        "ID": 9016400,
+        "Text": "- Black Flame Ritual"
+      },
+      {
+        "ID": 9016500,
+        "Text": "Black Flame\u0027s Protection"
+      },
+      {
+        "ID": 9016600,
+        "Text": "Black Hood"
+      },
+      {
+        "ID": 9016700,
+        "Text": "- Black Knife"
+      },
+      {
+        "ID": 9016800,
+        "Text": "Black Knife Armor"
+      },
+      {
+        "ID": 9016900,
+        "Text": "Black Knife Gauntlets"
+      },
+      {
+        "ID": 9017000,
+        "Text": "Black Knife Greaves"
+      },
+      {
+        "ID": 9017100,
+        "Text": "Black Knife Hood"
+      },
+      {
+        "ID": 9017200,
+        "Text": "- Black Knife Tiche"
+      },
+      {
+        "ID": 9017300,
+        "Text": "- Black Knifeprint"
+      },
+      {
+        "ID": 9017400,
+        "Text": "Black Whetblade"
+      },
+      {
+        "ID": 9017500,
+        "Text": "Black Wolf Mask"
+      },
+      {
+        "ID": 9017609,
+        "Text": "10 Black-Key Bolt"
+      },
+      {
+        "ID": 9017619,
+        "Text": "20 Black-Key Bolt"
+      },
+      {
+        "ID": 9017700,
+        "Text": "- Blackflame Monk Amon"
+      },
+      {
+        "ID": 9017800,
+        "Text": "Blackguard\u0027s Bell Bearing"
+      },
+      {
+        "ID": 9017900,
+        "Text": "Blackguard\u0027s Iron Mask"
+      },
+      {
+        "ID": 9018000,
+        "Text": "- Grafted Blade Greatsword"
+      },
+      {
+        "ID": 9018100,
+        "Text": "Blade of Calling"
+      },
+      {
+        "ID": 9018200,
+        "Text": "Blaidd\u0027s Armor"
+      },
+      {
+        "ID": 9018300,
+        "Text": "Blaidd\u0027s Gauntlets"
+      },
+      {
+        "ID": 9018400,
+        "Text": "Blaidd\u0027s Greaves"
+      },
+      {
+        "ID": 9018500,
+        "Text": "- Blasphemous Claw"
+      },
+      {
+        "ID": 9018600,
+        "Text": "Blessed Dew Talisman"
+      },
+      {
+        "ID": 9018700,
+        "Text": "Blessing of the Erdtree"
+      },
+      {
+        "ID": 9018801,
+        "Text": "2 Blood Grease"
+      },
+      {
+        "ID": 9018802,
+        "Text": "3 Blood Grease"
+      },
+      {
+        "ID": 9018907,
+        "Text": "8 Blood-Tainted Excrement"
+      },
+      {
+        "ID": 9019000,
+        "Text": "- Bloodflame Blade"
+      },
+      {
+        "ID": 9019100,
+        "Text": "- Bloodflame Talons"
+      },
+      {
+        "ID": 9019200,
+        "Text": "- Bloodhound Claws"
+      },
+      {
+        "ID": 9019300,
+        "Text": "- Bloodhound Knight Armor"
+      },
+      {
+        "ID": 9019400,
+        "Text": "- Bloodhound Knight Floh"
+      },
+      {
+        "ID": 9019500,
+        "Text": "- Bloodhound Knight Gauntlets"
+      },
+      {
+        "ID": 9019600,
+        "Text": "- Bloodhound Knight Greaves"
+      },
+      {
+        "ID": 9019700,
+        "Text": "- Bloodhound Knight Helm"
+      },
+      {
+        "ID": 9019800,
+        "Text": "- Bloodhound\u0027s Fang"
+      },
+      {
+        "ID": 9019902,
+        "Text": "3 Bloodrose"
+      },
+      {
+        "ID": 9019904,
+        "Text": "5 Bloodrose"
+      },
+      {
+        "ID": 9019907,
+        "Text": "8 Bloodrose"
+      },
+      {
+        "ID": 9020000,
+        "Text": "Bloodsoaked Manchettes"
+      },
+      {
+        "ID": 9020100,
+        "Text": "Bloodsoaked Mask"
+      },
+      {
+        "ID": 9020200,
+        "Text": "Bloody Finger"
+      },
+      {
+        "ID": 9020300,
+        "Text": "Bloody Helice"
+      },
+      {
+        "ID": 9020400,
+        "Text": "- Blue Dancer Charm"
+      },
+      {
+        "ID": 9020500,
+        "Text": "Blue Silver Bracelets"
+      },
+      {
+        "ID": 9020600,
+        "Text": "Blue Silver Mail Armor"
+      },
+      {
+        "ID": 9020700,
+        "Text": "Blue Silver Mail Hood"
+      },
+      {
+        "ID": 9020800,
+        "Text": "Blue Silver Mail Skirt"
+      },
+      {
+        "ID": 9020900,
+        "Text": "- Blue-Feathered Branchsword"
+      },
+      {
+        "ID": 9021000,
+        "Text": "Blue-White Wooden Shield"
+      },
+      {
+        "ID": 9021109,
+        "Text": "10 Bolt"
+      },
+      {
+        "ID": 9021200,
+        "Text": "Bolt of Gransax"
+      },
+      {
+        "ID": 9021300,
+        "Text": "Boltdrake Talisman"
+      },
+      {
+        "ID": 9021400,
+        "Text": "Boltdrake Talisman \u002B1"
+      },
+      {
+        "ID": 9021500,
+        "Text": "Boltdrake Talisman \u002B2"
+      },
+      {
+        "ID": 9021600,
+        "Text": "- Bone Peddler\u0027s Bell Bearing"
+      },
+      {
+        "ID": 9021700,
+        "Text": "Briar Armor"
+      },
+      {
+        "ID": 9021800,
+        "Text": "- Briar Greatshield"
+      },
+      {
+        "ID": 9021900,
+        "Text": "Briar Greaves"
+      },
+      {
+        "ID": 9022000,
+        "Text": "Briar Helm"
+      },
+      {
+        "ID": 9022100,
+        "Text": "Briars of Punishment"
+      },
+      {
+        "ID": 9022200,
+        "Text": "- Briars of Sin"
+      },
+      {
+        "ID": 9022300,
+        "Text": "Brick Hammer"
+      },
+      {
+        "ID": 9022403,
+        "Text": "4 Budding Cave Moss"
+      },
+      {
+        "ID": 9022502,
+        "Text": "3 Budding Horn"
+      },
+      {
+        "ID": 9022600,
+        "Text": "Bull-Goat Armor"
+      },
+      {
+        "ID": 9022700,
+        "Text": "Bull-Goat Gauntlets"
+      },
+      {
+        "ID": 9022800,
+        "Text": "Bull-Goat Greaves"
+      },
+      {
+        "ID": 9022900,
+        "Text": "Bull-Goat Helm"
+      },
+      {
+        "ID": 9023000,
+        "Text": "Bull-Goat\u0027s Talisman"
+      },
+      {
+        "ID": 9023104,
+        "Text": "5 Burred Bolt"
+      },
+      {
+        "ID": 9023109,
+        "Text": "10 Burred Bolt"
+      },
+      {
+        "ID": 9023200,
+        "Text": "Candletree Wooden Shield"
+      },
+      {
+        "ID": 9023300,
+        "Text": "Cane Sword"
+      },
+      {
+        "ID": 9023400,
+        "Text": "Cannon of Haima"
+      },
+      {
+        "ID": 9023500,
+        "Text": "Carian Glintblade Staff"
+      },
+      {
+        "ID": 9023600,
+        "Text": "Carian Glintstone Staff"
+      },
+      {
+        "ID": 9023700,
+        "Text": "Carian Inverted Statue"
+      },
+      {
+        "ID": 9023800,
+        "Text": "Carian Knight Armor"
+      },
+      {
+        "ID": 9023900,
+        "Text": "Carian Knight Gauntlets"
+      },
+      {
+        "ID": 9024000,
+        "Text": "Carian Knight Greaves"
+      },
+      {
+        "ID": 9024100,
+        "Text": "Carian Knight Helm"
+      },
+      {
+        "ID": 9024200,
+        "Text": "- Carian Knight\u0027s Shield"
+      },
+      {
+        "ID": 9024300,
+        "Text": "Carian Knight\u0027s Sword"
+      },
+      {
+        "ID": 9024400,
+        "Text": "- Carian Piercer"
+      },
+      {
+        "ID": 9024509,
+        "Text": "10 Cave Moss"
+      },
+      {
+        "ID": 9024600,
+        "Text": "Celebrant\u0027s Skull"
+      },
+      {
+        "ID": 9024700,
+        "Text": "1 Celestial Dew"
+      },
+      {
+        "ID": 9024800,
+        "Text": "- Cerulean Amber Medallion"
+      },
+      {
+        "ID": 9024900,
+        "Text": "Cerulean Amber Medallion \u002B1"
+      },
+      {
+        "ID": 9025000,
+        "Text": "Cerulean Amber Medallion \u002B2"
+      },
+      {
+        "ID": 9025100,
+        "Text": "- Cerulean Crystal Tear"
+      },
+      {
+        "ID": 9025200,
+        "Text": "- Cerulean Hidden Tear"
+      },
+      {
+        "ID": 9025300,
+        "Text": "Cerulean Seed Talisman"
+      },
+      {
+        "ID": 9025400,
+        "Text": "Cerulean Tear Scarab"
+      },
+      {
+        "ID": 9025500,
+        "Text": "Chrysalids\u0027 Memento"
+      },
+      {
+        "ID": 9025600,
+        "Text": "Cinquedea"
+      },
+      {
+        "ID": 9025700,
+        "Text": "Cipher Pata"
+      },
+      {
+        "ID": 9025800,
+        "Text": "1 Clarifying Boluses"
+      },
+      {
+        "ID": 9025900,
+        "Text": "Clarifying Horn Charm"
+      },
+      {
+        "ID": 9026000,
+        "Text": "Clarifying Horn Charm \u002B1"
+      },
+      {
+        "ID": 9026100,
+        "Text": "1 Clarifying White Cured Meat"
+      },
+      {
+        "ID": 9026200,
+        "Text": "Claw Talisman"
+      },
+      {
+        "ID": 9026300,
+        "Text": "Clawmark Seal"
+      },
+      {
+        "ID": 9026400,
+        "Text": "Clayman Ashes"
+      },
+      {
+        "ID": 9026500,
+        "Text": "Claymore"
+      },
+      {
+        "ID": 9026600,
+        "Text": "Cleanrot Knight Finlay"
+      },
+      {
+        "ID": 9026700,
+        "Text": "Clinging Bone"
+      },
+      {
+        "ID": 9026800,
+        "Text": "Cloth Garb"
+      },
+      {
+        "ID": 9026900,
+        "Text": "Cloth Trousers"
+      },
+      {
+        "ID": 9027000,
+        "Text": "Coded Sword"
+      },
+      {
+        "ID": 9027100,
+        "Text": "Coil Shield"
+      },
+      {
+        "ID": 9027200,
+        "Text": "Collapsing Stars"
+      },
+      {
+        "ID": 9027300,
+        "Text": "Comet"
+      },
+      {
+        "ID": 9027400,
+        "Text": "Comet Azur"
+      },
+      {
+        "ID": 9027500,
+        "Text": "- Commander\u0027s Standard"
+      },
+      {
+        "ID": 9027600,
+        "Text": "Commoner\u0027s Headband"
+      },
+      {
+        "ID": 9027700,
+        "Text": "Commoner\u0027s Simple Garb"
+      },
+      {
+        "ID": 9027800,
+        "Text": "Companion Jar"
+      },
+      {
+        "ID": 9027900,
+        "Text": "Composite Bow"
+      },
+      {
+        "ID": 9028000,
+        "Text": "- Concealing Veil"
+      },
+      {
+        "ID": 9028100,
+        "Text": "Confessor Armor"
+      },
+      {
+        "ID": 9028200,
+        "Text": "Confessor Boots"
+      },
+      {
+        "ID": 9028300,
+        "Text": "Confessor Gloves"
+      },
+      {
+        "ID": 9028400,
+        "Text": "Confessor Hood"
+      },
+      {
+        "ID": 9028500,
+        "Text": "Consort\u0027s Mask"
+      },
+      {
+        "ID": 9028600,
+        "Text": "Consort\u0027s Robe"
+      },
+      {
+        "ID": 9028700,
+        "Text": "Consort\u0027s Trousers"
+      },
+      {
+        "ID": 9028800,
+        "Text": "Conspectus Scroll"
+      },
+      {
+        "ID": 9028900,
+        "Text": "Corhyn\u0027s Bell Bearing"
+      },
+      {
+        "ID": 9029000,
+        "Text": "Corhyn\u0027s Robe"
+      },
+      {
+        "ID": 9029100,
+        "Text": "1 Crab Eggs"
+      },
+      {
+        "ID": 9029102,
+        "Text": "3 Crab Eggs"
+      },
+      {
+        "ID": 9029103,
+        "Text": "4 Crab Eggs"
+      },
+      {
+        "ID": 9029200,
+        "Text": "Cracked Crystal"
+      },
+      {
+        "ID": 9029300,
+        "Text": "1 Cracked Pot"
+      },
+      {
+        "ID": 9029400,
+        "Text": "Cranial Vessel Candlestand"
+      },
+      {
+        "ID": 9029500,
+        "Text": "Crepus\u0027s Black-Key Crossbow"
+      },
+      {
+        "ID": 9029600,
+        "Text": "Crepus\u0027s Vial"
+      },
+      {
+        "ID": 9029700,
+        "Text": "Crimson Amber Medallion \u002B1"
+      },
+      {
+        "ID": 9029800,
+        "Text": "Crimson Amber Medallion \u002B2"
+      },
+      {
+        "ID": 9029900,
+        "Text": "- Crimson Bubbletear"
+      },
+      {
+        "ID": 9030000,
+        "Text": "Crimson Crystal Tear"
+      },
+      {
+        "ID": 9030100,
+        "Text": "Crimson Hood"
+      },
+      {
+        "ID": 9030200,
+        "Text": "Crimson Seed Talisman"
+      },
+      {
+        "ID": 9030300,
+        "Text": "Crimson Tear Scarab"
+      },
+      {
+        "ID": 9030400,
+        "Text": "- Crimsonburst Crystal Tear"
+      },
+      {
+        "ID": 9030500,
+        "Text": "- Crimsonspill Crystal Tear"
+      },
+      {
+        "ID": 9030600,
+        "Text": "Crimsonwhorl Bubbletear"
+      },
+      {
+        "ID": 9030700,
+        "Text": "Cross-Naginata"
+      },
+      {
+        "ID": 9030800,
+        "Text": "- Crucible Axe Armor"
+      },
+      {
+        "ID": 9030900,
+        "Text": "- Crucible Axe Helm"
+      },
+      {
+        "ID": 9031000,
+        "Text": "Crucible Feather Talisman"
+      },
+      {
+        "ID": 9031100,
+        "Text": "Crucible Gauntlets"
+      },
+      {
+        "ID": 9031150,
+        "Text": "- Crucible Gauntlets"
+      },
+      {
+        "ID": 9031200,
+        "Text": "Crucible Greaves"
+      },
+      {
+        "ID": 9031250,
+        "Text": "- Crucible Greaves"
+      },
+      {
+        "ID": 9031300,
+        "Text": "- Crucible Hornshield"
+      },
+      {
+        "ID": 9031400,
+        "Text": "- Crucible Knot Talisman"
+      },
+      {
+        "ID": 9031500,
+        "Text": "Crucible Scale Talisman"
+      },
+      {
+        "ID": 9031600,
+        "Text": "Crucible Tree Armor"
+      },
+      {
+        "ID": 9031700,
+        "Text": "Crucible Tree Helm"
+      },
+      {
+        "ID": 9031801,
+        "Text": "2 Crystal Bud"
+      },
+      {
+        "ID": 9031804,
+        "Text": "5 Crystal Bud"
+      },
+      {
+        "ID": 9031900,
+        "Text": "- Crystal Burst"
+      },
+      {
+        "ID": 9032002,
+        "Text": "3 Crystal Cave Moss"
+      },
+      {
+        "ID": 9032102,
+        "Text": "3 Crystal Dart"
+      },
+      {
+        "ID": 9032103,
+        "Text": "4 Crystal Dart"
+      },
+      {
+        "ID": 9032104,
+        "Text": "5 Crystal Dart"
+      },
+      {
+        "ID": 9032107,
+        "Text": "8 Crystal Dart"
+      },
+      {
+        "ID": 9032109,
+        "Text": "10 Crystal Dart"
+      },
+      {
+        "ID": 9032200,
+        "Text": "Crystal Knife"
+      },
+      {
+        "ID": 9032300,
+        "Text": "- Crystal Release"
+      },
+      {
+        "ID": 9032400,
+        "Text": "Crystal Spear"
+      },
+      {
+        "ID": 9032500,
+        "Text": "Crystal Staff"
+      },
+      {
+        "ID": 9032600,
+        "Text": "Crystal Sword"
+      },
+      {
+        "ID": 9032700,
+        "Text": "- Crystal Torrent"
+      },
+      {
+        "ID": 9032800,
+        "Text": "Crystalian Ashes"
+      },
+      {
+        "ID": 9032902,
+        "Text": "3 Cuckoo Glintstone"
+      },
+      {
+        "ID": 9032903,
+        "Text": "4 Cuckoo Glintstone"
+      },
+      {
+        "ID": 9032904,
+        "Text": "5 Cuckoo Glintstone"
+      },
+      {
+        "ID": 9032907,
+        "Text": "8 Cuckoo Glintstone"
+      },
+      {
+        "ID": 9032909,
+        "Text": "10 Cuckoo Glintstone"
+      },
+      {
+        "ID": 9033000,
+        "Text": "Cursemark of Death"
+      },
+      {
+        "ID": 9033100,
+        "Text": "Curved Sword Talisman"
+      },
+      {
+        "ID": 9033200,
+        "Text": "D\u0027s Bell Bearing"
+      },
+      {
+        "ID": 9033300,
+        "Text": "Daedicar\u0027s Woe"
+      },
+      {
+        "ID": 9033400,
+        "Text": "Dagger Talisman"
+      },
+      {
+        "ID": 9033500,
+        "Text": "Dancer\u0027s Castanets"
+      },
+      {
+        "ID": 9033600,
+        "Text": "1 Dappled Cured Meat"
+      },
+      {
+        "ID": 9033700,
+        "Text": "1 Dappled White Cured Meat"
+      },
+      {
+        "ID": 9033800,
+        "Text": "Dark Moon Greatsword"
+      },
+      {
+        "ID": 9033900,
+        "Text": "Dark Moon Ring"
+      },
+      {
+        "ID": 9034000,
+        "Text": "- Death Ritual Spear"
+      },
+      {
+        "ID": 9034100,
+        "Text": "- Death\u0027s Poker"
+      },
+      {
+        "ID": 9034200,
+        "Text": "Deathbed Dress"
+      },
+      {
+        "ID": 9034300,
+        "Text": "1 Deathroot"
+      },
+      {
+        "ID": 9034400,
+        "Text": "Dectus Medallion (Left)"
+      },
+      {
+        "ID": 9034500,
+        "Text": "Dectus Medallion (Right)"
+      },
+      {
+        "ID": 9034600,
+        "Text": "- Demi-Human Ashes"
+      },
+      {
+        "ID": 9034700,
+        "Text": "- Demi-Human Queen\u0027s Staff"
+      },
+      {
+        "ID": 9034800,
+        "Text": "Depraved Perfumer Carmaan"
+      },
+      {
+        "ID": 9034900,
+        "Text": "- Devourer\u0027s Scepter"
+      },
+      {
+        "ID": 9035000,
+        "Text": "Dewkissed Herba"
+      },
+      {
+        "ID": 9035100,
+        "Text": "Dexterity-knot Crystal Tear"
+      },
+      {
+        "ID": 9035200,
+        "Text": "Diallos\u0027s Mask"
+      },
+      {
+        "ID": 9035300,
+        "Text": "Discarded Palace Key"
+      },
+      {
+        "ID": 9035400,
+        "Text": "- Divine Fortification"
+      },
+      {
+        "ID": 9035500,
+        "Text": "Dolores the Sleeping Arrow Puppet"
+      },
+      {
+        "ID": 9035600,
+        "Text": "- Dragon Cult Prayerbook"
+      },
+      {
+        "ID": 9035700,
+        "Text": "- Dragon Greatclaw"
+      },
+      {
+        "ID": 9035800,
+        "Text": "- Dragon Halberd"
+      },
+      {
+        "ID": 9035900,
+        "Text": "- 1 Dragon Heart"
+      },
+      {
+        "ID": 9035902,
+        "Text": "- 3 Dragon Heart"
+      },
+      {
+        "ID": 9035904,
+        "Text": "- 5 Dragon Heart"
+      },
+      {
+        "ID": 9036000,
+        "Text": "Flame, Grant Me Strength"
+      },
+      {
+        "ID": 9036100,
+        "Text": "Dragon Towershield"
+      },
+      {
+        "ID": 9036200,
+        "Text": "Dragonbane Talisman"
+      },
+      {
+        "ID": 9036300,
+        "Text": "Dragonbolt Blessing"
+      },
+      {
+        "ID": 9036400,
+        "Text": "- Dragonclaw Shield"
+      },
+      {
+        "ID": 9036500,
+        "Text": "Dragoncrest Greatshield Talisman"
+      },
+      {
+        "ID": 9036600,
+        "Text": "Dragoncrest Shield Talisman"
+      },
+      {
+        "ID": 9036700,
+        "Text": "Dragoncrest Shield Talisman \u002B1"
+      },
+      {
+        "ID": 9036800,
+        "Text": "Dragoncrest Shield Talisman \u002B2"
+      },
+      {
+        "ID": 9036900,
+        "Text": "- Dragonscale Blade"
+      },
+      {
+        "ID": 9037000,
+        "Text": "1 Dragonwound Grease"
+      },
+      {
+        "ID": 9037001,
+        "Text": "2 Dragonwound Grease"
+      },
+      {
+        "ID": 9037002,
+        "Text": "3 Dragonwound Grease"
+      },
+      {
+        "ID": 9037003,
+        "Text": "4 Dragonwound Grease"
+      },
+      {
+        "ID": 9037100,
+        "Text": "Drake Knight Armor"
+      },
+      {
+        "ID": 9037200,
+        "Text": "Drake Knight Gauntlets"
+      },
+      {
+        "ID": 9037300,
+        "Text": "Drake Knight Greaves"
+      },
+      {
+        "ID": 9037400,
+        "Text": "Drake Knight Helm"
+      },
+      {
+        "ID": 9037500,
+        "Text": "Drawing-Room Key"
+      },
+      {
+        "ID": 9037603,
+        "Text": "4 Drawstring Blood Grease"
+      },
+      {
+        "ID": 9037701,
+        "Text": "2 Drawstring Fire Grease"
+      },
+      {
+        "ID": 9037702,
+        "Text": "3 Drawstring Fire Grease"
+      },
+      {
+        "ID": 9037703,
+        "Text": "4 Drawstring Fire Grease"
+      },
+      {
+        "ID": 9037801,
+        "Text": "2 Drawstring Holy Grease"
+      },
+      {
+        "ID": 9037802,
+        "Text": "3 Drawstring Holy Grease"
+      },
+      {
+        "ID": 9037901,
+        "Text": "2 Drawstring Lightning Grease"
+      },
+      {
+        "ID": 9038002,
+        "Text": "3 Drawstring Poison Grease"
+      },
+      {
+        "ID": 9038100,
+        "Text": "Duelist\u0027s Furled Finger"
+      },
+      {
+        "ID": 9038207,
+        "Text": "8 Dwelling Arrow"
+      },
+      {
+        "ID": 9038209,
+        "Text": "10 Dwelling Arrow"
+      },
+      {
+        "ID": 9038300,
+        "Text": "Eccentric\u0027s Armor"
+      },
+      {
+        "ID": 9038400,
+        "Text": "Eccentric\u0027s Breeches"
+      },
+      {
+        "ID": 9038500,
+        "Text": "Eccentric\u0027s Hood"
+      },
+      {
+        "ID": 9038600,
+        "Text": "Eccentric\u0027s Manchettes"
+      },
+      {
+        "ID": 9038700,
+        "Text": "Eclipse Crest Heater Shield"
+      },
+      {
+        "ID": 9038800,
+        "Text": "Eclipse Shotel"
+      },
+      {
+        "ID": 9038900,
+        "Text": "- Elden Remembrance"
+      },
+      {
+        "ID": 9039000,
+        "Text": "Elden Stars"
+      },
+      {
+        "ID": 9039100,
+        "Text": "- Eleonora\u0027s Poleblade"
+      },
+      {
+        "ID": 9039200,
+        "Text": "Envoy Crown"
+      },
+      {
+        "ID": 9039300,
+        "Text": "Erdleaf Flower"
+      },
+      {
+        "ID": 9039400,
+        "Text": "Erdsteel Dagger"
+      },
+      {
+        "ID": 9039500,
+        "Text": "Erdtree Bow"
+      },
+      {
+        "ID": 9039600,
+        "Text": "- Erdtree Greatbow"
+      },
+      {
+        "ID": 9039700,
+        "Text": "- Erdtree Greatshield"
+      },
+      {
+        "ID": 9039800,
+        "Text": "Erdtree Heal"
+      },
+      {
+        "ID": 9039900,
+        "Text": "Erdtree Seal"
+      },
+      {
+        "ID": 9040000,
+        "Text": "Erdtree\u0027s Favor"
+      },
+      {
+        "ID": 9040100,
+        "Text": "Erdtree\u0027s Favor \u002B1"
+      },
+      {
+        "ID": 9040200,
+        "Text": "Erdtree\u0027s Favor \u002B2"
+      },
+      {
+        "ID": 9040300,
+        "Text": "Errant Sorcerer Boots"
+      },
+      {
+        "ID": 9040400,
+        "Text": "Errant Sorcerer Manchettes"
+      },
+      {
+        "ID": 9040500,
+        "Text": "Errant Sorcerer Robe (Altered)"
+      },
+      {
+        "ID": 9040600,
+        "Text": "Eternal Darkness"
+      },
+      {
+        "ID": 9040700,
+        "Text": "1 Exalted Flesh"
+      },
+      {
+        "ID": 9040701,
+        "Text": "2 Exalted Flesh"
+      },
+      {
+        "ID": 9040805,
+        "Text": "6 Explosive Bolt"
+      },
+      {
+        "ID": 9040900,
+        "Text": "- Explosive Ghostflame"
+      },
+      {
+        "ID": 9041004,
+        "Text": "5 Explosive Greatbolt"
+      },
+      {
+        "ID": 9041102,
+        "Text": "3 Explosive Stone Clump"
+      },
+      {
+        "ID": 9041105,
+        "Text": "6 Explosive Stone Clump"
+      },
+      {
+        "ID": 9041200,
+        "Text": "1 Eye of Yelough"
+      },
+      {
+        "ID": 9041202,
+        "Text": "3 Eye of Yelough"
+      },
+      {
+        "ID": 9041204,
+        "Text": "5 Eye of Yelough"
+      },
+      {
+        "ID": 9041300,
+        "Text": "Eye Surcoat"
+      },
+      {
+        "ID": 9041400,
+        "Text": "Faded Erdleaf Flower"
+      },
+      {
+        "ID": 9041500,
+        "Text": "Faith-knot Crystal Tear"
+      },
+      {
+        "ID": 9041600,
+        "Text": "Faithful\u0027s Canvas Talisman"
+      },
+      {
+        "ID": 9041700,
+        "Text": "- Fallingstar Beast Jaw"
+      },
+      {
+        "ID": 9041800,
+        "Text": "- Family Heads"
+      },
+      {
+        "ID": 9041900,
+        "Text": "1 Fan Daggers"
+      },
+      {
+        "ID": 9041903,
+        "Text": "4 Fan Daggers"
+      },
+      {
+        "ID": 9041904,
+        "Text": "5 Fan Daggers"
+      },
+      {
+        "ID": 9041905,
+        "Text": "6 Fan Daggers"
+      },
+      {
+        "ID": 9041907,
+        "Text": "8 Fan Daggers"
+      },
+      {
+        "ID": 9042002,
+        "Text": "3 Festering Bloody Finger"
+      },
+      {
+        "ID": 9042100,
+        "Text": "Fetid Pot"
+      },
+      {
+        "ID": 9042200,
+        "Text": "Fevor\u0027s Cookbook [1]"
+      },
+      {
+        "ID": 9042300,
+        "Text": "Fevor\u0027s Cookbook [3]"
+      },
+      {
+        "ID": 9042400,
+        "Text": "Fia\u0027s Hood"
+      },
+      {
+        "ID": 9042500,
+        "Text": "- Fia\u0027s Mist"
+      },
+      {
+        "ID": 9042600,
+        "Text": "Fia\u0027s Robe"
+      },
+      {
+        "ID": 9042700,
+        "Text": "Finger Maiden Fillet"
+      },
+      {
+        "ID": 9042800,
+        "Text": "Finger Maiden Robe"
+      },
+      {
+        "ID": 9042900,
+        "Text": "Finger Maiden Shoes"
+      },
+      {
+        "ID": 9043000,
+        "Text": "Finger Severer"
+      },
+      {
+        "ID": 9043100,
+        "Text": "- Fingerprint Armor"
+      },
+      {
+        "ID": 9043200,
+        "Text": "- Fingerprint Gauntlets"
+      },
+      {
+        "ID": 9043300,
+        "Text": "- Fingerprint Grape"
+      },
+      {
+        "ID": 9043400,
+        "Text": "- Fingerprint Greaves"
+      },
+      {
+        "ID": 9043500,
+        "Text": "- Fingerprint Helm"
+      },
+      {
+        "ID": 9043600,
+        "Text": "Fingerprint Stone Shield"
+      },
+      {
+        "ID": 9043700,
+        "Text": "Fingerslayer Blade"
+      },
+      {
+        "ID": 9043804,
+        "Text": "5 Fire Arrow"
+      },
+      {
+        "ID": 9043809,
+        "Text": "10 Fire Arrow"
+      },
+      {
+        "ID": 9043811,
+        "Text": "12 Fire Arrow"
+      },
+      {
+        "ID": 9043814,
+        "Text": "15 Fire Arrow"
+      },
+      {
+        "ID": 9043905,
+        "Text": "6 Fire Blossom"
+      },
+      {
+        "ID": 9044000,
+        "Text": "1 Fire Grease"
+      },
+      {
+        "ID": 9044001,
+        "Text": "2 Fire Grease"
+      },
+      {
+        "ID": 9044002,
+        "Text": "3 Fire Grease"
+      },
+      {
+        "ID": 9044004,
+        "Text": "5 Fire Grease"
+      },
+      {
+        "ID": 9044100,
+        "Text": "Fire Longsword"
+      },
+      {
+        "ID": 9044200,
+        "Text": "Fire Monk Ashes"
+      },
+      {
+        "ID": 9044300,
+        "Text": "Fire Monks\u0027 Prayerbook"
+      },
+      {
+        "ID": 9044400,
+        "Text": "Fire Scorpion Charm"
+      },
+      {
+        "ID": 9044500,
+        "Text": "Fire\u0027s Deadly Sin"
+      },
+      {
+        "ID": 9044600,
+        "Text": "1 Fireproof Dried Liver"
+      },
+      {
+        "ID": 9044601,
+        "Text": "2 Fireproof Dried Liver"
+      },
+      {
+        "ID": 9044602,
+        "Text": "3 Fireproof Dried Liver"
+      },
+      {
+        "ID": 9044700,
+        "Text": "Flail"
+      },
+      {
+        "ID": 9044800,
+        "Text": "Flamberge"
+      },
+      {
+        "ID": 9044900,
+        "Text": "Flame, Cleanse Me"
+      },
+      {
+        "ID": 9045000,
+        "Text": "Flame Crest Wooden Shield"
+      },
+      {
+        "ID": 9045100,
+        "Text": "- Flame of the Fell God"
+      },
+      {
+        "ID": 9045200,
+        "Text": "Flame Sling"
+      },
+      {
+        "ID": 9045300,
+        "Text": "- Flame, Protect Me"
+      },
+      {
+        "ID": 9045400,
+        "Text": "- Flame-Shrouding Cracked Tear"
+      },
+      {
+        "ID": 9045500,
+        "Text": "- Flamedrake Talisman"
+      },
+      {
+        "ID": 9045600,
+        "Text": "Flamedrake Talisman \u002B1"
+      },
+      {
+        "ID": 9045700,
+        "Text": "- Flamedrake Talisman \u002B2"
+      },
+      {
+        "ID": 9045809,
+        "Text": "10 Flaming Bolt"
+      },
+      {
+        "ID": 9045900,
+        "Text": "Flask of Cerulean Tears"
+      },
+      {
+        "ID": 9046000,
+        "Text": "Flask of Crimson Tears"
+      },
+      {
+        "ID": 9046100,
+        "Text": "Flask of Wondrous Physick"
+      },
+      {
+        "ID": 9046200,
+        "Text": "Flock\u0027s Canvas Talisman"
+      },
+      {
+        "ID": 9046300,
+        "Text": "Flowing Curved Sword"
+      },
+      {
+        "ID": 9046400,
+        "Text": "1 Formic Rock"
+      },
+      {
+        "ID": 9046401,
+        "Text": "2 Formic Rock"
+      },
+      {
+        "ID": 9046500,
+        "Text": "Founding Rain of Stars"
+      },
+      {
+        "ID": 9046602,
+        "Text": "3 Four-Toed Fowl Foot"
+      },
+      {
+        "ID": 9046700,
+        "Text": "1 Freezing Grease"
+      },
+      {
+        "ID": 9046701,
+        "Text": "2 Freezing Grease"
+      },
+      {
+        "ID": 9046702,
+        "Text": "3 Freezing Grease"
+      },
+      {
+        "ID": 9046703,
+        "Text": "4 Freezing Grease"
+      },
+      {
+        "ID": 9046704,
+        "Text": "5 Freezing Grease"
+      },
+      {
+        "ID": 9046705,
+        "Text": "6 Freezing Grease"
+      },
+      {
+        "ID": 9046800,
+        "Text": "- Frenzied Burst"
+      },
+      {
+        "ID": 9046900,
+        "Text": "Frenzied Flame Seal"
+      },
+      {
+        "ID": 9047000,
+        "Text": "Frenzied\u0027s Cookbook [1]"
+      },
+      {
+        "ID": 9047100,
+        "Text": "Frenzied\u0027s Cookbook [2]"
+      },
+      {
+        "ID": 9047200,
+        "Text": "1 Frenzyflame Stone"
+      },
+      {
+        "ID": 9047300,
+        "Text": "- Frozen Armament"
+      },
+      {
+        "ID": 9047400,
+        "Text": "- Frozen Lightning Spear"
+      },
+      {
+        "ID": 9047500,
+        "Text": "Frozen Needle"
+      },
+      {
+        "ID": 9047603,
+        "Text": "4 Fulgurbloom"
+      },
+      {
+        "ID": 9047604,
+        "Text": "5 Fulgurbloom"
+      },
+      {
+        "ID": 9047607,
+        "Text": "8 Fulgurbloom"
+      },
+      {
+        "ID": 9047700,
+        "Text": "Full Moon Crossbow"
+      },
+      {
+        "ID": 9047800,
+        "Text": "1 Furlcalling Finger Remedy"
+      },
+      {
+        "ID": 9047802,
+        "Text": "3 Furlcalling Finger Remedy"
+      },
+      {
+        "ID": 9047900,
+        "Text": "- Gargoyle\u0027s Black Axe"
+      },
+      {
+        "ID": 9048000,
+        "Text": "- Gargoyle\u0027s Black Blades"
+      },
+      {
+        "ID": 9048100,
+        "Text": "- Gargoyle\u0027s Black Halberd"
+      },
+      {
+        "ID": 9048200,
+        "Text": "- Gargoyle\u0027s Blackblade"
+      },
+      {
+        "ID": 9048300,
+        "Text": "- Gargoyle\u0027s Great Axe"
+      },
+      {
+        "ID": 9048400,
+        "Text": "- Gargoyle\u0027s Greatsword"
+      },
+      {
+        "ID": 9048500,
+        "Text": "- Gargoyle\u0027s Halberd"
+      },
+      {
+        "ID": 9048600,
+        "Text": "- Gargoyle\u0027s Twinblade"
+      },
+      {
+        "ID": 9048700,
+        "Text": "Gavel of Haima"
+      },
+      {
+        "ID": 9048800,
+        "Text": "Gelmir Knight Armor"
+      },
+      {
+        "ID": 9048900,
+        "Text": "Gelmir Knight Gauntlets"
+      },
+      {
+        "ID": 9049000,
+        "Text": "Gelmir Knight Greaves"
+      },
+      {
+        "ID": 9049100,
+        "Text": "Gelmir Knight Helm"
+      },
+      {
+        "ID": 9049200,
+        "Text": "- Gelmir\u0027s Fury"
+      },
+      {
+        "ID": 9049300,
+        "Text": "- Ghiza\u0027s Wheel"
+      },
+      {
+        "ID": 9049400,
+        "Text": "Ghost Glovewort [1]"
+      },
+      {
+        "ID": 9049500,
+        "Text": "Ghost Glovewort [2]"
+      },
+      {
+        "ID": 9049600,
+        "Text": "Ghost Glovewort [3]"
+      },
+      {
+        "ID": 9049700,
+        "Text": "Ghost Glovewort [4]"
+      },
+      {
+        "ID": 9049800,
+        "Text": "Ghost Glovewort [5]"
+      },
+      {
+        "ID": 9049900,
+        "Text": "Ghost Glovewort [6]"
+      },
+      {
+        "ID": 9050000,
+        "Text": "Ghost Glovewort [7]"
+      },
+      {
+        "ID": 9050100,
+        "Text": "Ghost Glovewort [8]"
+      },
+      {
+        "ID": 9050200,
+        "Text": "1 Ghost Glovewort [9]"
+      },
+      {
+        "ID": 9050300,
+        "Text": "Ghost-Glovewort Picker\u0027s Bell Bearing [1]"
+      },
+      {
+        "ID": 9050400,
+        "Text": "Ghost-Glovewort Picker\u0027s Bell Bearing [2]"
+      },
+      {
+        "ID": 9050500,
+        "Text": "Ghost-Glovewort Picker\u0027s Bell Bearing [3]"
+      },
+      {
+        "ID": 9050600,
+        "Text": "Ghostflame Torch"
+      },
+      {
+        "ID": 9050700,
+        "Text": "Giant Rat Ashes"
+      },
+      {
+        "ID": 9050800,
+        "Text": "Giant-Crusher"
+      },
+      {
+        "ID": 9050900,
+        "Text": "Giant\u0027s Prayerbook"
+      },
+      {
+        "ID": 9051000,
+        "Text": "Giant\u0027s Seal"
+      },
+      {
+        "ID": 9051100,
+        "Text": "Gilded Iron Shield"
+      },
+      {
+        "ID": 9051200,
+        "Text": "1 Glass Shard"
+      },
+      {
+        "ID": 9051201,
+        "Text": "2 Glass Shard"
+      },
+      {
+        "ID": 9051202,
+        "Text": "3 Glass Shard"
+      },
+      {
+        "ID": 9051204,
+        "Text": "5 Glass Shard"
+      },
+      {
+        "ID": 9051300,
+        "Text": "Glintstone Craftsman\u0027s Cookbook [1]"
+      },
+      {
+        "ID": 9051400,
+        "Text": "Glintstone Craftsman\u0027s Cookbook [2]"
+      },
+      {
+        "ID": 9051500,
+        "Text": "Glintstone Craftsman\u0027s Cookbook [3]"
+      },
+      {
+        "ID": 9051600,
+        "Text": "Glintstone Craftsman\u0027s Cookbook [4]"
+      },
+      {
+        "ID": 9051700,
+        "Text": "Glintstone Craftsman\u0027s Cookbook [5]"
+      },
+      {
+        "ID": 9051800,
+        "Text": "Glintstone Craftsman\u0027s Cookbook [6]"
+      },
+      {
+        "ID": 9051900,
+        "Text": "Glintstone Craftsman\u0027s Cookbook [8]"
+      },
+      {
+        "ID": 9052003,
+        "Text": "4 Glintstone Firefly"
+      },
+      {
+        "ID": 9052004,
+        "Text": "5 Glintstone Firefly"
+      },
+      {
+        "ID": 9052005,
+        "Text": "6 Glintstone Firefly"
+      },
+      {
+        "ID": 9052007,
+        "Text": "8 Glintstone Firefly"
+      },
+      {
+        "ID": 9052100,
+        "Text": "Glintstone Kris"
+      },
+      {
+        "ID": 9052200,
+        "Text": "Glintstone Scarab"
+      },
+      {
+        "ID": 9052302,
+        "Text": "3 Glintstone Scrap"
+      },
+      {
+        "ID": 9052305,
+        "Text": "6 Glintstone Scrap"
+      },
+      {
+        "ID": 9052400,
+        "Text": "- Glintstone Sorcerer Ashes"
+      },
+      {
+        "ID": 9052500,
+        "Text": "- Glintstone Staff"
+      },
+      {
+        "ID": 9052600,
+        "Text": "Glintstone Whetblade"
+      },
+      {
+        "ID": 9052700,
+        "Text": "- Glovewort Picker\u0027s Bell Bearing [1]"
+      },
+      {
+        "ID": 9052800,
+        "Text": "- Glovewort Picker\u0027s Bell Bearing [2]"
+      },
+      {
+        "ID": 9052900,
+        "Text": "Glovewort Picker\u0027s Bell Bearing [3]"
+      },
+      {
+        "ID": 9053001,
+        "Text": "2 Glowstone"
+      },
+      {
+        "ID": 9053002,
+        "Text": "3 Glowstone"
+      },
+      {
+        "ID": 9053003,
+        "Text": "4 Glowstone"
+      },
+      {
+        "ID": 9053004,
+        "Text": "5 Glowstone"
+      },
+      {
+        "ID": 9053100,
+        "Text": "- Godfrey Icon"
+      },
+      {
+        "ID": 9053200,
+        "Text": "Godrick Soldier Ashes"
+      },
+      {
+        "ID": 9053300,
+        "Text": "- Godrick\u0027s Great Rune"
+      },
+      {
+        "ID": 9053301,
+        "Text": "Godrick\u0027s Great Rune"
+      },
+      {
+        "ID": 9053400,
+        "Text": "- Godskin Apostle Bracelets"
+      },
+      {
+        "ID": 9053500,
+        "Text": "- Godskin Apostle Hood"
+      },
+      {
+        "ID": 9053600,
+        "Text": "- Godskin Apostle Robe"
+      },
+      {
+        "ID": 9053700,
+        "Text": "- Godskin Apostle Trousers"
+      },
+      {
+        "ID": 9053800,
+        "Text": "- Godskin Peeler"
+      },
+      {
+        "ID": 9053900,
+        "Text": "Godskin Prayerbook"
+      },
+      {
+        "ID": 9054000,
+        "Text": "- Godskin Stitcher"
+      },
+      {
+        "ID": 9054100,
+        "Text": "- Godskin Swaddling Cloth"
+      },
+      {
+        "ID": 9054200,
+        "Text": "5 Godskin Ward"
+      },
+      {
+        "ID": 9054300,
+        "Text": "Godslayer\u0027s Greatsword"
+      },
+      {
+        "ID": 9054400,
+        "Text": "Godslayer\u0027s Seal"
+      },
+      {
+        "ID": 9054500,
+        "Text": "Gold Bracelets"
+      },
+      {
+        "ID": 9054600,
+        "Text": "1 Gold Firefly"
+      },
+      {
+        "ID": 9054601,
+        "Text": "2 Gold Firefly"
+      },
+      {
+        "ID": 9054602,
+        "Text": "3 Gold Firefly"
+      },
+      {
+        "ID": 9054700,
+        "Text": "- Gold Scarab"
+      },
+      {
+        "ID": 9054800,
+        "Text": "Gold Sewing Needle"
+      },
+      {
+        "ID": 9054900,
+        "Text": "Gold Waistwrap"
+      },
+      {
+        "ID": 9055000,
+        "Text": "1 Gold-Pickled Fowl Foot"
+      },
+      {
+        "ID": 9055001,
+        "Text": "2 Gold-Pickled Fowl Foot"
+      },
+      {
+        "ID": 9055100,
+        "Text": "1 Gold-Tinged Excrement"
+      },
+      {
+        "ID": 9055101,
+        "Text": "2 Gold-Tinged Excrement"
+      },
+      {
+        "ID": 9055104,
+        "Text": "5 Gold-Tinged Excrement"
+      },
+      {
+        "ID": 9055204,
+        "Text": "5 Golden Arrow"
+      },
+      {
+        "ID": 9055205,
+        "Text": "6 Golden Arrow"
+      },
+      {
+        "ID": 9055209,
+        "Text": "10 Golden Arrow"
+      },
+      {
+        "ID": 9055213,
+        "Text": "14 Golden Arrow"
+      },
+      {
+        "ID": 9055214,
+        "Text": "15 Golden Arrow"
+      },
+      {
+        "ID": 9055300,
+        "Text": "- Golden Beast Crest Shield"
+      },
+      {
+        "ID": 9055401,
+        "Text": "2 Golden Centipede"
+      },
+      {
+        "ID": 9055500,
+        "Text": "Golden Epitaph"
+      },
+      {
+        "ID": 9055609,
+        "Text": "10 Golden Great Arrow"
+      },
+      {
+        "ID": 9055700,
+        "Text": "- Golden Halberd"
+      },
+      {
+        "ID": 9055800,
+        "Text": "- Golden Lightning Fortification"
+      },
+      {
+        "ID": 9055900,
+        "Text": "- Golden Order Greatsword"
+      },
+      {
+        "ID": 9056000,
+        "Text": "Golden Order Principia"
+      },
+      {
+        "ID": 9056100,
+        "Text": "Golden Order Seal"
+      },
+      {
+        "ID": 9056200,
+        "Text": "Golden Rowa"
+      },
+      {
+        "ID": 9056300,
+        "Text": "1 Golden Rune [1]"
+      },
+      {
+        "ID": 9056302,
+        "Text": "3 Golden Rune [1]"
+      },
+      {
+        "ID": 9056305,
+        "Text": "6 Golden Rune [1]"
+      },
+      {
+        "ID": 9056400,
+        "Text": "1 Golden Rune [10]"
+      },
+      {
+        "ID": 9056407,
+        "Text": "8 Golden Rune [10]"
+      },
+      {
+        "ID": 9056500,
+        "Text": "1 Golden Rune [11]"
+      },
+      {
+        "ID": 9056700,
+        "Text": "1 Golden Rune [12]"
+      },
+      {
+        "ID": 9056800,
+        "Text": "1 Golden Rune [13]"
+      },
+      {
+        "ID": 9056900,
+        "Text": "1 Golden Rune [2]"
+      },
+      {
+        "ID": 9056901,
+        "Text": "2 Golden Rune [2]"
+      },
+      {
+        "ID": 9057000,
+        "Text": "1 Golden Rune [3]"
+      },
+      {
+        "ID": 9057100,
+        "Text": "1 Golden Rune [4]"
+      },
+      {
+        "ID": 9057200,
+        "Text": "1 Golden Rune [5]"
+      },
+      {
+        "ID": 9057300,
+        "Text": "1 Golden Rune [6]"
+      },
+      {
+        "ID": 9057400,
+        "Text": "1 Golden Rune [7]"
+      },
+      {
+        "ID": 9057500,
+        "Text": "1 Golden Rune [8]"
+      },
+      {
+        "ID": 9057600,
+        "Text": "1 Golden Rune [9]"
+      },
+      {
+        "ID": 9057700,
+        "Text": "1 Golden Seed"
+      },
+      {
+        "ID": 9057800,
+        "Text": "1 Golden Sunflower"
+      },
+      {
+        "ID": 9057900,
+        "Text": "Golden Tailoring Tools"
+      },
+      {
+        "ID": 9058000,
+        "Text": "Golden Vow"
+      },
+      {
+        "ID": 9058100,
+        "Text": "Goldmask\u0027s Rags"
+      },
+      {
+        "ID": 9058200,
+        "Text": "Gostoc\u0027s Bell Bearing"
+      },
+      {
+        "ID": 9058300,
+        "Text": "Gowry\u0027s Bell Bearing"
+      },
+      {
+        "ID": 9058400,
+        "Text": "1 Grace Mimic"
+      },
+      {
+        "ID": 9058402,
+        "Text": "3 Grace Mimic"
+      },
+      {
+        "ID": 9058404,
+        "Text": "5 Grace Mimic"
+      },
+      {
+        "ID": 9058407,
+        "Text": "8 Grace Mimic"
+      },
+      {
+        "ID": 9058500,
+        "Text": "1 Grave Glovewort [1]"
+      },
+      {
+        "ID": 9058600,
+        "Text": "Grave Glovewort [2]"
+      },
+      {
+        "ID": 9058700,
+        "Text": "Grave Glovewort [3]"
+      },
+      {
+        "ID": 9058800,
+        "Text": "Grave Glovewort [4]"
+      },
+      {
+        "ID": 9058900,
+        "Text": "Grave Glovewort [5]"
+      },
+      {
+        "ID": 9059000,
+        "Text": "Grave Glovewort [6]"
+      },
+      {
+        "ID": 9059100,
+        "Text": "Grave Glovewort [7]"
+      },
+      {
+        "ID": 9059200,
+        "Text": "Grave Glovewort [8]"
+      },
+      {
+        "ID": 9059300,
+        "Text": "Grave Glovewort [9]"
+      },
+      {
+        "ID": 9059400,
+        "Text": "1 Grave Violet"
+      },
+      {
+        "ID": 9059402,
+        "Text": "3 Grave Violet"
+      },
+      {
+        "ID": 9059404,
+        "Text": "5 Grave Violet"
+      },
+      {
+        "ID": 9059500,
+        "Text": "1 Gravel Stone"
+      },
+      {
+        "ID": 9059501,
+        "Text": "2 Gravel Stone"
+      },
+      {
+        "ID": 9059502,
+        "Text": "3 Gravel Stone"
+      },
+      {
+        "ID": 9059504,
+        "Text": "5 Gravel Stone"
+      },
+      {
+        "ID": 9059600,
+        "Text": "- Gravel Stone Seal"
+      },
+      {
+        "ID": 9059700,
+        "Text": "Graven-Mass Talisman"
+      },
+      {
+        "ID": 9059800,
+        "Text": "Graven-School Talisman"
+      },
+      {
+        "ID": 9059901,
+        "Text": "2 Gravity Stone Chunk"
+      },
+      {
+        "ID": 9059902,
+        "Text": "3 Gravity Stone Chunk"
+      },
+      {
+        "ID": 9060002,
+        "Text": "3 Gravity Stone Fan"
+      },
+      {
+        "ID": 9060003,
+        "Text": "4 Gravity Stone Fan"
+      },
+      {
+        "ID": 9060005,
+        "Text": "6 Gravity Stone Fan"
+      },
+      {
+        "ID": 9060100,
+        "Text": "- Gravity Stone Peddler\u0027s Bell Bearing"
+      },
+      {
+        "ID": 9060200,
+        "Text": "- Gravity Well"
+      },
+      {
+        "ID": 9060304,
+        "Text": "5 Great Arrow"
+      },
+      {
+        "ID": 9060309,
+        "Text": "10 Great Arrow"
+      },
+      {
+        "ID": 9060319,
+        "Text": "20 Great Arrow"
+      },
+      {
+        "ID": 9060400,
+        "Text": "- Great Club"
+      },
+      {
+        "ID": 9060500,
+        "Text": "1 Great Dragonfly Head"
+      },
+      {
+        "ID": 9060502,
+        "Text": "3 Great Dragonfly Head"
+      },
+      {
+        "ID": 9060503,
+        "Text": "4 Great Dragonfly Head"
+      },
+      {
+        "ID": 9060504,
+        "Text": "5 Great Dragonfly Head"
+      },
+      {
+        "ID": 9060600,
+        "Text": "Great \u00C9p\u00E9e"
+      },
+      {
+        "ID": 9060700,
+        "Text": "1 Great Ghost Glovewort"
+      },
+      {
+        "ID": 9060800,
+        "Text": "1 Great Grave Glovewort"
+      },
+      {
+        "ID": 9060900,
+        "Text": "Great Mace"
+      },
+      {
+        "ID": 9061000,
+        "Text": "- Great Omenkiller Cleaver"
+      },
+      {
+        "ID": 9061100,
+        "Text": "- Great Oracular Bubble"
+      },
+      {
+        "ID": 9061200,
+        "Text": "- Great Rune of the Unborn"
+      },
+      {
+        "ID": 9061300,
+        "Text": "Great Stars"
+      },
+      {
+        "ID": 9061400,
+        "Text": "Great Turtle Shell"
+      },
+      {
+        "ID": 9061500,
+        "Text": "Great-Jar\u0027s Arsenal"
+      },
+      {
+        "ID": 9061600,
+        "Text": "Greataxe"
+      },
+      {
+        "ID": 9061700,
+        "Text": "- Greatblade Phalanx"
+      },
+      {
+        "ID": 9061800,
+        "Text": "Greatbow"
+      },
+      {
+        "ID": 9061900,
+        "Text": "Greathood"
+      },
+      {
+        "ID": 9062000,
+        "Text": "Greatshield Soldier Ashes"
+      },
+      {
+        "ID": 9062100,
+        "Text": "Greatshield Talisman"
+      },
+      {
+        "ID": 9062200,
+        "Text": "Greatsword"
+      },
+      {
+        "ID": 9062300,
+        "Text": "Green Turtle Talisman"
+      },
+      {
+        "ID": 9062400,
+        "Text": "- Greenburst Crystal Tear"
+      },
+      {
+        "ID": 9062500,
+        "Text": "Greenspill Crystal Tear"
+      },
+      {
+        "ID": 9062600,
+        "Text": "Guilty Hood"
+      },
+      {
+        "ID": 9062700,
+        "Text": "Gurranq\u0027s Beast Claw"
+      },
+      {
+        "ID": 9062800,
+        "Text": "- Haima Glintstone Crown"
+      },
+      {
+        "ID": 9062900,
+        "Text": "Haligdrake Talisman"
+      },
+      {
+        "ID": 9063000,
+        "Text": "Haligdrake Talisman \u002B1"
+      },
+      {
+        "ID": 9063100,
+        "Text": "Haligdrake Talisman \u002B2"
+      },
+      {
+        "ID": 9063200,
+        "Text": "Haligtree Knight Helm"
+      },
+      {
+        "ID": 9063300,
+        "Text": "Haligtree Secret Medallion (Left)"
+      },
+      {
+        "ID": 9063400,
+        "Text": "Haligtree Secret Medallion (Right)"
+      },
+      {
+        "ID": 9063500,
+        "Text": "Haligtree Soldier Ashes"
+      },
+      {
+        "ID": 9063600,
+        "Text": "Hammer"
+      },
+      {
+        "ID": 9063700,
+        "Text": "- Hammer Talisman"
+      },
+      {
+        "ID": 9063800,
+        "Text": "Hand Ballista"
+      },
+      {
+        "ID": 9063900,
+        "Text": "Harp Bow"
+      },
+      {
+        "ID": 9064000,
+        "Text": "Hawk Crest Wooden Shield"
+      },
+      {
+        "ID": 9064100,
+        "Text": "1 Hefty Beast Bone"
+      },
+      {
+        "ID": 9064101,
+        "Text": "2 Hefty Beast Bone"
+      },
+      {
+        "ID": 9064102,
+        "Text": "3 Hefty Beast Bone"
+      },
+      {
+        "ID": 9064103,
+        "Text": "4 Hefty Beast Bone"
+      },
+      {
+        "ID": 9064104,
+        "Text": "5 Hefty Beast Bone"
+      },
+      {
+        "ID": 9064105,
+        "Text": "6 Hefty Beast Bone"
+      },
+      {
+        "ID": 9064109,
+        "Text": "10 Hefty Beast Bone"
+      },
+      {
+        "ID": 9064200,
+        "Text": "- Helphen\u0027s Steeple"
+      },
+      {
+        "ID": 9064302,
+        "Text": "3 Herba"
+      },
+      {
+        "ID": 9064400,
+        "Text": "Hermit Merchant\u0027s Bell Bearing [1]"
+      },
+      {
+        "ID": 9064500,
+        "Text": "Hermit Merchant\u0027s Bell Bearing [2]"
+      },
+      {
+        "ID": 9064600,
+        "Text": "Hermit Merchant\u0027s Bell Bearing [3]"
+      },
+      {
+        "ID": 9064700,
+        "Text": "1 Hero\u0027s Rune [1]"
+      },
+      {
+        "ID": 9064800,
+        "Text": "1 Hero\u0027s Rune [2]"
+      },
+      {
+        "ID": 9064900,
+        "Text": "1 Hero\u0027s Rune [3]"
+      },
+      {
+        "ID": 9065000,
+        "Text": "1 Hero\u0027s Rune [4]"
+      },
+      {
+        "ID": 9065100,
+        "Text": "1 Hero\u0027s Rune [5]"
+      },
+      {
+        "ID": 9065200,
+        "Text": "Hierodas Glintstone Crown"
+      },
+      {
+        "ID": 9065300,
+        "Text": "Highland Axe"
+      },
+      {
+        "ID": 9065400,
+        "Text": "1 Holy Grease"
+      },
+      {
+        "ID": 9065401,
+        "Text": "2 Holy Grease"
+      },
+      {
+        "ID": 9065402,
+        "Text": "3 Holy Grease"
+      },
+      {
+        "ID": 9065404,
+        "Text": "5 Holy Grease"
+      },
+      {
+        "ID": 9065405,
+        "Text": "6 Holy Grease"
+      },
+      {
+        "ID": 9065500,
+        "Text": "- Holy-Shrouding Cracked Tear"
+      },
+      {
+        "ID": 9065600,
+        "Text": "1 Holyproof Dried Liver"
+      },
+      {
+        "ID": 9065601,
+        "Text": "2 Holyproof Dried Liver"
+      },
+      {
+        "ID": 9065700,
+        "Text": "Hookclaws"
+      },
+      {
+        "ID": 9065800,
+        "Text": "Horn Bow"
+      },
+      {
+        "ID": 9065900,
+        "Text": "Hoslow\u0027s Armor"
+      },
+      {
+        "ID": 9066000,
+        "Text": "Hoslow\u0027s Gauntlets"
+      },
+      {
+        "ID": 9066100,
+        "Text": "Hoslow\u0027s Greaves"
+      },
+      {
+        "ID": 9066200,
+        "Text": "Hoslow\u0027s Helm"
+      },
+      {
+        "ID": 9066300,
+        "Text": "Hoslow\u0027s Petal Whip"
+      },
+      {
+        "ID": 9066400,
+        "Text": "Howl of Shabriri"
+      },
+      {
+        "ID": 9066502,
+        "Text": "3 Human Bone Shard"
+      },
+      {
+        "ID": 9066504,
+        "Text": "5 Human Bone Shard"
+      },
+      {
+        "ID": 9066505,
+        "Text": "6 Human Bone Shard"
+      },
+      {
+        "ID": 9066507,
+        "Text": "8 Human Bone Shard"
+      },
+      {
+        "ID": 9066600,
+        "Text": "Ice Crest Shield"
+      },
+      {
+        "ID": 9066700,
+        "Text": "Icerind Hatchet"
+      },
+      {
+        "ID": 9066800,
+        "Text": "Icon Shield"
+      },
+      {
+        "ID": 9066900,
+        "Text": "Iji\u0027s Bell Bearing"
+      },
+      {
+        "ID": 9067000,
+        "Text": "Iji\u0027s Mirrorhelm"
+      },
+      {
+        "ID": 9067100,
+        "Text": "1 Imbued Sword Key"
+      },
+      {
+        "ID": 9067200,
+        "Text": "1 Immunizing Cured Meat"
+      },
+      {
+        "ID": 9067300,
+        "Text": "Immunizing Horn Charm"
+      },
+      {
+        "ID": 9067400,
+        "Text": "1 Immunizing White Cured Meat"
+      },
+      {
+        "ID": 9067500,
+        "Text": "Imp Head (Corpse)"
+      },
+      {
+        "ID": 9067600,
+        "Text": "Imp Head (Elder)"
+      },
+      {
+        "ID": 9067700,
+        "Text": "Imp Head (Wolf)"
+      },
+      {
+        "ID": 9067800,
+        "Text": "Imprisoned Merchant\u0027s Bell Bearing"
+      },
+      {
+        "ID": 9067900,
+        "Text": "Incantation Scarab"
+      },
+      {
+        "ID": 9068000,
+        "Text": "Inescapable Frenzy"
+      },
+      {
+        "ID": 9068100,
+        "Text": "- Inquisitor\u0027s Girandole"
+      },
+      {
+        "ID": 9068200,
+        "Text": "Inseparable Sword"
+      },
+      {
+        "ID": 9068300,
+        "Text": "Intelligence-knot Crystal Tear"
+      },
+      {
+        "ID": 9068400,
+        "Text": "Inverted Hawk Heater Shield"
+      },
+      {
+        "ID": 9068500,
+        "Text": "1 Invigorating Cured Meat"
+      },
+      {
+        "ID": 9068600,
+        "Text": "1 Invigorating White Cured Meat"
+      },
+      {
+        "ID": 9068602,
+        "Text": "3 Invigorating White Cured Meat"
+      },
+      {
+        "ID": 9068700,
+        "Text": "Irina\u0027s Letter"
+      },
+      {
+        "ID": 9068800,
+        "Text": "Iron Ball"
+      },
+      {
+        "ID": 9068900,
+        "Text": "Iron Kasa"
+      },
+      {
+        "ID": 9069000,
+        "Text": "Iron Whetblade"
+      },
+      {
+        "ID": 9069100,
+        "Text": "Isolated Merchant\u0027s Bell Bearing [1]"
+      },
+      {
+        "ID": 9069200,
+        "Text": "Isolated Merchant\u0027s Bell Bearing [2]"
+      },
+      {
+        "ID": 9069300,
+        "Text": "Isolated Merchant\u0027s Bell Bearing [3]"
+      },
+      {
+        "ID": 9069400,
+        "Text": "Ivory Sickle"
+      },
+      {
+        "ID": 9069500,
+        "Text": "Jar"
+      },
+      {
+        "ID": 9069600,
+        "Text": "- Jar Cannon"
+      },
+      {
+        "ID": 9069700,
+        "Text": "Jellyfish Shield"
+      },
+      {
+        "ID": 9069800,
+        "Text": "Juvenile Scholar Cap"
+      },
+      {
+        "ID": 9069900,
+        "Text": "Juvenile Scholar Robe"
+      },
+      {
+        "ID": 9070000,
+        "Text": "- Kaiden Sellsword Ashes"
+      },
+      {
+        "ID": 9070100,
+        "Text": "Kale\u0027s Bell Bearing"
+      },
+      {
+        "ID": 9070200,
+        "Text": "- Karolos Glintstone Crown"
+      },
+      {
+        "ID": 9070300,
+        "Text": "Katar"
+      },
+      {
+        "ID": 9070400,
+        "Text": "- Kindred of Rot Ashes"
+      },
+      {
+        "ID": 9070500,
+        "Text": "- Kindred of Rot\u0027s Exultation"
+      },
+      {
+        "ID": 9070600,
+        "Text": "Knifeprint Clue"
+      },
+      {
+        "ID": 9070703,
+        "Text": "4 Kukri"
+      },
+      {
+        "ID": 9070704,
+        "Text": "5 Kukri"
+      },
+      {
+        "ID": 9070705,
+        "Text": "6 Kukri"
+      },
+      {
+        "ID": 9070707,
+        "Text": "8 Kukri"
+      },
+      {
+        "ID": 9070800,
+        "Text": "Lance"
+      },
+      {
+        "ID": 9070900,
+        "Text": "Lance Talisman"
+      },
+      {
+        "ID": 9071000,
+        "Text": "1 Land Octopus Ovary"
+      },
+      {
+        "ID": 9071100,
+        "Text": "Land Squirt Ashes"
+      },
+      {
+        "ID": 9071200,
+        "Text": "- Lansseax\u0027s Glaive"
+      },
+      {
+        "ID": 9071300,
+        "Text": "Large Club"
+      },
+      {
+        "ID": 9071401,
+        "Text": "2 Large Glintstone Scrap"
+      },
+      {
+        "ID": 9071402,
+        "Text": "3 Large Glintstone Scrap"
+      },
+      {
+        "ID": 9071404,
+        "Text": "5 Large Glintstone Scrap"
+      },
+      {
+        "ID": 9071500,
+        "Text": "1 Larval Tear"
+      },
+      {
+        "ID": 9071600,
+        "Text": "Latenna the Albinauric"
+      },
+      {
+        "ID": 9071700,
+        "Text": "Law of Causality"
+      },
+      {
+        "ID": 9071800,
+        "Text": "- Lazuli Glintstone Crown"
+      },
+      {
+        "ID": 9071900,
+        "Text": "Leaden Hardtear"
+      },
+      {
+        "ID": 9072000,
+        "Text": "- Leaden Hardtear"
+      },
+      {
+        "ID": 9072100,
+        "Text": "- Leather Armor"
+      },
+      {
+        "ID": 9072200,
+        "Text": "- Leather Boots"
+      },
+      {
+        "ID": 9072300,
+        "Text": "- Leather Gloves"
+      },
+      {
+        "ID": 9072400,
+        "Text": "Letter from Volcano Manor"
+      },
+      {
+        "ID": 9072500,
+        "Text": "Letter to Bernahl"
+      },
+      {
+        "ID": 9072600,
+        "Text": "Letter to Patches"
+      },
+      {
+        "ID": 9072700,
+        "Text": "Leyndell Soldier Ashes"
+      },
+      {
+        "ID": 9072800,
+        "Text": "Lightning Bastard Sword"
+      },
+      {
+        "ID": 9072900,
+        "Text": "1 Lightning Grease"
+      },
+      {
+        "ID": 9072901,
+        "Text": "2 Lightning Grease"
+      },
+      {
+        "ID": 9072903,
+        "Text": "4 Lightning Grease"
+      },
+      {
+        "ID": 9072904,
+        "Text": "5 Lightning Grease"
+      },
+      {
+        "ID": 9073002,
+        "Text": "3 Lightning Greatbolt"
+      },
+      {
+        "ID": 9073004,
+        "Text": "5 Lightning Greatbolt"
+      },
+      {
+        "ID": 9073005,
+        "Text": "6 Lightning Greatbolt"
+      },
+      {
+        "ID": 9073009,
+        "Text": "10 Lightning Greatbolt"
+      },
+      {
+        "ID": 9073013,
+        "Text": "14 Lightning Greatbolt"
+      },
+      {
+        "ID": 9073100,
+        "Text": "Lightning Scorpion Charm"
+      },
+      {
+        "ID": 9073200,
+        "Text": "- Lightning Strike"
+      },
+      {
+        "ID": 9073300,
+        "Text": "- Lightning-Shrouding Cracked Tear"
+      },
+      {
+        "ID": 9073400,
+        "Text": "1 Lightningproof Dried Liver"
+      },
+      {
+        "ID": 9073401,
+        "Text": "2 Lightningproof Dried Liver"
+      },
+      {
+        "ID": 9073500,
+        "Text": "Lionel\u0027s Armor"
+      },
+      {
+        "ID": 9073600,
+        "Text": "Lionel\u0027s Gauntlets"
+      },
+      {
+        "ID": 9073700,
+        "Text": "Lionel\u0027s Greaves"
+      },
+      {
+        "ID": 9073800,
+        "Text": "Lionel\u0027s Helm"
+      },
+      {
+        "ID": 9073900,
+        "Text": "1 Living Jar Shard"
+      },
+      {
+        "ID": 9073902,
+        "Text": "3 Living Jar Shard"
+      },
+      {
+        "ID": 9073904,
+        "Text": "5 Living Jar Shard"
+      },
+      {
+        "ID": 9073909,
+        "Text": "10 Living Jar Shard"
+      },
+      {
+        "ID": 9074000,
+        "Text": "Lone Wolf Ashes"
+      },
+      {
+        "ID": 9074100,
+        "Text": "Longtail Cat Talisman"
+      },
+      {
+        "ID": 9074200,
+        "Text": "- Lord of Blood\u0027s Exultation"
+      },
+      {
+        "ID": 9074300,
+        "Text": "Lord of Blood\u0027s Favor"
+      },
+      {
+        "ID": 9074400,
+        "Text": "Lord of Blood\u0027s Favor"
+      },
+      {
+        "ID": 9074500,
+        "Text": "Lord\u0027s Divine Fortification"
+      },
+      {
+        "ID": 9074600,
+        "Text": "1 Lord\u0027s Rune"
+      },
+      {
+        "ID": 9074709,
+        "Text": "10 Lordsworn\u0027s Bolt"
+      },
+      {
+        "ID": 9074800,
+        "Text": "Lordsworn\u0027s Greatsword"
+      },
+      {
+        "ID": 9074900,
+        "Text": "- Loretta\u0027s Greatbow"
+      },
+      {
+        "ID": 9075000,
+        "Text": "- Loretta\u0027s Mastery"
+      },
+      {
+        "ID": 9075100,
+        "Text": "- Loretta\u0027s War Sickle"
+      },
+      {
+        "ID": 9075200,
+        "Text": "1 Lost Ashes of War"
+      },
+      {
+        "ID": 9075300,
+        "Text": "Lucerne"
+      },
+      {
+        "ID": 9075400,
+        "Text": "- Lucidity"
+      },
+      {
+        "ID": 9075500,
+        "Text": "1 Lump of Flesh"
+      },
+      {
+        "ID": 9075502,
+        "Text": "3 Lump of Flesh"
+      },
+      {
+        "ID": 9075503,
+        "Text": "4 Lump of Flesh"
+      },
+      {
+        "ID": 9075504,
+        "Text": "5 Lump of Flesh"
+      },
+      {
+        "ID": 9075600,
+        "Text": "Lusat\u0027s Glintstone Crown"
+      },
+      {
+        "ID": 9075700,
+        "Text": "Lusat\u0027s Glintstone Staff"
+      },
+      {
+        "ID": 9075800,
+        "Text": "Lusat\u0027s Manchettes"
+      },
+      {
+        "ID": 9075900,
+        "Text": "Lusat\u0027s Robe"
+      },
+      {
+        "ID": 9076000,
+        "Text": "- Mad Pumpkin Head Ashes"
+      },
+      {
+        "ID": 9076100,
+        "Text": "- Magic Downpour"
+      },
+      {
+        "ID": 9076200,
+        "Text": "1 Magic Grease"
+      },
+      {
+        "ID": 9076201,
+        "Text": "2 Magic Grease"
+      },
+      {
+        "ID": 9076202,
+        "Text": "3 Magic Grease"
+      },
+      {
+        "ID": 9076300,
+        "Text": "Magic Scorpion Charm"
+      },
+      {
+        "ID": 9076400,
+        "Text": "- Magic-Shrouding Cracked Tear"
+      },
+      {
+        "ID": 9076500,
+        "Text": "Magma Shot"
+      },
+      {
+        "ID": 9076600,
+        "Text": "Magma Whip Candlestick"
+      },
+      {
+        "ID": 9076700,
+        "Text": "- Magma Wyrm\u0027s Scalesword"
+      },
+      {
+        "ID": 9076800,
+        "Text": "- Malenia\u0027s Great Rune"
+      },
+      {
+        "ID": 9076801,
+        "Text": "Malenia\u0027s Great Rune"
+      },
+      {
+        "ID": 9076900,
+        "Text": "- Malformed Dragon Armor"
+      },
+      {
+        "ID": 9077000,
+        "Text": "- Malformed Dragon Gauntlets"
+      },
+      {
+        "ID": 9077100,
+        "Text": "- Malformed Dragon Greaves"
+      },
+      {
+        "ID": 9077200,
+        "Text": "- Malformed Dragon Helm"
+      },
+      {
+        "ID": 9077300,
+        "Text": "Man-Serpent Ashes"
+      },
+      {
+        "ID": 9077400,
+        "Text": "Manor Towershield"
+      },
+      {
+        "ID": 9077500,
+        "Text": "- Mantis Blade"
+      },
+      {
+        "ID": 9077600,
+        "Text": "Map: Ainsel"
+      },
+      {
+        "ID": 9077700,
+        "Text": "Map: Altus Plateau"
+      },
+      {
+        "ID": 9077800,
+        "Text": "Map: Caelid"
+      },
+      {
+        "ID": 9077900,
+        "Text": "Map: Consecrated Snowfield"
+      },
+      {
+        "ID": 9078000,
+        "Text": "Map: Deeproot Depths"
+      },
+      {
+        "ID": 9078100,
+        "Text": "Map: Dragonbarrow"
+      },
+      {
+        "ID": 9078200,
+        "Text": "Map: Lake of Rot"
+      },
+      {
+        "ID": 9078300,
+        "Text": "Map: Leyndell, Royal Capital"
+      },
+      {
+        "ID": 9078400,
+        "Text": "Map: Limgrave, East"
+      },
+      {
+        "ID": 9078500,
+        "Text": "Map: Limgrave, West"
+      },
+      {
+        "ID": 9078600,
+        "Text": "Map: Liurnia, East"
+      },
+      {
+        "ID": 9078700,
+        "Text": "Map: Liurnia, North"
+      },
+      {
+        "ID": 9078800,
+        "Text": "Map: Liurnia, West"
+      },
+      {
+        "ID": 9078900,
+        "Text": "Map: Mohgwyn Palace"
+      },
+      {
+        "ID": 9079000,
+        "Text": "Map: Mountaintops of the Giants, East"
+      },
+      {
+        "ID": 9079100,
+        "Text": "Map: Mountaintops of the Giants, West"
+      },
+      {
+        "ID": 9079200,
+        "Text": "Map: Mt. Gelmir"
+      },
+      {
+        "ID": 9079300,
+        "Text": "Map: Siofra River"
+      },
+      {
+        "ID": 9079400,
+        "Text": "Map: Weeping Peninsula"
+      },
+      {
+        "ID": 9079500,
+        "Text": "- Marais Executioner\u0027s Sword"
+      },
+      {
+        "ID": 9079600,
+        "Text": "- Marais Mask"
+      },
+      {
+        "ID": 9079700,
+        "Text": "- Marais Robe"
+      },
+      {
+        "ID": 9079800,
+        "Text": "Marika\u0027s Golden Siigl"
+      },
+      {
+        "ID": 9079900,
+        "Text": "Marika\u0027s Scarseal"
+      },
+      {
+        "ID": 9080000,
+        "Text": "Marika\u0027s Soreseal"
+      },
+      {
+        "ID": 9080100,
+        "Text": "Marionette Soldier Ashes"
+      },
+      {
+        "ID": 9080200,
+        "Text": "Marred Leather Shield"
+      },
+      {
+        "ID": 9080300,
+        "Text": "Marred Wooden Shield"
+      },
+      {
+        "ID": 9080400,
+        "Text": "Mask of Confidence"
+      },
+      {
+        "ID": 9080500,
+        "Text": "Mausoleum Soldier Ashes"
+      },
+      {
+        "ID": 9080600,
+        "Text": "- Meat Peddler\u0027s Bell Bearing"
+      },
+      {
+        "ID": 9080700,
+        "Text": "- Medicine Peddler\u0027s Bell Bearing"
+      },
+      {
+        "ID": 9080800,
+        "Text": "Meeting Place Map"
+      },
+      {
+        "ID": 9080902,
+        "Text": "3 Melted Mushroom"
+      },
+      {
+        "ID": 9081000,
+        "Text": "1 Memory Stone"
+      },
+      {
+        "ID": 9081100,
+        "Text": "Mending Rune of Perfect Order"
+      },
+      {
+        "ID": 9081200,
+        "Text": "Mending Rune of the Death-Prince"
+      },
+      {
+        "ID": 9081300,
+        "Text": "Mending Rune of the Fell Curse"
+      },
+      {
+        "ID": 9081404,
+        "Text": "5 Meteor Bolt"
+      },
+      {
+        "ID": 9081500,
+        "Text": "Meteoric Ore Blade"
+      },
+      {
+        "ID": 9081600,
+        "Text": "- Meteorite"
+      },
+      {
+        "ID": 9081700,
+        "Text": "- Meteorite of Astel"
+      },
+      {
+        "ID": 9081800,
+        "Text": "Meteorite Staff"
+      },
+      {
+        "ID": 9081900,
+        "Text": "Millicent\u0027s Prosthesis"
+      },
+      {
+        "ID": 9082000,
+        "Text": "Mimic Tear Ashes"
+      },
+      {
+        "ID": 9082100,
+        "Text": "Mimic\u0027s Veil"
+      },
+      {
+        "ID": 9082200,
+        "Text": "Miniature Ranni"
+      },
+      {
+        "ID": 9082300,
+        "Text": "1 Miquella\u0027s Lily"
+      },
+      {
+        "ID": 9082302,
+        "Text": "3 Miquella\u0027s Lily"
+      },
+      {
+        "ID": 9082400,
+        "Text": "Miquella\u0027s Needle"
+      },
+      {
+        "ID": 9082500,
+        "Text": "Miquellan Knight\u0027s Sword"
+      },
+      {
+        "ID": 9082600,
+        "Text": "Mirage Riddle"
+      },
+      {
+        "ID": 9082705,
+        "Text": "6 Miranda Powder"
+      },
+      {
+        "ID": 9082709,
+        "Text": "10 Miranda Powder"
+      },
+      {
+        "ID": 9082800,
+        "Text": "Miranda Sprout Ashes"
+      },
+      {
+        "ID": 9082900,
+        "Text": "Miriel\u0027s Bell Bearing"
+      },
+      {
+        "ID": 9083000,
+        "Text": "Mis\u00E9ricorde"
+      },
+      {
+        "ID": 9083100,
+        "Text": "Missionary\u0027s Cookbook [3]"
+      },
+      {
+        "ID": 9083200,
+        "Text": "Missionary\u0027s Cookbook [4]"
+      },
+      {
+        "ID": 9083300,
+        "Text": "Missionary\u0027s Cookbook [5]"
+      },
+      {
+        "ID": 9083400,
+        "Text": "Missionary\u0027s Cookbook [6]"
+      },
+      {
+        "ID": 9083500,
+        "Text": "- Mohg\u0027s Great Rune"
+      },
+      {
+        "ID": 9083501,
+        "Text": "Mohg\u0027s Great Rune"
+      },
+      {
+        "ID": 9083600,
+        "Text": "Mohg\u0027s Shackle"
+      },
+      {
+        "ID": 9083700,
+        "Text": "Moon of Nokstella"
+      },
+      {
+        "ID": 9083800,
+        "Text": "- Moonveil"
+      },
+      {
+        "ID": 9083900,
+        "Text": "- Morgott\u0027s Great Rune"
+      },
+      {
+        "ID": 9083901,
+        "Text": "Morgott\u0027s Great Rune"
+      },
+      {
+        "ID": 9084000,
+        "Text": "Morning Star"
+      },
+      {
+        "ID": 9084100,
+        "Text": "Mottled Necklace"
+      },
+      {
+        "ID": 9084200,
+        "Text": "Mottled Necklace \u002B1"
+      },
+      {
+        "ID": 9084302,
+        "Text": "3 Mushroom"
+      },
+      {
+        "ID": 9084303,
+        "Text": "4 Mushroom"
+      },
+      {
+        "ID": 9084304,
+        "Text": "5 Mushroom"
+      },
+      {
+        "ID": 9084305,
+        "Text": "6 Mushroom"
+      },
+      {
+        "ID": 9084307,
+        "Text": "8 Mushroom"
+      },
+      {
+        "ID": 9084309,
+        "Text": "10 Mushroom"
+      },
+      {
+        "ID": 9084400,
+        "Text": "Mushroom Arms"
+      },
+      {
+        "ID": 9084500,
+        "Text": "Mushroom Body"
+      },
+      {
+        "ID": 9084600,
+        "Text": "Mushroom Crown"
+      },
+      {
+        "ID": 9084700,
+        "Text": "Mushroom Head"
+      },
+      {
+        "ID": 9084800,
+        "Text": "Mushroom Legs"
+      },
+      {
+        "ID": 9085000,
+        "Text": "Nagakiba"
+      },
+      {
+        "ID": 9085100,
+        "Text": "1 Nascent Butterfly"
+      },
+      {
+        "ID": 9085101,
+        "Text": "2 Nascent Butterfly"
+      },
+      {
+        "ID": 9085102,
+        "Text": "3 Nascent Butterfly"
+      },
+      {
+        "ID": 9085200,
+        "Text": "Navy Hood"
+      },
+      {
+        "ID": 9085300,
+        "Text": "Nepheli Loux Puppet"
+      },
+      {
+        "ID": 9085400,
+        "Text": "1 Neutralizing Boluses"
+      },
+      {
+        "ID": 9085401,
+        "Text": "2 Neutralizing Boluses"
+      },
+      {
+        "ID": 9085404,
+        "Text": "5 Neutralizing Boluses"
+      },
+      {
+        "ID": 9085500,
+        "Text": "Night Comet"
+      },
+      {
+        "ID": 9085600,
+        "Text": "- Night\u0027s Cavalry Armor"
+      },
+      {
+        "ID": 9085700,
+        "Text": "- Night\u0027s Cavalry Gauntlets"
+      },
+      {
+        "ID": 9085800,
+        "Text": "- Night\u0027s Cavalry Greaves"
+      },
+      {
+        "ID": 9085900,
+        "Text": "- Night\u0027s Cavalry Helm"
+      },
+      {
+        "ID": 9086000,
+        "Text": "Nightmaiden \u0026 Swordstress Puppets"
+      },
+      {
+        "ID": 9086100,
+        "Text": "- Nightrider Flail"
+      },
+      {
+        "ID": 9086200,
+        "Text": "- Nightrider Glaive"
+      },
+      {
+        "ID": 9086300,
+        "Text": "- Noble Presence"
+      },
+      {
+        "ID": 9086400,
+        "Text": "- Noble Sorcerer Ashes"
+      },
+      {
+        "ID": 9086500,
+        "Text": "Noble\u0027s Gloves"
+      },
+      {
+        "ID": 9086600,
+        "Text": "Noble\u0027s Traveling Garb"
+      },
+      {
+        "ID": 9086700,
+        "Text": "Noble\u0027s Trousers"
+      },
+      {
+        "ID": 9086800,
+        "Text": "Nomad Ashes"
+      },
+      {
+        "ID": 9086900,
+        "Text": "Nomadic Merchant\u0027s Bell Bearing [1]"
+      },
+      {
+        "ID": 9087000,
+        "Text": "Nomadic Merchant\u0027s Bell Bearing [10]"
+      },
+      {
+        "ID": 9087100,
+        "Text": "Nomadic Merchant\u0027s Bell Bearing [11]"
+      },
+      {
+        "ID": 9087200,
+        "Text": "Nomadic Merchant\u0027s Bell Bearing [2]"
+      },
+      {
+        "ID": 9087300,
+        "Text": "Nomadic Merchant\u0027s Bell Bearing [3]"
+      },
+      {
+        "ID": 9087400,
+        "Text": "Nomadic Merchant\u0027s Bell Bearing [4]"
+      },
+      {
+        "ID": 9087500,
+        "Text": "Nomadic Merchant\u0027s Bell Bearing [5]"
+      },
+      {
+        "ID": 9087600,
+        "Text": "Nomadic Merchant\u0027s Bell Bearing [6]"
+      },
+      {
+        "ID": 9087700,
+        "Text": "Nomadic Merchant\u0027s Bell Bearing [7]"
+      },
+      {
+        "ID": 9087800,
+        "Text": "Nomadic Merchant\u0027s Bell Bearing [8]"
+      },
+      {
+        "ID": 9087900,
+        "Text": "Nomadic Merchant\u0027s Bell Bearing [9]"
+      },
+      {
+        "ID": 9088000,
+        "Text": "Nomadic Merchant\u0027s Chapeau"
+      },
+      {
+        "ID": 9088100,
+        "Text": "Nomadic Merchant\u0027s Finery"
+      },
+      {
+        "ID": 9088200,
+        "Text": "Nomadic Merchant\u0027s Trousers"
+      },
+      {
+        "ID": 9088300,
+        "Text": "Nomadic Warrior\u0027s Cookbook [10]"
+      },
+      {
+        "ID": 9088400,
+        "Text": "Nomadic Warrior\u0027s Cookbook [11]"
+      },
+      {
+        "ID": 9088500,
+        "Text": "Nomadic Warrior\u0027s Cookbook [12]"
+      },
+      {
+        "ID": 9088600,
+        "Text": "Nomadic Warrior\u0027s Cookbook [14]"
+      },
+      {
+        "ID": 9088700,
+        "Text": "Nomadic Warrior\u0027s Cookbook [19]"
+      },
+      {
+        "ID": 9088800,
+        "Text": "Nomadic Warrior\u0027s Cookbook [21]"
+      },
+      {
+        "ID": 9088900,
+        "Text": "Nomadic Warrior\u0027s Cookbook [22]"
+      },
+      {
+        "ID": 9089000,
+        "Text": "Nomadic Warrior\u0027s Cookbook [23]"
+      },
+      {
+        "ID": 9089100,
+        "Text": "Nomadic Warrior\u0027s Cookbook [24]"
+      },
+      {
+        "ID": 9089200,
+        "Text": "Nomadic Warrior\u0027s Cookbook [4]"
+      },
+      {
+        "ID": 9089300,
+        "Text": "Nomadic Warrior\u0027s Cookbook [6]"
+      },
+      {
+        "ID": 9089400,
+        "Text": "Nomadic Warrior\u0027s Cookbook [7]"
+      },
+      {
+        "ID": 9089500,
+        "Text": "Nomadic Warrior\u0027s Cookbook [8]"
+      },
+      {
+        "ID": 9089600,
+        "Text": "Nomadic Warrior\u0027s Cookbook [9]"
+      },
+      {
+        "ID": 9089700,
+        "Text": "None"
+      },
+      {
+        "ID": 9089800,
+        "Text": "Note: Miquella\u0027s Needle"
+      },
+      {
+        "ID": 9089900,
+        "Text": "Note: The Lord of Frenzied Flame"
+      },
+      {
+        "ID": 9090000,
+        "Text": "Nox Flowing Hammer"
+      },
+      {
+        "ID": 9090100,
+        "Text": "- Nox Flowing Sword"
+      },
+      {
+        "ID": 9090200,
+        "Text": "Nox Mirrorhelm"
+      },
+      {
+        "ID": 9090300,
+        "Text": "1 Numen\u0027s Rune"
+      },
+      {
+        "ID": 9090400,
+        "Text": "Official\u0027s Attire"
+      },
+      {
+        "ID": 9090500,
+        "Text": "- Okina Mask"
+      },
+      {
+        "ID": 9090600,
+        "Text": "1 Old Fang"
+      },
+      {
+        "ID": 9090601,
+        "Text": "2 Old Fang"
+      },
+      {
+        "ID": 9090602,
+        "Text": "3 Old Fang"
+      },
+      {
+        "ID": 9090603,
+        "Text": "4 Old Fang"
+      },
+      {
+        "ID": 9090604,
+        "Text": "5 Old Fang"
+      },
+      {
+        "ID": 9090605,
+        "Text": "6 Old Fang"
+      },
+      {
+        "ID": 9090700,
+        "Text": "Old Lord\u0027s Talisman"
+      },
+      {
+        "ID": 9090800,
+        "Text": "Old Sorcerer\u0027s Legwraps"
+      },
+      {
+        "ID": 9090900,
+        "Text": "Olivinus Glintstone Crown"
+      },
+      {
+        "ID": 9091000,
+        "Text": "Omen Armor"
+      },
+      {
+        "ID": 9091100,
+        "Text": "Omen Gauntlets"
+      },
+      {
+        "ID": 9091200,
+        "Text": "Omen Greaves"
+      },
+      {
+        "ID": 9091300,
+        "Text": "Omen Helm"
+      },
+      {
+        "ID": 9091400,
+        "Text": "- Omenkiller Boots"
+      },
+      {
+        "ID": 9091500,
+        "Text": "- Omenkiller Long Gloves"
+      },
+      {
+        "ID": 9091600,
+        "Text": "- Omenkiller Robe"
+      },
+      {
+        "ID": 9091700,
+        "Text": "- Omenkiller Rollo"
+      },
+      {
+        "ID": 9091800,
+        "Text": "Omensmirk Mask"
+      },
+      {
+        "ID": 9091900,
+        "Text": "- One-Eyed Shield"
+      },
+      {
+        "ID": 9092000,
+        "Text": "- Onyx Lord\u0027s Greatsword"
+      },
+      {
+        "ID": 9092100,
+        "Text": "- Opaline Bubbletear"
+      },
+      {
+        "ID": 9092200,
+        "Text": "- Opaline Hardtear"
+      },
+      {
+        "ID": 9092300,
+        "Text": "- Oracle Bubbles"
+      },
+      {
+        "ID": 9092400,
+        "Text": "Oracle Envoy Ashes"
+      },
+      {
+        "ID": 9092500,
+        "Text": "- Order Healing"
+      },
+      {
+        "ID": 9092600,
+        "Text": "- Ordovis\u0027s Greatsword"
+      },
+      {
+        "ID": 9092700,
+        "Text": "- Ornamental Straight Sword"
+      },
+      {
+        "ID": 9092800,
+        "Text": "Page Ashes"
+      },
+      {
+        "ID": 9092900,
+        "Text": "- Patches\u0027 Bell Bearing"
+      },
+      {
+        "ID": 9093000,
+        "Text": "Pearldrake Talisman"
+      },
+      {
+        "ID": 9093100,
+        "Text": "Pearldrake Talisman \u002B1"
+      },
+      {
+        "ID": 9093200,
+        "Text": "Pearldrake Talisman \u002B2"
+      },
+      {
+        "ID": 9093300,
+        "Text": "1 Perfume Bottle"
+      },
+      {
+        "ID": 9093400,
+        "Text": "- Perfumer Tricia"
+      },
+      {
+        "ID": 9093500,
+        "Text": "Perfumer\u0027s Cookbook [1]"
+      },
+      {
+        "ID": 9093600,
+        "Text": "Perfumer\u0027s Cookbook [2]"
+      },
+      {
+        "ID": 9093700,
+        "Text": "Perfumer\u0027s Cookbook [3]"
+      },
+      {
+        "ID": 9093800,
+        "Text": "Perfumer\u0027s Talisman"
+      },
+      {
+        "ID": 9093900,
+        "Text": "Perfumer\u0027s Traveling Garb"
+      },
+      {
+        "ID": 9094000,
+        "Text": "1 Pickled Turtle Neck"
+      },
+      {
+        "ID": 9094002,
+        "Text": "3 Pickled Turtle Neck"
+      },
+      {
+        "ID": 9094100,
+        "Text": "Pidia\u0027s Bell Bearing"
+      },
+      {
+        "ID": 9094200,
+        "Text": "Pike"
+      },
+      {
+        "ID": 9094300,
+        "Text": "Pillory Shield"
+      },
+      {
+        "ID": 9094400,
+        "Text": "- Poison Armament"
+      },
+      {
+        "ID": 9094500,
+        "Text": "1 Poison Grease"
+      },
+      {
+        "ID": 9094501,
+        "Text": "2 Poison Grease"
+      },
+      {
+        "ID": 9094502,
+        "Text": "3 Poison Grease"
+      },
+      {
+        "ID": 9094600,
+        "Text": "- Poison Mist"
+      },
+      {
+        "ID": 9094701,
+        "Text": "2 Poisonbloom"
+      },
+      {
+        "ID": 9094702,
+        "Text": "3 Poisonbloom"
+      },
+      {
+        "ID": 9094703,
+        "Text": "4 Poisonbloom"
+      },
+      {
+        "ID": 9094704,
+        "Text": "5 Poisonbloom"
+      },
+      {
+        "ID": 9094804,
+        "Text": "5 Poisonbone Dart"
+      },
+      {
+        "ID": 9094805,
+        "Text": "6 Poisonbone Dart"
+      },
+      {
+        "ID": 9094807,
+        "Text": "8 Poisonbone Dart"
+      },
+      {
+        "ID": 9094809,
+        "Text": "10 Poisonbone Dart"
+      },
+      {
+        "ID": 9094902,
+        "Text": "3 Poisoned Stone"
+      },
+      {
+        "ID": 9094907,
+        "Text": "8 Poisoned Stone"
+      },
+      {
+        "ID": 9095000,
+        "Text": "Prattling Pate \u0022Apologies\u0022"
+      },
+      {
+        "ID": 9095100,
+        "Text": "Prattling Pate \u0022Hello\u0022"
+      },
+      {
+        "ID": 9095200,
+        "Text": "Prattling Pate \u0022Let\u0027s get to it\u0022"
+      },
+      {
+        "ID": 9095300,
+        "Text": "Prattling Pate \u0022My beloved\u0022"
+      },
+      {
+        "ID": 9095400,
+        "Text": "Prattling Pate \u0022Please help\u0022"
+      },
+      {
+        "ID": 9095500,
+        "Text": "Prattling Pate \u0022Thank you\u0022"
+      },
+      {
+        "ID": 9095600,
+        "Text": "Prattling Pate \u0022Wonderful\u0022"
+      },
+      {
+        "ID": 9095700,
+        "Text": "Prattling Pate \u0022You\u0027re beautiful\u0022"
+      },
+      {
+        "ID": 9095800,
+        "Text": "Preceptor\u0027s Big Hat"
+      },
+      {
+        "ID": 9095900,
+        "Text": "Preceptor\u0027s Gloves"
+      },
+      {
+        "ID": 9096000,
+        "Text": "Preceptor\u0027s Long Gown"
+      },
+      {
+        "ID": 9096100,
+        "Text": "Preceptor\u0027s Trousers"
+      },
+      {
+        "ID": 9096200,
+        "Text": "- Prelate\u0027s Inferno Crozier"
+      },
+      {
+        "ID": 9096300,
+        "Text": "1 Preserving Boluses"
+      },
+      {
+        "ID": 9096302,
+        "Text": "3 Preserving Boluses"
+      },
+      {
+        "ID": 9096304,
+        "Text": "5 Preserving Boluses"
+      },
+      {
+        "ID": 9096400,
+        "Text": "Primal Glintstone Blade"
+      },
+      {
+        "ID": 9096500,
+        "Text": "- Prince of Death\u0027s Cyst"
+      },
+      {
+        "ID": 9096600,
+        "Text": "Prince of Death\u0027s Pustule"
+      },
+      {
+        "ID": 9096700,
+        "Text": "Prince of Death\u0027s Staff"
+      },
+      {
+        "ID": 9096800,
+        "Text": "Prosthesis-Wearer Heirloom"
+      },
+      {
+        "ID": 9096900,
+        "Text": "- Protection of the Erdtree"
+      },
+      {
+        "ID": 9097000,
+        "Text": "Pulley Bow"
+      },
+      {
+        "ID": 9097100,
+        "Text": "Pulley Crossbow"
+      },
+      {
+        "ID": 9097200,
+        "Text": "Pureblood Knight\u0027s Medal"
+      },
+      {
+        "ID": 9097300,
+        "Text": "- Purifying Crystal Tear"
+      },
+      {
+        "ID": 9097400,
+        "Text": "- Putrid Corpse Ashes"
+      },
+      {
+        "ID": 9097500,
+        "Text": "Radagon Icon"
+      },
+      {
+        "ID": 9097600,
+        "Text": "- Radagon\u0027s Scarseal"
+      },
+      {
+        "ID": 9097700,
+        "Text": "Radagon\u0027s Soreseal"
+      },
+      {
+        "ID": 9097800,
+        "Text": "Radahn Soldier Ashes"
+      },
+      {
+        "ID": 9097900,
+        "Text": "- Radahn\u0027s Great Rune"
+      },
+      {
+        "ID": 9097901,
+        "Text": "Radahn\u0027s Great Rune"
+      },
+      {
+        "ID": 9098003,
+        "Text": "4 Radahn\u0027s Spear"
+      },
+      {
+        "ID": 9098005,
+        "Text": "6 Radahn\u0027s Spear"
+      },
+      {
+        "ID": 9098009,
+        "Text": "10 Radahn\u0027s Spear"
+      },
+      {
+        "ID": 9098100,
+        "Text": "Radiant Baldachin\u0027s Blessing"
+      },
+      {
+        "ID": 9098200,
+        "Text": "Radiant Gold Mask"
+      },
+      {
+        "ID": 9098300,
+        "Text": "Raging Wolf Armor"
+      },
+      {
+        "ID": 9098400,
+        "Text": "Raging Wolf Gauntlets"
+      },
+      {
+        "ID": 9098500,
+        "Text": "Raging Wolf Greaves"
+      },
+      {
+        "ID": 9098600,
+        "Text": "Raging Wolf Helm"
+      },
+      {
+        "ID": 9098700,
+        "Text": "1 Rainbow Stone"
+      },
+      {
+        "ID": 9098703,
+        "Text": "4 Rainbow Stone"
+      },
+      {
+        "ID": 9098704,
+        "Text": "5 Rainbow Stone"
+      },
+      {
+        "ID": 9098809,
+        "Text": "10 Rainbow Stone Arrow (Fletched)"
+      },
+      {
+        "ID": 9098900,
+        "Text": "- Rancorcall"
+      },
+      {
+        "ID": 9099000,
+        "Text": "Ranni\u0027s Dark Moon"
+      },
+      {
+        "ID": 9099100,
+        "Text": "Raptor Talons"
+      },
+      {
+        "ID": 9099200,
+        "Text": "Raptor\u0027s Black Feathers"
+      },
+      {
+        "ID": 9099300,
+        "Text": "1 Raw Meat Dumpling"
+      },
+      {
+        "ID": 9099309,
+        "Text": "10 Raw Meat Dumpling"
+      },
+      {
+        "ID": 9099400,
+        "Text": "Raya Lucaria Soldier Ashes"
+      },
+      {
+        "ID": 9099500,
+        "Text": "Recusant Finger"
+      },
+      {
+        "ID": 9099600,
+        "Text": "Red Letter"
+      },
+      {
+        "ID": 9099700,
+        "Text": "- Red-Feathered Branchsword"
+      },
+      {
+        "ID": 9099800,
+        "Text": "Red-Hot Whetblade"
+      },
+      {
+        "ID": 9099900,
+        "Text": "- Redmane Knight Ogha"
+      },
+      {
+        "ID": 9100000,
+        "Text": "- Reduvia"
+      },
+      {
+        "ID": 9100100,
+        "Text": "Regalia of Eochaid"
+      },
+      {
+        "ID": 9100200,
+        "Text": "1 Rejuvenating Boluses"
+      },
+      {
+        "ID": 9100204,
+        "Text": "5 Rejuvenating Boluses"
+      },
+      {
+        "ID": 9100300,
+        "Text": "- Remembrance of Hoarah Loux"
+      },
+      {
+        "ID": 9100400,
+        "Text": "- Remembrance of the Black Blade"
+      },
+      {
+        "ID": 9100500,
+        "Text": "- Remembrance of the Blasphemous"
+      },
+      {
+        "ID": 9100600,
+        "Text": "- Remembrance of the Blood Lord"
+      },
+      {
+        "ID": 9100700,
+        "Text": "- Remembrance of the Dragonlord"
+      },
+      {
+        "ID": 9100800,
+        "Text": "- Remembrance of the Fire Giant"
+      },
+      {
+        "ID": 9100900,
+        "Text": "- Remembrance of the Full Moon Queen"
+      },
+      {
+        "ID": 9101000,
+        "Text": "- Remembrance of the Grafted"
+      },
+      {
+        "ID": 9101100,
+        "Text": "- Remembrance of the Lichdragon"
+      },
+      {
+        "ID": 9101200,
+        "Text": "- Remembrance of the Naturalborn"
+      },
+      {
+        "ID": 9101300,
+        "Text": "- Remembrance of the Omen King"
+      },
+      {
+        "ID": 9101400,
+        "Text": "- Remembrance of the Regal Ancestor"
+      },
+      {
+        "ID": 9101500,
+        "Text": "- Remembrance of the Rot Goddess"
+      },
+      {
+        "ID": 9101600,
+        "Text": "- Remembrance of the Starscourge"
+      },
+      {
+        "ID": 9101701,
+        "Text": "2 Rimed Crystal Bud"
+      },
+      {
+        "ID": 9101702,
+        "Text": "3 Rimed Crystal Bud"
+      },
+      {
+        "ID": 9101704,
+        "Text": "5 Rimed Crystal Bud"
+      },
+      {
+        "ID": 9101707,
+        "Text": "8 Rimed Crystal Bud"
+      },
+      {
+        "ID": 9101807,
+        "Text": "8 Rimed Rowa"
+      },
+      {
+        "ID": 9101900,
+        "Text": "Ringed Finger"
+      },
+      {
+        "ID": 9102000,
+        "Text": "1 Ritual Pot"
+      },
+      {
+        "ID": 9102100,
+        "Text": "Ritual Shield Talisman"
+      },
+      {
+        "ID": 9102200,
+        "Text": "Ritual Sword Talisman"
+      },
+      {
+        "ID": 9102300,
+        "Text": "- Rivers of Blood"
+      },
+      {
+        "ID": 9102400,
+        "Text": "- Roar Medallion"
+      },
+      {
+        "ID": 9102500,
+        "Text": "Rock Blaster"
+      },
+      {
+        "ID": 9102600,
+        "Text": "Rock Sling"
+      },
+      {
+        "ID": 9102700,
+        "Text": "Rogier\u0027s Bell Bearing"
+      },
+      {
+        "ID": 9102800,
+        "Text": "Rogier\u0027s Letter"
+      },
+      {
+        "ID": 9102900,
+        "Text": "Rogier\u0027s Rapier \u002B8"
+      },
+      {
+        "ID": 9103000,
+        "Text": "Roiling Magma"
+      },
+      {
+        "ID": 9103100,
+        "Text": "Rold Medallion"
+      },
+      {
+        "ID": 9103200,
+        "Text": "Ronin\u0027s Armor"
+      },
+      {
+        "ID": 9103300,
+        "Text": "Ronin\u0027s Gauntlets"
+      },
+      {
+        "ID": 9103400,
+        "Text": "Ronin\u0027s Greaves"
+      },
+      {
+        "ID": 9103501,
+        "Text": "2 Root Resin"
+      },
+      {
+        "ID": 9103502,
+        "Text": "3 Root Resin"
+      },
+      {
+        "ID": 9103503,
+        "Text": "4 Root Resin"
+      },
+      {
+        "ID": 9103504,
+        "Text": "5 Root Resin"
+      },
+      {
+        "ID": 9103600,
+        "Text": "Roped Fire Pot"
+      },
+      {
+        "ID": 9103700,
+        "Text": "Rosus\u0027 Axe"
+      },
+      {
+        "ID": 9103800,
+        "Text": "1 Rot Grease"
+      },
+      {
+        "ID": 9103801,
+        "Text": "2 Rot Grease"
+      },
+      {
+        "ID": 9103802,
+        "Text": "3 Rot Grease"
+      },
+      {
+        "ID": 9103900,
+        "Text": "Rotten Crystal Sword"
+      },
+      {
+        "ID": 9104000,
+        "Text": "- Rotten Gravekeeper Cloak"
+      },
+      {
+        "ID": 9104100,
+        "Text": "- Rotten Staff"
+      },
+      {
+        "ID": 9104200,
+        "Text": "Rotten Stray Ashes"
+      },
+      {
+        "ID": 9104300,
+        "Text": "Rotten Winged Sword Insignia"
+      },
+      {
+        "ID": 9104400,
+        "Text": "Rowa Fruit"
+      },
+      {
+        "ID": 9104500,
+        "Text": "Royal Greatsword"
+      },
+      {
+        "ID": 9104600,
+        "Text": "- Royal House Scroll"
+      },
+      {
+        "ID": 9104700,
+        "Text": "Royal Remains Armor"
+      },
+      {
+        "ID": 9104800,
+        "Text": "Royal Remains Gauntlets"
+      },
+      {
+        "ID": 9104900,
+        "Text": "Royal Remains Greaves"
+      },
+      {
+        "ID": 9105000,
+        "Text": "Royal Remains Helm"
+      },
+      {
+        "ID": 9105102,
+        "Text": "3 Ruin Fragment"
+      },
+      {
+        "ID": 9105200,
+        "Text": "- Ruins Greatsword"
+      },
+      {
+        "ID": 9105300,
+        "Text": "Ruler\u0027s Mask"
+      },
+      {
+        "ID": 9105400,
+        "Text": "Ruler\u0027s Robe"
+      },
+      {
+        "ID": 9105500,
+        "Text": "1 Rune Arc"
+      },
+      {
+        "ID": 9105600,
+        "Text": "- Ruptured Crystal Tear"
+      },
+      {
+        "ID": 9105700,
+        "Text": "- Rusted Anchor"
+      },
+      {
+        "ID": 9105800,
+        "Text": "Rusty Key"
+      },
+      {
+        "ID": 9105900,
+        "Text": "Rya\u0027s Necklace"
+      },
+      {
+        "ID": 9106000,
+        "Text": "- Rykard\u0027s Great Rune"
+      },
+      {
+        "ID": 9106001,
+        "Text": "Rykard\u0027s Great Rune"
+      },
+      {
+        "ID": 9106100,
+        "Text": "1 Sacramental Bud"
+      },
+      {
+        "ID": 9106101,
+        "Text": "2 Sacramental Bud"
+      },
+      {
+        "ID": 9106102,
+        "Text": "3 Sacramental Bud"
+      },
+      {
+        "ID": 9106200,
+        "Text": "- Sacred Butchering Knife"
+      },
+      {
+        "ID": 9106300,
+        "Text": "- Sacred Scorpion Charm"
+      },
+      {
+        "ID": 9106400,
+        "Text": "1 Sacred Tear"
+      },
+      {
+        "ID": 9106500,
+        "Text": "- Sacrificial Axe"
+      },
+      {
+        "ID": 9106600,
+        "Text": "1 Sacrificial Twig"
+      },
+      {
+        "ID": 9106700,
+        "Text": "Sage Hood"
+      },
+      {
+        "ID": 9106800,
+        "Text": "Sage Robe"
+      },
+      {
+        "ID": 9106900,
+        "Text": "Sage Trousers"
+      },
+      {
+        "ID": 9107000,
+        "Text": "Sanctified Whetblade"
+      },
+      {
+        "ID": 9107102,
+        "Text": "3 Sanctuary Stone"
+      },
+      {
+        "ID": 9107200,
+        "Text": "Sanguine Noble Bracelets"
+      },
+      {
+        "ID": 9107300,
+        "Text": "- Sanguine Noble Hood"
+      },
+      {
+        "ID": 9107400,
+        "Text": "- Sanguine Noble Robe"
+      },
+      {
+        "ID": 9107500,
+        "Text": "Sanguine Noble Trousers"
+      },
+      {
+        "ID": 9107600,
+        "Text": "- Sanguine Noble Waistcloth"
+      },
+      {
+        "ID": 9107700,
+        "Text": "Scaled Armor"
+      },
+      {
+        "ID": 9107800,
+        "Text": "Scaled Gauntlets"
+      },
+      {
+        "ID": 9107900,
+        "Text": "Scaled Greaves"
+      },
+      {
+        "ID": 9108000,
+        "Text": "Scaled Helm"
+      },
+      {
+        "ID": 9108100,
+        "Text": "Scavenger\u0027s Curved Sword"
+      },
+      {
+        "ID": 9108200,
+        "Text": "- Scepter of the All-Knowing"
+      },
+      {
+        "ID": 9108300,
+        "Text": "Scorpion\u0027s Stinger"
+      },
+      {
+        "ID": 9108400,
+        "Text": "- Scouring Black Flame"
+      },
+      {
+        "ID": 9108500,
+        "Text": "Scythe"
+      },
+      {
+        "ID": 9108600,
+        "Text": "1 Seedbed Curse"
+      },
+      {
+        "ID": 9108700,
+        "Text": "Sellen\u0027s Bell Bearing"
+      },
+      {
+        "ID": 9108800,
+        "Text": "Sellen\u0027s Primal Glintstone"
+      },
+      {
+        "ID": 9108900,
+        "Text": "Sellia\u0027s Secret"
+      },
+      {
+        "ID": 9109000,
+        "Text": "Sellian Sealbreaker"
+      },
+      {
+        "ID": 9109100,
+        "Text": "Seluvis\u0027s Bell Bearing"
+      },
+      {
+        "ID": 9109200,
+        "Text": "Seluvis\u0027s Introduction"
+      },
+      {
+        "ID": 9109300,
+        "Text": "Seluvis\u0027s Potion"
+      },
+      {
+        "ID": 9109409,
+        "Text": "10 Serpent Arrow"
+      },
+      {
+        "ID": 9109414,
+        "Text": "15 Serpent Arrow"
+      },
+      {
+        "ID": 9109500,
+        "Text": "Serpent Bow"
+      },
+      {
+        "ID": 9109600,
+        "Text": "Serpent-God\u0027s Curved Sword"
+      },
+      {
+        "ID": 9109700,
+        "Text": "Serpent-Hunter"
+      },
+      {
+        "ID": 9109800,
+        "Text": "Serpent\u0027s Amnion"
+      },
+      {
+        "ID": 9109900,
+        "Text": "Serpentbone Blade"
+      },
+      {
+        "ID": 9110000,
+        "Text": "Sewer-Gaol Key"
+      },
+      {
+        "ID": 9110100,
+        "Text": "- Sewing Needle"
+      },
+      {
+        "ID": 9110200,
+        "Text": "1 Shabriri Grape"
+      },
+      {
+        "ID": 9110300,
+        "Text": "Shabriri\u0027s Woe"
+      },
+      {
+        "ID": 9110400,
+        "Text": "Shadow Bait"
+      },
+      {
+        "ID": 9110500,
+        "Text": "Shamshir"
+      },
+      {
+        "ID": 9110600,
+        "Text": "Shard of Alexander"
+      },
+      {
+        "ID": 9110700,
+        "Text": "Shatter Earth"
+      },
+      {
+        "ID": 9110800,
+        "Text": "Shattering Crystal"
+      },
+      {
+        "ID": 9110905,
+        "Text": "6 Shattershard Arrow (Fletched)"
+      },
+      {
+        "ID": 9110909,
+        "Text": "10 Shattershard Arrow (Fletched)"
+      },
+      {
+        "ID": 9111000,
+        "Text": "1 Shield Grease"
+      },
+      {
+        "ID": 9111001,
+        "Text": "2 Shield Grease"
+      },
+      {
+        "ID": 9111100,
+        "Text": "Shield of the Guilty"
+      },
+      {
+        "ID": 9111200,
+        "Text": "- Shining Horned Headband"
+      },
+      {
+        "ID": 9111300,
+        "Text": "- Siluria\u0027s Tree"
+      },
+      {
+        "ID": 9111401,
+        "Text": "2 Silver Firefly"
+      },
+      {
+        "ID": 9111404,
+        "Text": "5 Silver Firefly"
+      },
+      {
+        "ID": 9111500,
+        "Text": "Silver Mirrorshield"
+      },
+      {
+        "ID": 9111600,
+        "Text": "Silver Scarab"
+      },
+      {
+        "ID": 9111701,
+        "Text": "2 Silver Tear Husk"
+      },
+      {
+        "ID": 9111702,
+        "Text": "3 Silver Tear Husk"
+      },
+      {
+        "ID": 9111800,
+        "Text": "1 Silver-Pickled Fowl Foot"
+      },
+      {
+        "ID": 9111801,
+        "Text": "2 Silver-Pickled Fowl Foot"
+      },
+      {
+        "ID": 9111802,
+        "Text": "3 Silver-Pickled Fowl Foot"
+      },
+      {
+        "ID": 9111804,
+        "Text": "5 Silver-Pickled Fowl Foot"
+      },
+      {
+        "ID": 9111900,
+        "Text": "- Skeletal Bandit Ashes"
+      },
+      {
+        "ID": 9112000,
+        "Text": "Skeletal Mask"
+      },
+      {
+        "ID": 9112100,
+        "Text": "- Skeletal Militiaman Ashes"
+      },
+      {
+        "ID": 9112200,
+        "Text": "1 Sliver of Meat"
+      },
+      {
+        "ID": 9112201,
+        "Text": "2 Sliver of Meat"
+      },
+      {
+        "ID": 9112202,
+        "Text": "3 Sliver of Meat"
+      },
+      {
+        "ID": 9112205,
+        "Text": "6 Sliver of Meat"
+      },
+      {
+        "ID": 9112300,
+        "Text": "1 Slumbering Egg"
+      },
+      {
+        "ID": 9112301,
+        "Text": "2 Slumbering Egg"
+      },
+      {
+        "ID": 9112302,
+        "Text": "3 Slumbering Egg"
+      },
+      {
+        "ID": 9112304,
+        "Text": "5 Slumbering Egg"
+      },
+      {
+        "ID": 9112400,
+        "Text": "Small Golden Effigy"
+      },
+      {
+        "ID": 9112500,
+        "Text": "Small Red Effigy"
+      },
+      {
+        "ID": 9112600,
+        "Text": "1 Smithing Stone [1]"
+      },
+      {
+        "ID": 9112601,
+        "Text": "2 Smithing Stone [1]"
+      },
+      {
+        "ID": 9112602,
+        "Text": "3 Smithing Stone [1]"
+      },
+      {
+        "ID": 9112603,
+        "Text": "4 Smithing Stone [1]"
+      },
+      {
+        "ID": 9112604,
+        "Text": "5 Smithing Stone [1]"
+      },
+      {
+        "ID": 9112700,
+        "Text": "1 Smithing Stone [2]"
+      },
+      {
+        "ID": 9112701,
+        "Text": "2 Smithing Stone [2]"
+      },
+      {
+        "ID": 9112702,
+        "Text": "3 Smithing Stone [2]"
+      },
+      {
+        "ID": 9112800,
+        "Text": "1 Smithing Stone [3]"
+      },
+      {
+        "ID": 9112801,
+        "Text": "2 Smithing Stone [3]"
+      },
+      {
+        "ID": 9112802,
+        "Text": "3 Smithing Stone [3]"
+      },
+      {
+        "ID": 9112900,
+        "Text": "1 Smithing Stone [4]"
+      },
+      {
+        "ID": 9112902,
+        "Text": "3 Smithing Stone [4]"
+      },
+      {
+        "ID": 9113000,
+        "Text": "1 Smithing Stone [5]"
+      },
+      {
+        "ID": 9113002,
+        "Text": "3 Smithing Stone [5]"
+      },
+      {
+        "ID": 9113100,
+        "Text": "1 Smithing Stone [6]"
+      },
+      {
+        "ID": 9113101,
+        "Text": "2 Smithing Stone [6]"
+      },
+      {
+        "ID": 9113102,
+        "Text": "3 Smithing Stone [6]"
+      },
+      {
+        "ID": 9113200,
+        "Text": "1 Smithing Stone [7]"
+      },
+      {
+        "ID": 9113201,
+        "Text": "2 Smithing Stone [7]"
+      },
+      {
+        "ID": 9113202,
+        "Text": "3 Smithing Stone [7]"
+      },
+      {
+        "ID": 9113203,
+        "Text": "4 Smithing Stone [7]"
+      },
+      {
+        "ID": 9113300,
+        "Text": "1 Smithing Stone [8]"
+      },
+      {
+        "ID": 9113302,
+        "Text": "3 Smithing Stone [8]"
+      },
+      {
+        "ID": 9113400,
+        "Text": "- Smithing-Stone Miner\u0027s Bell Bearing [1]"
+      },
+      {
+        "ID": 9113500,
+        "Text": "Smithing-Stone Miner\u0027s Bell Bearing [2]"
+      },
+      {
+        "ID": 9113600,
+        "Text": "Smithing-Stone Miner\u0027s Bell Bearing [3]"
+      },
+      {
+        "ID": 9113700,
+        "Text": "- Smithing-Stone Miner\u0027s Bell Bearing [4]"
+      },
+      {
+        "ID": 9113800,
+        "Text": "1 Smoldering Butterfly"
+      },
+      {
+        "ID": 9113801,
+        "Text": "2 Smoldering Butterfly"
+      },
+      {
+        "ID": 9113802,
+        "Text": "3 Smoldering Butterfly"
+      },
+      {
+        "ID": 9113803,
+        "Text": "4 Smoldering Butterfly"
+      },
+      {
+        "ID": 9113804,
+        "Text": "5 Smoldering Butterfly"
+      },
+      {
+        "ID": 9113805,
+        "Text": "6 Smoldering Butterfly"
+      },
+      {
+        "ID": 9113807,
+        "Text": "8 Smoldering Butterfly"
+      },
+      {
+        "ID": 9113900,
+        "Text": "Smoldering Shield"
+      },
+      {
+        "ID": 9114000,
+        "Text": "Snow Witch Hat"
+      },
+      {
+        "ID": 9114100,
+        "Text": "Snow Witch Robe"
+      },
+      {
+        "ID": 9114200,
+        "Text": "Snow Witch Skirt"
+      },
+      {
+        "ID": 9114302,
+        "Text": "3 Soap"
+      },
+      {
+        "ID": 9114303,
+        "Text": "4 Soap"
+      },
+      {
+        "ID": 9114400,
+        "Text": "1 Soft Cotton"
+      },
+      {
+        "ID": 9114401,
+        "Text": "2 Soft Cotton"
+      },
+      {
+        "ID": 9114402,
+        "Text": "3 Soft Cotton"
+      },
+      {
+        "ID": 9114405,
+        "Text": "6 Soft Cotton"
+      },
+      {
+        "ID": 9114500,
+        "Text": "- Soldjars of Fortune Ashes"
+      },
+      {
+        "ID": 9114600,
+        "Text": "1 Somber Ancient Dragon Smithing Stone"
+      },
+      {
+        "ID": 9114700,
+        "Text": "1 Somber Smithing Stone [1]"
+      },
+      {
+        "ID": 9114701,
+        "Text": "2 Somber Smithing Stone [1]"
+      },
+      {
+        "ID": 9114800,
+        "Text": "1 Somber Smithing Stone [2]"
+      },
+      {
+        "ID": 9114801,
+        "Text": "2 Somber Smithing Stone [2]"
+      },
+      {
+        "ID": 9114900,
+        "Text": "1 Somber Smithing Stone [3]"
+      },
+      {
+        "ID": 9115000,
+        "Text": "1 Somber Smithing Stone [4]"
+      },
+      {
+        "ID": 9115100,
+        "Text": "1 Somber Smithing Stone [5]"
+      },
+      {
+        "ID": 9115102,
+        "Text": "3 Somber Smithing Stone [5]"
+      },
+      {
+        "ID": 9115200,
+        "Text": "1 Somber Smithing Stone [6]"
+      },
+      {
+        "ID": 9115300,
+        "Text": "1 Somber Smithing Stone [7]"
+      },
+      {
+        "ID": 9115302,
+        "Text": "3 Somber Smithing Stone [7]"
+      },
+      {
+        "ID": 9115400,
+        "Text": "1 Somber Smithing Stone [8]"
+      },
+      {
+        "ID": 9115500,
+        "Text": "1 Somber Smithing Stone [9]"
+      },
+      {
+        "ID": 9115600,
+        "Text": "- Somberstone Miner\u0027s Bell Bearing [1]"
+      },
+      {
+        "ID": 9115700,
+        "Text": "- Somberstone Miner\u0027s Bell Bearing [2]"
+      },
+      {
+        "ID": 9115800,
+        "Text": "Somberstone Miner\u0027s Bell Bearing [3]"
+      },
+      {
+        "ID": 9115900,
+        "Text": "Somberstone Miner\u0027s Bell Bearing [4]"
+      },
+      {
+        "ID": 9116000,
+        "Text": "Somberstone Miner\u0027s Bell Bearing [5]"
+      },
+      {
+        "ID": 9116101,
+        "Text": "2 Soporific Grease"
+      },
+      {
+        "ID": 9116102,
+        "Text": "3 Soporific Grease"
+      },
+      {
+        "ID": 9116200,
+        "Text": "- Spear \u002B7"
+      },
+      {
+        "ID": 9116300,
+        "Text": "Spear Talisman"
+      },
+      {
+        "ID": 9116400,
+        "Text": "- Speckled Hardtear"
+      },
+      {
+        "ID": 9116500,
+        "Text": "Spectral Steed Whistle"
+      },
+      {
+        "ID": 9116600,
+        "Text": "Spellblade\u0027s Gloves"
+      },
+      {
+        "ID": 9116700,
+        "Text": "Spellblade\u0027s Pointed Hat"
+      },
+      {
+        "ID": 9116800,
+        "Text": "Spellblade\u0027s Traveling Attire"
+      },
+      {
+        "ID": 9116900,
+        "Text": "Spellblade\u0027s Trousers"
+      },
+      {
+        "ID": 9117000,
+        "Text": "- Spelldrake Talisman"
+      },
+      {
+        "ID": 9117100,
+        "Text": "Spelldrake Talisman \u002B1"
+      },
+      {
+        "ID": 9117200,
+        "Text": "Spelldrake Talisman \u002B2"
+      },
+      {
+        "ID": 9117300,
+        "Text": "1 Spellproof Dried Liver"
+      },
+      {
+        "ID": 9117400,
+        "Text": "Spiked Cracked Tear"
+      },
+      {
+        "ID": 9117500,
+        "Text": "Spiked Palisade Shield"
+      },
+      {
+        "ID": 9117600,
+        "Text": "Spiralhorn Shield"
+      },
+      {
+        "ID": 9117700,
+        "Text": "Spirit Calling Bell"
+      },
+      {
+        "ID": 9117800,
+        "Text": "Spirit Jellyfish Ashes"
+      },
+      {
+        "ID": 9117909,
+        "Text": "10 Spiritflame Arrow"
+      },
+      {
+        "ID": 9117914,
+        "Text": "15 Spiritflame Arrow"
+      },
+      {
+        "ID": 9118009,
+        "Text": "10 St. Trina\u0027s Arrow"
+      },
+      {
+        "ID": 9118100,
+        "Text": "St. Trina\u0027s Torch"
+      },
+      {
+        "ID": 9118200,
+        "Text": "Staff of Loss"
+      },
+      {
+        "ID": 9118300,
+        "Text": "- Staff of the Avatar"
+      },
+      {
+        "ID": 9118400,
+        "Text": "Stalwart Horn Charm"
+      },
+      {
+        "ID": 9118500,
+        "Text": "Stalwart Horn Charm \u002B1"
+      },
+      {
+        "ID": 9118600,
+        "Text": "1 Stanching Boluses"
+      },
+      {
+        "ID": 9118602,
+        "Text": "3 Stanching Boluses"
+      },
+      {
+        "ID": 9118700,
+        "Text": "Star Fist"
+      },
+      {
+        "ID": 9118800,
+        "Text": "Stargazer Heirloom"
+      },
+      {
+        "ID": 9118900,
+        "Text": "1 Starlight Shards"
+      },
+      {
+        "ID": 9119000,
+        "Text": "Stars of Ruin"
+      },
+      {
+        "ID": 9119100,
+        "Text": "Starscourge Heirloom"
+      },
+      {
+        "ID": 9119200,
+        "Text": "Steel-Wire Torch"
+      },
+      {
+        "ID": 9119300,
+        "Text": "1 Stimulating Boluses"
+      },
+      {
+        "ID": 9119301,
+        "Text": "2 Stimulating Boluses"
+      },
+      {
+        "ID": 9119302,
+        "Text": "3 Stimulating Boluses"
+      },
+      {
+        "ID": 9119400,
+        "Text": "Stone of Gurranq"
+      },
+      {
+        "ID": 9119500,
+        "Text": "- Stonebarb Cracked Tear"
+      },
+      {
+        "ID": 9119600,
+        "Text": "1 Stonesword Key"
+      },
+      {
+        "ID": 9119700,
+        "Text": "Stormhawk Axe"
+      },
+      {
+        "ID": 9119800,
+        "Text": "Stormhawk Deenh"
+      },
+      {
+        "ID": 9119902,
+        "Text": "3 Stormhawk Feather"
+      },
+      {
+        "ID": 9119903,
+        "Text": "4 Stormhawk Feather"
+      },
+      {
+        "ID": 9119904,
+        "Text": "5 Stormhawk Feather"
+      },
+      {
+        "ID": 9120000,
+        "Text": "Strength-knot Crystal Tear"
+      },
+      {
+        "ID": 9120100,
+        "Text": "1 String"
+      },
+      {
+        "ID": 9120102,
+        "Text": "3 String"
+      },
+      {
+        "ID": 9120103,
+        "Text": "4 String"
+      },
+      {
+        "ID": 9120104,
+        "Text": "5 String"
+      },
+      {
+        "ID": 9120200,
+        "Text": "1 Strip of White Flesh"
+      },
+      {
+        "ID": 9120201,
+        "Text": "2 Strip of White Flesh"
+      },
+      {
+        "ID": 9120202,
+        "Text": "3 Strip of White Flesh"
+      },
+      {
+        "ID": 9120300,
+        "Text": "Swarm of Flies"
+      },
+      {
+        "ID": 9120400,
+        "Text": "- Sword of Milos"
+      },
+      {
+        "ID": 9120500,
+        "Text": "Sword of Night and Flame"
+      },
+      {
+        "ID": 9120600,
+        "Text": "Sword of St. Trina"
+      },
+      {
+        "ID": 9120700,
+        "Text": "- Tailoring Tools"
+      },
+      {
+        "ID": 9120800,
+        "Text": "Taker\u0027s Cameo"
+      },
+      {
+        "ID": 9120900,
+        "Text": "- 1 Talisman Pouch"
+      },
+      {
+        "ID": 9121000,
+        "Text": "1 Tarnished Golden Sunflower"
+      },
+      {
+        "ID": 9121002,
+        "Text": "3 Tarnished Golden Sunflower"
+      },
+      {
+        "ID": 9121003,
+        "Text": "4 Tarnished Golden Sunflower"
+      },
+      {
+        "ID": 9121007,
+        "Text": "8 Tarnished Golden Sunflower"
+      },
+      {
+        "ID": 9121100,
+        "Text": "Tarnished\u0027s Furled Finger"
+      },
+      {
+        "ID": 9121200,
+        "Text": "Tarnished\u0027s Wizened Finger"
+      },
+      {
+        "ID": 9121300,
+        "Text": "Taunter\u0027s Tongue"
+      },
+      {
+        "ID": 9121400,
+        "Text": "Terra Magica"
+      },
+      {
+        "ID": 9121500,
+        "Text": "1 Thawfrost Boluses"
+      },
+      {
+        "ID": 9121501,
+        "Text": "2 Thawfrost Boluses"
+      },
+      {
+        "ID": 9121502,
+        "Text": "3 Thawfrost Boluses"
+      },
+      {
+        "ID": 9121600,
+        "Text": "The Flame of Frenzy"
+      },
+      {
+        "ID": 9121700,
+        "Text": "- Lhutel the Headless"
+      },
+      {
+        "ID": 9121800,
+        "Text": "The Stormhawk King"
+      },
+      {
+        "ID": 9121902,
+        "Text": "3 Thin Beast Bones"
+      },
+      {
+        "ID": 9122000,
+        "Text": "- Thops\u0027s Barrier"
+      },
+      {
+        "ID": 9122100,
+        "Text": "Thops\u0027s Bell Bearing"
+      },
+      {
+        "ID": 9122200,
+        "Text": "- Thorny Cracked Tear"
+      },
+      {
+        "ID": 9122304,
+        "Text": "5 Throwing Dagger"
+      },
+      {
+        "ID": 9122305,
+        "Text": "6 Throwing Dagger"
+      },
+      {
+        "ID": 9122307,
+        "Text": "8 Throwing Dagger"
+      },
+      {
+        "ID": 9122400,
+        "Text": "- Tibia\u0027s Summons"
+      },
+      {
+        "ID": 9122500,
+        "Text": "Tonic of Forgetfulness"
+      },
+      {
+        "ID": 9122604,
+        "Text": "5 Toxic Mushroom"
+      },
+      {
+        "ID": 9122700,
+        "Text": "Traveler\u0027s Boots"
+      },
+      {
+        "ID": 9122800,
+        "Text": "Traveler\u0027s Clothes"
+      },
+      {
+        "ID": 9122900,
+        "Text": "Traveler\u0027s Gloves"
+      },
+      {
+        "ID": 9123000,
+        "Text": "Traveler\u0027s Hat"
+      },
+      {
+        "ID": 9123100,
+        "Text": "Traveler\u0027s Manchettes"
+      },
+      {
+        "ID": 9123200,
+        "Text": "Traveler\u0027s Slops"
+      },
+      {
+        "ID": 9123300,
+        "Text": "Traveling Maiden Boots"
+      },
+      {
+        "ID": 9123400,
+        "Text": "Traveling Maiden Gloves"
+      },
+      {
+        "ID": 9123500,
+        "Text": "Traveling Maiden Hood"
+      },
+      {
+        "ID": 9123600,
+        "Text": "Traveling Maiden Robe"
+      },
+      {
+        "ID": 9123700,
+        "Text": "- Tree Sentinel Armor"
+      },
+      {
+        "ID": 9123800,
+        "Text": "- Tree Sentinel Gauntlets"
+      },
+      {
+        "ID": 9123900,
+        "Text": "- Tree Sentinel Greaves"
+      },
+      {
+        "ID": 9124000,
+        "Text": "- Tree Sentinel Helm"
+      },
+      {
+        "ID": 9124100,
+        "Text": "Treespear"
+      },
+      {
+        "ID": 9124200,
+        "Text": "1 Trina\u0027s Lily"
+      },
+      {
+        "ID": 9124203,
+        "Text": "4 Trina\u0027s Lily"
+      },
+      {
+        "ID": 9124300,
+        "Text": "Triple Rings of Light"
+      },
+      {
+        "ID": 9124400,
+        "Text": "- Troll Knight\u0027s Sword"
+      },
+      {
+        "ID": 9124500,
+        "Text": "Troll\u0027s Golden Sword"
+      },
+      {
+        "ID": 9124600,
+        "Text": "Troll\u0027s Hammer"
+      },
+      {
+        "ID": 9124700,
+        "Text": "1 Turtle Neck Meat"
+      },
+      {
+        "ID": 9124701,
+        "Text": "2 Turtle Neck Meat"
+      },
+      {
+        "ID": 9124800,
+        "Text": "Twiggy Cracked Tear"
+      },
+      {
+        "ID": 9124900,
+        "Text": "- Twinbird Kite Shield"
+      },
+      {
+        "ID": 9125000,
+        "Text": "Twinblade"
+      },
+      {
+        "ID": 9125100,
+        "Text": "Twinblade Talisman"
+      },
+      {
+        "ID": 9125200,
+        "Text": "Twinned Armor"
+      },
+      {
+        "ID": 9125300,
+        "Text": "Twinned Gauntlets"
+      },
+      {
+        "ID": 9125400,
+        "Text": "Twinned Greaves"
+      },
+      {
+        "ID": 9125500,
+        "Text": "Twinned Helm"
+      },
+      {
+        "ID": 9125600,
+        "Text": "Twinned Knight Swords"
+      },
+      {
+        "ID": 9125700,
+        "Text": "- Twinsage Glintstone Crown"
+      },
+      {
+        "ID": 9125800,
+        "Text": "- Twinsage Sorcerer Ashes"
+      },
+      {
+        "ID": 9125900,
+        "Text": "Two Fingers Heirloom"
+      },
+      {
+        "ID": 9126000,
+        "Text": "Two Fingers\u0027 Prayerbook"
+      },
+      {
+        "ID": 9126100,
+        "Text": "Uchigatana"
+      },
+      {
+        "ID": 9126200,
+        "Text": "- Unalloyed Gold Needle"
+      },
+      {
+        "ID": 9126300,
+        "Text": "Unendurable Frenzy"
+      },
+      {
+        "ID": 9126400,
+        "Text": "Unseen Blade"
+      },
+      {
+        "ID": 9126500,
+        "Text": "Unseen Form"
+      },
+      {
+        "ID": 9126600,
+        "Text": "Upper-Class Robe"
+      },
+      {
+        "ID": 9126700,
+        "Text": "Urumi"
+      },
+      {
+        "ID": 9126800,
+        "Text": "Valkyrie\u0027s Prosthesis"
+      },
+      {
+        "ID": 9126900,
+        "Text": "Varre\u0027s Bouquet"
+      },
+      {
+        "ID": 9127000,
+        "Text": "Venomous Fang"
+      },
+      {
+        "ID": 9127100,
+        "Text": "Veteran\u0027s Helm"
+      },
+      {
+        "ID": 9127200,
+        "Text": "- Veteran\u0027s Prosthesis"
+      },
+      {
+        "ID": 9127300,
+        "Text": "- Viridian Amber Medallion"
+      },
+      {
+        "ID": 9127400,
+        "Text": "- Viridian Amber Medallion \u002B1"
+      },
+      {
+        "ID": 9127500,
+        "Text": "Viridian Amber Medallion \u002B2"
+      },
+      {
+        "ID": 9127600,
+        "Text": "Visage Shield"
+      },
+      {
+        "ID": 9127700,
+        "Text": "Voidbane Talisman"
+      },
+      {
+        "ID": 9127800,
+        "Text": "Volcanic Stone"
+      },
+      {
+        "ID": 9127900,
+        "Text": "Volcano Manor Invitation"
+      },
+      {
+        "ID": 9128000,
+        "Text": "Vulgar Militia Ashes"
+      },
+      {
+        "ID": 9128100,
+        "Text": "- Vyke\u0027s Dragonbolt"
+      },
+      {
+        "ID": 9128200,
+        "Text": "- Vyke\u0027s War Spear"
+      },
+      {
+        "ID": 9128300,
+        "Text": "Wakizashi"
+      },
+      {
+        "ID": 9128400,
+        "Text": "Wandering Noble Ashes"
+      },
+      {
+        "ID": 9128500,
+        "Text": "- War Surgeon Gloves"
+      },
+      {
+        "ID": 9128600,
+        "Text": "- War Surgeon Gown (Altered)"
+      },
+      {
+        "ID": 9128700,
+        "Text": "- War Surgeon Trousers"
+      },
+      {
+        "ID": 9128800,
+        "Text": "Warhawk Ashes"
+      },
+      {
+        "ID": 9128900,
+        "Text": "1 Warming Stone"
+      },
+      {
+        "ID": 9128901,
+        "Text": "2 Warming Stone"
+      },
+      {
+        "ID": 9128902,
+        "Text": "3 Warming Stone"
+      },
+      {
+        "ID": 9128903,
+        "Text": "4 Warming Stone"
+      },
+      {
+        "ID": 9128904,
+        "Text": "5 Warming Stone"
+      },
+      {
+        "ID": 9129000,
+        "Text": "Warrior Jar Shard"
+      },
+      {
+        "ID": 9129100,
+        "Text": "Watchdog\u0027s Staff"
+      },
+      {
+        "ID": 9129200,
+        "Text": "Weathered Dagger"
+      },
+      {
+        "ID": 9129300,
+        "Text": "Whetstone Knife"
+      },
+      {
+        "ID": 9129400,
+        "Text": "Whip"
+      },
+      {
+        "ID": 9129500,
+        "Text": "- Whirl, O Flame!"
+      },
+      {
+        "ID": 9129600,
+        "Text": "White Cipher Ring"
+      },
+      {
+        "ID": 9129700,
+        "Text": "- White Mask"
+      },
+      {
+        "ID": 9129800,
+        "Text": "White Reed Armor"
+      },
+      {
+        "ID": 9129900,
+        "Text": "White Reed Gauntlets"
+      },
+      {
+        "ID": 9130000,
+        "Text": "White Reed Greaves"
+      },
+      {
+        "ID": 9130100,
+        "Text": "Windy Crystal Tear"
+      },
+      {
+        "ID": 9130200,
+        "Text": "Wing of Astel"
+      },
+      {
+        "ID": 9130300,
+        "Text": "Winged Crystal Tear"
+      },
+      {
+        "ID": 9130400,
+        "Text": "Winged Misbegotten Ashes"
+      },
+      {
+        "ID": 9130500,
+        "Text": "Winged Scythe"
+      },
+      {
+        "ID": 9130600,
+        "Text": "- Winged Sword Insignia"
+      },
+      {
+        "ID": 9130700,
+        "Text": "Witch\u0027s Glintstone Crown"
+      },
+      {
+        "ID": 9130800,
+        "Text": "Wooden Greatshield"
+      },
+      {
+        "ID": 9130900,
+        "Text": "Wraith Calling Bell"
+      },
+      {
+        "ID": 9131000,
+        "Text": "Wrath of Gold"
+      },
+      {
+        "ID": 9131100,
+        "Text": "1 Yellow Ember"
+      },
+      {
+        "ID": 9131200,
+        "Text": "- Zamor Armor"
+      },
+      {
+        "ID": 9131300,
+        "Text": "- Zamor Bracelets"
+      },
+      {
+        "ID": 9131400,
+        "Text": "- Zamor Curved Sword"
+      },
+      {
+        "ID": 9131500,
+        "Text": "Zamor Ice Storm"
+      },
+      {
+        "ID": 9131600,
+        "Text": "- Zamor Legwraps"
+      },
+      {
+        "ID": 9131700,
+        "Text": "- Zamor Mask"
+      },
+      {
+        "ID": 9131800,
+        "Text": "Zorayas\u0027s Letter"
+      },
+      {
+        "ID": 9131900,
+        "Text": "- Banished Knight Engvall"
+      },
+      {
+        "ID": 9132000,
+        "Text": "- 1 Deathroot"
+      },
+      {
+        "ID": 9132100,
+        "Text": "- 1 Golden Seed"
+      },
+      {
+        "ID": 9132200,
+        "Text": "- 1 Memory Stone"
+      },
+      {
+        "ID": 9132309,
+        "Text": "- 10 Gravity Stone Chunk"
+      },
+      {
+        "ID": 9132400,
+        "Text": "- Silver Tear Mask"
+      },
+      {
+        "ID": 9132500,
+        "Text": "- 1 Larval Tear"
+      },
+      {
+        "ID": 9132501,
+        "Text": "- 2 Larval Tear"
+      },
+      {
+        "ID": 9132609,
+        "Text": "- 10 Gravity Stone Fan"
+      },
+      {
+        "ID": 9132700,
+        "Text": "- 1 Hero\u0027s Rune [1]"
+      },
+      {
+        "ID": 9132800,
+        "Text": "Strength!"
+      },
+      {
+        "ID": 9132900,
+        "Text": "My Thanks"
+      },
+      {
+        "ID": 9133000,
+        "Text": "Fire Spur Me"
+      },
+      {
+        "ID": 9133100,
+        "Text": "Crossed Legs"
+      },
+      {
+        "ID": 9133200,
+        "Text": "Dozing Cross-Legged"
+      },
+      {
+        "ID": 9133300,
+        "Text": "- Dragon Communion Seal"
+      },
+      {
+        "ID": 9133400,
+        "Text": "- 1 Beast Blood"
+      },
+      {
+        "ID": 9133500,
+        "Text": "- 2 Old Fang"
+      },
+      {
+        "ID": 9133600,
+        "Text": "- 1 Ghost Glovewort [2]"
+      },
+      {
+        "ID": 9133700,
+        "Text": "- Omen Bairn"
+      },
+      {
+        "ID": 9133800,
+        "Text": "- 1 Lord\u0027s Rune"
+      },
+      {
+        "ID": 9133900,
+        "Text": "- Rotten Duelist Helm"
+      },
+      {
+        "ID": 9134000,
+        "Text": "- Rotten Greataxe"
+      },
+      {
+        "ID": 9134100,
+        "Text": "- Rotten Duelist Greaves"
+      },
+      {
+        "ID": 9134200,
+        "Text": "- 1 Ghost Glovewort [9]"
+      },
+      {
+        "ID": 9134300,
+        "Text": "- 1 Numen\u0027s Rune"
+      },
+      {
+        "ID": 9134400,
+        "Text": "- 1 Rune Arc"
+      },
+      {
+        "ID": 9134500,
+        "Text": "- Immunizing Horn Charm \u002B1"
+      },
+      {
+        "ID": 9134600,
+        "Text": "- 1 Golden Rune [10]"
+      },
+      {
+        "ID": 9134700,
+        "Text": "- 1 Golden Rune [12]"
+      },
+      {
+        "ID": 9134800,
+        "Text": "- 1 Golden Rune [13]"
+      },
+      {
+        "ID": 9134900,
+        "Text": "- 1 Ghost Glovewort [4]"
+      },
+      {
+        "ID": 9135000,
+        "Text": "- 1 Ghost Glovewort [6]"
+      },
+      {
+        "ID": 9135100,
+        "Text": "- 1 Golden Rune [6]"
+      },
+      {
+        "ID": 9135200,
+        "Text": "- 1 Golden Rune [9]"
+      },
+      {
+        "ID": 9135300,
+        "Text": "- 1 Shabriri Grape"
+      },
+      {
+        "ID": 9135400,
+        "Text": "- 5 Raw Meat Dumpling"
+      },
+      {
+        "ID": 9135504,
+        "Text": "- 5 Sacramental Bud"
+      },
+      {
+        "ID": 9135600,
+        "Text": "- 1 Golden Rune [3]"
+      },
+      {
+        "ID": 9135700,
+        "Text": "- 1 Golden Rune [5]"
+      },
+      {
+        "ID": 9135800,
+        "Text": "- Great Stars"
+      },
+      {
+        "ID": 9135900,
+        "Text": "- 5 Smoldering Butterfly"
+      },
+      {
+        "ID": 9136000,
+        "Text": "- 3 Fire Blossom"
+      },
+      {
+        "ID": 9136100,
+        "Text": "- 1 Living Jar Shard"
+      },
+      {
+        "ID": 9136200,
+        "Text": "- 1 Raw Meat Dumpling"
+      },
+      {
+        "ID": 9136309,
+        "Text": "- 10 Great Arrow"
+      },
+      {
+        "ID": 9136401,
+        "Text": "- 2 Great Grave Glovewort"
+      },
+      {
+        "ID": 9150000,
+        "Text": "Warp to Sellia Crystal Tunnel"
+      },
+      {
+        "ID": 9175000,
+        "Text": "Carian Study Hall (Inverted)"
+      },
+      {
+        "ID": 9200000,
+        "Text": "(Only at Night)"
+      },
+      {
+        "ID": 9200001,
+        "Text": "(Only when the festival is not active)"
+      },
+      {
+        "ID": 9200003,
+        "Text": "(Only after Thops moves to Academy of Raya Lucaria)"
+      },
+      {
+        "ID": 9200004,
+        "Text": "(Only in Evergaol)"
+      },
+      {
+        "ID": 9201000,
+        "Text": "(Requires Fia and Cursemark of Death)"
+      },
+      {
+        "ID": 9201001,
+        "Text": "(Breakable Statue)"
+      },
+      {
+        "ID": 9201003,
+        "Text": "(Requires Discarded Palace Key)"
+      },
+      {
+        "ID": 9201006,
+        "Text": "Imp Statue (1 Key)"
+      },
+      {
+        "ID": 9201007,
+        "Text": "Imp Statue (2 Keys)"
+      },
+      {
+        "ID": 9201009,
+        "Text": "(Requires Yura\u0027s death)"
+      },
+      {
+        "ID": 9201010,
+        "Text": "(Requires Tanith\u0027s death)"
+      },
+      {
+        "ID": 9202000,
+        "Text": "Teardrop Scarab"
+      },
+      {
+        "ID": 9202100,
+        "Text": "- 1 Somber Smithing Stone [1]"
+      },
+      {
+        "ID": 9202200,
+        "Text": "- 1 Somber Smithing Stone [2]"
+      },
+      {
+        "ID": 9202300,
+        "Text": "- 1 Somber Smithing Stone [3]"
+      },
+      {
+        "ID": 9202400,
+        "Text": "- 1 Somber Smithing Stone [4]"
+      },
+      {
+        "ID": 9202500,
+        "Text": "- 1 Somber Smithing Stone [5]"
+      },
+      {
+        "ID": 9202600,
+        "Text": "- 1 Somber Smithing Stone [6]"
+      },
+      {
+        "ID": 9202700,
+        "Text": "- 1 Somber Smithing Stone [7]"
+      },
+      {
+        "ID": 9202800,
+        "Text": "- 1 Somber Smithing Stone [8]"
+      },
+      {
+        "ID": 9202900,
+        "Text": "- 1 Somber Smithing Stone [9]"
+      },
+      {
+        "ID": 9203000,
+        "Text": "- 1 Somber Ancient Dragon Smithing Stone"
+      },
+      {
+        "ID": 9204604,
+        "Text": "- 5 Smithing Stone [6]"
+      },
+      {
+        "ID": 9204704,
+        "Text": "- 5 Smithing Stone [7]"
+      },
+      {
+        "ID": 9204800,
+        "Text": "- 1 Smithing Stone [8]"
+      },
+      {
+        "ID": 9204900,
+        "Text": "- 1 Ancient Dragon Smithing Stone"
+      },
+      {
+        "ID": 9240000,
+        "Text": "Mad Tongue Alberich: Taunter\u0027s Tongue"
+      },
+      {
+        "ID": 9240001,
+        "Text": "Bloody Finger Nerijus"
+      },
+      {
+        "ID": 9240002,
+        "Text": "Recusant Henricus"
+      },
+      {
+        "ID": 9240003,
+        "Text": "Preceptor Miriam"
+      },
+      {
+        "ID": 9240004,
+        "Text": "Moongrum, Carian Knight"
+      },
+      {
+        "ID": 9240005,
+        "Text": "Festering Fingerprint Vyke"
+      },
+      {
+        "ID": 9240006,
+        "Text": "Anastasia, Tarnished-Eater"
+      },
+      {
+        "ID": 9240007,
+        "Text": "Eleonora, Violet Bloody Finger"
+      },
+      {
+        "ID": 9240008,
+        "Text": "Maleigh Marais, Shaded Castle Castellan"
+      },
+      {
+        "ID": 9240009,
+        "Text": "Inquisitor Ghiza"
+      },
+      {
+        "ID": 9240010,
+        "Text": "Chief Guardian Arghanthy"
+      },
+      {
+        "ID": 9240011,
+        "Text": "Bloody Finger Okina"
+      },
+      {
+        "ID": 9240012,
+        "Text": "Recusant Bernahl"
+      },
+      {
+        "ID": 9240013,
+        "Text": "Sanguine Noble"
+      },
+      {
+        "ID": 9240014,
+        "Text": "Nameless White Mask"
+      },
+      {
+        "ID": 9245000,
+        "Text": "Isolated Merchant"
+      },
+      {
+        "ID": 9245001,
+        "Text": "Nomadic Merchant"
+      },
+      {
+        "ID": 9245002,
+        "Text": "Hermit Merchant"
+      },
+      {
+        "ID": 9245003,
+        "Text": "Isolated Merchant"
+      },
+      {
+        "ID": 9250000,
+        "Text": "Noble Sorcerer"
+      },
+      {
+        "ID": 9250001,
+        "Text": "Banished Knight"
+      },
+      {
+        "ID": 9250002,
+        "Text": "Alabaster Lord"
+      },
+      {
+        "ID": 9250003,
+        "Text": "Godrick Knight"
+      },
+      {
+        "ID": 9250004,
+        "Text": "Lion Guardian"
+      },
+      {
+        "ID": 9250005,
+        "Text": "Ulcerated Tree Spirit"
+      },
+      {
+        "ID": 9250006,
+        "Text": "Crucible Knight"
+      },
+      {
+        "ID": 9250007,
+        "Text": "Demi-Human Queen"
+      },
+      {
+        "ID": 9250008,
+        "Text": "Godskin Noble"
+      },
+      {
+        "ID": 9250009,
+        "Text": "Royal Revenant"
+      },
+      {
+        "ID": 9250010,
+        "Text": "Glintstone Dragon"
+      },
+      {
+        "ID": 9250011,
+        "Text": "Leyndell Knight"
+      },
+      {
+        "ID": 9250012,
+        "Text": "Knight Troll"
+      },
+      {
+        "ID": 9250013,
+        "Text": "Omenkiller"
+      },
+      {
+        "ID": 9250014,
+        "Text": "Battlemage"
+      },
+      {
+        "ID": 9250015,
+        "Text": "Valiant Gargoyle"
+      },
+      {
+        "ID": 9250016,
+        "Text": "Omen Monstrosity"
+      },
+      {
+        "ID": 9250017,
+        "Text": "Erdtree Avatar"
+      },
+      {
+        "ID": 9250018,
+        "Text": "Fire Prelate"
+      },
+      {
+        "ID": 9250019,
+        "Text": "Bloodhound Knight"
+      },
+      {
+        "ID": 9250020,
+        "Text": "Cemetery Shade"
+      },
+      {
+        "ID": 9250021,
+        "Text": "Magma Wyrm"
+      },
+      {
+        "ID": 9250022,
+        "Text": "Tanith\u0027s Knight"
+      },
+      {
+        "ID": 9250023,
+        "Text": "Tibia Mariner"
+      },
+      {
+        "ID": 9250024,
+        "Text": "Rotten Grave Warden Duelist"
+      },
+      {
+        "ID": 9250025,
+        "Text": "Putrid Avatar"
+      },
+      {
+        "ID": 9250026,
+        "Text": "Putrid Tree Spirit"
+      },
+      {
+        "ID": 9250027,
+        "Text": "Ancient Dragon"
+      },
+      {
+        "ID": 9250028,
+        "Text": "Draconic Tree Sentinel"
+      },
+      {
+        "ID": 9250029,
+        "Text": "Giant Ant"
+      },
+      {
+        "ID": 9250030,
+        "Text": "Runebear"
+      },
+      {
+        "ID": 9250031,
+        "Text": "Giant Silver Tear"
+      },
+      {
+        "ID": 9250032,
+        "Text": "Ancestral Follower"
+      },
+      {
+        "ID": 9250033,
+        "Text": "Withered Astel"
+      },
+      {
+        "ID": 9250034,
+        "Text": "Ancestral Follower Shaman"
+      },
+      {
+        "ID": 9250035,
+        "Text": "Thorn Sorcerer"
+      },
+      {
+        "ID": 9250036,
+        "Text": "Grafted Scion"
+      },
+      {
+        "ID": 9250037,
+        "Text": "Troll"
+      },
+      {
+        "ID": 9250038,
+        "Text": "Wormface"
+      },
+      {
+        "ID": 9250039,
+        "Text": "Wandering Noble"
+      },
+      {
+        "ID": 9250040,
+        "Text": "Elder Woman-Bat"
+      },
+      {
+        "ID": 9250041,
+        "Text": "Fingercreeper"
+      },
+      {
+        "ID": 9250042,
+        "Text": "Flame Chariot"
+      },
+      {
+        "ID": 9250043,
+        "Text": "Living Jar"
+      },
+      {
+        "ID": 9250044,
+        "Text": "Chariot"
+      },
+      {
+        "ID": 9250045,
+        "Text": "Fia\u0027s Champions"
+      },
+      {
+        "ID": 9250046,
+        "Text": "Balloon"
+      },
+      {
+        "ID": 9250047,
+        "Text": "Crystal Crab"
+      },
+      {
+        "ID": 9250048,
+        "Text": "Elder Dragon Greyoll"
+      },
+      {
+        "ID": 9250049,
+        "Text": "Black Knife Assassin"
+      },
+      {
+        "ID": 10500000,
+        "Text": "\nMap For Goblins - Reforged\n"
+      },
+      {
+        "ID": 10500001,
+        "Text": "New/Altered Encounter"
+      },
+      {
+        "ID": 10500002,
+        "Text": "Rune Piece"
+      },
+      {
+        "ID": 10500110,
+        "Text": "- Kaiden Set, Dismounter"
+      },
+      {
+        "ID": 10500120,
+        "Text": "- Knight\u0027s Greatsword, Beast Crest Heater Shield"
+      },
+      {
+        "ID": 10500130,
+        "Text": "- Great \u00C9p\u00E9e \u002B Glintstone Staff"
+      },
+      {
+        "ID": 10500140,
+        "Text": "- Redmane Knight Set, Redmane Greatshield"
+      },
+      {
+        "ID": 10500150,
+        "Text": "- Radahn Soldier Set, Warpick"
+      },
+      {
+        "ID": 10500160,
+        "Text": "- Radahn Foot Soldier Set, Lordsworn\u0027s Shield"
+      },
+      {
+        "ID": 10500170,
+        "Text": "- Godrick Soldier Set, Gilded Greatshield"
+      },
+      {
+        "ID": 10500180,
+        "Text": "- Monk\u0027s Flamemace, Great Mace"
+      },
+      {
+        "ID": 10500190,
+        "Text": "- Fire Monk Set, Monk\u0027s Flameblade"
+      },
+      {
+        "ID": 10500200,
+        "Text": "- Cuckoo Knight Set, Lordsworn\u0027s Straight Sword"
+      },
+      {
+        "ID": 10500210,
+        "Text": "- Raya Lucaria Soldier Set, Cuckoo Greatshield"
+      },
+      {
+        "ID": 10500220,
+        "Text": "- Leyndell Soldier Set, Brass Shield"
+      },
+      {
+        "ID": 10500230,
+        "Text": "- Leyndell Knight Set, Giant-Crusher"
+      },
+      {
+        "ID": 10500240,
+        "Text": "- Marionette Set, Spiked Spear"
+      },
+      {
+        "ID": 10500250,
+        "Text": "- Gelmir Glintstone Staff"
+      },
+      {
+        "ID": 10500260,
+        "Text": "- Staff of the Guilty"
+      },
+      {
+        "ID": 10500270,
+        "Text": "- Fire Prelate Set"
+      },
+      {
+        "ID": 10500280,
+        "Text": "- Rotten Crystal Sword, Spear and Staff"
+      },
+      {
+        "ID": 10500290,
+        "Text": "- Haligtree Knight Set, Haligtree Creast Greatshield"
+      },
+      {
+        "ID": 10500300,
+        "Text": "- Iron Greatsword"
+      },
+      {
+        "ID": 10500310,
+        "Text": "- Iron Greatsword"
+      },
+      {
+        "ID": 10500320,
+        "Text": "- Grave Scythe"
+      },
+      {
+        "ID": 10500330,
+        "Text": "- Chainlink Flail"
+      },
+      {
+        "ID": 10500340,
+        "Text": "- Marionette Soldier Birdhelm"
+      },
+      {
+        "ID": 10500350,
+        "Text": "- Pumpkin Helm"
+      },
+      {
+        "ID": 10500999,
+        "Text": "\n\n"
+      },
+      {
+        "ID": 10501000,
+        "Text": "New Incantation"
+      },
+      {
+        "ID": 10501020,
+        "Text": "(On one of the branches)"
+      },
+      {
+        "ID": 10501030,
+        "Text": "(Requires progressing Millicent\u0027s quest)"
+      },
+      {
+        "ID": 10501040,
+        "Text": "(By Waypoint Ruins, below Fort Gael)"
+      },
+      {
+        "ID": 10501050,
+        "Text": "(Dropped by a Knight)"
+      },
+      {
+        "ID": 10501070,
+        "Text": "(Dropped by Dragonkin Soldier)"
+      },
+      {
+        "ID": 10501999,
+        "Text": "\n"
+      },
+      {
+        "ID": 10502000,
+        "Text": "New Sorcery"
+      },
+      {
+        "ID": 10502010,
+        "Text": "(Only at Night)"
+      },
+      {
+        "ID": 10502060,
+        "Text": "(Reward from \u0022Falling Sky\u0022 painting)"
+      },
+      {
+        "ID": 10502070,
+        "Text": "(Requires progressing Alexander\u0027s quest)"
+      },
+      {
+        "ID": 10502120,
+        "Text": "(Dropped by a glintstone crab)"
+      },
+      {
+        "ID": 10502130,
+        "Text": "(Obtained by defeating the 4 special,"
+      },
+      {
+        "ID": 10502131,
+        "Text": "skeleton-summoning Bloodbane Albinaurics)"
+      },
+      {
+        "ID": 10502999,
+        "Text": "\n"
+      },
+      {
+        "ID": 10503000,
+        "Text": "New Weapon"
+      },
+      {
+        "ID": 10503020,
+        "Text": "- Grave Spear (droppable)"
+      },
+      {
+        "ID": 10503999,
+        "Text": "\n"
+      },
+      {
+        "ID": 10504000,
+        "Text": "New Spirit Ash"
+      },
+      {
+        "ID": 10504010,
+        "Text": "(Found on walls of Caria Manor)"
+      },
+      {
+        "ID": 10504020,
+        "Text": "(Requires progressing Ranni\u0027s quest)"
+      },
+      {
+        "ID": 10504030,
+        "Text": "(Requires progressing Latenna\u0027s quest)"
+      },
+      {
+        "ID": 10504040,
+        "Text": "(Found in the cellar of Zamor Ruins)"
+      },
+      {
+        "ID": 10504999,
+        "Text": "\n"
+      },
+      {
+        "ID": 10505000,
+        "Text": "New Ash of War"
+      },
+      {
+        "ID": 10505010,
+        "Text": "(Bloodhound Step exlusive to Bloodhound Claws)"
+      },
+      {
+        "ID": 10505999,
+        "Text": "\n"
+      },
+      {
+        "ID": 10506000,
+        "Text": "New Crystal Tear"
+      },
+      {
+        "ID": 10506999,
+        "Text": "\n"
+      },
+      {
+        "ID": 10507000,
+        "Text": "New Talisman"
+      },
+      {
+        "ID": 10507020,
+        "Text": "(Requires collecting all Shards at Astrolabes)"
+      },
+      {
+        "ID": 10507999,
+        "Text": "\n"
+      },
+      {
+        "ID": 10508000,
+        "Text": "Fortune"
+      },
+      {
+        "ID": 10508010,
+        "Text": "(Dropped by Bell Bearing Hunter)"
+      },
+      {
+        "ID": 10508020,
+        "Text": "(Dropped by Godskin Noble)"
+      },
+      {
+        "ID": 10508030,
+        "Text": "(Dropped by Battlemage Hugues)"
+      },
+      {
+        "ID": 10508999,
+        "Text": "\n"
+      },
+      {
+        "ID": 10509000,
+        "Text": "New Apparel"
+      },
+      {
+        "ID": 10509010,
+        "Text": "The Chelonian Mitre"
+      },
+      {
+        "ID": 10509011,
+        "Text": "It can be obtained by giving Miriel all"
+      },
+      {
+        "ID": 10509012,
+        "Text": "of the available scrolls and prayerbooks."
+      },
+      {
+        "ID": 10509013,
+        "Text": "Alternately, he will drop it upon death."
+      },
+      {
+        "ID": 10510000,
+        "Text": "/ Alterations, movements, swaps /"
+      },
+      {
+        "ID": 10510010,
+        "Text": "Swapped Item"
+      },
+      {
+        "ID": 10510011,
+        "Text": "- Academy Scroll"
+      },
+      {
+        "ID": 10510020,
+        "Text": "Swapped Item"
+      },
+      {
+        "ID": 10510021,
+        "Text": "- House Scroll"
+      },
+      {
+        "ID": 10510030,
+        "Text": "Moved Item"
+      },
+      {
+        "ID": 10510031,
+        "Text": "- Dectus Medallion, Right (From Fort Faroth)"
+      },
+      {
+        "ID": 10510040,
+        "Text": "New Item"
+      },
+      {
+        "ID": 10510041,
+        "Text": "- Starlight Token"
+      },
+      {
+        "ID": 10510050,
+        "Text": "Swapped Item"
+      },
+      {
+        "ID": 10510051,
+        "Text": "- Greatbow"
+      },
+      {
+        "ID": 10510060,
+        "Text": "Swapped Item"
+      },
+      {
+        "ID": 10510061,
+        "Text": "- Erdtree Greatbow"
+      },
+      {
+        "ID": 10510070,
+        "Text": "Changed Item"
+      },
+      {
+        "ID": 10510071,
+        "Text": "- Dark Glintstone Staff"
+      },
+      {
+        "ID": 10510080,
+        "Text": "Moved Item"
+      },
+      {
+        "ID": 10510081,
+        "Text": "- Valkyrie\u0027s Prosthetis"
+      },
+      {
+        "ID": 10510090,
+        "Text": "New Cookbook"
+      },
+      {
+        "ID": 10510100,
+        "Text": "New Cookbook"
+      },
+      {
+        "ID": 10510110,
+        "Text": "New Cookbook"
+      },
+      {
+        "ID": 10510111,
+        "Text": "(Beyond the Gates of Sellia)"
+      },
+      {
+        "ID": 10510120,
+        "Text": "New Cookbook"
+      },
+      {
+        "ID": 10510130,
+        "Text": "New Bell-Bearing"
+      },
+      {
+        "ID": 10510140,
+        "Text": "New Bell-Bearing"
+      },
+      {
+        "ID": 10510150,
+        "Text": "New Bell-Bearing"
+      },
+      {
+        "ID": 10510160,
+        "Text": "Briars of Punishment"
+      },
+      {
+        "ID": 10520010,
+        "Text": "- Somber Smithing Stone [1]"
+      },
+      {
+        "ID": 10520020,
+        "Text": "- Somber Smithing Stone [2]"
+      },
+      {
+        "ID": 10520030,
+        "Text": "- Somber Smithing Stone [3]"
+      },
+      {
+        "ID": 10520040,
+        "Text": "- Somber Smithing Stone [4]"
+      },
+      {
+        "ID": 10520050,
+        "Text": "- Somber Smithing Stone [5]"
+      },
+      {
+        "ID": 10520060,
+        "Text": "- Somber Smithing Stone [6]"
+      },
+      {
+        "ID": 10520070,
+        "Text": "- Somber Smithing Stone [7]"
+      },
+      {
+        "ID": 10520080,
+        "Text": "- Somber Smithing Stone [8]"
+      },
+      {
+        "ID": 10520090,
+        "Text": "- Somber Smithing Stone [9]"
+      },
+      {
+        "ID": 10520100,
+        "Text": "- Ancient Somber Smithing Stone"
+      },
+      {
+        "ID": 19999999,
+        "Text": "\nEND OF GOBLIN\n"
+      }
+],
+    "Version": 2,
+    "BigEndian": false,
+    "Compression": 1
+  },
+  "FmgID": 19
+}
