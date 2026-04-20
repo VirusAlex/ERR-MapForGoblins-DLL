@@ -14,6 +14,7 @@
 #include "goblin_config.hpp"
 #include "goblin_inject.hpp"
 #include "goblin_logic.hpp"
+#include "goblin_markers.hpp"
 #include "goblin_messages.hpp"
 
 static std::thread mod_thread;
@@ -80,6 +81,13 @@ static void setup_mod()
 
     if (GetModuleHandleA("ersc.dll"))
         spdlog::info("Seamless Co-op detected (ersc.dll)");
+
+    if (goblin::config::enableMarkerDump)
+    {
+        goblin::markers::set_output_path(g_mod_folder / "logs" / "MapForGoblins_markers.log");
+        std::thread(goblin::markers::hotkey_loop).detach();
+        spdlog::info("Marker dump hotkey: VK 0x{:X}", goblin::config::markerDumpKey);
+    }
 
     bool first_read = true;
     auto start = std::chrono::steady_clock::now();

@@ -1,6 +1,6 @@
 # ELDEN RING Reforged - MapForGoblins - DLL
 
-A DLL mod for [Elden Ring Reforged](https://www.nexusmods.com/eldenring/mods/541) (ERR) that adds ~7000 icons to the world map: weapons, armor, spells, quest items, bosses, NPCs, Rune Pieces, etc.
+A DLL mod for [Elden Ring Reforged](https://www.nexusmods.com/eldenring/mods/541) (ERR) that adds ~9000 icons to the world map: weapons, armor, spells, quest items, bosses, NPCs, Rune Pieces, etc.
 
 Unlike [Goblin Maps](https://www.nexusmods.com/eldenring/mods/3091), this mod does not modify `regulation.bin`. All map point data is injected into memory at runtime, so it won't conflict with other regulation edits.
 
@@ -10,8 +10,8 @@ Collected Rune Pieces and Ember Pieces are automatically hidden on the map using
 
 ## Features
 
-- ~7000 map icons across 41 toggleable categories (configurable via INI)
-- Map icon text injected via MsgRepository hook (English only, applied to all language slots)
+- ~9000 map icons across 60+ toggleable categories (configurable via INI)
+- Map text sourced from existing in-game FMG entries (all 14 languages) via a MsgRepository hook — each marker redirects to a goods/weapon/armour/etc. name by ID, so translations come for free
 - Collected Rune/Ember Piece detection: GEOF singletons for unloaded tiles + CSWorldGeomMan flags for loaded tiles
 - No regulation.bin changes - no conflicts with other mods
 - Addon-compatible folder structure for ERR
@@ -25,7 +25,9 @@ Requirements:
 
 ```bash
 build.bat              # configure + build
-build.bat generate     # regenerate C++ data from MASSEDIT/FMG (requires Python)
+build.bat snapshot     # run the full data pipeline + build + package into pre-release/
+build.bat release      # same as snapshot, but non-pre version + bumps patch version
+build.bat generate     # run the data pipeline only (no DLL build)
 build.bat clean        # delete build directory
 ```
 
@@ -39,19 +41,25 @@ All map data is compiled into the DLL itself - no external data files needed at 
 
 ## Data Pipeline
 
-The mod's map data is generated from ERR game files through a Python pipeline:
+The mod's map data is generated from ERR game files through a Python pipeline
+orchestrated by `tools/build_pipeline.py` (18 stages, hash-based incremental cache):
 
 ```
-MSB + regulation.bin
+MSB + regulation.bin + EMEVD
     │
-    ├─► extract_all_items.py     → items_database.json
-    ├─► extract_rune_positions.py → rune_pieces.json, ember_pieces.json
-    ├─► extract_itemlot_csv.py   → ItemLotParam_map.csv
+    ├─► extract_all_items.py        → items_database.json
+    ├─► build_entity_index.py       → msb_entity_index.json
+    ├─► scan_emevd_awards.py        → emevd_lot_mapping.json
+    ├─► enrich_fallback_with_emevd.py (upgrades unmatched records in-place)
     │
-    ├─► generate_all_massedit.py → MASSEDIT files
+    ├─► generate_loot_massedit.py   → 50+ Loot/Equipment/Key/Quest/Magic MASSEDIT
     ├─► generate_pieces_massedit.py → Rune/Ember MASSEDIT + slot mappings
+    ├─► generate_material_nodes.py, generate_graces.py, generate_summoning_pools.py,
+    │   generate_spirit_springs.py, generate_imp_statues.py, generate_stakes.py,
+    │   generate_paintings.py, generate_maps.py, generate_gestures.py,
+    │   generate_hostile_npcs.py    → world-infrastructure MASSEDIT
     │
-    └─► generate_data.py → goblin_map_data.cpp + goblin_text_data.cpp
+    └─► generate_data.py → goblin_map_data.cpp + goblin_legacy_conv.hpp
                               │
                               └─► build.bat → MapForGoblins.dll
 ```
@@ -76,9 +84,8 @@ MapForGoblins/
 │   └── goblin/             Mod-specific headers (structs, flags, tiles)
 ├── tracker/                RunePieceTracker - standalone piece tracking DLL
 ├── data/
-│   ├── massedit/           MASSEDIT files (map icon definitions)
-│   ├── msg/                FMG JSON translations (14 languages)
-│   └── *.json, *.csv       Extracted game data
+│   ├── massedit_generated/ MASSEDIT files (auto-generated map icon definitions)
+│   └── *.json, *.csv       Extracted game data (items, entity index, EMEVD map, ...)
 ├── tools/                  Python scripts (extraction, generation, analysis)
 │   ├── lib/                Andre.SoulsFormats.dll + dependencies
 │   ├── paramdefs/          Elden Ring param field definitions (XML)

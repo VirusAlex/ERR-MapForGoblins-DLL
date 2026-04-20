@@ -28,6 +28,8 @@ namespace goblin
         extern bool showCrystalTears;
         extern bool showImbuedSwordKeys;
         extern bool showLarvalTears;
+        extern bool showScadutreeFragments;
+        extern bool showGreatRunes;
         extern bool showLostAshes;
         extern bool showPotsNPerfumes;
         extern bool showSeedsTears;
@@ -41,14 +43,35 @@ namespace goblin
         extern bool showMPFingers;
         extern bool showMaterialNodes;
         extern bool showReusables;
-        extern bool showSomberScarab;
+        extern bool showSmithingStones;
+        extern bool showSmithingStonesLow;
+        extern bool showSmithingStonesRare;
+        extern bool showGoldenRunes;
+        extern bool showGoldenRunesLow;
         extern bool showStoneswordKeys;
-        extern bool showUniqueDrops;
+        extern bool showThrowables;
+        extern bool showPrattlingPates;
+        extern bool showRuneArcs;
+        extern bool showDragonHearts;
+        extern bool showGloveworts;
+        extern bool showGreatGloveworts;
+        extern bool showRadaFruit;
+        extern bool showGestures;
+        extern bool showGreases;
+        extern bool showUtilities;
+        extern bool showStatBoosts;
+        extern bool showFortunes;
+        extern bool showHostileNPC;
 
         // Magic
         extern bool showIncantations;
         extern bool showMemoryStones;
+        extern bool showPrayerbooks;
         extern bool showSorceries;
+
+        // World - Bosses
+        extern bool showBosses;
+        extern bool hideKilledBosses;  // true=hide killed icons, false=green checkmark
 
         // Quest
         extern bool showDeathroot;
@@ -56,19 +79,18 @@ namespace goblin
         extern bool showSeedbedCurses;
 
         // Reforged
-        extern bool showCampContents;
         extern bool showEmberPieces;
         extern bool showItemsAndChanges;
         extern bool showRunePieces;
-        extern uint8_t collectedSlot; // 255 = auto (largest GEOF section)
 
         // World
         extern bool showGraces;
-        extern bool showHostileNPC;
         extern bool showImpStatues;
+        extern bool showWorldMaps;
         extern bool showPaintings;
         extern bool showSpiritSprings;
         extern bool showSpiritspringHawks;
+        extern bool showStakesOfMarika;
         extern bool showSummoningPools;
 
         // Boss/camp/merchant settings
@@ -77,5 +99,11 @@ namespace goblin
         extern bool showCampIcons;
         extern bool showMerchantIcons;
         extern bool redifyBossIcons;
+
+        // Marker dump (hotkey → dump beacon/stamp coords to file)
+        extern bool enableMarkerDump;
+        extern uint32_t markerDumpKey;  // Win32 VK_* code (default VK_F9 = 0x78)
     };
+
+    uint32_t parse_vk_code(std::string name);
 };

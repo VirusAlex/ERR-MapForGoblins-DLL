@@ -6,3 +6,8 @@ err_mod_dir =
 # Path to Elden Ring game directory (contains eldenring.exe, oo2core_6_win64.dll)
 # Example: C:\Steam\steamapps\common\ELDEN RING\Game
 game_dir =
+
+# Optional: path to SmithBox install (only needed by some research scripts
+# under tools/_*.py — not required by the core build pipeline).
+# Example: C:\Tools\Smithbox_2_1_2_2016_02_16_a
+smithbox_dir =

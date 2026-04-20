@@ -1,0 +1,39 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net10.0</TargetFramework>
+    <RollForward>LatestMajor</RollForward>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Reference Include="Andre.SoulsFormats">
+      <HintPath>$(SMITHBOX_DIR)\Andre.SoulsFormats.dll</HintPath>
+    </Reference>
+    <Reference Include="Andre.IO">
+      <HintPath>$(SMITHBOX_DIR)\Andre.IO.dll</HintPath>
+    </Reference>
+    <Reference Include="Andre.Core">
+      <HintPath>$(SMITHBOX_DIR)\Andre.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="BouncyCastle.Cryptography">
+      <HintPath>$(SMITHBOX_DIR)\BouncyCastle.Cryptography.dll</HintPath>
+    </Reference>
+    <Reference Include="DotNext">
+      <HintPath>$(SMITHBOX_DIR)\DotNext.dll</HintPath>
+    </Reference>
+    <Reference Include="DotNext.Unsafe">
+      <HintPath>$(SMITHBOX_DIR)\DotNext.Unsafe.dll</HintPath>
+    </Reference>
+    <Reference Include="CommunityToolkit.HighPerformance">
+      <HintPath>$(SMITHBOX_DIR)\CommunityToolkit.HighPerformance.dll</HintPath>
+    </Reference>
+    <Reference Include="ZstdNet">
+      <HintPath>$(SMITHBOX_DIR)\ZstdNet.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+</Project>

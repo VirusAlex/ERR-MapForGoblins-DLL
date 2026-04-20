@@ -8,6 +8,7 @@
 #include <map>
 #include <set>
 #include <spdlog/spdlog.h>
+#include <string>
 #include <vector>
 
 #define WIN32_LEAN_AND_MEAN
@@ -15,9 +16,44 @@
 
 using Category = goblin::generated::Category;
 
+// Model IDs are: 10,000,000 + AEG_group*1000 + model_number
+// e.g. AEG099_821 = 10,099,821 = 0x009A1C6D
 static constexpr uint16_t GEOM_IDX_MIN = 0x1194;
-// Model hash for AEG099_821 (bytes 4-7 of GEOF entry)
-static constexpr uint32_t MODEL_HASH_821 = 0x009A1C6D;
+
+// ─── data-driven model tracking ─────────────────────────────────────
+// Built from MAP_ENTRIES at init time — no hardcoded model lists.
+
+static std::set<std::string> g_tracked_prefixes;   // "AEG099_821", "AEG099_651", etc.
+static std::set<uint32_t>    g_tracked_model_ids;   // 10099821, 10099651, etc.
+
+static std::string prefix_from_object_name(const char *name)
+{
+    // "AEG099_821_9000" → "AEG099_821"
+    const char *last_us = strrchr(name, '_');
+    if (!last_us || last_us == name) return {};
+    return std::string(name, last_us - name);
+}
+
+static std::string prefix_from_model_id(uint32_t model_id)
+{
+    if (model_id < 10000000) return {};
+    uint32_t raw = model_id - 10000000;
+    uint32_t group = raw / 1000;
+    uint32_t number = raw % 1000;
+    char buf[20];
+    snprintf(buf, sizeof(buf), "AEG%03u_%03u", group, number);
+    return buf;
+}
+
+static uint32_t model_id_from_prefix(const std::string &prefix)
+{
+    // "AEG099_821" → 10099821
+    if (prefix.size() < 10 || prefix.substr(0, 3) != "AEG" || prefix[6] != '_')
+        return 0;
+    unsigned group = 0, number = 0;
+    if (sscanf(prefix.c_str(), "AEG%u_%u", &group, &number) != 2) return 0;
+    return 10000000u + group * 1000u + number;
+}
 
 static std::set<uint64_t> g_collected_rows;
 static int g_collected_count = 0;
@@ -29,14 +65,13 @@ struct ParamRef {
 };
 static std::map<uint64_t, ParamRef> g_param_ptrs;
 
-static std::map<uint32_t, std::vector<uint64_t>> g_tile_to_rows;        // tile → ordered row_ids
-static std::map<uint32_t, std::map<int, uint64_t>> g_tile_name_to_row;  // tile → name_suffix → row_id
-static std::map<uint32_t, std::map<int, uint64_t>> g_tile_slot_to_row;  // tile → geom_slot → row_id
+static std::map<uint32_t, std::vector<uint64_t>> g_tile_to_rows;                // tile → ordered row_ids
+static std::map<uint32_t, std::map<std::string, uint64_t>> g_tile_name_to_row;  // tile → object_name → row_id
+// 3D slot map: tile → prefix → geom_slot → row_id  (no cross-model collisions)
+static std::map<uint32_t, std::map<std::string, std::map<int, uint64_t>>> g_tile_slot_to_row;
 static bool g_initialized = false;
 static bool g_dumped_geom_ins = false;
 
-// Cached GEOF state for tiles that transitioned out of GEOF
-static std::map<uint32_t, std::set<uint64_t>> g_geof_cache;
 
 // ─── save file discovery ───────────────────────────────────────────────
 
@@ -250,7 +285,7 @@ static void read_singleton_entries(uintptr_t game_base, uintptr_t rva,
             uint16_t geom_idx = entry[2] | (entry[3] << 8);
             uint32_t model_hash = entry[4] | (entry[5] << 8) | (entry[6] << 16) | (entry[7] << 24);
 
-            if (model_hash == MODEL_HASH_821 && (entry_flags == 0x00 || entry_flags == 0x80))
+            if (g_tracked_model_ids.count(model_hash) && (entry_flags == 0x00 || entry_flags == 0x80))
                 out.push_back({tile_id, entry_flags, geom_idx, model_hash});
         }
     }
@@ -259,7 +294,7 @@ static void read_singleton_entries(uintptr_t game_base, uintptr_t rva,
 
 // ─── Read ALIVE pieces from CSWorldGeomMan (loaded tiles) ───────────
 
-// Returns tile_id → set of alive MSB part names (e.g. "AEG099_821_9000")
+// Returns tile_id → set of alive MSB part names for ALL tracked model prefixes
 static std::map<uint32_t, std::set<std::string>> read_alive_from_world_geom_man()
 {
     std::map<uint32_t, std::set<std::string>> result;
@@ -364,18 +399,21 @@ static std::map<uint32_t, std::set<std::string>> read_alive_from_world_geom_man(
                     for (int c = 0; c < 63 && name_buf[c]; c++)
                         narrow[c] = (char)(name_buf[c] & 0xFF);
 
-                    if (strncmp(narrow, "AEG099_821", 10) == 0)
+                    // Check if this object belongs to any tracked model prefix
+                    std::string prefix = prefix_from_object_name(narrow);
+                    if (!prefix.empty() && g_tracked_prefixes.count(prefix))
                     {
                         if (result.find(block_id) == result.end())
                             result[block_id] = {};
 
-                        // +0x263 bit1: persistent alive flag (slow to update)
-                        // +0x269 & 0x60: immediate pickup flag (lost on restart)
-                        uint8_t f263 = 0, f269 = 0;
+                        // +0x263 bit1: persistent alive flag (survives restart)
+                        // +0x26B bit4: immediate collection flag (all model types, lost on restart)
+                        uint8_t f263 = 0, f26B = 0;
                         safe_read((char *)geom_ins + 0x263, &f263, 1);
-                        safe_read((char *)geom_ins + 0x269, &f269, 1);
+                        safe_read((char *)geom_ins + 0x26B, &f26B, 1);
 
-                        bool alive = (f263 & 0x02) && !(f269 & 0x60);
+                        bool alive = (f263 & 0x02) && !(f26B & 0x10);
+
                         if (alive)
                             result[block_id].insert(std::string(narrow));
                     }
@@ -411,40 +449,6 @@ static std::map<uint32_t, std::set<std::string>> read_alive_from_world_geom_man(
     return result;
 }
 
-static void add_collected_from_loaded_tiles(
-    const std::map<uint32_t, std::set<std::string>> &alive,
-    std::set<uint64_t> &collected_rows)
-{
-    int hidden_from_wgm = 0;
-
-    int tiles_matched = 0, tiles_unmatched = 0;
-    for (auto &[tile_id, alive_names] : alive)
-    {
-        auto it = g_tile_to_rows.find(tile_id);
-        if (it == g_tile_to_rows.end())
-        {
-            tiles_unmatched++;
-            continue;
-        }
-        tiles_matched++;
-
-        auto &rows = it->second;
-
-        for (int slot = 0; slot < (int)rows.size(); slot++)
-        {
-            char expected_name[32];
-            snprintf(expected_name, sizeof(expected_name), "AEG099_821_%d", 9000 + slot);
-
-            bool is_alive = alive_names.find(expected_name) != alive_names.end();
-            if (!is_alive)
-            {
-                if (collected_rows.insert(rows[slot]).second)
-                    hidden_from_wgm++;
-            }
-        }
-    }
-
-}
 
 static void dump_singleton_raw(uintptr_t game_base, uintptr_t rva, const char *name)
 {
@@ -531,31 +535,98 @@ void goblin::collected::initialize()
     g_tile_to_rows.clear();
     g_tile_slot_to_row.clear();
     g_tile_name_to_row.clear();
+    g_tracked_prefixes.clear();
+    g_tracked_model_ids.clear();
 
+    // Build tracking tables from MAP_ENTRIES — any entry with object_name is tracked.
+    // Adding a new model type only requires adding entries + _slots.json.
     for (size_t i = 0; i < generated::MAP_ENTRY_COUNT; i++)
     {
         const auto &e = generated::MAP_ENTRIES[i];
-        if (e.category != Category::ReforgedRunePieces &&
-            e.category != Category::ReforgedEmberPieces)
+        if (!e.object_name || !e.object_name[0])
             continue;
+
+        std::string prefix = prefix_from_object_name(e.object_name);
+        if (prefix.empty())
+            continue;
+
+        g_tracked_prefixes.insert(prefix);
 
         uint32_t tile = encode_tile(e.data.areaNo, e.data.gridXNo, e.data.gridZNo);
         g_tile_to_rows[tile].push_back(e.row_id);
+
+        // 3D slot map: tile → prefix → geom_slot → row_id
         if (e.geom_slot >= 0)
-            g_tile_slot_to_row[tile][e.geom_slot] = e.row_id;
-        if (e.name_suffix >= 0)
-            g_tile_name_to_row[tile][e.name_suffix] = e.row_id;
+            g_tile_slot_to_row[tile][prefix][e.geom_slot] = e.row_id;
+
+        // WGM name tracking: full object name for accurate alive matching
+        g_tile_name_to_row[tile][e.object_name] = e.row_id;
+    }
+
+    // Build model_id set for GEOF filtering
+    for (auto &prefix : g_tracked_prefixes)
+    {
+        uint32_t mid = model_id_from_prefix(prefix);
+        if (mid)
+            g_tracked_model_ids.insert(mid);
     }
 
     int total_piece_entries = 0;
     for (auto &[t, rows] : g_tile_to_rows)
         total_piece_entries += (int)rows.size();
 
-    spdlog::info("[COLLECTED] {} piece entries across {} tiles in map data",
-                 total_piece_entries, g_tile_to_rows.size());
+    spdlog::info("[COLLECTED] {} entries across {} tiles, {} tracked prefixes ({} model IDs)",
+                 total_piece_entries, g_tile_to_rows.size(),
+                 g_tracked_prefixes.size(), g_tracked_model_ids.size());
+
+    for (auto &prefix : g_tracked_prefixes)
+        spdlog::debug("[COLLECTED]   prefix: {} -> model_id {}", prefix, model_id_from_prefix(prefix));
 
     g_initialized = true;
     spdlog::info("[COLLECTED] Initialized, awaiting refresh()");
+}
+
+// ─── remap row IDs after dynamic assignment ────────────────────────
+
+void goblin::collected::remap_row_ids(const std::unordered_map<uint64_t, uint64_t> &old_to_new)
+{
+    // Remap g_tile_to_rows
+    for (auto &[tile, rows] : g_tile_to_rows)
+    {
+        for (auto &rid : rows)
+        {
+            auto it = old_to_new.find(rid);
+            if (it != old_to_new.end())
+                rid = it->second;
+        }
+    }
+
+    // Remap g_tile_slot_to_row (3D: tile → prefix → slot → row_id)
+    for (auto &[tile, prefix_map] : g_tile_slot_to_row)
+    {
+        for (auto &[prefix, slot_map] : prefix_map)
+        {
+            for (auto &[slot, rid] : slot_map)
+            {
+                auto it = old_to_new.find(rid);
+                if (it != old_to_new.end())
+                    rid = it->second;
+            }
+        }
+    }
+
+    // Remap g_tile_name_to_row
+    for (auto &[tile, name_map] : g_tile_name_to_row)
+    {
+        for (auto &[obj_name, rid] : name_map)
+        {
+            auto it = old_to_new.find(rid);
+            if (it != old_to_new.end())
+                rid = it->second;
+        }
+    }
+
+    spdlog::debug("[COLLECTED] Remapped {} row IDs", old_to_new.size());
 }
 
 // ─── hide icon in-place ─────────────────────────────────────────────
@@ -597,16 +668,21 @@ int goblin::collected::refresh()
 
     std::set<uint64_t> new_collected;
 
-    std::map<uint32_t, std::vector<int>> geof_tile_slots;
+    // Group GEOF entries by tile + prefix
+    // key: tile_id → prefix → list of GEOF-computed slots
+    std::map<uint32_t, std::map<std::string, std::vector<int>>> geof_tile_prefix_slots;
     for (auto &e : geof)
     {
         if (g_tile_to_rows.find(e.tile_id) == g_tile_to_rows.end())
             continue;
+        std::string prefix = prefix_from_model_id(e.model_hash);
+        if (prefix.empty())
+            continue;
         int slot = aeg099_index_from_geof(e.geom_idx, e.flags);
-        geof_tile_slots[e.tile_id].push_back(slot);
+        geof_tile_prefix_slots[e.tile_id][prefix].push_back(slot);
     }
 
-    // WGM is fresher than GEOF for loaded tiles
+    // ── WGM: accurate tracking for loaded tiles ──
     auto alive = read_alive_from_world_geom_man();
     std::set<uint32_t> wgm_tiles;
 
@@ -616,77 +692,86 @@ int goblin::collected::refresh()
 
         auto name_it = g_tile_name_to_row.find(tile_id);
         if (name_it == g_tile_name_to_row.end())
-            continue;
-
-        for (auto &[suffix, row_id] : name_it->second)
         {
-            char piece_name[32];
-            snprintf(piece_name, sizeof(piece_name), "AEG099_821_%d", suffix);
-            bool is_alive = alive_names.count(piece_name) > 0;
-            if (!is_alive)
+            // WGM has tracked objects on this tile, but we have no map data for it
+            if (!alive_names.empty())
+                spdlog::debug("[COLLECTED] WGM tile 0x{:08X} NOT in map data ({} alive objects)",
+                              tile_id, alive_names.size());
+            continue;
+        }
+
+        for (auto &[object_name, row_id] : name_it->second)
+        {
+            if (alive_names.count(object_name) == 0)
                 new_collected.insert(row_id);
         }
     }
 
-    // GEOF for unloaded tiles only
-    for (auto &[tid, slots] : geof_tile_slots)
+    // ── GEOF: for unloaded tiles ──
+    for (auto &[tid, prefix_slots] : geof_tile_prefix_slots)
     {
         if (wgm_tiles.count(tid))
             continue;
 
-        auto slot_map_it = g_tile_slot_to_row.find(tid);
-        if (slot_map_it == g_tile_slot_to_row.end()) continue;
-        auto &slot_map = slot_map_it->second;
+        auto tile_it = g_tile_slot_to_row.find(tid);
+        if (tile_it == g_tile_slot_to_row.end()) continue;
 
-        for (int slot : slots)
+        for (auto &[prefix, slots] : prefix_slots)
         {
-            auto row_it = slot_map.find(slot);
-            if (row_it != slot_map.end())
-                new_collected.insert(row_it->second);
-        }
-    }
+            auto prefix_it = tile_it->second.find(prefix);
+            if (prefix_it == tile_it->second.end()) continue;
 
-    int new_cache_entries = 0;
-    for (auto &[tid, slots] : geof_tile_slots)
-    {
-        if (g_geof_cache.find(tid) == g_geof_cache.end())
-            new_cache_entries++;
-        std::set<uint64_t> cached;
-        auto slot_map_it = g_tile_slot_to_row.find(tid);
-        if (slot_map_it != g_tile_slot_to_row.end())
-        {
-            for (int s : slots)
+            for (int slot : slots)
             {
-                auto it = slot_map_it->second.find(s);
-                if (it != slot_map_it->second.end())
-                    cached.insert(it->second);
+                auto row_it = prefix_it->second.find(slot);
+                if (row_it != prefix_it->second.end())
+                    new_collected.insert(row_it->second);
             }
         }
-        g_geof_cache[tid] = cached;
     }
-    if (new_cache_entries > 0)
-        spdlog::info("[CACHE] Added {} new tiles to cache (total: {})", new_cache_entries, g_geof_cache.size());
 
     if (new_collected == g_collected_rows)
         return 0;
+    // Log which rows were added/removed (for small deltas only)
+    {
+        std::vector<uint64_t> added, removed;
+        for (auto r : new_collected)
+            if (!g_collected_rows.count(r)) added.push_back(r);
+        for (auto r : g_collected_rows)
+            if (!new_collected.count(r)) removed.push_back(r);
+        spdlog::info("[COLLECTED] Set changed: {} -> {} (added {}, removed {})",
+                     g_collected_rows.size(), new_collected.size(), added.size(), removed.size());
+        if (added.size() <= 10)
+            for (auto r : added) spdlog::info("[COLLECTED]   +row {}", r);
+        if (removed.size() <= 10)
+            for (auto r : removed) spdlog::info("[COLLECTED]   -row {}", r);
+    }
 
     // Restore all to visible, then re-hide collected
     for (auto &[row_id, ref] : g_param_ptrs)
         ref.ptr[0x20] = ref.original_areaNo;
 
+    int applied = 0, missed = 0;
     for (uint64_t row_id : new_collected)
     {
         auto pit = g_param_ptrs.find(row_id);
         if (pit != g_param_ptrs.end())
+        {
             pit->second.ptr[0x20] = 99;
+            applied++;
+        }
+        else
+            missed++;
     }
+    if (missed > 0)
+        spdlog::warn("[COLLECTED] {} row IDs NOT in param_ptrs (out of {} collected)", missed, new_collected.size());
 
     int delta = (int)new_collected.size() - (int)g_collected_rows.size();
     g_collected_rows = std::move(new_collected);
     g_collected_count = (int)g_collected_rows.size();
 
-    spdlog::info("[COLLECTED] Refresh: {} hidden (delta {:+d}), {} GEOF entries",
-                 g_collected_count, delta, geof.size());
+    spdlog::info("[COLLECTED] Refresh: {} hidden (delta {:+d}), {} GEOF entries, {} WGM tiles",
+                 g_collected_count, delta, geof.size(), wgm_tiles.size());
 
     return delta;
 }

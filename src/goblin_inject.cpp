@@ -6,6 +6,8 @@
 #include "from/paramdef/WORLD_MAP_POINT_PARAM_ST.hpp"
 
 #include <algorithm>
+#include <set>
+#include <unordered_map>
 #include <spdlog/spdlog.h>
 #include <vector>
 
@@ -53,6 +55,8 @@ static bool is_category_enabled(Category cat)
     case Category::KeyCrystalTears:      return goblin::config::showCrystalTears;
     case Category::KeyImbuedSwordKeys:   return goblin::config::showImbuedSwordKeys;
     case Category::KeyLarvalTears:       return goblin::config::showLarvalTears;
+    case Category::KeyScadutreeFragments: return goblin::config::showScadutreeFragments;
+    case Category::KeyGreatRunes:        return goblin::config::showGreatRunes;
     case Category::KeyLostAshes:         return goblin::config::showLostAshes;
     case Category::KeyPotsNPerfumes:     return goblin::config::showPotsNPerfumes;
     case Category::KeySeedsTears:        return goblin::config::showSeedsTears;
@@ -64,25 +68,43 @@ static bool is_category_enabled(Category cat)
     case Category::LootMPFingers:        return goblin::config::showMPFingers;
     case Category::LootMaterialNodes:    return goblin::config::showMaterialNodes;
     case Category::LootReusables:        return goblin::config::showReusables;
-    case Category::LootSomberScarab:     return goblin::config::showSomberScarab;
+    case Category::LootSmithingStones:       return goblin::config::showSmithingStones;
+    case Category::LootSmithingStonesLow:   return goblin::config::showSmithingStonesLow;
+    case Category::LootSmithingStonesRare:  return goblin::config::showSmithingStonesRare;
+    case Category::LootGoldenRunes:         return goblin::config::showGoldenRunes;
+    case Category::LootGoldenRunesLow:      return goblin::config::showGoldenRunesLow;
     case Category::LootStoneswordKeys:   return goblin::config::showStoneswordKeys;
-    case Category::LootUniqueDrops:      return goblin::config::showUniqueDrops;
+    case Category::LootThrowables:       return goblin::config::showThrowables;
+    case Category::LootPrattlingPates:   return goblin::config::showPrattlingPates;
+    case Category::LootRuneArcs:         return goblin::config::showRuneArcs;
+    case Category::LootDragonHearts:     return goblin::config::showDragonHearts;
+    case Category::LootGloveworts:       return goblin::config::showGloveworts;
+    case Category::LootGreatGloveworts:  return goblin::config::showGreatGloveworts;
+    case Category::LootRadaFruit:        return goblin::config::showRadaFruit;
+    case Category::LootGestures:         return goblin::config::showGestures;
+    case Category::LootGreases:          return goblin::config::showGreases;
+    case Category::LootUtilities:        return goblin::config::showUtilities;
+    case Category::LootStatBoosts:       return goblin::config::showStatBoosts;
+    case Category::ReforgedFortunes:     return goblin::config::showFortunes;
+    case Category::WorldHostileNPC:      return goblin::config::showHostileNPC;
     case Category::MagicIncantations:    return goblin::config::showIncantations;
     case Category::MagicMemoryStones:    return goblin::config::showMemoryStones;
+    case Category::MagicPrayerbooks:     return goblin::config::showPrayerbooks;
     case Category::MagicSorceries:       return goblin::config::showSorceries;
+    case Category::WorldBosses:          return goblin::config::showBosses;
     case Category::QuestDeathroot:       return goblin::config::showDeathroot;
     case Category::QuestProgression:     return goblin::config::showProgression;
     case Category::QuestSeedbedCurses:   return goblin::config::showSeedbedCurses;
-    case Category::ReforgedCampContents: return goblin::config::showCampContents;
     case Category::ReforgedEmberPieces:  return goblin::config::showEmberPieces;
     case Category::ReforgedItemsAndChanges: return goblin::config::showItemsAndChanges;
     case Category::ReforgedRunePieces:   return goblin::config::showRunePieces;
     case Category::WorldGraces:          return goblin::config::showGraces;
-    case Category::WorldHostileNPC:      return goblin::config::showHostileNPC;
     case Category::WorldImpStatues:      return goblin::config::showImpStatues;
+    case Category::WorldMaps:            return goblin::config::showWorldMaps;
     case Category::WorldPaintings:       return goblin::config::showPaintings;
     case Category::WorldSpiritSprings:   return goblin::config::showSpiritSprings;
     case Category::WorldSpiritspringHawks: return goblin::config::showSpiritspringHawks;
+    case Category::WorldStakesOfMarika:  return goblin::config::showStakesOfMarika;
     case Category::WorldSummoningPools:  return goblin::config::showSummoningPools;
     default:                             return true;
     }
@@ -93,29 +115,34 @@ void goblin::inject_map_entries()
     struct InjectedEntry
     {
         int32_t row_id;
+        uint64_t original_row_id;
         const from::paramdef::WORLD_MAP_POINT_PARAM_ST *data;
-        bool is_piece;     // Rune/Ember Piece — register for real-time hiding
-        bool is_hidden;    // Category disabled — hide via areaNo=99
+        bool is_piece;
+        Category category;
     };
 
+    // Filter: only include enabled categories (disabled ones are simply not injected)
     std::vector<InjectedEntry> entries;
     entries.reserve(generated::MAP_ENTRY_COUNT);
 
-    size_t hidden_by_config = 0;
+    size_t skipped_by_config = 0;
     for (size_t i = 0; i < generated::MAP_ENTRY_COUNT; i++)
     {
         const auto &e = generated::MAP_ENTRIES[i];
-        bool enabled = is_category_enabled(e.category);
-        if (!enabled)
-            hidden_by_config++;
-        entries.push_back({static_cast<int32_t>(e.row_id), &e.data,
+        if (!is_category_enabled(e.category))
+        {
+            skipped_by_config++;
+            continue;
+        }
+        entries.push_back({0, e.row_id, &e.data,
                            e.category == Category::ReforgedRunePieces ||
-                           e.category == Category::ReforgedEmberPieces,
-                           !enabled});
+                           e.category == Category::ReforgedEmberPieces ||
+                           e.category == Category::LootMaterialNodes,
+                           e.category});
     }
 
-    spdlog::info("Injecting {} map entries ({} hidden by config)",
-                 entries.size(), hidden_by_config);
+    spdlog::info("Injecting {} map entries ({} skipped by config)",
+                 entries.size(), skipped_by_config);
 
     auto param_res_cap = find_world_map_point_param_res_cap();
     if (!param_res_cap)
@@ -133,6 +160,31 @@ void goblin::inject_map_entries()
     uint16_t orig_num_rows = old_table->num_rows;
 
     spdlog::debug("Original WorldMapPointParam: {} rows", orig_num_rows);
+
+    // Collect vanilla row IDs to avoid collisions
+    std::set<int32_t> vanilla_ids;
+    for (uint16_t i = 0; i < orig_num_rows; i++)
+        vanilla_ids.insert(static_cast<int32_t>(old_table->rows[i].row_id));
+
+    // Assign sequential IDs starting from 1, skipping vanilla IDs
+    std::unordered_map<uint64_t, uint64_t> id_remap;  // original -> dynamic
+    int32_t next_id = 1;
+    for (auto &entry : entries)
+    {
+        while (vanilla_ids.count(next_id))
+            next_id++;
+        id_remap[entry.original_row_id] = static_cast<uint64_t>(next_id);
+        entry.row_id = next_id++;
+    }
+
+    // Update collected system with new dynamic IDs
+    collected::remap_row_ids(id_remap);
+
+    spdlog::debug("Assigned IDs: {} entries, range {}-{}, remapped {} piece IDs",
+                  entries.size(),
+                  entries.empty() ? 0 : entries.front().row_id,
+                  entries.empty() ? 0 : entries.back().row_id,
+                  id_remap.size());
 
     uint32_t new_entry_count = static_cast<uint32_t>(entries.size());
     uint32_t total_rows = orig_num_rows + new_entry_count;
@@ -177,7 +229,7 @@ void goblin::inject_map_entries()
     new_table->num_rows = static_cast<uint16_t>(total_rows);
     new_table->param_type_offset = type_str_start;
     *reinterpret_cast<uint32_t *>(new_param_file + 0x00) = static_cast<uint32_t>(type_str_start);
-    *reinterpret_cast<uint16_t *>(new_param_file + 0x04) = static_cast<uint16_t>(data_start);  // shortDataOffset
+    *reinterpret_cast<uint16_t *>(new_param_file + 0x04) = static_cast<uint16_t>(data_start);
     *reinterpret_cast<uint64_t *>(new_param_file + 0x30) = data_start;
 
     memcpy(new_param_file + type_str_start, type_str, type_str_len);
@@ -187,7 +239,7 @@ void goblin::inject_map_entries()
         int32_t row_id;
         const uint8_t *data_ptr;
         bool is_piece;
-        bool is_hidden;  // hide via areaNo=99 (category disabled)
+        Category category;
     };
 
     std::vector<RowSource> all_rows;
@@ -196,12 +248,12 @@ void goblin::inject_map_entries()
     for (uint16_t i = 0; i < orig_num_rows; i++)
     {
         auto *data = old_param_file + old_table->rows[i].param_offset;
-        all_rows.push_back({static_cast<int32_t>(old_table->rows[i].row_id), data, false, false});
+        all_rows.push_back({static_cast<int32_t>(old_table->rows[i].row_id), data, false, {}});
     }
     for (auto &entry : entries)
     {
         all_rows.push_back({entry.row_id, reinterpret_cast<const uint8_t *>(entry.data),
-                            entry.is_piece, entry.is_hidden});
+                            entry.is_piece, entry.category});
     }
 
     std::sort(all_rows.begin(), all_rows.end(),
@@ -211,7 +263,6 @@ void goblin::inject_map_entries()
     auto *new_wrapper_locs = reinterpret_cast<WrapperRowLocator *>(new_param_file + wrapper_row_loc_start);
     size_t file_end_marker = type_str_start + type_str_len;
 
-    int hidden_by_category = 0;
     for (size_t i = 0; i < all_rows.size(); i++)
     {
         size_t data_offset = data_start + i * PARAM_DATA_SIZE;
@@ -222,15 +273,25 @@ void goblin::inject_map_entries()
         new_wrapper_locs[i].row = all_rows[i].row_id;
         new_wrapper_locs[i].index = static_cast<int32_t>(i);
 
-        // Hide entries whose category is disabled (areaNo=99 → non-existent area)
-        if (all_rows[i].is_hidden)
+        // Boss/hawk kill display mode: green checkmark vs hide killed
+        auto cat = all_rows[i].category;
+        if (cat == Category::WorldBosses || cat == Category::WorldSpiritspringHawks)
         {
-            auto *param_ptr = new_param_file + data_offset;
-            param_ptr[0x20] = 99;
-            hidden_by_category++;
+            auto *p = reinterpret_cast<from::paramdef::WORLD_MAP_POINT_PARAM_ST *>(
+                new_param_file + data_offset);
+            if (goblin::config::hideKilledBosses)
+            {
+                p->clearedEventFlagId = 0;  // no green checkmark, text hides → icon hides
+            }
+            else
+            {
+                p->textDisableFlagId1 = 0;  // keep green checkmark, don't hide text
+                p->textDisableFlagId2 = 0;  // keep location text visible too
+            }
         }
     }
 
+    // Register Rune/Ember piece pointers for real-time tracking
     int registered = 0, hidden_at_inject = 0;
     for (size_t i = 0; i < all_rows.size(); i++)
     {
@@ -250,8 +311,8 @@ void goblin::inject_map_entries()
         }
     }
 
-    spdlog::info("Registered {} piece pointers, {} hidden at inject time, {} hidden by category",
-                 registered, hidden_at_inject, hidden_by_category);
+    spdlog::info("Registered {} piece pointers, {} hidden at inject time",
+                 registered, hidden_at_inject);
 
     spdlog::debug("Swapping param_file pointer: {:p} -> {:p}", (void *)old_param_file, (void *)new_param_file);
     file_ptr_ref = new_param_file;

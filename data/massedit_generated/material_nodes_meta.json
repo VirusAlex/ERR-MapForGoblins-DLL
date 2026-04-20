@@ -1,0 +1,334 @@
+{
+  "models": {
+    "AEG099_651": {
+      "goodsId": 20651,
+      "item": "Trina's Lily"
+    },
+    "AEG099_653": {
+      "goodsId": 20653,
+      "item": "Miquella's Lily"
+    },
+    "AEG099_656": {
+      "goodsId": 20651,
+      "item": "Trina's Lily"
+    },
+    "AEG099_657": {
+      "goodsId": 20653,
+      "item": "Miquella's Lily"
+    },
+    "AEG099_691": {
+      "goodsId": 20691,
+      "item": "Arteria Leaf"
+    },
+    "AEG099_696": {
+      "goodsId": 20691,
+      "item": "Arteria Leaf"
+    },
+    "AEG099_740": {
+      "goodsId": 20740,
+      "item": "Eye of Yelough"
+    },
+    "AEG099_753": {
+      "goodsId": 20753,
+      "item": "Sacramental Burgeon"
+    },
+    "AEG099_800": {
+      "goodsId": 20800,
+      "item": "Nascent Butterfly"
+    },
+    "AEG099_801": {
+      "goodsId": 20801,
+      "item": "Aeonian Butterfly"
+    },
+    "AEG099_820": {
+      "goodsId": 20820,
+      "item": "Golden Centipede"
+    },
+    "AEG099_821": {
+      "goodsId": 800011,
+      "item": "Runic Trace"
+    },
+    "AEG099_822": {
+      "goodsId": 850011,
+      "item": "Ember Trace"
+    },
+    "AEG099_852": {
+      "goodsId": 20852,
+      "item": "Formic Rock"
+    },
+    "AEG099_855": {
+      "goodsId": 20855,
+      "item": "Gravel Stone"
+    },
+    "AEG099_860": {
+      "goodsId": 10100,
+      "item": "Smithing Stone [1]"
+    },
+    "AEG099_861": {
+      "goodsId": 10101,
+      "item": "Smithing Stone [2]"
+    },
+    "AEG099_862": {
+      "goodsId": 10102,
+      "item": "Smithing Stone [3]"
+    },
+    "AEG099_863": {
+      "goodsId": 10103,
+      "item": "Smithing Stone [4]"
+    },
+    "AEG099_864": {
+      "goodsId": 10104,
+      "item": "Smithing Stone [5]"
+    },
+    "AEG099_865": {
+      "goodsId": 10105,
+      "item": "Smithing Stone [6]"
+    },
+    "AEG099_866": {
+      "goodsId": 10106,
+      "item": "Smithing Stone [7]"
+    },
+    "AEG099_867": {
+      "goodsId": 10107,
+      "item": "Smithing Stone [8]"
+    },
+    "AEG099_868": {
+      "goodsId": 10140,
+      "item": "Ancient Dragon Smithing Stone"
+    },
+    "AEG099_869": {
+      "goodsId": 17000,
+      "item": "???"
+    },
+    "AEG099_870": {
+      "goodsId": 10160,
+      "item": "Somber Smithing Stone [1]"
+    },
+    "AEG099_871": {
+      "goodsId": 10161,
+      "item": "Somber Smithing Stone [2]"
+    },
+    "AEG099_872": {
+      "goodsId": 10162,
+      "item": "Somber Smithing Stone [3]"
+    },
+    "AEG099_873": {
+      "goodsId": 10163,
+      "item": "Somber Smithing Stone [4]"
+    },
+    "AEG099_874": {
+      "goodsId": 10164,
+      "item": "Somber Smithing Stone [5]"
+    },
+    "AEG099_875": {
+      "goodsId": 10165,
+      "item": "Somber Smithing Stone [6]"
+    },
+    "AEG099_876": {
+      "goodsId": 10166,
+      "item": "Somber Smithing Stone [7]"
+    },
+    "AEG099_877": {
+      "goodsId": 10167,
+      "item": "Somber Smithing Stone [8]"
+    },
+    "AEG099_878": {
+      "goodsId": 10168,
+      "item": "Somber Ancient Dragon Smithing Stone"
+    },
+    "AEG099_879": {
+      "goodsId": 10200,
+      "item": "Somber Smithing Stone [9]"
+    },
+    "AEG099_880": {
+      "goodsId": 10150,
+      "item": "Smithing Scadushard"
+    },
+    "AEG099_881": {
+      "goodsId": 10150,
+      "item": "Smithing Scadushard"
+    },
+    "AEG099_882": {
+      "goodsId": 10150,
+      "item": "Smithing Scadushard"
+    },
+    "AEG099_883": {
+      "goodsId": 10150,
+      "item": "Smithing Scadushard"
+    },
+    "AEG099_884": {
+      "goodsId": 10150,
+      "item": "Smithing Scadushard"
+    },
+    "AEG099_885": {
+      "goodsId": 10150,
+      "item": "Smithing Scadushard"
+    },
+    "AEG099_886": {
+      "goodsId": 10150,
+      "item": "Smithing Scadushard"
+    },
+    "AEG099_887": {
+      "goodsId": 10150,
+      "item": "Smithing Scadushard"
+    },
+    "AEG099_888": {
+      "goodsId": 10150,
+      "item": "Smithing Scadushard"
+    },
+    "AEG099_890": {
+      "goodsId": 10151,
+      "item": "Somber Smithing Scadushard"
+    },
+    "AEG099_891": {
+      "goodsId": 10151,
+      "item": "Somber Smithing Scadushard"
+    },
+    "AEG099_892": {
+      "goodsId": 10151,
+      "item": "Somber Smithing Scadushard"
+    },
+    "AEG099_893": {
+      "goodsId": 10151,
+      "item": "Somber Smithing Scadushard"
+    },
+    "AEG099_894": {
+      "goodsId": 10151,
+      "item": "Somber Smithing Scadushard"
+    },
+    "AEG099_895": {
+      "goodsId": 10151,
+      "item": "Somber Smithing Scadushard"
+    },
+    "AEG099_896": {
+      "goodsId": 10151,
+      "item": "Somber Smithing Scadushard"
+    },
+    "AEG099_897": {
+      "goodsId": 10151,
+      "item": "Somber Smithing Scadushard"
+    },
+    "AEG099_898": {
+      "goodsId": 10151,
+      "item": "Somber Smithing Scadushard"
+    },
+    "AEG099_899": {
+      "goodsId": 10151,
+      "item": "Somber Smithing Scadushard"
+    },
+    "AEG099_920": {
+      "goodsId": 10900,
+      "item": "Grave Glovewort [1]"
+    },
+    "AEG099_921": {
+      "goodsId": 10901,
+      "item": "Grave Glovewort [2]"
+    },
+    "AEG099_922": {
+      "goodsId": 10902,
+      "item": "Grave Glovewort [3]"
+    },
+    "AEG099_923": {
+      "goodsId": 10903,
+      "item": "Grave Glovewort [4]"
+    },
+    "AEG099_924": {
+      "goodsId": 10904,
+      "item": "Grave Glovewort [5]"
+    },
+    "AEG099_925": {
+      "goodsId": 10905,
+      "item": "Grave Glovewort [6]"
+    },
+    "AEG099_926": {
+      "goodsId": 10906,
+      "item": "Grave Glovewort [7]"
+    },
+    "AEG099_927": {
+      "goodsId": 10907,
+      "item": "Grave Glovewort [8]"
+    },
+    "AEG099_928": {
+      "goodsId": 10908,
+      "item": "Grave Glovewort [9]"
+    },
+    "AEG099_929": {
+      "goodsId": 10909,
+      "item": "Great Grave Glovewort"
+    },
+    "AEG099_930": {
+      "goodsId": 10910,
+      "item": "Ghost Glovewort [1]"
+    },
+    "AEG099_931": {
+      "goodsId": 10911,
+      "item": "Ghost Glovewort [2]"
+    },
+    "AEG099_932": {
+      "goodsId": 10912,
+      "item": "Ghost Glovewort [3]"
+    },
+    "AEG099_933": {
+      "goodsId": 10913,
+      "item": "Ghost Glovewort [4]"
+    },
+    "AEG099_934": {
+      "goodsId": 10914,
+      "item": "Ghost Glovewort [5]"
+    },
+    "AEG099_935": {
+      "goodsId": 10915,
+      "item": "Ghost Glovewort [6]"
+    },
+    "AEG099_936": {
+      "goodsId": 10916,
+      "item": "Ghost Glovewort [7]"
+    },
+    "AEG099_937": {
+      "goodsId": 10917,
+      "item": "Ghost Glovewort [8]"
+    },
+    "AEG099_938": {
+      "goodsId": 10918,
+      "item": "Ghost Glovewort [9]"
+    },
+    "AEG099_939": {
+      "goodsId": 10919,
+      "item": "Great Ghost Glovewort"
+    },
+    "AEG463_771": {
+      "goodsId": 2020015,
+      "item": "Nectarblood Burgeon"
+    },
+    "AEG463_781": {
+      "goodsId": 2020017,
+      "item": "Swollen Grape"
+    },
+    "AEG463_840": {
+      "goodsId": 2020023,
+      "item": "Dragon's Calorbloom"
+    },
+    "AEG463_850": {
+      "goodsId": 2020024,
+      "item": "Finger Mimic"
+    },
+    "AEG463_860": {
+      "goodsId": 20753,
+      "item": "Sacramental Burgeon"
+    },
+    "AEG463_920": {
+      "goodsId": 2020031,
+      "item": "Blessed Bone Shard"
+    },
+    "AEG463_950": {
+      "goodsId": 20855,
+      "item": "Gravel Stone"
+    },
+    "AEG463_960": {
+      "goodsId": 2020035,
+      "item": "Furnace Visage"
+    }
+  },
+  "entry_count": 1545,
+  "start_id": 4000000
+}

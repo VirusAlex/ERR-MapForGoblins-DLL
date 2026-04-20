@@ -3,6 +3,8 @@ build/
 build_old/
 tracker/build/
 tools/fmg_patcher/build/
+tools/msb_extractor/bin/
+tools/msb_extractor/obj/
 
 # Release packages and built release
 ERR - MapForGoblins - DLL - v*/
@@ -33,3 +35,66 @@ tools/config.ini
 .idea/
 Thumbs.db
 desktop.ini
+
+# Incremental-build cache + in-place backups
+data/.build_cache.json
+data/*.bak
+
+# One-off research outputs + intermediate versions (not used by current pipeline)
+data/_*.json
+data/_*.txt
+data/all_gathering_nodes_clean.json
+data/all_gathering_nodes_complete.json
+data/all_gathering_nodes_vanilla.json
+data/dlc_scadushard_glovewort_msb.json
+data/dungeon_gathering_nodes.json
+data/enemy_npcname_mapping.json
+data/err_scadushard_glovewort_lots.json
+data/map_code_locations.json
+data/massedit_audit.md
+data/material_nodes_*.json
+data/missing_msb_hashes.json
+data/unknown_locations.txt
+data/unknown_msb_mapping.json
+data/vanilla_boss_data.json
+
+# Research / one-off scratch outputs (prefixed with _). The _*.py scripts
+# themselves are kept in git — they're useful diagnostic tools.
+tools/_*.txt
+tools/_*.bin
+tools/_*.json
+tools/before_*.json
+tools/before_*.bin
+tools/before2_*.json
+tools/addr_*.txt
+tools/dump_*.bin
+
+# Oodle shipped with Elden Ring — resolved via config.ini game_dir at runtime
+oo2core_6_win64.dll
+tools/oo2core_6_win64.dll
+
+# FFDEC extraction/render outputs — large, reproducible from 02_120_worldmap*.gfx
+assets/map_icons/rendered/
+assets/map_icons/exported/
+assets/map_icons/images/
+assets/map_icons/scripts/
+assets/map_icons/sprite_sheets/
+assets/map_icons/by_iconId/
+assets/map_icons/composed/
+
+# Historical decompile snapshots — keep only worldmap_new_actual.xml (active source)
+assets/map_icons/worldmap.xml
+assets/map_icons/worldmap_398.xml
+assets/map_icons/worldmap_399.xml
+assets/map_icons/worldmap_400.xml
+assets/map_icons/worldmap_modified.xml
+assets/map_icons/worldmap_new_verify.xml
+
+# Game sprite-sheet PNGs — large, reproducible via extract_subtextures.py
+assets/map_icons/SB_*.png
+
+# Sub-textures extracted from game — reproducible via extract_subtextures.py
+assets/menu/KG_*.tga
+assets/menu/MENU_*.tga
+assets/menu/SB_*.tga
+assets/menu/*.bak

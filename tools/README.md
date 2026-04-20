@@ -1,7 +1,7 @@
 # MapForGoblins - Tools
 
 Python scripts for data extraction, code generation, and debugging.
-Scripts prefixed with `_` are research/diagnostic tools. The rest form the build pipeline.
+Scripts prefixed with `_` are research/diagnostic tools (kept in git; their `_*.txt`/`_*.bin`/`_*.json` scratch outputs are gitignored). The rest form the build pipeline.
 
 ## Setup
 
@@ -21,13 +21,74 @@ Dependencies:
 
 ## Core Pipeline
 
-Build order: `extract_all_items.py` → `generate_all_massedit.py` → `generate_data.py` → `build.bat`
+**Run `build.bat snapshot` from repo root** — this invokes `build_pipeline.py` which
+orchestrates all stages with hash-based incremental caching, then compiles the DLL
+and packages it into `pre-release/`.
+
+### build_pipeline.py - Incremental pipeline orchestrator
+Runs all generation stages in dependency order. Each stage has declared inputs/outputs.
+Stage signature = SHA256 of inputs (file content for files, `(relpath, size, mtime_ns)`
+aggregate for directories). A stage is skipped iff its signature matches
+`data/.build_cache.json` AND all output files exist. Outputs to `src/generated/` and
+`data/massedit_generated/`.
+Args: `[--force <stage>]` `[--force-all]`.
+
+Pipeline stages:
+1. `extract_items` — regulation + MSBs → items_database + goods classification
+2. `entity_index` — all MSBs → `msb_entity_index.json`
+3. `emevd_scan` — all EMEVDs → `emevd_lot_mapping.json` (scripted-item → entity mapping)
+4. `enrich_fallback` — upgrades fallback records in items_database with EMEVD-derived coords
+5. `generate_boss_list` → boss_list.json
+6. `generate_loot_massedit` → all Loot/Equipment/Key/Quest/Magic/Reforged .MASSEDIT
+7. `generate_pieces_massedit` → Rune/Ember Pieces .MASSEDIT
+8. `generate_material_nodes` → Material Nodes .MASSEDIT
+9. `generate_graces` → Graces
+10. `generate_summoning_pools` → Summoning Pools (with dedup)
+11. `generate_spirit_springs` → Spirit Springs + Hawks
+12. `generate_imp_statues` → Imp Statues
+13. `generate_stakes` → Stakes of Marika
+14. `generate_paintings` → Paintings
+15. `generate_maps` → World Maps
+16. `generate_gestures` → Gestures (via common event 90005570 scan)
+17. `generate_hostile_npcs` → invaders (via `teamType=24` in NpcParam + MSB)
+18. `generate_data` — parses all .MASSEDIT → `goblin_map_data.cpp` +
+    `goblin_legacy_conv.hpp` (dungeon→overworld coord conversion from WorldMapLegacyConvParam).
+
+Direct build order (manual invocation):
+`extract_all_items.py` → `build_entity_index.py` → `scan_emevd_awards.py` →
+`enrich_fallback_with_emevd.py` → `generate_*.py` → `generate_data.py` → `build.bat`
 
 ### extract_all_items.py - Extract item database
-Parses regulation.bin (ItemLotParam, EquipParam) and MSB Treasure events to build a
-complete item database with positions, names, event flags, and categories.
+Parses regulation.bin (ItemLotParam_map, ItemLotParam_enemy, NpcParam, EquipParam*) and
+MSB Treasure events to build a complete item database with positions, names, event
+flags, and categories. Also emits auxiliary classification files.
 No arguments. Reads ERR mod files via config.ini.
-Output: `data/items_database.json`
+Output: `data/items_database.json`, `data/goods_sort_groups.json`,
+`data/goods_{crafting,sorcery,incantation,spirit_ash}_ids.json`,
+`data/tutorial_title_ids.json`, `data/tutorial_title_names.json`,
+`data/enemy_tutorial_mapping.json`.
+
+### build_entity_index.py - Build MSB entity index
+Scans all MSB files for Enemies/Assets/DummyAssets with non-zero EntityID; emits a
+flat map `EntityID → (map, x, y, z, model, name, kind)`. Used downstream to resolve
+scripted-drop positions to world coords.
+No arguments.
+Output: `data/msb_entity_index.json` (~15k entries, ~5 MB).
+
+### scan_emevd_awards.py - Scan EMEVD for scripted item lots
+Walks every EMEVD file, scans each instruction's arg bytes for co-occurrences of
+ItemLotIDs (from regulation.bin) and MSB EntityIDs from `msb_entity_index.json`.
+Filters to same-map matches and lot IDs ≥ 10000 (rejects small-int noise). For each
+matched lot, emits the candidate spawn entity. Used for scripted treasures that have
+no direct MSB Treasure event.
+Output: `data/emevd_lot_mapping.json` (~1200 lots with candidates).
+
+### enrich_fallback_with_emevd.py - Upgrade unmatched items with EMEVD coords
+For records marked `from_fallback=True` in items_database (lot found in ItemLotParam
+but no matching MSB Treasure), looks up the lot in `emevd_lot_mapping.json` and writes
+the entity's coords back into items_database. Chooses entity by lot-ID prefix match
+(same tile), fallback to first candidate.
+Input + output (in-place): `data/items_database.json`.
 
 ### extract_rune_positions.py - Extract Rune/Ember Piece positions
 Scans all MSB files for AEG099_821 (Rune) and AEG099_822 (Ember) assets. Extracts
@@ -41,29 +102,91 @@ goods IDs (800010, 850010) to CSV. Replaces the need for SmithBox export.
 Args: `[path/to/regulation.bin]` (optional, defaults to config.ini).
 Output: `data/ItemLotParam_map.csv`
 
-### generate_all_massedit.py - Generate MASSEDIT from item database
-Converts items_database.json into MASSEDIT files for each item category. Preserves
-existing manually-edited entries, assigns row IDs, and generates FMG text entries.
-No arguments.
-Output: `data/massedit/*.MASSEDIT`, `data/new_fmg_entries.json`
-
 ### generate_pieces_massedit.py - Generate Rune/Ember Piece MASSEDIT
 Creates MASSEDIT entries from rune/ember JSON data, matches event flags from
 ItemLotParam_map.csv, and saves slot mapping for the DLL's GEOF detection.
 No arguments.
-Output: `data/massedit/Reforged - Rune Pieces.MASSEDIT`, `*_slots.json`
+Output: `data/massedit_generated/Reforged - Rune Pieces.MASSEDIT`, `*_slots.json`
 
 ### generate_data.py - Generate C++ source from MASSEDIT
-Reads all MASSEDIT files + FMG JSONs and generates C++ arrays compiled into the DLL.
-Maps MASSEDIT categories to C++ enums, embeds geom_slot from slot JSONs.
+Reads all MASSEDIT files and generates C++ arrays compiled into the DLL. Maps
+MASSEDIT categories to C++ enums, embeds geom_slot from slot JSONs, de-overlaps
+icons that share coords via a square spiral. Also emits the legacy dungeon→overworld
+conversion table from WorldMapLegacyConvParam. Text rendering is done at runtime
+via an offset-encoded ID that redirects to the game's own FMG entries — no custom
+text file is generated.
+Args: `[--massedit-dir PATH]` (default: `data/massedit`; pipeline uses `data/massedit_generated`).
+Output: `src/generated/goblin_map_data.cpp`, `src/generated/goblin_legacy_conv.hpp`.
+
+### generate_loot_massedit.py - Generate loot/equipment/magic/etc MASSEDIT
+Reads items_database + goods classification files. Each category has a lambda filter
+over items[]; matched records emit a MASSEDIT row with icon, position, event flag,
+textId1 (goods/weapon/etc offset-encoded for DLL FMG redirect), optional textId2
+(location), and textId3 (enemy TutorialTitle for enemy drops).
 No arguments.
-Output: `src/generated/goblin_map_data.cpp`, `src/generated/goblin_text_data.cpp`
+Output: `data/massedit_generated/*.MASSEDIT` (50+ category files + `World - Bosses.MASSEDIT`).
+
+### generate_gestures.py - Gesture pickup markers
+EMEVD-driven: scans Event 0 initializer calls for RunEvent targeting common template
+`90005570` (the gesture-spawn template). Each call's args contain
+`[flag, gesture_param, entity_id]` — entity resolves to MSB position. Covers the 5
+standard world-pickup gesture flags plus DLC variants (7 total).
+No arguments.
+Output: `data/massedit_generated/Loot - Gestures.MASSEDIT`.
+
+### generate_hostile_npcs.py - Hostile NPC invader markers
+Queries NpcParam for rows with `teamType=24` (Invader team). Scans all MSBs for
+Enemies whose NPCParamID matches; keeps those with non-zero EntityID (filters script-
+only dummies) and deduplicates by (map, rounded coords).
+No arguments.
+Output: `data/massedit_generated/World - Hostile NPC.MASSEDIT`.
 
 ### compare_massedit.py - Validate MASSEDIT vs item database
 Cross-references current MASSEDIT files with items_database.json. Reports matched,
 missing, obsolete, and position-mismatched entries.
 No arguments.
 Output: console report, `data/comparison_report.json`
+
+---
+
+## Icon GFX Editing
+
+The map-icon GFX (`assets/menu/02_120_worldmap_new.gfx`) is a Scaleform SWF with one
+frame per iconId in DefineSprite 171. Each frame = background (`charId=1000` blue drop)
++ overlay icon (various charIds for different textures) + optional color tint.
+
+See `assets/map_icons/HOW_TO_ADD_ICONS.md` for the full FFDEC workflow.
+
+### add_gfx_icon.py - Add single icon frame to GFX XML
+Appends one new frame to sprite 171 with given bg/icon char, scale, translate, and
+RGB tint. Operates on decompiled XML.
+Args: many (`--xml`, `--output`, `--frame`, `--bg-char`, `--icon-char`, `--icon-red`,
+etc.). See `--help`.
+
+### add_gfx_icons_batch.py - Batch-add tinted frames from config
+Reads `tools/icon_tints_config.json` (family templates + per-category color tints)
+and appends all new frames in one XML pass. Used to materialize the tinted-color
+palette for 60+ categories that would otherwise share a few base icons.
+Args: `[--xml in.xml] [--output out.xml] [--config path]`.
+Output: modifies XML in place (new frameCount).
+
+### icon_tints_config.json - Tinted-icon specifications
+Declarative list of `(iconId, family, r, g, b)` plus base-family templates (`consumable`,
+`key`, `stone`, `crafting`, `seed`, `piece`). Edit this to change or add tinted variants.
+
+### render_map_icons.py - Render composed icon previews
+Parses GFX XML frames, loads TGA textures, applies color transforms, and composites
+each iconId as a PNG preview. Used to visually verify new icons before baking into
+the GFX.
+Args: `--xml PATH --frames N[,M,...]`.
+Output: `assets/map_icons/composed/iconId_NNN.png`.
+
+### extract_subtextures.py - Extract icon textures from game DDS
+Reads `01_common.sblytbnd.dcx` (layouts) + `01_common.tpf.dcx` (sprite sheets), crops
+sub-textures into individual TGA files used by `render_map_icons.py`. Reproducible,
+so the TGAs are gitignored.
+No arguments.
+Output: `assets/menu/*.tga`.
 
 ---
 
@@ -81,6 +204,14 @@ Rune Pieces with their collected/uncollected status. Supports dungeon-to-world
 coordinate mapping.
 Args: `<save_file> --json <rune_pieces.json> [--out map.json] [--html map.html]`.
 Output: JSON map and optional HTML visualization.
+
+### extract_markers.py - Extract map markers from save file
+Reads player-placed map beacons from save file and finds nearby MASSEDIT entries.
+Markers are stored at slot offset `+0x01C9C8` (5 beacons) and `+0x01CA68` (10 secondary).
+Converts map UI coordinates to world coordinates using an empirical formula
+(`worldX = 0.4056 * mapX + 9223`, `worldZ = -0.4989 * mapZ + 12931`, error < 50 units).
+Args: `<save_file.err> [--slot N] [--radius R] [--category CAT]`.
+Output: console list of markers with nearby MASSEDIT entries sorted by distance.
 
 ### _diff_saves_bytes.py - Binary diff of two saves
 Simple byte-level diff. Shows changed regions with hex context, detects single-bit

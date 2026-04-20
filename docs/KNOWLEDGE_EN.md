@@ -13,7 +13,7 @@ A DLL mod for Elden Ring Reforged (ERR). Adds ~7000 icons to the world map: weap
 
 The key difference from a regular installer - the mod **does not touch regulation.bin**, all data is injected into memory when the DLL loads. This allows online play without EAC blocking (via Seamless Co-op / mod loader).
 
-Current version: **v1.0.6**, ~7000 WorldMapPointParam entries (+ ~740 vanilla), 41 granular icon categories in INI. Collected Rune/Ember Pieces are automatically hidden on the map.
+Current version: **v1.0.8** (pre), ~9000 WorldMapPointParam entries (+ ~740 vanilla), 60+ granular icon categories in INI. Collected Rune/Ember Pieces are automatically hidden on the map.
 
 ---
 
@@ -27,11 +27,12 @@ Current version: **v1.0.6**, ~7000 WorldMapPointParam entries (+ ~740 vanilla), 
 | `goblin_inject.cpp` | Injecting entries into WorldMapPointParam (replacing ParamTable in memory) |
 | `goblin_messages.cpp` | Hook on MsgRepositoryImp::LookupEntry for custom map text |
 | `goblin_logic.cpp` | Map fragment logic - icons only appear after the map fragment is collected |
-| `goblin_collected.cpp` | Detection of collected Rune/Ember Pieces: GEOF (model hash + InstanceID slot) + WGM (+0x263 bit1) |
-| `goblin_config.cpp` | INI parsing (mINI), 41 category toggles + debug_logging |
+| `goblin_collected.cpp` | Detection of collected Rune/Ember Pieces: GEOF (model hash + InstanceID slot) + WGM (+0x263 bit1 + +0x26B bit4) |
+| `goblin_config.cpp` | INI parsing (mINI), 60+ category toggles + debug_logging, VK hotkey parsing |
+| `goblin_markers.cpp` | Optional in-memory beacon-array dump via hotkey (debug-only, off by default) |
 | `goblin_massedit.cpp` | Runtime MASSEDIT file parser (alternative loading path from `dll/offline/massedit/`) |
-| `generated/goblin_map_data.cpp` | Auto-generated array from MASSEDIT files (~7000 entries) |
-| `generated/goblin_text_data.cpp` | Auto-generated text data from FMG JSON (14 languages) |
+| `generated/goblin_map_data.cpp` | Auto-generated array from MASSEDIT files (~9000 entries) |
+| `generated/goblin_legacy_conv.hpp` | Auto-generated dungeon→overworld coord conversion table (from WorldMapLegacyConvParam) |
 | `modutils.cpp` | AOB scanner (Pattern16), hooks (MinHook), memory utilities |
 | `from/params.cpp` | Working with SoloParamRepository - searching and iterating Param tables |
 
@@ -58,46 +59,55 @@ ParamTable (param_file):
 ### How text works (goblin_messages.cpp)
 
 Hook on `MsgRepositoryImp::LookupEntry` (AOB: `48 8B 3D ?? ?? ?? ?? 44 0F B6 30 48 85 FF 75`).
-For IDs >= 9000000, we return our own text from a compiled C++ array.
-We also build an FMG binary in memory for PlaceName - so the game sees our entries when iterating over FMG.
+All our PlaceName IDs use **offset-encoding** — no custom compiled text. The high digits
+of the ID encode which existing game FMG category the marker borrows from:
 
-Language is detected via the Steam API (`SteamAPI_ISteamApps_GetCurrentGameLanguage`).
+| Offset range | Redirects to FMG category |
+|---|---|
+| 100 000 000 + id | WeaponName |
+| 200 000 000 + id | ProtectorName (armour) |
+| 300 000 000 + id | AccessoryName (talismans) |
+| 400 000 000 + id | GemName (ashes of war) |
+| 500 000 000 + id | GoodsName |
+| 600 000 000 + id | Event text (tutorial/hint strings) |
+| 900 000 000 + id | TutorialTitle |
+
+When the game looks up a marker's PlaceName ID, our hook translates the offset back to the
+underlying ID and returns the existing in-game string. This gives full localisation
+for free across all 14 language slots. No `goblin_text_data.cpp` is compiled any more.
 
 ### Data generation pipeline
 
+All orchestrated by `tools/build_pipeline.py` (18 stages, hash-based incremental cache
+in `data/.build_cache.json`; cold ~240 s, fully cached <1 s).
+
 ```
-MSB files + regulation.bin
+MSB files + regulation.bin + EMEVD
+        |
+        +-- extract_all_items.py    -->  items_database.json + goods classification
+        +-- build_entity_index.py   -->  msb_entity_index.json
+        +-- scan_emevd_awards.py    -->  emevd_lot_mapping.json
+        +-- enrich_fallback_with_emevd.py (upgrades unmatched records in-place)
+        |
+        +-- generate_loot_massedit.py    -->  50+ Loot/Equipment/Key/Quest/Magic MASSEDIT
+        +-- generate_pieces_massedit.py  -->  Rune/Ember MASSEDIT + _slots.json
+        +-- generate_material_nodes.py   -->  Loot - Material Nodes MASSEDIT
+        +-- generate_graces.py, generate_summoning_pools.py, generate_spirit_springs.py,
+        |   generate_imp_statues.py, generate_stakes.py, generate_paintings.py,
+        |   generate_maps.py             -->  world-infrastructure MASSEDIT
+        +-- generate_gestures.py         -->  gestures (via common event 90005570 scan)
+        +-- generate_hostile_npcs.py     -->  invaders (via NpcParam.teamType=24 + MSB)
         |
         v
-  extract_all_items.py  -->  items_database.json
-        |
-        v
-  generate_all_massedit.py  -->  MASSEDIT files (data/massedit/)
-        |                         + FMG JSON (data/msg/)
-        v
-  generate_data.py  -->  goblin_map_data.cpp + goblin_text_data.cpp
+  generate_data.py  -->  goblin_map_data.cpp + goblin_legacy_conv.hpp
+                          (MapEntry.geom_slot baked in for each piece)
         |
         v
   CMake build  -->  MapForGoblins.dll
 ```
 
-Separate pipeline for Rune/Ember Pieces:
-```
-MSB files (AEG099_821 / AEG099_822)
-        |
-        v
-  extract_rune_positions.py  -->  rune_pieces.json / ember_pieces.json
-        |                         (with InstanceID for GEOF slot mapping)
-        v
-  generate_pieces_massedit.py  -->  MASSEDIT files + _slots.json
-        |                            (row_id -> geom_slot = InstanceID - 9000)
-        v
-  generate_data.py  -->  goblin_map_data.cpp
-                          (MapEntry.geom_slot for each piece)
-```
-
-MSB parsing via Andre.SoulsFormats.dll (from Smithbox, copy in `tools/lib/`).
-`MSBE.Read(string path)` via reflection - supports both base game and DLC maps.
+MSB parsing via Andre.SoulsFormats.dll (from Smithbox, bundled in `tools/lib/`).
+`MSBE.Read(string path)` via reflection — supports both base game and DLC maps.
 
 ---
 
@@ -252,7 +262,7 @@ Event 1045630910 (handler for a single piece):
 
 Data in `data/_piece_final_map.json` and `data/_piece_complete_map.json`.
 
-### SOLVED: Tracking Rune/Ember Pieces (v1.0.6)
+### SOLVED: Tracking Rune/Ember Pieces
 
 Fully reverse-engineered via memory dumps.
 
@@ -267,11 +277,13 @@ Fully reverse-engineered via memory dumps.
 
 2. **CSWorldGeomMan** (loaded tiles, RVA `0x3D69BA8`) - **TAKES PRIORITY over GEOF**:
    - RB-tree of loaded blocks -> geom_ins_vector -> CSWorldGeomIns objects
-   - **Combined flag**:
-     - +0x263 bit 1 (mask 0x02): persistent, survives restart (32/32 checks)
-     - +0x269 & 0x60: immediate after pickup, but resets on restart
-   - `alive = (f263 & 0x02) && !(f269 & 0x60)` - alive only if BOTH flags agree
+   - **Combined flag** (universal across AEG099_821/822/651/691):
+     - +0x263 bit 1 (mask 0x02): persistent, survives restart
+     - +0x26B bit 4 (mask 0x10): immediate after pickup, works for all model types
+   - `alive = (f263 & 0x02) && !(f26B & 0x10)` - alive only if BOTH flags agree
    - WGM data takes priority over GEOF for loaded tiles (GEOF may be stale)
+   - **Earlier flag `+0x269 & 0x60` is deprecated**: works for 821/691 but NOT for gathering
+     nodes 651 (stays 0x10 after pickup). Replaced by the universal +0x26B bit 4.
 
 **False candidate: +0x1D8** - processing state, not collected status. Flickers during streaming.
 
@@ -281,7 +293,6 @@ Fully reverse-engineered via memory dumps.
 - WGM mapping: each piece is bound by `name_suffix` -> `row_id` (not by position in the vector)
 
 **Known limitations:**
-- ~3 pieces out of ~1164 are tracked via event flags (EMEVD), not GEOF - these are not detected
 - Seamless Co-op hosting crashes due to VirtualAlloc'd ParamTable (old bug, unrelated to collected detection)
 
 Details: `geom_collection_tracking.md` in the project root.
@@ -290,16 +301,13 @@ Details: `geom_collection_tracking.md` in the project root.
 
 ## Remaining Tasks
 
-### 1. Event-flag tracked pieces (~3)
-~3 pieces out of ~1164 are tracked via EMEVD event flags, not GEOF. Detecting them needs event flag reading from memory (event 1045632900 -> collectedFlag).
-
-### 2. Seamless Co-op hosting
-The VirtualAlloc'd ParamTable (9803 rows instead of 740) is incompatible with Seamless Co-op when creating a session (hosting). Options:
+### 1. Seamless Co-op hosting
+The VirtualAlloc'd ParamTable (~9800 rows instead of 740) is incompatible with Seamless Co-op when creating a session (hosting). Options:
 - Hook param lookup instead of replacing the table
 - HeapAlloc instead of VirtualAlloc
 - Figure out what exactly Seamless Co-op does with params during hosting
 
-### 3. Reference Offsets
+### 2. Reference Offsets
 
 Player position:
 ```
@@ -388,10 +396,10 @@ Initially ChrModules+0x68 (PhysMod)+0x70 returned (0,0,0). Correct chain: ChrMod
 
 ---
 
-## Tracking Rune Pieces - SOLVED (v1.0.6)
+## Tracking Rune Pieces - SOLVED
 
-Approach: game memory dump (Python + pymem) -> byte-by-byte comparison of CSWorldGeomIns structures -> combined flag (+0x263 persistent + +0x269 immediate) -> verification across 4+ dumps.
+Approach: game memory dump (Python + pymem) -> byte-by-byte comparison of CSWorldGeomIns structures -> combined flag (+0x263 persistent + +0x26B universal immediate) -> verification across 4+ dumps including gathering nodes (AEG099_651).
 
-Result: 175/178 pieces are correctly hidden (3 event-flag tracked ones are not covered).
+Result: all Rune/Ember Pieces are correctly hidden on pickup, both for loaded and unloaded tiles.
 
 Details: see the "SOLVED: Tracking Rune/Ember Pieces" section above and `geom_collection_tracking.md`.

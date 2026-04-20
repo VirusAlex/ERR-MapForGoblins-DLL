@@ -1,0 +1,43 @@
+{
+  "_comment": "Tinted variants of shared base icons. Each entry creates a new iconId starting at 408.",
+  "_base_families": {
+    "consumable": {"bg_char": 1000, "bg_scale": 0.62939453, "bg_tx": -770, "bg_ty": -770, "bg_alpha": 205, "icon_char": 1013, "icon_scale": 0.18299866, "icon_tx": -217, "icon_ty": -262},
+    "key":        {"bg_char": 1000, "bg_scale": 0.62939453, "bg_tx": -770, "bg_ty": -770, "bg_alpha": 205, "icon_char": 1002, "icon_scale": 0.18299866, "icon_tx": -187, "icon_ty": -277},
+    "stone":      {"bg_char": 1000, "bg_scale": 0.62939453, "bg_tx": -770, "bg_ty": -770, "bg_alpha": 205, "icon_char": 1004, "icon_scale": 0.18299866, "icon_tx": -232, "icon_ty": -217},
+    "crafting":   {"bg_char": 1000, "bg_scale": 0.62939453, "bg_tx": -770, "bg_ty": -770, "bg_alpha": 205, "icon_char": 1015, "icon_scale": 0.18299866, "icon_tx": -232, "icon_ty": -262},
+    "seed":       {"bg_char": 1000, "bg_scale": 0.62939453, "bg_tx": -770, "bg_ty": -770, "bg_alpha": 205, "icon_char": 1003, "icon_scale": 0.18299866, "icon_tx": -292, "icon_ty": -292},
+    "piece":      {"single": true, "icon_char": 21, "icon_scale": 0.5, "icon_tx": -210, "icon_ty": -298}
+  },
+  "icons": [
+    {"iconId": 408, "family": "consumable", "r": 120, "g": 60,  "b": -30, "category": "Loot - Greases"},
+    {"iconId": 409, "family": "consumable", "r": -50, "g": 70,  "b": 100, "category": "Loot - Throwables"},
+    {"iconId": 410, "family": "consumable", "r": 120, "g": -30, "b": 100, "category": "Loot - Stat Boosts"},
+    {"iconId": 411, "family": "consumable", "r": 120, "g": -50, "b": -50, "category": "Loot - Rune Arcs"},
+    {"iconId": 412, "family": "consumable", "r": -30, "g": 90,  "b": 70,  "category": "Loot - Utilities"},
+    {"iconId": 413, "family": "consumable", "r": 80,  "g": -70, "b": -70, "category": "Loot - Dragon Hearts"},
+    {"iconId": 414, "family": "consumable", "r": 130, "g": 60,  "b": 80,  "category": "Loot - MP-Fingers"},
+    {"iconId": 415, "family": "consumable", "r": 50,  "g": -30, "b": 120, "category": "Loot - Prattling Pates"},
+    {"iconId": 416, "family": "consumable", "r": 30,  "g": 30,  "b": 40,  "category": "Loot - Reusables"},
+    {"iconId": 417, "family": "consumable", "r": 120, "g": 100, "b": -40, "category": "Loot - Gestures"},
+    {"iconId": 418, "family": "consumable", "r": 60,  "g": 30,  "b": 100, "category": "Key - Larval Tears"},
+    {"iconId": 419, "family": "consumable", "r": -30, "g": 40,  "b": 120, "category": "Key - Celestial Dew"},
+    {"iconId": 420, "family": "consumable", "r": 130, "g": 100, "b": -30, "category": "Key - Great Runes"},
+    {"iconId": 421, "family": "consumable", "r": 30,  "g": -50, "b": 70,  "category": "Reforged - Items"},
+    {"iconId": 422, "family": "consumable", "r": 60,  "g": 20,  "b": -40, "category": "Reforged - Fortunes"},
+    {"iconId": 423, "family": "consumable", "r": 60,  "g": 80,  "b": -50, "category": "Reforged - Sealed Curios"},
+    {"iconId": 424, "family": "key", "r": 60,  "g": 20,  "b": -40, "category": "Key - Cookbooks"},
+    {"iconId": 425, "family": "key", "r": 120, "g": 60,  "b": -30, "category": "Key - Pots n Perfumes"},
+    {"iconId": 426, "family": "key", "r": 100, "g": 80,  "b": -20, "category": "Loot - Bell-Bearings"},
+    {"iconId": 427, "family": "key", "r": 60,  "g": -10, "b": -30, "category": "Magic - Prayerbooks"},
+    {"iconId": 428, "family": "key", "r": -60, "g": 60,  "b": -60, "category": "Quest - Deathroot"},
+    {"iconId": 429, "family": "key", "r": -50, "g": -20, "b": 120, "category": "Magic - Memory Stones"},
+    {"iconId": 430, "family": "key", "r": 30,  "g": -40, "b": 70,  "category": "Quest - Seedbed Curses"},
+    {"iconId": 431, "family": "key", "r": 30,  "g": 30,  "b": 40,  "category": "Key - Whetblades"},
+    {"iconId": 432, "family": "key", "r": 50,  "g": 50,  "b": 60,  "category": "Key - Imbued Sword Keys"},
+    {"iconId": 433, "family": "stone", "r": -40, "g": -40, "b": -40, "category": "Loot - Smithing Stones (Low)"},
+    {"iconId": 434, "family": "stone", "r": 130, "g": 100, "b": -30, "category": "Loot - Smithing Stones (Rare)"},
+    {"iconId": 435, "family": "crafting", "r": 60,  "g": 30,  "b": 100, "category": "Loot - Gloveworts"},
+    {"iconId": 436, "family": "crafting", "r": 100, "g": 20,  "b": 130, "category": "Loot - Great Gloveworts"},
+    {"iconId": 437, "family": "seed", "r": 130, "g": 60,  "b": 50,  "category": "Loot - Rada Fruit"}
+  ]
+}

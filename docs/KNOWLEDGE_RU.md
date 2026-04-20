@@ -9,11 +9,11 @@
 
 ## Что такое MapForGoblins
 
-DLL-мод для Elden Ring Reforged (ERR). Добавляет ~7000 иконок на карту мира: оружие, броня, заклинания, квестовые предметы, боссы, NPC, Rune Pieces и т.д.
+DLL-мод для Elden Ring Reforged (ERR). Добавляет ~9000 иконок на карту мира: оружие, броня, заклинания, квестовые предметы, боссы, NPC, Rune Pieces и т.д.
 
 Ключевое отличие от обычного инсталлера -- мод **не трогает regulation.bin**, все данные инжектятся в память при загрузке DLL. Это позволяет играть онлайн без блокировки EAC (через Seamless Co-op / мод-лоадер).
 
-Текущая версия: **v1.0.6**, ~7000 записей WorldMapPointParam (+ ~740 ванильных), 41 гранулярная категория иконок в INI. Собранные Rune/Ember Pieces автоматически скрываются на карте.
+Текущая версия: **v1.0.8** (pre), ~9000 записей WorldMapPointParam (+ ~740 ванильных), 60+ гранулярных категорий иконок в INI. Собранные Rune/Ember Pieces автоматически скрываются на карте.
 
 ---
 
@@ -27,11 +27,12 @@ DLL-мод для Elden Ring Reforged (ERR). Добавляет ~7000 иконо
 | `goblin_inject.cpp` | Инжект записей в WorldMapPointParam (подмена ParamTable в памяти) |
 | `goblin_messages.cpp` | Хук MsgRepositoryImp::LookupEntry для кастомного текста карты |
 | `goblin_logic.cpp` | Логика map fragment -- иконки появляются только после сбора фрагмента карты |
-| `goblin_collected.cpp` | Определение собранных Rune/Ember Pieces: GEOF (model hash + InstanceID slot) + WGM (+0x263 bit1) |
-| `goblin_config.cpp` | Парсинг INI (mINI), 41 переключатель категорий + debug_logging |
+| `goblin_collected.cpp` | Определение собранных Rune/Ember Pieces: GEOF (model hash + InstanceID slot) + WGM (+0x263 бит1 + +0x26B бит4) |
+| `goblin_config.cpp` | Парсинг INI (mINI), 60+ переключателей категорий + debug_logging, парсинг VK-кода хоткея |
+| `goblin_markers.cpp` | Опциональный дамп бикон-массивов из памяти по хоткею (отладочный, выключен по умолчанию) |
 | `goblin_massedit.cpp` | Runtime-парсер MASSEDIT файлов (альтернативный путь загрузки из `dll/offline/massedit/`) |
-| `generated/goblin_map_data.cpp` | Автосгенерированный массив из MASSEDIT файлов (~7000 записей) |
-| `generated/goblin_text_data.cpp` | Автосгенерированные текстовые данные из FMG JSON (14 языков) |
+| `generated/goblin_map_data.cpp` | Автосгенерированный массив из MASSEDIT файлов (~9000 записей) |
+| `generated/goblin_legacy_conv.hpp` | Автосгенерированная таблица dungeon→overworld конверсии координат (из WorldMapLegacyConvParam) |
 | `modutils.cpp` | AOB-сканер (Pattern16), хуки (MinHook), утилиты для работы с памятью |
 | `from/params.cpp` | Работа с SoloParamRepository -- поиск и итерация по Param таблицам |
 
@@ -58,46 +59,55 @@ ParamTable (param_file):
 ### Как работает текст (goblin_messages.cpp)
 
 Хук на `MsgRepositoryImp::LookupEntry` (AOB: `48 8B 3D ?? ?? ?? ?? 44 0F B6 30 48 85 FF 75`).
-Для ID >= 9000000 возвращаем свой текст из скомпилированного C++ массива.
-Дополнительно собираем FMG бинарь в памяти для PlaceName -- чтобы игра видела наши записи при итерации по FMG.
+Все наши PlaceName ID используют **offset-encoding** — никакого кастомного скомпилированного текста.
+Старшие разряды ID кодируют, из какой существующей FMG-категории брать строку:
 
-Язык определяется через Steam API (`SteamAPI_ISteamApps_GetCurrentGameLanguage`).
+| Диапазон offset | Редирект в FMG-категорию |
+|---|---|
+| 100 000 000 + id | WeaponName |
+| 200 000 000 + id | ProtectorName (броня) |
+| 300 000 000 + id | AccessoryName (талисманы) |
+| 400 000 000 + id | GemName (ashes of war) |
+| 500 000 000 + id | GoodsName |
+| 600 000 000 + id | Event text (tutorial/hint строки) |
+| 900 000 000 + id | TutorialTitle |
+
+Когда игра запрашивает PlaceName маркера, хук переводит offset обратно в исходный ID и
+возвращает существующую в игре строку. Локализация во все 14 языковых слотов работает автоматически.
+`goblin_text_data.cpp` больше не компилируется.
 
 ### Пайплайн генерации данных
 
+Весь пайплайн оркеструется `tools/build_pipeline.py` (18 стадий, хеш-инкрементальный кеш
+в `data/.build_cache.json`; холодный запуск ~240 с, полностью кешированный <1 с).
+
 ```
-MSB файлы + regulation.bin
+MSB файлы + regulation.bin + EMEVD
+        |
+        +-- extract_all_items.py    -->  items_database.json + классификация goods
+        +-- build_entity_index.py   -->  msb_entity_index.json
+        +-- scan_emevd_awards.py    -->  emevd_lot_mapping.json
+        +-- enrich_fallback_with_emevd.py (in-place апгрейд неразрешённых записей)
+        |
+        +-- generate_loot_massedit.py    -->  50+ Loot/Equipment/Key/Quest/Magic MASSEDIT
+        +-- generate_pieces_massedit.py  -->  Rune/Ember MASSEDIT + _slots.json
+        +-- generate_material_nodes.py   -->  Loot - Material Nodes MASSEDIT
+        +-- generate_graces.py, generate_summoning_pools.py, generate_spirit_springs.py,
+        |   generate_imp_statues.py, generate_stakes.py, generate_paintings.py,
+        |   generate_maps.py             -->  MASSEDIT мировой инфраструктуры
+        +-- generate_gestures.py         -->  жесты (через сканирование common event 90005570)
+        +-- generate_hostile_npcs.py     -->  инвейдеры (через NpcParam.teamType=24 + MSB)
         |
         v
-  extract_all_items.py  -->  items_database.json
-        |
-        v
-  generate_all_massedit.py  -->  MASSEDIT файлы (data/massedit/)
-        |                         + FMG JSON (data/msg/)
-        v
-  generate_data.py  -->  goblin_map_data.cpp + goblin_text_data.cpp
+  generate_data.py  -->  goblin_map_data.cpp + goblin_legacy_conv.hpp
+                          (MapEntry.geom_slot вшит для каждого piece)
         |
         v
   CMake build  -->  MapForGoblins.dll
 ```
 
-Отдельный пайплайн для Rune/Ember Pieces:
-```
-MSB файлы (AEG099_821 / AEG099_822)
-        |
-        v
-  extract_rune_positions.py  -->  rune_pieces.json / ember_pieces.json
-        |                         (с InstanceID для GEOF slot маппинга)
-        v
-  generate_pieces_massedit.py  -->  MASSEDIT файлы + _slots.json
-        |                            (row_id → geom_slot = InstanceID - 9000)
-        v
-  generate_data.py  -->  goblin_map_data.cpp
-                          (MapEntry.geom_slot для каждого piece)
-```
-
 Парсинг MSB через Andre.SoulsFormats.dll (из Smithbox, копия в `tools/lib/`).
-`MSBE.Read(string path)` через reflection - поддерживает и base game, и DLC карты.
+`MSBE.Read(string path)` через reflection — поддерживает и base game, и DLC карты.
 
 ---
 
@@ -252,7 +262,7 @@ Event 1045630910 (обработчик одного куска):
 
 Данные в `data/_piece_final_map.json` и `data/_piece_complete_map.json`.
 
-### РЕШЕНО: Tracking Rune/Ember Pieces (v1.0.6)
+### РЕШЕНО: Tracking Rune/Ember Pieces
 
 Полностью раскрыт через серию дампов памяти.
 
@@ -267,11 +277,13 @@ Event 1045630910 (обработчик одного куска):
 
 2. **CSWorldGeomMan** (загруженные тайлы, RVA `0x3D69BA8`) - **ПРИОРИТЕТ над GEOF**:
    - RB-tree загруженных блоков → geom_ins_vector → CSWorldGeomIns объекты
-   - **Комбинированный флаг**:
-     - +0x263 бит 1 (маска 0x02): постоянный, переживает рестарт (32/32 проверок)
-     - +0x269 & 0x60: мгновенный после подбора, но сбрасывается при рестарте
-   - `alive = (f263 & 0x02) && !(f269 & 0x60)` - жив только если ОБА флага согласны
+   - **Комбинированный флаг** (универсальный для AEG099_821/822/651/691):
+     - +0x263 бит 1 (маска 0x02): постоянный, переживает рестарт
+     - +0x26B бит 4 (маска 0x10): мгновенный после подбора, работает для всех типов моделей
+   - `alive = (f263 & 0x02) && !(f26B & 0x10)` - жив только если ОБА флага согласны
    - WGM данные приоритетнее GEOF для загруженных тайлов (GEOF может быть устаревшим)
+   - **Старый флаг `+0x269 & 0x60` устарел**: работает для 821/691, но НЕ для gathering
+     nodes 651 (остаётся 0x10 после подбора). Заменён универсальным +0x26B бит 4.
 
 **Ложный кандидат: +0x1D8** - processing state, не собранность. Мерцает при стриминге.
 
@@ -281,7 +293,6 @@ Event 1045630910 (обработчик одного куска):
 - WGM маппинг: каждый piece привязан по `name_suffix` → `row_id` (не по позиции в векторе)
 
 **Известные ограничения:**
-- ~3 осколка из ~1164 трекаются через event flags (EMEVD), а не GEOF - не обнаруживаются
 - Хостинг Seamless Co-op крашится из-за VirtualAlloc'd ParamTable (старый баг, не связан с collected detection)
 
 Детали: `geom_collection_tracking.md` в корне проекта.
@@ -290,16 +301,13 @@ Event 1045630910 (обработчик одного куска):
 
 ## Оставшиеся задачи
 
-### 1. Event-flag tracked pieces (~3 шт.)
-~3 осколка из ~1164 трекаются через EMEVD event flags, а не GEOF. Для обнаружения нужно чтение event flags из памяти (event 1045632900 -> collectedFlag).
-
-### 2. Seamless Co-op хостинг
-VirtualAlloc'd ParamTable (9803 строк вместо 740) несовместима с Seamless Co-op при создании сессии (хостинг). Варианты:
+### 1. Seamless Co-op хостинг
+VirtualAlloc'd ParamTable (~9800 строк вместо 740) несовместима с Seamless Co-op при создании сессии (хостинг). Варианты:
 - Хук param lookup вместо замены таблицы
 - HeapAlloc вместо VirtualAlloc
 - Разобраться что именно Seamless Co-op делает с param при хостинге
 
-### 3. Справочные оффсеты
+### 2. Справочные оффсеты
 
 Позиция игрока:
 ```
@@ -388,10 +396,10 @@ ChrModules+0x68 (PhysMod)+0x70 давал (0,0,0). Правильная цепо
 
 ---
 
-## Tracking Rune Pieces - РЕШЕНО (v1.0.6)
+## Tracking Rune Pieces - РЕШЕНО
 
-Подход: дамп памяти игры (Python + pymem) → побайтовое сравнение CSWorldGeomIns структур → комбинированный флаг (+0x263 persistent + +0x269 immediate) → верификация на 4+ дампах.
+Подход: дамп памяти игры (Python + pymem) → побайтовое сравнение CSWorldGeomIns структур → комбинированный флаг (+0x263 persistent + +0x26B universal immediate) → верификация на 4+ дампах включая gathering nodes (AEG099_651).
 
-Результат: 175/178 осколков корректно скрываются (3 event-flag tracked не покрыты).
+Результат: все Rune/Ember Pieces корректно скрываются при подборе, как для загруженных, так и для выгруженных тайлов.
 
 Детали: секция "РЕШЕНО: Tracking Rune/Ember Pieces" выше и `geom_collection_tracking.md`.

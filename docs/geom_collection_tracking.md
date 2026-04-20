@@ -101,11 +101,11 @@ Tiles near the player's spawn point load **directly from the save file into WGM*
 
 This means for ~5% of tiles (nearest to the player on load), there is no GEOF data. You have to determine "collected" status from the CSWorldGeomIns objects themselves.
 
-## The Collected Flag: Combined Check (+0x263 + +0x269)
+## The Collected Flag: Combined Check (+0x263 + +0x26B)
 
-### Discovery
+### Three Flags Found
 
-By comparing memory dumps byte by byte, we scanned **the first 0x300 (768) bytes** of CSWorldGeomIns across **4 dumps** (spawn, walked, restart+teleport, another restart) - 32 samples total with known ground truth. Found two complementary flags:
+By comparing memory dumps byte by byte, we scanned **the first 0x300 (768) bytes** of CSWorldGeomIns across **4 dumps** (spawn, walked, restart+teleport, another restart) - 32 samples total with known ground truth. Later expanded to cover gathering nodes (AEG099_651) which use a different immediate flag.
 
 **Flag 1: +0x263 bit 1** - persistent, survives game restarts
 ```
@@ -118,32 +118,56 @@ Mask:     0x02 (bit 1)
 
 Typical byte values: `0x7E`/`0x7F` = alive, `0x7C`/`0x7D` = collected.
 
-**Flag 2: +0x269 & 0x60** - immediate after pickup, but lost on restart
+**Flag 2: +0x26B bit 4** - UNIVERSAL immediate flag, all model types (lost on tile reload)
+```
+Address:  CSWorldGeomIns + 0x26B
+Mask:     0x10 (bit 4)
+
+  0x06 (bit CLR) → ALIVE
+  0x16 (bit SET) → COLLECTED (set immediately on pickup)
+```
+
+**Flag 3: +0x269 & 0x60** - immediate, but ONLY for destructible pickups (821/691), NOT gathering nodes (651)
 ```
 Address:  CSWorldGeomIns + 0x269
 Mask:     0x60 (bits 5 and 6)
 
-  0x00 → ALIVE
-  0x60 → COLLECTED (set immediately when player picks up the piece)
+  0x00 → ALIVE (or gathering node — this flag does NOT work for 651!)
+  0x60 → COLLECTED (only set for rune pieces 821, ember pieces 822, and one-time nodes like 691)
 ```
 
-### Why Both Are Needed
+### Which Flag To Use
 
-Neither flag works alone for all cases:
-- **+0x263** persists after restart but updates **slowly** after pickup (can take seconds)
-- **+0x269** updates **immediately** on pickup but resets to 0x00 after game restart
+| Object type | +0x263 (persistent) | +0x26B (immediate) | +0x269 (immediate) |
+|-------------|--------------------|--------------------|-------------------|
+| AEG099_821 (Rune Pieces) | Yes (slow) | **Yes** | Yes |
+| AEG099_822 (Ember Pieces) | Yes (slow) | **Yes** | Yes |
+| AEG099_691 (Trina's Lily etc.) | Yes (slow) | **Yes** | Yes |
+| AEG099_651 (Erdleaf etc.) | **Never updates while tile loaded!** | **Yes** | **NO** |
 
-The combined check: **object is alive ONLY if both flags agree it's alive**:
+**Use +0x26B, not +0x269.** The +0x269 flag was discovered first on AEG099_821 and appeared sufficient, but it does not trigger for AEG099_651 gathering nodes. The +0x26B flag is universal.
+
+### Recommended Check
+
 ```
-alive = (byte_263 & 0x02) != 0  AND  (byte_269 & 0x60) == 0
+alive = (byte_263 & 0x02) != 0  AND  (byte_26B & 0x10) == 0
 ```
-If either flag says collected → the object is collected.
+
+- **+0x263** catches objects collected in previous sessions (persists in save, restored on tile load)
+- **+0x26B** catches objects collected just now while the tile is loaded (immediate)
+- Both flags reset to their "alive" state when a tile unloads and reloads — but +0x263 gets restored from save data with the correct "dead" state
+
+### AEG099_651 Caveat
+
+For gathering nodes (AEG099_651), +0x263 does **not** update while the tile is loaded. It only reflects the correct state after the tile unloads (GEOF saves it) and reloads. This means:
+- Immediate detection relies **solely** on +0x26B for 651 nodes
+- After tile reload, +0x263 is correct (0x7D = dead)
 
 ### Verification
 
-- **+0x263 bit 1**: 32/32 correct across 4 dumps including restarts
-- **+0x269 & 0x60**: correct immediately after pickup (verified in live game)
-- **Combined**: handles both fresh pickups and persisted state across restarts
+- **+0x263 bit 1**: 32/32 correct across 4 dumps including restarts (821 only)
+- **+0x26B bit 4**: verified on 3x AEG099_651 + 1x AEG099_821, before/after same object comparison
+- **+0x269 & 0x60**: works for 821/691 but NOT for 651 (verified: stays 0x10 after 651 collection)
 
 ### WGM Priority Over GEOF
 
@@ -201,13 +225,13 @@ Example: m60_33_44_00 → area=60(0x3C), gridX=33(0x21), gridZ=44(0x2C), idx=0
 
 ```cpp
 // Check if a CSWorldGeomIns object has been collected
-// Combined: +0x263 bit1 (persistent) + +0x269 bits 5-6 (immediate)
+// Combined: +0x263 bit1 (persistent) + +0x26B bit4 (universal immediate)
 // Alive only if BOTH flags agree it's alive
 bool is_geom_collected(void* geom_ins) {
-    uint8_t f263 = 0, f269 = 0;
+    uint8_t f263 = 0, f26B = 0;
     safe_read((char*)geom_ins + 0x263, &f263, 1);
-    safe_read((char*)geom_ins + 0x269, &f269, 1);
-    bool alive = (f263 & 0x02) && !(f269 & 0x60);
+    safe_read((char*)geom_ins + 0x26B, &f26B, 1);
+    bool alive = (f263 & 0x02) && !(f26B & 0x10);
     return !alive;
 }
 ```
@@ -221,10 +245,10 @@ pm = pymem.Pymem("eldenring.exe")
 
 def is_geom_collected(geom_ins_addr):
     """Check if a GeomIns object has been collected.
-    Combined: +0x263 (persistent) + +0x269 (immediate after pickup)."""
+    Combined: +0x263 (persistent) + +0x26B (universal immediate)."""
     f263 = pm.read_uchar(geom_ins_addr + 0x263)
-    f269 = pm.read_uchar(geom_ins_addr + 0x269)
-    alive = (f263 & 0x02) and not (f269 & 0x60)
+    f26B = pm.read_uchar(geom_ins_addr + 0x26B)
+    alive = (f263 & 0x02) and not (f26B & 0x10)
     return not alive
 ```
 
@@ -245,7 +269,7 @@ Player loads a save
 │  Tiles near          │──► CSWorldGeomMan (RVA 0x3D69BA8) ← PRIORITY
 │  player (5%)         │    RB-tree → BlockData → geom_ins_vector
 │                      │    Combined: +0x263 & 0x02 (persistent)
-│                      │            + +0x269 & 0x60 (immediate)
+│                      │            + +0x26B & 0x10 (universal immediate)
 └──────────────────────┘
 ```
 
@@ -355,11 +379,11 @@ CSWorldGeomIns + 0x18 + 0x18 + 0x18 = +0x48 → *msb_part_ptr → *name_ptr (wch
 
 Это значит, что для ~5% тайлов (ближайших к игроку при загрузке) GEOF-данных нет, и нужно определять "собранность" по самим CSWorldGeomIns-объектам.
 
-## Флаг собранности: комбинированная проверка (+0x263 + +0x269)
+## Флаг собранности: комбинированная проверка (+0x263 + +0x26B)
 
-### Открытие
+### Три найденных флага
 
-Побайтовым сравнением дампов памяти перебрали **первые 0x300 (768) байт** CSWorldGeomIns на **4 дампах** (spawn, walked, restart+teleport, ещё один restart) - 32 сэмпла с известным ground truth. Нашли два комплементарных флага:
+Побайтовым сравнением дампов памяти перебрали **первые 0x300 (768) байт** CSWorldGeomIns на **4 дампах** (spawn, walked, restart+teleport, ещё один restart) - 32 сэмпла с известным ground truth. Позже расширили исследование на gathering nodes (AEG099_651), которые используют другой immediate-флаг.
 
 **Флаг 1: +0x263 бит 1** - постоянный, переживает рестарт
 ```
@@ -372,32 +396,56 @@ CSWorldGeomIns + 0x18 + 0x18 + 0x18 = +0x48 → *msb_part_ptr → *name_ptr (wch
 
 Типичные значения: `0x7E`/`0x7F` = жив, `0x7C`/`0x7D` = собран.
 
-**Флаг 2: +0x269 & 0x60** - мгновенный после подбора, но сбрасывается при рестарте
+**Флаг 2: +0x26B бит 4** - УНИВЕРСАЛЬНЫЙ мгновенный флаг, все типы моделей (сбрасывается при перезагрузке тайла)
+```
+Адрес:  CSWorldGeomIns + 0x26B
+Маска:  0x10 (бит 4)
+
+  0x06 (бит СНЯТ) → ЖИВ
+  0x16 (бит УСТАНОВЛЕН) → СОБРАН (устанавливается мгновенно при подборе)
+```
+
+**Флаг 3: +0x269 & 0x60** - мгновенный, но ТОЛЬКО для уничтожаемых подборов (821/691), НЕ для gathering nodes (651)
 ```
 Адрес:  CSWorldGeomIns + 0x269
 Маска:  0x60 (биты 5 и 6)
 
-  0x00 → ЖИВ
-  0x60 → СОБРАН (устанавливается мгновенно при подборе)
+  0x00 → ЖИВ (или gathering node — этот флаг НЕ работает для 651!)
+  0x60 → СОБРАН (только для rune pieces 821, ember pieces 822, one-time nodes вроде 691)
 ```
 
-### Почему нужны оба
+### Какой флаг использовать
 
-Ни один флаг не работает отдельно:
-- **+0x263** переживает рестарт, но **медленно обновляется** после подбора
-- **+0x269** обновляется **мгновенно** при подборе, но сбрасывается после рестарта
+| Тип объекта | +0x263 (persistent) | +0x26B (immediate) | +0x269 (immediate) |
+|-------------|--------------------|--------------------|-------------------|
+| AEG099_821 (Rune Pieces) | Да (медленно) | **Да** | Да |
+| AEG099_822 (Ember Pieces) | Да (медленно) | **Да** | Да |
+| AEG099_691 (Лилия Трины и др.) | Да (медленно) | **Да** | Да |
+| AEG099_651 (Лист Эрдрева и др.) | **Не обновляется пока тайл загружен!** | **Да** | **НЕТ** |
 
-Комбинированная проверка: **объект жив ТОЛЬКО если оба флага согласны что жив**:
+**Используйте +0x26B, а не +0x269.** Флаг +0x269 был обнаружен первым на AEG099_821 и казался достаточным, но он не срабатывает для gathering nodes AEG099_651. Флаг +0x26B универсален.
+
+### Рекомендуемая проверка
+
 ```
-alive = (byte_263 & 0x02) != 0  AND  (byte_269 & 0x60) == 0
+alive = (byte_263 & 0x02) != 0  AND  (byte_26B & 0x10) == 0
 ```
-Если хотя бы один флаг говорит "собран" → объект собран.
+
+- **+0x263** ловит объекты, собранные в предыдущих сессиях (сохраняется в сейве, восстанавливается при загрузке тайла)
+- **+0x26B** ловит объекты, собранные прямо сейчас пока тайл загружен (мгновенно)
+- Оба флага сбрасываются в "живое" состояние при выгрузке/загрузке тайла — но +0x263 восстанавливается из сейва с правильным "мёртвым" состоянием
+
+### Особенность AEG099_651
+
+Для gathering nodes (AEG099_651) флаг +0x263 **не обновляется** пока тайл загружен. Он отражает правильное состояние только после выгрузки тайла (GEOF сохраняет) и повторной загрузки:
+- Мгновенная детекция полностью зависит от +0x26B для 651 нод
+- После перезагрузки тайла +0x263 корректен (0x7D = мёртв)
 
 ### Проверка
 
-- **+0x263 бит 1**: 32/32 корректно на 4 дампах включая рестарты
-- **+0x269 & 0x60**: корректно мгновенно после подбора (проверено в живой игре)
-- **Комбинация**: покрывает и свежие подборы, и сохранённое состояние после рестартов
+- **+0x263 бит 1**: 32/32 корректно на 4 дампах включая рестарты (только 821)
+- **+0x26B бит 4**: проверено на 3x AEG099_651 + 1x AEG099_821, сравнение before/after одного и того же объекта
+- **+0x269 & 0x60**: работает для 821/691, но НЕ для 651 (проверено: остаётся 0x10 после сбора 651)
 
 ### Приоритет WGM над GEOF
 
@@ -455,13 +503,13 @@ tile_id = (area << 24) | (gridX << 16) | (gridZ << 8) | index
 
 ```cpp
 // Проверка "собран ли объект" для CSWorldGeomIns
-// Комбинированная: +0x263 бит1 (постоянный) + +0x269 биты 5-6 (мгновенный)
+// Комбинированная: +0x263 бит1 (постоянный) + +0x26B бит4 (универсальный мгновенный)
 // Жив только если ОБА флага согласны
 bool is_geom_collected(void* geom_ins) {
-    uint8_t f263 = 0, f269 = 0;
+    uint8_t f263 = 0, f26B = 0;
     safe_read((char*)geom_ins + 0x263, &f263, 1);
-    safe_read((char*)geom_ins + 0x269, &f269, 1);
-    bool alive = (f263 & 0x02) && !(f269 & 0x60);
+    safe_read((char*)geom_ins + 0x26B, &f26B, 1);
+    bool alive = (f263 & 0x02) && !(f26B & 0x10);
     return !alive;
 }
 ```
@@ -475,10 +523,10 @@ pm = pymem.Pymem("eldenring.exe")
 
 def is_geom_collected(geom_ins_addr):
     """Проверяет, собран ли GeomIns объект.
-    Комбинация: +0x263 (постоянный) + +0x269 (мгновенный после подбора)."""
+    Комбинация: +0x263 (постоянный) + +0x26B (универсальный мгновенный)."""
     f263 = pm.read_uchar(geom_ins_addr + 0x263)
-    f269 = pm.read_uchar(geom_ins_addr + 0x269)
-    alive = (f263 & 0x02) and not (f269 & 0x60)
+    f26B = pm.read_uchar(geom_ins_addr + 0x26B)
+    alive = (f263 & 0x02) and not (f26B & 0x10)
     return not alive
 ```
 
@@ -499,6 +547,6 @@ def is_geom_collected(geom_ins_addr):
 │  Тайлы рядом с       │──► CSWorldGeomMan (RVA 0x3D69BA8) ← ПРИОРИТЕТ
 │  игроком (5%)        │    RB-tree → BlockData → geom_ins_vector
 │                      │    Комбинация: +0x263 & 0x02 (постоянный)
-│                      │              + +0x269 & 0x60 (мгновенный)
+│                      │              + +0x26B & 0x10 (универсальный мгновенный)
 └──────────────────────┘
 ```

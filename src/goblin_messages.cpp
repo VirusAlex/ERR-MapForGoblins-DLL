@@ -1,8 +1,9 @@
 #include "goblin_messages.hpp"
-#include "generated/goblin_text_data.hpp"
+#include "generated/goblin_map_data.hpp"
 #include "modutils.hpp"
 
 #include <cstring>
+#include <set>
 #include <spdlog/spdlog.h>
 #include <string>
 #include <thread>
@@ -286,41 +287,60 @@ void goblin::setup_messages()
     auto lang = detect_language();
     spdlog::debug("Detected language: {}", lang);
 
-    const TextEntry *lang_entries = nullptr;
-    size_t lang_count = 0;
-    for (size_t i = 0; i < LANG_COUNT; i++)
-    {
-        if (lang == LANG_TABLE[i].steam_name)
-        {
-            lang_entries = LANG_TABLE[i].entries;
-            lang_count = LANG_TABLE[i].count;
-            break;
-        }
-    }
-    if (!lang_entries)
-    {
-        for (size_t i = 0; i < LANG_COUNT; i++)
-        {
-            if (strcmp(LANG_TABLE[i].steam_name, "english") == 0)
-            {
-                lang_entries = LANG_TABLE[i].entries;
-                lang_count = LANG_TABLE[i].count;
-                break;
-            }
-        }
-    }
-    if (!lang_entries)
-    {
-        spdlog::error("No text data for language \"{}\"", lang);
-        return;
-    }
-
     std::vector<NewEntry> new_entries;
-    new_entries.reserve(lang_count);
-    for (size_t i = 0; i < lang_count; i++)
-        new_entries.push_back({lang_entries[i].id, lang_entries[i].text});
 
-    spdlog::debug("Prepared {} PlaceName entries for \"{}\"", new_entries.size(), lang);
+    // Collect item IDs used as textId — need to copy from various FMGs to PlaceName
+    // FmgId slots: GoodsName=10, WeaponName=11, ProtectorName=12, AccessoryName=13,
+    //              PlaceName=19, GemName=35, ArtsName=42, TutorialTitle=207
+    // textId encoding: real_id + category_offset
+    //   100000000+id:      WeaponName (cat=2, weapons)
+    //   200000000+id:      ProtectorName (cat=3, armour)
+    //   300000000+id:      AccessoryName (cat=4, talismans)
+    //   400000000+id:      GemName (cat=5, ashes of war)
+    //   500000000+id:      GoodsName (cat=1, goods)
+    //   600000000+id:      EventTextForMap (map event text, e.g. "Closed with an imp's seal")
+    //   900000000+id:      TutorialTitle (enemy names)
+    // Legacy (pre-offset): raw PlaceName IDs < 100M for location names
+    std::set<int32_t> goods_ids_needed;      // GoodsName FMG, slot 10
+    std::set<int32_t> weapon_ids_needed;     // WeaponName FMG, slot 11
+    std::set<int32_t> protector_ids_needed;  // ProtectorName FMG, slot 12
+    std::set<int32_t> accessory_ids_needed;  // AccessoryName FMG, slot 13
+    std::set<int32_t> gem_ids_needed;        // GemName FMG, slot 14
+    std::set<int32_t> event_text_ids_needed; // EventTextForMap FMG, slot 34/467
+    std::set<int32_t> tutorial_ids_needed;   // TutorialTitle FMG, slot 207 (enemy names from ERR Codex)
+    for (size_t i = 0; i < generated::MAP_ENTRY_COUNT; i++)
+    {
+        const auto &e = generated::MAP_ENTRIES[i];
+        const int32_t *text_ids[] = {
+            &e.data.textId1, &e.data.textId2, &e.data.textId3, &e.data.textId4,
+            &e.data.textId5, &e.data.textId6, &e.data.textId7, &e.data.textId8,
+        };
+        for (auto *tidp : text_ids)
+        {
+            int32_t tid = *tidp;
+            if (tid <= 0) continue;
+            if (tid >= 900000000)               // TutorialTitle (enemy names)
+                tutorial_ids_needed.insert(tid);
+            else if (tid >= 600000000)          // EventTextForMap (offset 600M)
+                event_text_ids_needed.insert(tid);
+            else if (tid >= 500000000)          // GoodsName (goods, offset 500M)
+                goods_ids_needed.insert(tid);
+            else if (tid >= 400000000)          // GemName (ashes of war, offset 400M)
+                gem_ids_needed.insert(tid);
+            else if (tid >= 300000000)          // AccessoryName (talismans, offset 300M)
+                accessory_ids_needed.insert(tid);
+            else if (tid >= 200000000)          // ProtectorName (armour, offset 200M)
+                protector_ids_needed.insert(tid);
+            else if (tid >= 100000000)          // WeaponName (weapons, offset 100M)
+                weapon_ids_needed.insert(tid);
+            // IDs < 100M are raw PlaceName IDs (location names, no copy needed)
+        }
+    }
+    spdlog::debug("{} Goods + {} Weapon + {} Protector + {} Accessory + {} Gem + {} EventText + {} Tutorial IDs need lookup",
+                  goods_ids_needed.size(), weapon_ids_needed.size(),
+                  protector_ids_needed.size(), accessory_ids_needed.size(),
+                  gem_ids_needed.size(), event_text_ids_needed.size(),
+                  tutorial_ids_needed.size());
 
     auto msg_repository_address = modutils::scan<from::CS::MsgRepositoryImp *>({
         .aob = "48 8B 3D ?? ?? ?? ?? 44 0F B6 30 48 85 FF 75",
@@ -345,6 +365,174 @@ void goblin::setup_messages()
     }
 
     auto **sub = reinterpret_cast<uint8_t **>(base_array[0]);
+
+    // Helper: copy entries from an FMG to PlaceName, with offset remapping
+    // needed_ids contains offset-encoded IDs; real FMG id = offset_id - offset_base
+    // The PlaceName entry is written at the offset-encoded ID
+    auto copy_fmg_entries = [&](uint8_t *fmg_ptr, const std::set<int32_t> &needed_ids,
+                                int32_t offset_base, const char *label) -> int
+    {
+        if (needed_ids.empty() || !fmg_ptr) return 0;
+
+        uint32_t grp_cnt = *reinterpret_cast<uint32_t *>(fmg_ptr + 0x0C);
+        uint32_t str_cnt = *reinterpret_cast<uint32_t *>(fmg_ptr + 0x10);
+        uint64_t raw_off = *reinterpret_cast<uint64_t *>(fmg_ptr + 0x18);
+
+        uint8_t *off_ptr = (raw_off > 0x1000000)
+            ? reinterpret_cast<uint8_t *>(raw_off)
+            : fmg_ptr + raw_off;
+
+        auto *groups = reinterpret_cast<FmgGroup *>(fmg_ptr + 0x28);
+        auto *str_offs = reinterpret_cast<uint64_t *>(off_ptr);
+
+        // Build reverse lookup: real_id -> offset_id (for ammo: offset_base=0, id stored as-is)
+        std::unordered_map<int32_t, int32_t> real_to_offset;
+        for (int32_t oid : needed_ids)
+            real_to_offset[oid - offset_base] = oid;
+
+        int copied = 0;
+        for (uint32_t g = 0; g < grp_cnt; g++)
+        {
+            int32_t first = groups[g].first_id;
+            int32_t last = groups[g].last_id;
+            int32_t si = groups[g].string_index;
+            for (int32_t id = first; id <= last; id++, si++)
+            {
+                if (si < 0 || si >= (int32_t)str_cnt) continue;
+                auto it = real_to_offset.find(id);
+                if (it == real_to_offset.end()) continue;
+
+                uint64_t s_off = str_offs[si];
+                if (s_off == 0) continue;
+                const wchar_t *text = (s_off > 0x1000000)
+                    ? reinterpret_cast<const wchar_t *>(s_off)
+                    : reinterpret_cast<const wchar_t *>(fmg_ptr + s_off);
+                if (text && text[0])
+                {
+                    new_entries.push_back({it->second, text});  // write at offset-encoded ID
+                    copied++;
+                }
+            }
+        }
+        spdlog::info("Copied {} {} entries to PlaceName", copied, label);
+        return copied;
+    };
+
+    // Read GoodsName FMG (slot 10): goods items, offset 500M
+    if (!goods_ids_needed.empty() && 10 < count2 && sub[10])
+        copy_fmg_entries(sub[10], goods_ids_needed, 500000000, "GoodsName");
+
+    // Read WeaponName FMG (slot 11): ammo (offset=0, id>=50M) + weapons (offset=100M)
+    if (11 < count2 && sub[11])
+    {
+        // Ammo IDs are stored as-is (>=50M), weapon IDs are offset by 100M
+        std::set<int32_t> ammo_ids, weapon_offset_ids;
+        for (int32_t tid : weapon_ids_needed)
+        {
+            if (tid >= 100000000)
+                weapon_offset_ids.insert(tid);
+            else
+                ammo_ids.insert(tid);
+        }
+        if (!ammo_ids.empty())
+            copy_fmg_entries(sub[11], ammo_ids, 0, "WeaponName(ammo)");
+        if (!weapon_offset_ids.empty())
+            copy_fmg_entries(sub[11], weapon_offset_ids, 100000000, "WeaponName(weapon)");
+    }
+
+    // Read ProtectorName FMG (slot 12): armour, offset 200M
+    if (!protector_ids_needed.empty() && 12 < count2 && sub[12])
+        copy_fmg_entries(sub[12], protector_ids_needed, 200000000, "ProtectorName");
+
+    // Read AccessoryName FMG (slot 13): talismans, offset 300M
+    if (!accessory_ids_needed.empty() && 13 < count2 && sub[13])
+        copy_fmg_entries(sub[13], accessory_ids_needed, 300000000, "AccessoryName");
+
+    // Read GemName FMG (slot 35 = FmgId::GemName): ashes of war, offset 400M
+    if (!gem_ids_needed.empty())
+    {
+        // GemName = slot 35, ArtsName = slot 42 (alternative), DLC: 322, 422
+        for (int try_slot : {35, 42, 322, 422})
+        {
+            if (try_slot >= count2 || !sub[try_slot]) continue;
+            auto copied = copy_fmg_entries(sub[try_slot], gem_ids_needed, 400000000, "GemName");
+            if (copied > 0)
+            {
+                spdlog::info("GemName: copied {} from slot {}", copied, try_slot);
+                break;
+            }
+        }
+    }
+
+    // TODO: EventTextForMap FMG (slots 34/367/467) is in a separate MsgRepository bank
+    // (menu msgbnd, not item msgbnd). Need to find the menu bank pointer to access it.
+    // For now, 600M+ textIds will show as ?PlaceName? until this is implemented.
+    if (!event_text_ids_needed.empty())
+        spdlog::warn("EventTextForMap: {} IDs requested but menu FMG bank not yet supported",
+                      event_text_ids_needed.size());
+
+    // Read TutorialTitle FMG (slot 207) for ERR Codex enemy names
+    // textId in MASSEDIT = real TutorialTitle ID + 900000000 (to avoid collision with GoodsName)
+    // We look up by real ID but write to PlaceName at the remapped ID
+    if (!tutorial_ids_needed.empty() && 207 < count2 && sub[207])
+    {
+        auto *tut_fmg = sub[207];
+        uint32_t tut_group_cnt = *reinterpret_cast<uint32_t *>(tut_fmg + 0x0C);
+        uint32_t tut_string_cnt = *reinterpret_cast<uint32_t *>(tut_fmg + 0x10);
+        uint64_t tut_raw_str_off = *reinterpret_cast<uint64_t *>(tut_fmg + 0x18);
+
+        uint8_t *tut_offsets_ptr;
+        if (tut_raw_str_off > 0x1000000)
+            tut_offsets_ptr = reinterpret_cast<uint8_t *>(tut_raw_str_off);
+        else
+            tut_offsets_ptr = tut_fmg + tut_raw_str_off;
+
+        auto *tut_groups = reinterpret_cast<FmgGroup *>(tut_fmg + 0x28);
+        auto *tut_str_offs = reinterpret_cast<uint64_t *>(tut_offsets_ptr);
+
+        // Build set of real TutorialTitle IDs (without offset)
+        std::set<int32_t> real_tut_ids;
+        for (int32_t remapped : tutorial_ids_needed)
+            real_tut_ids.insert(remapped - 900000000);
+
+        int tut_copied = 0;
+        for (uint32_t g = 0; g < tut_group_cnt; g++)
+        {
+            int32_t first = tut_groups[g].first_id;
+            int32_t last = tut_groups[g].last_id;
+            int32_t si = tut_groups[g].string_index;
+
+            for (int32_t id = first; id <= last; id++, si++)
+            {
+                if (si < 0 || si >= (int32_t)tut_string_cnt)
+                    continue;
+                if (real_tut_ids.count(id) == 0)
+                    continue;
+
+                uint64_t str_off = tut_str_offs[si];
+                if (str_off == 0) continue;
+
+                const wchar_t *text;
+                if (str_off > 0x1000000)
+                    text = reinterpret_cast<const wchar_t *>(str_off);
+                else
+                    text = reinterpret_cast<const wchar_t *>(tut_fmg + str_off);
+
+                if (text && text[0])
+                {
+                    // Write to PlaceName at remapped ID (real + 900000000)
+                    new_entries.push_back({id + 900000000, text});
+                    tut_copied++;
+                }
+            }
+        }
+        spdlog::info("Copied {} TutorialTitle entries to PlaceName (enemy names)", tut_copied);
+    }
+    else if (!tutorial_ids_needed.empty())
+    {
+        spdlog::warn("TutorialTitle FMG (slot 207) not available ({} IDs needed)", tutorial_ids_needed.size());
+    }
+
     auto *fmg_ptr = sub[19];
 
     if (!fmg_ptr)

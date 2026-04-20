@@ -10,12 +10,13 @@ import json
 import math
 from pathlib import Path
 
-DATA_DIR = Path(__file__).parent.parent / "data"
-OUTPUT_DIR = DATA_DIR / "massedit"
+from massedit_common import DATA_DIR, OUT_DIR as OUTPUT_DIR, OVERWORLD_AREAS, resolve_location_id
+from massedit_common import DLC_AREAS, UNDERGROUND_AREAS, get_disp_mask
+
 CSV_PATH = DATA_DIR / "ItemLotParam_map.csv"
 
-UNDERGROUND_AREAS = {12}
-DLC_AREAS = {20, 21, 22, 25, 28, 40, 41, 42, 43, 61}
+# Alias for backward compatibility
+place_name_id = resolve_location_id
 
 
 def parse_map_tile(map_name):
@@ -25,9 +26,7 @@ def parse_map_tile(map_name):
     area = int(parts[0][1:])
     p1 = int(parts[1])
     p2 = int(parts[2])
-    if area in (60, 61):
-        return area, p1, p2
-    elif area in DLC_AREAS:
+    if area in (60, 61) or area in DLC_AREAS:
         return area, p1, p2
     else:
         return area, p1, 0
@@ -94,7 +93,12 @@ def generate_massedit(items, item_name, text_id, icon_id, start_row_id, output_f
 
         lines.append(f"param WorldMapPointParam: id {row_id}: posX: = {x:.3f};")
         lines.append(f"param WorldMapPointParam: id {row_id}: posZ: = {z:.3f};")
-        lines.append(f"param WorldMapPointParam: id {row_id}: textId1: = {text_id};")
+        # Offset-encode goods ID (500M) to avoid collision with PlaceName IDs
+        lines.append(f"param WorldMapPointParam: id {row_id}: textId1: = {text_id + 500000000};")
+
+        loc_id = place_name_id(item['map'])
+        if loc_id > 0:
+            lines.append(f"param WorldMapPointParam: id {row_id}: textId2: = {loc_id};")
 
         # No auto-hide: no EntityID->ItemLot mapping available
         lines.append(f"param WorldMapPointParam: id {row_id}: selectMinZoomStep: = 1;")
@@ -115,7 +119,8 @@ def generate_massedit(items, item_name, text_id, icon_id, start_row_id, output_f
         suffix = int(parts[-1]) if len(parts) == 2 and parts[-1].isdigit() else -1
         slot_map[row_id2] = {
             'geom_slot': (iid - 9000) if iid >= 9000 else -1,
-            'name_suffix': suffix
+            'name_suffix': suffix,
+            'object_name': name
         }
         row_id2 += 1
 
@@ -141,7 +146,7 @@ def main():
 
     generate_massedit(
         rune_items, "Rune Pieces",
-        text_id=10600001, icon_id=371,
+        text_id=800010, icon_id=371,   # goodsId for "Rune Piece" / "Осколок Руны" — localized via GoodsName FMG
         start_row_id=2000000,
         output_file=OUTPUT_DIR / "Reforged - Rune Pieces.MASSEDIT",
         event_flags=rune_flags
@@ -149,7 +154,7 @@ def main():
 
     generate_massedit(
         ember_items, "Ember Pieces",
-        text_id=10600002, icon_id=371,
+        text_id=850010, icon_id=371,   # goodsId for "Ember Piece" — same star as Rune Pieces (distinguished by map location)
         start_row_id=3000000,
         output_file=OUTPUT_DIR / "Reforged - Ember Pieces.MASSEDIT",
         event_flags=ember_flags

@@ -51,9 +51,9 @@ exit /b 0
 
 :generate
 echo.
-echo Regenerating C++ data from MASSEDIT and FMG files...
+echo Running data pipeline (incremental, hash-cached)...
 echo ============================================
-py "%SCRIPT_DIR%tools\generate_data.py"
+py "%SCRIPT_DIR%tools\build_pipeline.py" %*
 echo.
 exit /b 0
 
@@ -93,6 +93,14 @@ call :parse_version
 if errorlevel 1 exit /b 1
 echo Snapshot version: pre-%VER%
 
+REM Incremental data pipeline (hash-based cache). Pass --force-all to rebuild everything.
+echo Running incremental pipeline...
+py "%SCRIPT_DIR%tools\build_pipeline.py" %*
+if errorlevel 1 (
+    echo [FAILED] build_pipeline.py
+    exit /b 1
+)
+
 call :ensure_configured
 if errorlevel 1 exit /b 1
 
@@ -114,7 +122,7 @@ mkdir "%SNAP_DIR%\addons\MapForGoblins\menu" 2>nul
 
 copy /Y "%BUILD_DIR%\Release\MapForGoblins.dll" "%SNAP_DIR%\dll\offline\" >nul
 copy /Y "%BUILD_DIR%\Release\MapForGoblins.ini" "%SNAP_DIR%\dll\offline\" >nul
-copy /Y "%SCRIPT_DIR%assets\menu\02_120_worldmap.gfx" "%SNAP_DIR%\addons\MapForGoblins\menu\" >nul
+copy /Y "%SCRIPT_DIR%assets\menu\02_120_worldmap_new.gfx" "%SNAP_DIR%\addons\MapForGoblins\menu\02_120_worldmap.gfx" >nul
 powershell -NoProfile -Command "(Get-Content '%SCRIPT_DIR%assets\README.txt') -replace '%%VERSION%%','pre-%VER%' | Set-Content '%SNAP_DIR%\README.txt'"
 
 echo.
@@ -136,6 +144,14 @@ for /f "tokens=1,2,3 delims=." %%a in ("%VER%") do (
     set "V_PATCH=%%c"
 )
 echo Release version: %VER% (%V_MAJOR%.%V_MINOR%.%V_PATCH%)
+
+REM Incremental data pipeline (hash-based cache). Pass --force-all to rebuild everything.
+echo Running incremental pipeline...
+py "%SCRIPT_DIR%tools\build_pipeline.py" %*
+if errorlevel 1 (
+    echo [FAILED] build_pipeline.py
+    exit /b 1
+)
 
 REM Build with VERSION_PRE="" (release, no pre- prefix)
 call "%VS_PATH%" -arch=amd64 >nul 2>&1
@@ -161,7 +177,7 @@ mkdir "%REL_DIR%\addons\MapForGoblins\menu" 2>nul
 
 copy /Y "%BUILD_DIR%\Release\MapForGoblins.dll" "%REL_DIR%\dll\offline\" >nul
 copy /Y "%BUILD_DIR%\Release\MapForGoblins.ini" "%REL_DIR%\dll\offline\" >nul
-copy /Y "%SCRIPT_DIR%assets\menu\02_120_worldmap.gfx" "%REL_DIR%\addons\MapForGoblins\menu\" >nul
+copy /Y "%SCRIPT_DIR%assets\menu\02_120_worldmap_new.gfx" "%REL_DIR%\addons\MapForGoblins\menu\02_120_worldmap.gfx" >nul
 powershell -NoProfile -Command "(Get-Content '%SCRIPT_DIR%assets\README.txt') -replace '%%VERSION%%','%VER%' | Set-Content '%REL_DIR%\README.txt'"
 
 echo.

@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 3.28.1)
 set(CMAKE_GENERATOR_PLATFORM x64)
 
 project( MapForGoblins
-  VERSION   "1.0.8"
+  VERSION   "1.0.9"
   LANGUAGES CXX)
 
 set(VERSION_PRE "pre")  # set to "" for release builds
@@ -61,8 +61,6 @@ add_library( MapForGoblins SHARED
   src/goblin/goblin_map_exceptions.hpp
   src/generated/goblin_map_data.hpp
   src/generated/goblin_map_data.cpp
-  src/generated/goblin_text_data.hpp
-  src/generated/goblin_text_data.cpp
   src/goblin_config.hpp
   src/goblin_config.cpp
   src/goblin_collected.hpp
@@ -71,6 +69,8 @@ add_library( MapForGoblins SHARED
   src/goblin_inject.cpp
   src/goblin_logic.hpp
   src/goblin_logic.cpp
+  src/goblin_markers.hpp
+  src/goblin_markers.cpp
   src/goblin_messages.hpp
   src/goblin_messages.cpp
   src/dllmain.cpp)

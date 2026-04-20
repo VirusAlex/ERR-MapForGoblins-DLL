@@ -5,6 +5,7 @@ Outputs items_database.json with positions, items, event flags, and categories.
 """
 
 import json
+import struct
 import sys
 import io
 import os
@@ -287,6 +288,31 @@ def main():
     item_lots = param_to_dict(ilp, lot_fields)
     print(f'  {len(item_lots)} item lots')
 
+    print('--- ItemLotParam_enemy ---')
+    ilp_enemy = read_param(bnd, 'ItemLotParam_enemy', paramdefs)
+    enemy_lot_fields = set()
+    for i in range(1, 9):
+        enemy_lot_fields.update([f'lotItemId0{i}', f'lotItemCategory0{i}', f'lotItemNum0{i}'])
+    enemy_lot_fields.add('getItemFlagId')
+    item_lots_enemy = param_to_dict(ilp_enemy, enemy_lot_fields)
+    print(f'  {len(item_lots_enemy)} enemy item lots')
+
+    print('--- NpcParam (enemy drop lots) ---')
+    npc_param = read_param(bnd, 'NpcParam', paramdefs)
+    npc_lots = param_to_dict(npc_param, {'itemLotId_map', 'itemLotId_enemy'})
+    # Build NPC ID -> lot mappings (prefer map lot, fallback to enemy lot)
+    npc_to_map_lot = {}
+    npc_to_enemy_lot = {}
+    for npc_id, fields in npc_lots.items():
+        lot_map = fields.get('itemLotId_map', 0)
+        lot_enemy = fields.get('itemLotId_enemy', 0)
+        if lot_map > 0:
+            npc_to_map_lot[npc_id] = lot_map
+        if lot_enemy > 0:
+            npc_to_enemy_lot[npc_id] = lot_enemy
+    print(f'  {len(npc_lots)} NPCs, {len(npc_to_map_lot)} with map lots, {len(npc_to_enemy_lot)} with enemy lots')
+
+
     print('--- EquipParamWeapon ---')
     wparam = read_param(bnd, 'EquipParamWeapon', paramdefs)
     weapon_db = param_to_dict(wparam, {'wepType', 'sortId'})
@@ -355,9 +381,6 @@ def main():
             msb_errors += 1
             continue
 
-        if msb.Events.Treasures.Count == 0:
-            continue
-
         part_positions = {}
         for p in msb.Parts.Assets:
             part_positions[str(p.Name)] = {
@@ -399,24 +422,185 @@ def main():
                 'z': pos['z'],
                 'itemLotId': item_lot_id,
                 'partName': part_name,
+                'source': 'treasure',
             })
 
-    print(f'  Found {len(treasures)} treasure placements ({msb_errors} MSB errors)')
+        # Enemy drops: NPC → NpcParam → itemLotId_map or itemLotId_enemy
+        for p in msb.Parts.Enemies:
+            npc_id = int(p.NPCParamID)
+            lot_id = npc_to_map_lot.get(npc_id, 0)
+            lot_source = 'map'
+            if lot_id <= 0:
+                lot_id = npc_to_enemy_lot.get(npc_id, 0)
+                lot_source = 'enemy'
+            if lot_id <= 0:
+                continue
+            name = str(p.Name)
+            model = str(p.ModelName) if hasattr(p, 'ModelName') else ''
+            treasures.append({
+                'map': map_info['map'],
+                'areaNo': map_info['areaNo'],
+                'p1': map_info['p1'],
+                'p2': map_info['p2'],
+                'x': float(p.Position.X),
+                'y': float(p.Position.Y),
+                'z': float(p.Position.Z),
+                'itemLotId': lot_id,
+                'partName': name,
+                'source': 'enemy',
+                'enemyModel': model,
+                'npcParamId': npc_id,
+                'lotSource': lot_source,
+            })
+
+    print(f'  Found {len(treasures)} placements ({msb_errors} MSB errors)')
+    enemy_count = sum(1 for t in treasures if t.get('source') == 'enemy')
+    print(f'    ({len(treasures) - enemy_count} treasures + {enemy_count} enemy drops)')
+
+    # ── EMEVD: template event drops (scarabs, mini-bosses, etc.) ──
+    print('\n=== Scanning EMEVD for template event drops ===')
+
+    _emevd_read = asm.GetType('SoulsFormats.EMEVD').GetMethod(
+        'Read', BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy,
+        None, Array[SysType]([_str_type]), None)
+
+    # Template events that award items: event_id -> (entity_offset, lot_offset, min_args)
+    # Scarab/enemy drops: entity at offset 8, lot at offset 16
+    # Boss rewards (90005860+): entity at offset 16, lot at offset 24
+    # NPC quest rewards (90005750): entity at offset 8, lot at offset 16
+    # NPC invasion rewards (90005774): entity at offset 8, lot at offset 12
+    # Painting pickups (90005632): entity at offset 8, lot at offset 16
+    # Great Runes (90005110): entity at offset 8, lot at offset 20
+    # Larval Tears (90005390): entity at offset 8, lot at offset 28
+    TEMPLATE_EVENTS = {
+        # Scarab/enemy drops
+        90005200: (8, 16, 20),
+        90005210: (8, 16, 20),
+        90005300: (8, 16, 20),
+        90005301: (8, 16, 20),
+        # Boss rewards (field bosses, dungeon bosses)
+        90005860: (16, 24, 28),
+        90005861: (16, 24, 28),
+        90005880: (16, 24, 28),
+        90005881: (16, 24, 28),
+        90005882: (16, 24, 28),
+        90005883: (16, 24, 28),
+        90005885: (16, 24, 28),
+        # NPC quest/dialog rewards
+        90005750: (8, 16, 20),
+        # NPC invasion rewards
+        90005774: (8, 12, 16),
+        90005792: (8, 24, 28),
+        # Painting pickups
+        90005632: (8, 16, 20),
+        # Great Runes
+        90005110: (8, 20, 24),
+        # Larval Tears (boss morph)
+        90005390: (8, 28, 32),
+        # DLC forging / special
+        90005555: (8, 12, 16),
+    }
+
+    # Boss reward event IDs (have defeat flag at offset 8)
+    BOSS_EVENTS = {90005860, 90005861, 90005880, 90005881, 90005882, 90005883, 90005885}
+
+    emevd_dir = ERR_MOD_DIR / 'event'
+    emevd_calls = []  # (entityId, lotId, map_name, eventId, defeatFlag)
+
+    for emevd_path in sorted(emevd_dir.glob('*.emevd.dcx')):
+        map_name = emevd_path.name.replace('.emevd.dcx', '')
+        try:
+            tmp2 = os.path.join(tempfile.gettempdir(), '_mfg_emevd.tmp')
+            SysFile.WriteAllBytes(tmp2, SoulsFormats.DCX.Decompress(str(emevd_path)).ToArray())
+            emevd = _emevd_read.Invoke(None, Array[Object]([tmp2]))
+            os.unlink(tmp2)
+        except:
+            continue
+
+        for event in emevd.Events:
+            for instr in event.Instructions:
+                if int(instr.Bank) != 2000:
+                    continue
+                args = bytes(instr.ArgData)
+                if len(args) < 8:
+                    continue
+                event_id = struct.unpack_from('<i', args, 4)[0]
+                if event_id not in TEMPLATE_EVENTS:
+                    continue
+                entity_off, lot_off, min_len = TEMPLATE_EVENTS[event_id]
+                if len(args) < min_len:
+                    continue
+                entity_id = struct.unpack_from('<i', args, entity_off)[0]
+                lot_id = struct.unpack_from('<i', args, lot_off)[0]
+                # Extract defeat flag for boss events (offset 8 = args[2])
+                defeat_flag = struct.unpack_from('<i', args, 8)[0] if event_id in BOSS_EVENTS else 0
+                if lot_id > 0 and entity_id > 0:
+                    emevd_calls.append((entity_id, lot_id, map_name, event_id, defeat_flag))
+
+    print(f'  {len(emevd_calls)} template event calls with lot IDs')
+
+    # Match EntityIDs to MSB positions (already collected in part_positions per MSB)
+    # Re-scan MSBs for EntityID → position mapping
+    entity_to_pos = {}
+    emevd_entity_ids = {e[0] for e in emevd_calls}
+    for msb_path in sorted(MSB_DIR.glob('*.msb.dcx')):
+        map_info = parse_map_name(msb_path.name)
+        if not map_info or map_info['p3'] == 99:
+            continue
+        try:
+            tmp2 = os.path.join(tempfile.gettempdir(), '_mfg_msb2.tmp')
+            SysFile.WriteAllBytes(tmp2, SoulsFormats.DCX.Decompress(str(msb_path)).ToArray())
+            msb = _read_from_bytes(_msbe_read, SoulsFormats.DCX.Decompress(str(msb_path)), '.msb')
+        except:
+            continue
+        for p in msb.Parts.Enemies:
+            eid = int(p.EntityID)
+            if eid in emevd_entity_ids and eid not in entity_to_pos:
+                entity_to_pos[eid] = {
+                    'x': float(p.Position.X), 'y': float(p.Position.Y), 'z': float(p.Position.Z),
+                    'map': map_info['map'], 'areaNo': map_info['areaNo'],
+                    'p1': map_info['p1'], 'p2': map_info['p2'],
+                    'name': str(p.Name), 'model': str(p.ModelName),
+                    'npcParam': int(p.NPCParamID),
+                }
+
+    emevd_matched = 0
+    seen_emevd = set()
+    for entity_id, lot_id, emevd_map, event_id, defeat_flag in emevd_calls:
+        pos = entity_to_pos.get(entity_id)
+        if not pos:
+            continue
+        dedup_key = (entity_id, lot_id)
+        if dedup_key in seen_emevd:
+            continue
+        seen_emevd.add(dedup_key)
+        entry = {
+            'map': pos['map'], 'areaNo': pos['areaNo'],
+            'p1': pos['p1'], 'p2': pos['p2'],
+            'x': pos['x'], 'y': pos['y'], 'z': pos['z'],
+            'itemLotId': lot_id, 'partName': pos['name'],
+            'source': 'emevd', 'enemyModel': pos['model'],
+            'npcParamId': pos.get('npcParam', 0),
+        }
+        if defeat_flag > 0:
+            entry['defeatFlag'] = defeat_flag
+            entry['emevdEventId'] = event_id
+        treasures.append(entry)
+        emevd_matched += 1
+
+    print(f'  {emevd_matched} EMEVD drops matched to positions ({len(entity_to_pos)}/{len(emevd_entity_ids)} entities found)')
 
     print('\n=== Cross-referencing data ===')
+    # Build set of all MSB treasure base lot IDs (to avoid treating them as sub-lots)
+    treasure_base_lots = {tr['itemLotId'] for tr in treasures if tr.get('source') == 'treasure'}
+    print(f'  {len(treasure_base_lots)} unique treasure base lot IDs')
+
     database = []
     no_lot = 0
     no_items = 0
 
-    for tr in treasures:
-        lot_id = tr['itemLotId']
-        lot = item_lots.get(lot_id)
-        if not lot:
-            no_lot += 1
-            continue
-
-        event_flag = lot.get('getItemFlagId', 0)
-
+    def extract_lot_items(lot):
+        """Extract items from an ItemLotParam entry."""
         items = []
         for slot in range(1, 9):
             item_id = lot.get(f'lotItemId0{slot}', 0)
@@ -424,18 +608,86 @@ def main():
             num = lot.get(f'lotItemNum0{slot}', 0)
             if item_id <= 0 or cat <= 0:
                 continue
-
             name = name_dbs.get(cat, {}).get(item_id, '')
             broad_cat, sub_cat = categorize_item(cat, item_id, goods_db, weapon_db)
-
             items.append({
-                'id': item_id,
-                'category': cat,
-                'num': num,
-                'name': name,
-                'broad_category': broad_cat,
-                'sub_category': sub_cat,
+                'id': item_id, 'category': cat, 'num': num,
+                'name': name, 'broad_category': broad_cat, 'sub_category': sub_cat,
             })
+        return items
+
+    for tr in treasures:
+        lot_id = tr['itemLotId']
+
+        # For enemy drops, scan sequential lot entries (base+0, base+1, ...)
+        # Each sub-entry may have its own getItemFlagId (one-time unique drops)
+        is_enemy = tr.get('source') == 'enemy'
+        lots_to_check = []
+
+        if (is_enemy or tr.get('source') == 'emevd') and lot_id in item_lots_enemy:
+            # Check base and sequential entries in enemy lots
+            for offset in range(1000):  # up to 1000 sub-entries (some NPCs have many variants)
+                sub_lot = item_lots_enemy.get(lot_id + offset)
+                if sub_lot is not None:
+                    lots_to_check.append((lot_id + offset, sub_lot))
+        elif lot_id in item_lots:
+            # Treasure: scan base + sequential sub-lots (chests can have multiple items)
+            # Stop at sub-lots that are themselves another treasure's base lot
+            lots_to_check.append((lot_id, item_lots[lot_id]))
+            for offset in range(1, 20):
+                sub_id = lot_id + offset
+                if sub_id in treasure_base_lots:
+                    break  # this is another treasure, not a sub-lot
+                sub_lot = item_lots.get(sub_id)
+                if sub_lot is None:
+                    break  # gap in sequence, stop
+                lots_to_check.append((sub_id, sub_lot))
+        else:
+            lot = item_lots_enemy.get(lot_id)
+            if lot:
+                lots_to_check.append((lot_id, lot))
+
+        if not lots_to_check:
+            no_lot += 1
+            continue
+
+        # Use the first lot for basic items, but collect flagged sub-lots separately
+        base_lot_id, base_lot = lots_to_check[0]
+        event_flag = base_lot.get('getItemFlagId', 0)
+        items = extract_lot_items(base_lot)
+
+        # For sub-lots with their own getItemFlagId, create separate records
+        # Applies to both enemy drops and treasure chests with multiple items
+        if len(lots_to_check) > 1:
+            for sub_lot_id, sub_lot in lots_to_check[1:]:
+                sub_flag = sub_lot.get('getItemFlagId', 0)
+                if sub_flag <= 0:
+                    continue
+                sub_items = extract_lot_items(sub_lot)
+                if not sub_items:
+                    continue
+                # Create a separate record for this flagged sub-lot
+                gridX, gridZ = get_grid(tr['areaNo'], tr['p1'], tr['p2'])
+                sub_record = {
+                    'map': tr['map'],
+                    'x': round(tr['x'], 3), 'y': round(tr['y'], 3), 'z': round(tr['z'], 3),
+                    'areaNo': tr['areaNo'], 'gridX': gridX, 'gridZ': gridZ,
+                    'dispMask': get_disp_mask(tr['areaNo']),
+                    'itemLotId': sub_lot_id, 'eventFlag': sub_flag,
+                    'partName': tr['partName'],
+                    'items': sub_items,
+                    'primary_category': sub_items[0]['broad_category'],
+                    'source': tr.get('source', 'treasure'),
+                }
+                if tr.get('enemyModel'):
+                    sub_record['enemyModel'] = tr['enemyModel']
+                if tr.get('npcParamId'):
+                    sub_record['npcParamId'] = tr['npcParamId']
+                if tr.get('defeatFlag'):
+                    sub_record['defeatFlag'] = tr['defeatFlag']
+                if tr.get('emevdEventId'):
+                    sub_record['emevdEventId'] = tr['emevdEventId']
+                database.append(sub_record)
 
         if not items:
             no_items += 1
@@ -457,7 +709,16 @@ def main():
             'partName': tr['partName'],
             'items': items,
             'primary_category': items[0]['broad_category'],
+            'source': tr.get('source', 'treasure'),
         }
+        if tr.get('enemyModel'):
+            record['enemyModel'] = tr['enemyModel']
+        if tr.get('npcParamId'):
+            record['npcParamId'] = tr['npcParamId']
+        if tr.get('defeatFlag'):
+            record['defeatFlag'] = tr['defeatFlag']
+        if tr.get('emevdEventId'):
+            record['emevdEventId'] = tr['emevdEventId']
         database.append(record)
 
     print(f'  {len(database)} records (no lot: {no_lot}, no items: {no_items})')

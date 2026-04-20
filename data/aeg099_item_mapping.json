@@ -1,0 +1,6029 @@
+[
+  {
+    "model": "AEG099_030",
+    "modelNum": 30,
+    "pickUpItemLotParamId": 900002000,
+    "isEnableRepick": false,
+    "isBreakOnPickUp": false,
+    "isHiddenOnRepick": false,
+    "items": [
+      {
+        "goodsId": 17000,
+        "category": 1,
+        "num": 1,
+        "name": "???"
+      }
+    ],
+    "primaryItem": "???",
+    "primaryGoodsId": 17000,
+    "primaryNum": 1
+  },
+  {
+    "model": "AEG099_031",
+    "modelNum": 31,
+    "pickUpItemLotParamId": 900002010,
+    "isEnableRepick": false,
+    "isBreakOnPickUp": false,
+    "isHiddenOnRepick": false,
+    "items": [
+      {
+        "goodsId": 17000,
+        "category": 1,
+        "num": 1,
+        "name": "???"
+      }
+    ],
+    "primaryItem": "???",
+    "primaryGoodsId": 17000,
+    "primaryNum": 1
+  },
+  {
+    "model": "AEG099_032",
+    "modelNum": 32,
+    "pickUpItemLotParamId": 900002020,
+    "isEnableRepick": false,
+    "isBreakOnPickUp": false,
+    "isHiddenOnRepick": false,
+    "items": [
+      {
+        "goodsId": 17000,
+        "category": 1,
+        "num": 1,
+        "name": "???"
+      }
+    ],
+    "primaryItem": "???",
+    "primaryGoodsId": 17000,
+    "primaryNum": 1
+  },
+  {
+    "model": "AEG099_036",
+    "modelNum": 36,
+    "pickUpItemLotParamId": 997230,
+    "isEnableRepick": false,
+    "isBreakOnPickUp": false,
+    "isHiddenOnRepick": false,
+    "items": [
+      {
+        "goodsId": 20723,
+        "category": 1,
+        "num": 1,
+        "name": "Bloodrose"
+      },
+      {
+        "goodsId": 20723,
+        "category": 1,
+        "num": 2,
+        "name": "Bloodrose"
+      }
+    ],
+    "primaryItem": "Bloodrose",
+    "primaryGoodsId": 20723,
+    "primaryNum": 1
+  },
+  {
+    "model": "AEG099_037",
+    "modelNum": 37,
+    "pickUpItemLotParamId": 900002040,
+    "isEnableRepick": false,
+    "isBreakOnPickUp": false,
+    "isHiddenOnRepick": false,
+    "items": [
+      {
+        "goodsId": 17000,
+        "category": 1,
+        "num": 1,
+        "name": "???"
+      },
+      {
+        "goodsId": 12304,
+        "category": 1,
+        "num": 2,
+        "name": "???"
+      },
+      {
+        "goodsId": 12304,
+        "category": 1,
+        "num": 3,
+        "name": "???"
+      },
+      {
+        "goodsId": 12304,
+        "category": 1,
+        "num": 5,
+        "name": "???"
+      }
+    ],
+    "primaryItem": "???",
+    "primaryGoodsId": 17000,
+    "primaryNum": 1
+  },
+  {
+    "model": "AEG099_038",
+    "modelNum": 38,
+    "pickUpItemLotParamId": 900002040,
+    "isEnableRepick": false,
+    "isBreakOnPickUp": false,
+    "isHiddenOnRepick": false,
+    "items": [
+      {
+        "goodsId": 17000,
+        "category": 1,
+        "num": 1,
+        "name": "???"
+      },
+      {
+        "goodsId": 12304,
+        "category": 1,
+        "num": 2,
+        "name": "???"
+      },
+      {
+        "goodsId": 12304,
+        "category": 1,
+        "num": 3,
+        "name": "???"
+      },
+      {
+        "goodsId": 12304,
+        "category": 1,
+        "num": 5,
+        "name": "???"
+      }
+    ],
+    "primaryItem": "???",
+    "primaryGoodsId": 17000,
+    "primaryNum": 1
+  },
+  {
+    "model": "AEG099_040",
+    "modelNum": 40,
+    "pickUpItemLotParamId": 997640,
+    "isEnableRepick": false,
+    "isBreakOnPickUp": false,
+    "isHiddenOnRepick": false,
+    "items": [
+      {
+        "goodsId": 17000,
+        "category": 1,
+        "num": 1,
+        "name": "???"
+      }
+    ],
+    "primaryItem": "???",
+    "primaryGoodsId": 17000,
+    "primaryNum": 1
+  },
+  {
+    "model": "AEG099_042",
+    "modelNum": 42,
+    "pickUpItemLotParamId": 996640,
+    "isEnableRepick": false,
+    "isBreakOnPickUp": false,
+    "isHiddenOnRepick": false,
+    "items": [
+      {
+        "goodsId": 17000,
+        "category": 1,
+        "num": 1,
+        "name": "???"
+      }
+    ],
+    "primaryItem": "???",
+    "primaryGoodsId": 17000,
+    "primaryNum": 1
+  },
+  {
+    "model": "AEG099_081",
+    "modelNum": 81,
+    "pickUpItemLotParamId": 900002610,
+    "isEnableRepick": false,
+    "isBreakOnPickUp": false,
+    "isHiddenOnRepick": false,
+    "items": [
+      {
+        "goodsId": 17000,
+        "category": 1,
+        "num": 1,
+        "name": "???"
+      }
+    ],
+    "primaryItem": "???",
+    "primaryGoodsId": 17000,
+    "primaryNum": 1
+  },
+  {
+    "model": "AEG099_085",
+    "modelNum": 85,
+    "pickUpItemLotParamId": 900002650,
+    "isEnableRepick": false,
+    "isBreakOnPickUp": false,
+    "isHiddenOnRepick": false,
+    "items": [
+      {
+        "goodsId": 17000,
+        "category": 1,
+        "num": 1,
+        "name": "???"
+      }
+    ],
+    "primaryItem": "???",
+    "primaryGoodsId": 17000,
+    "primaryNum": 1
+  },
+  {
+    "model": "AEG099_086",
+    "modelNum": 86,
+    "pickUpItemLotParamId": 900002660,
+    "isEnableRepick": false,
+    "isBreakOnPickUp": false,
+    "isHiddenOnRepick": false,
+    "items": [
+      {
+        "goodsId": 17000,
+        "category": 1,
+        "num": 1,
+        "name": "???"
+      }
+    ],
+    "primaryItem": "???",
+    "primaryGoodsId": 17000,
+    "primaryNum": 1
+  },
+  {
+    "model": "AEG099_102",
+    "modelNum": 102,
+    "pickUpItemLotParamId": 998060,
+    "isEnableRepick": false,
+    "isBreakOnPickUp": false,
+    "isHiddenOnRepick": false,
+    "items": [
+      {
+        "goodsId": 17000,
+        "category": 1,
+        "num": 1,
+        "name": "???"
+      }
+    ],
+    "primaryItem": "???",
+    "primaryGoodsId": 17000,
+    "primaryNum": 1
+  },
+  {
+    "model": "AEG099_103",
+    "modelNum": 103,
+    "pickUpItemLotParamId": 900002060,
+    "isEnableRepick": false,
+    "isBreakOnPickUp": false,
+    "isHiddenOnRepick": false,
+    "items": [
+      {
+        "goodsId": 17000,
+        "category": 1,
+        "num": 1,
+        "name": "???"
+      },
+      {
+        "goodsId": 12313,
+        "category": 1,
+        "num": 2,
+        "name": "???"
+      },
+      {
+        "goodsId": 12313,
+        "category": 1,
+        "num": 3,
+        "name": "???"
+      },
+      {
+        "goodsId": 12313,
+        "category": 1,
+        "num": 5,
+        "name": "???"
+      }
+    ],
+    "primaryItem": "???",
+    "primaryGoodsId": 17000,
+    "primaryNum": 1
+  },
+  {
+    "model": "AEG099_104",
+    "modelNum": 104,
+    "pickUpItemLotParamId": 996940,
+    "isEnableRepick": false,
+    "isBreakOnPickUp": false,
+    "isHiddenOnRepick": false,
+    "items": [
+      {
+        "goodsId": 17000,
+        "category": 1,
+        "num": 1,
+        "name": "???"
+      }
+    ],
+    "primaryItem": "???",
+    "primaryGoodsId": 17000,
+    "primaryNum": 1
+  },
+  {
+    "model": "AEG099_150",
+    "modelNum": 150,
+    "pickUpItemLotParamId": 900002500,
+    "isEnableRepick": false,
+    "isBreakOnPickUp": false,
+    "isHiddenOnRepick": false,
+    "items": [
+      {
+        "goodsId": 17000,
+        "category": 1,
+        "num": 1,
+        "name": "???"
+      }
+    ],
+    "primaryItem": "???",
+    "primaryGoodsId": 17000,
+    "primaryNum": 1
+  },
+  {
+    "model": "AEG099_151",
+    "modelNum": 151,
+    "pickUpItemLotParamId": 900002080,
+    "isEnableRepick": false,
+    "isBreakOnPickUp": false,
+    "isHiddenOnRepick": false,
+    "items": [
+      {
+        "goodsId": 17000,
+        "category": 1,
+        "num": 1,
+        "name": "???"
+      }
+    ],
+    "primaryItem": "???",
+    "primaryGoodsId": 17000,
+    "primaryNum": 1
+  },
+  {
+    "model": "AEG099_650",
+    "modelNum": 650,
+    "pickUpItemLotParamId": 996500,
+    "isEnableRepick": false,
+    "isBreakOnPickUp": true,
+    "isHiddenOnRepick": false,
+    "items": [
+      {
+        "goodsId": 20650,
+        "category": 1,
+        "num": 1,
+        "name": "Poisonbloom"
+      },
+      {
+        "goodsId": 20650,
+        "category": 1,
+        "num": 2,
+        "name": "Poisonbloom"
+      }
+    ],
+    "primaryItem": "Poisonbloom",
+    "primaryGoodsId": 20650,
+    "primaryNum": 1
+  },
+  {
+    "model": "AEG099_651",
+    "modelNum": 651,
+    "pickUpItemLotParamId": 996510,
+    "isEnableRepick": true,
+    "isBreakOnPickUp": true,
+    "isHiddenOnRepick": true,
+    "items": [
+      {
+        "goodsId": 20651,
+        "category": 1,
+        "num": 1,
+        "name": "Trina's Lily"
+      },
+      {
+        "goodsId": 20651,
+        "category": 1,
+        "num": 2,
+        "name": "Trina's Lily"
+      }
+    ],
+    "primaryItem": "Trina's Lily",
+    "primaryGoodsId": 20651,
+    "primaryNum": 1
+  },
+  {
+    "model": "AEG099_652",
+    "modelNum": 652,
+    "pickUpItemLotParamId": 996520,
+    "isEnableRepick": false,
+    "isBreakOnPickUp": true,
+    "isHiddenOnRepick": false,
+    "items": [
+      {
+        "goodsId": 15210,
+        "category": 1,
+        "num": 1,
+        "name": "???"
+      }
+    ],
+    "primaryItem": "???",
+    "primaryGoodsId": 15210,
+    "primaryNum": 1
+  },
+  {
+    "model": "AEG099_653",
+    "modelNum": 653,
+    "pickUpItemLotParamId": 996530,
+    "isEnableRepick": true,
+    "isBreakOnPickUp": true,
+    "isHiddenOnRepick": true,
+    "items": [
+      {
+        "goodsId": 20653,
+        "category": 1,
+        "num": 1,
+        "name": "Miquella's Lily"
+      },
+      {
+        "goodsId": 20653,
+        "category": 1,
+        "num": 2,
+        "name": "Miquella's Lily"
+      }
+    ],
+    "primaryItem": "Miquella's Lily",
+    "primaryGoodsId": 20653,
+    "primaryNum": 1
+  },
+  {
+    "model": "AEG099_654",
+    "modelNum": 654,
+    "pickUpItemLotParamId": 996540,
+    "isEnableRepick": false,
+    "isBreakOnPickUp": true,
+    "isHiddenOnRepick": false,
+    "items": [
+      {
+        "goodsId": 20654,
+        "category": 1,
+        "num": 1,
+        "name": "Grave Blossom"
+      },
+      {
+        "goodsId": 20654,
+        "category": 1,
+        "num": 2,
+        "name": "Grave Blossom"
+      }
+    ],
+    "primaryItem": "Grave Blossom",
+    "primaryGoodsId": 20654,
+    "primaryNum": 1
+  },
+  {
+    "model": "AEG099_655",
+    "modelNum": 655,
+    "pickUpItemLotParamId": 996550,
+    "isEnableRepick": false,
+    "isBreakOnPickUp": true,
+    "isHiddenOnRepick": false,
+    "items": [
+      {
+        "goodsId": 17000,
+        "category": 1,
+        "num": 1,
+        "name": "???"
+      }
+    ],
+    "primaryItem": "???",
+    "primaryGoodsId": 17000,
+    "primaryNum": 1
+  },
+  {
+    "model": "AEG099_656",
+    "modelNum": 656,
+    "pickUpItemLotParamId": 996560,
+    "isEnableRepick": true,
+    "isBreakOnPickUp": true,
+    "isHiddenOnRepick": true,
+    "items": [
+      {
+        "goodsId": 20651,
+        "category": 1,
+        "num": 1,
+        "name": "Trina's Lily"
+      },
+      {
+        "goodsId": 20651,
+        "category": 1,
+        "num": 2,
+        "name": "Trina's Lily"
+      }
+    ],
+    "primaryItem": "Trina's Lily",
+    "primaryGoodsId": 20651,
+    "primaryNum": 1
+  },
+  {
+    "model": "AEG099_657",
+    "modelNum": 657,
+    "pickUpItemLotParamId": 996570,
+    "isEnableRepick": true,
+    "isBreakOnPickUp": true,
+    "isHiddenOnRepick": true,
+    "items": [
+      {
+        "goodsId": 20653,
+        "category": 1,
+        "num": 1,
+        "name": "Miquella's Lily"
+      },
+      {
+        "goodsId": 20653,
+        "category": 1,
+        "num": 2,
+        "name": "Miquella's Lily"
+      }
+    ],
+    "primaryItem": "Miquella's Lily",
+    "primaryGoodsId": 20653,
+    "primaryNum": 1
+  },
+  {
+    "model": "AEG099_658",
+    "modelNum": 658,
+    "pickUpItemLotParamId": 996580,
+    "isEnableRepick": false,
+    "isBreakOnPickUp": true,
+    "isHiddenOnRepick": false,
+    "items": [
+      {
+        "goodsId": 17000,
+        "category": 1,
+        "num": 1,
+        "name": "???"
+      }
+    ],
+    "primaryItem": "???",
+    "primaryGoodsId": 17000,
+    "primaryNum": 1
+  },
+  {
+    "model": "AEG099_659",
+    "modelNum": 659,
+    "pickUpItemLotParamId": 996590,
+    "isEnableRepick": false,
+    "isBreakOnPickUp": true,
+    "isHiddenOnRepick": false,
+    "items": [
+      {
+        "goodsId": 17000,
+        "category": 1,
+        "num": 1,
+        "name": "???"
+      }
+    ],
+    "primaryItem": "???",
+    "primaryGoodsId": 17000,
+    "primaryNum": 1
+  },
+  {
+    "model": "AEG099_660",
+    "modelNum": 660,
+    "pickUpItemLotParamId": 996600,
+    "isEnableRepick": false,
+    "isBreakOnPickUp": true,
+    "isHiddenOnRepick": false,
+    "items": [
+      {
+        "goodsId": 20660,
+        "category": 1,
+        "num": 1,
+        "name": "Faded Erdleaf Flower"
+      },
+      {
+        "goodsId": 20660,
+        "category": 1,
+        "num": 2,
+        "name": "Faded Erdleaf Flower"
+      }
+    ],
+    "primaryItem": "Faded Erdleaf Flower",
+    "primaryGoodsId": 20660,
+    "primaryNum": 1
+  },
+  {
+    "model": "AEG099_661",
+    "modelNum": 661,
+    "pickUpItemLotParamId": 996610,
+    "isEnableRepick": false,
+    "isBreakOnPickUp": true,
+    "isHiddenOnRepick": false,
+    "items": [
+      {
+        "goodsId": 17000,
+        "category": 1,
+        "num": 1,
+        "name": "???"
+      }
+    ],
+    "primaryItem": "???",
+    "primaryGoodsId": 17000,
+    "primaryNum": 1
+  },
+  {
+    "model": "AEG099_662",
+    "modelNum": 662,
+    "pickUpItemLotParamId": 996620,
+    "isEnableRepick": false,
+    "isBreakOnPickUp": true,
+    "isHiddenOnRepick": false,
+    "items": [
+      {
+        "goodsId": 17000,
+        "category": 1,
+        "num": 1,
+        "name": "???"
+      }
+    ],
+    "primaryItem": "???",
+    "primaryGoodsId": 17000,
+    "primaryNum": 1
+  },
+  {
+    "model": "AEG099_663",
+    "modelNum": 663,
+    "pickUpItemLotParamId": 996630,
+    "isEnableRepick": false,
+    "isBreakOnPickUp": true,
+    "isHiddenOnRepick": false,
+    "items": [
+      {
+        "goodsId": 17000,
+        "category": 1,
+        "num": 1,
+        "name": "???"
+      }
+    ],
+    "primaryItem": "???",
+    "primaryGoodsId": 17000,
+    "primaryNum": 1
+  },
+  {
+    "model": "AEG099_664",
+    "modelNum": 664,
+    "pickUpItemLotParamId": 996640,
+    "isEnableRepick": false,
+    "isBreakOnPickUp": true,
+    "isHiddenOnRepick": false,
+    "items": [
+      {
+        "goodsId": 17000,
+        "category": 1,
+        "num": 1,
+        "name": "???"
+      }
+    ],
+    "primaryItem": "???",
+    "primaryGoodsId": 17000,
+    "primaryNum": 1
+  },
+  {
+    "model": "AEG099_665",
+    "modelNum": 665,
+    "pickUpItemLotParamId": 996650,
+    "isEnableRepick": false,
+    "isBreakOnPickUp": true,
+    "isHiddenOnRepick": false,
+    "items": [
+      {
+        "goodsId": 17000,
+        "category": 1,
+        "num": 1,
+        "name": "???"
+      }
+    ],
+    "primaryItem": "???",
+    "primaryGoodsId": 17000,
+    "primaryNum": 1
+  },
+  {
+    "model": "AEG099_666",
+    "modelNum": 666,
+    "pickUpItemLotParamId": 996660,
+    "isEnableRepick": false,
+    "isBreakOnPickUp": true,
+    "isHiddenOnRepick": false,
+    "items": [
+      {
+        "goodsId": 17000,
+        "category": 1,
+        "num": 1,
+        "name": "???"
+      }
+    ],
+    "primaryItem": "???",
+    "primaryGoodsId": 17000,
+    "primaryNum": 1
+  },
+  {
+    "model": "AEG099_667",
+    "modelNum": 667,
+    "pickUpItemLotParamId": 996670,
+    "isEnableRepick": false,
+    "isBreakOnPickUp": true,
+    "isHiddenOnRepick": false,
+    "items": [
+      {
+        "goodsId": 17000,
+        "category": 1,
+        "num": 1,
+        "name": "???"
+      }
+    ],
+    "primaryItem": "???",
+    "primaryGoodsId": 17000,
+    "primaryNum": 1
+  },
+  {
+    "model": "AEG099_668",
+    "modelNum": 668,
+    "pickUpItemLotParamId": 996680,
+    "isEnableRepick": false,
+    "isBreakOnPickUp": true,
+    "isHiddenOnRepick": false,
+    "items": [
+      {
+        "goodsId": 17000,
+        "category": 1,
+        "num": 1,
+        "name": "???"
+      }
+    ],
+    "primaryItem": "???",
+    "primaryGoodsId": 17000,
+    "primaryNum": 1
+  },
+  {
+    "model": "AEG099_669",
+    "modelNum": 669,
+    "pickUpItemLotParamId": 996690,
+    "isEnableRepick": false,
+    "isBreakOnPickUp": true,
+    "isHiddenOnRepick": false,
+    "items": [
+      {
+        "goodsId": 17000,
+        "category": 1,
+        "num": 1,
+        "name": "???"
+      }
+    ],
+    "primaryItem": "???",
+    "primaryGoodsId": 17000,
+    "primaryNum": 1
+  },
+  {
+    "model": "AEG099_670",
+    "modelNum": 670,
+    "pickUpItemLotParamId": 996700,
+    "isEnableRepick": false,
+    "isBreakOnPickUp": true,
+    "isHiddenOnRepick": false,
+    "items": [
+      {
+        "goodsId": 17000,
+        "category": 1,
+        "num": 1,
+        "name": "???"
+      }
+    ],
+    "primaryItem": "???",
+    "primaryGoodsId": 17000,
+    "primaryNum": 1
+  },
+  {
+    "model": "AEG099_671",
+    "modelNum": 671,
+    "pickUpItemLotParamId": 996710,
+    "isEnableRepick": false,
+    "isBreakOnPickUp": true,
+    "isHiddenOnRepick": false,
+    "items": [
+      {
+        "goodsId": 17000,
+        "category": 1,
+        "num": 1,
+        "name": "???"
+      }
+    ],
+    "primaryItem": "???",
+    "primaryGoodsId": 17000,
+    "primaryNum": 1
+  },
+  {
+    "model": "AEG099_672",
+    "modelNum": 672,
+    "pickUpItemLotParamId": 996720,
+    "isEnableRepick": false,
+    "isBreakOnPickUp": true,
+    "isHiddenOnRepick": false,
+    "items": [
+      {
+        "goodsId": 17000,
+        "category": 1,
+        "num": 1,
+        "name": "???"
+      }
+    ],
+    "primaryItem": "???",
+    "primaryGoodsId": 17000,
+    "primaryNum": 1
+  },
+  {
+    "model": "AEG099_673",
+    "modelNum": 673,
+    "pickUpItemLotParamId": 996730,
+    "isEnableRepick": false,
+    "isBreakOnPickUp": true,
+    "isHiddenOnRepick": false,
+    "items": [
+      {
+        "goodsId": 17000,
+        "category": 1,
+        "num": 1,
+        "name": "???"
+      }
+    ],
+    "primaryItem": "???",
+    "primaryGoodsId": 17000,
+    "primaryNum": 1
+  },
+  {
+    "model": "AEG099_674",
+    "modelNum": 674,
+    "pickUpItemLotParamId": 996740,
+    "isEnableRepick": false,
+    "isBreakOnPickUp": true,
+    "isHiddenOnRepick": false,
+    "items": [
+      {
+        "goodsId": 17000,
+        "category": 1,
+        "num": 1,
+        "name": "???"
+      }
+    ],
+    "primaryItem": "???",
+    "primaryGoodsId": 17000,
+    "primaryNum": 1
+  },
+  {
+    "model": "AEG099_675",
+    "modelNum": 675,
+    "pickUpItemLotParamId": 996750,
+    "isEnableRepick": false,
+    "isBreakOnPickUp": true,
+    "isHiddenOnRepick": false,
+    "items": [
+      {
+        "goodsId": 17000,
+        "category": 1,
+        "num": 1,
+        "name": "???"
+      }
+    ],
+    "primaryItem": "???",
+    "primaryGoodsId": 17000,
+    "primaryNum": 1
+  },
+  {
+    "model": "AEG099_676",
+    "modelNum": 676,
+    "pickUpItemLotParamId": 996760,
+    "isEnableRepick": false,
+    "isBreakOnPickUp": true,
+    "isHiddenOnRepick": false,
+    "items": [
+      {
+        "goodsId": 17000,
+        "category": 1,
+        "num": 1,
+        "name": "???"
+      }
+    ],
+    "primaryItem": "???",
+    "primaryGoodsId": 17000,
+    "primaryNum": 1
+  },
+  {
+    "model": "AEG099_677",
+    "modelNum": 677,
+    "pickUpItemLotParamId": 996770,
+    "isEnableRepick": false,
+    "isBreakOnPickUp": true,
+    "isHiddenOnRepick": false,
+    "items": [
+      {
+        "goodsId": 17000,
+        "category": 1,
+        "num": 1,
+        "name": "???"
+      }
+    ],
+    "primaryItem": "???",
+    "primaryGoodsId": 17000,
+    "primaryNum": 1
+  },
+  {
+    "model": "AEG099_678",
+    "modelNum": 678,
+    "pickUpItemLotParamId": 996780,
+    "isEnableRepick": false,
+    "isBreakOnPickUp": true,
+    "isHiddenOnRepick": false,
+    "items": [
+      {
+        "goodsId": 17000,
+        "category": 1,
+        "num": 1,
+        "name": "???"
+      }
+    ],
+    "primaryItem": "???",
+    "primaryGoodsId": 17000,
+    "primaryNum": 1
+  },
+  {
+    "model": "AEG099_679",
+    "modelNum": 679,
+    "pickUpItemLotParamId": 996790,
+    "isEnableRepick": false,
+    "isBreakOnPickUp": true,
+    "isHiddenOnRepick": false,
+    "items": [
+      {
+        "goodsId": 17000,
+        "category": 1,
+        "num": 1,
+        "name": "???"
+      }
+    ],
+    "primaryItem": "???",
+    "primaryGoodsId": 17000,
+    "primaryNum": 1
+  },
+  {
+    "model": "AEG099_680",
+    "modelNum": 680,
+    "pickUpItemLotParamId": 996800,
+    "isEnableRepick": false,
+    "isBreakOnPickUp": true,
+    "isHiddenOnRepick": false,
+    "items": [
+      {
+        "goodsId": 20680,
+        "category": 1,
+        "num": 1,
+        "name": "Erdleaf Flower"
+      },
+      {
+        "goodsId": 20680,
+        "category": 1,
+        "num": 2,
+        "name": "Erdleaf Flower"
+      }
+    ],
+    "primaryItem": "Erdleaf Flower",
+    "primaryGoodsId": 20680,
+    "primaryNum": 1
+  },
+  {
+    "model": "AEG099_681",
+    "modelNum": 681,
+    "pickUpItemLotParamId": 996810,
+    "isEnableRepick": false,
+    "isBreakOnPickUp": true,
+    "isHiddenOnRepick": false,
+    "items": [
+      {
+        "goodsId": 20681,
+        "category": 1,
+        "num": 1,
+        "name": "Altus Bloom"
+      },
+      {
+        "goodsId": 20681,
+        "category": 1,
+        "num": 2,
+        "name": "Altus Bloom"
+      }
+    ],
+    "primaryItem": "Altus Bloom",
+    "primaryGoodsId": 20681,
+    "primaryNum": 1
+  },
+  {
+    "model": "AEG099_682",
+    "modelNum": 682,
+    "pickUpItemLotParamId": 996820,
+    "isEnableRepick": false,
+    "isBreakOnPickUp": true,
+    "isHiddenOnRepick": false,
+    "items": [
+      {
+        "goodsId": 20682,
+        "category": 1,
+        "num": 1,
+        "name": "Fire Blossom"
+      },
+      {
+        "goodsId": 20682,
+        "category": 1,
+        "num": 2,
+        "name": "Fire Blossom"
+      }
+    ],
+    "primaryItem": "Fire Blossom",
+    "primaryGoodsId": 20682,
+    "primaryNum": 1
+  },
+  {
+    "model": "AEG099_683",
+    "modelNum": 683,
+    "pickUpItemLotParamId": 996830,
+    "isEnableRepick": false,
+    "isBreakOnPickUp": true,
+    "isHiddenOnRepick": false,
+    "items": [
+      {
+        "goodsId": 20683,
+        "category": 1,
+        "num": 1,
+        "name": "Golden Sunflower"
+      },
+      {
+        "goodsId": 20683,
+        "category": 1,
+        "num": 2,
+        "name": "Golden Sunflower"
+      }
+    ],
+    "primaryItem": "Golden Sunflower",
+    "primaryGoodsId": 20683,
+    "primaryNum": 1
+  },
+  {
+    "model": "AEG099_684",
+    "modelNum": 684,
+    "pickUpItemLotParamId": 996840,
+    "isEnableRepick": false,
+    "isBreakOnPickUp": true,
+    "isHiddenOnRepick": false,
+    "items": [
+      {
+        "goodsId": 20652,
+        "category": 1,
+        "num": 1,
+        "name": "Fulgurbloom"
+      },
+      {
+        "goodsId": 20652,
+        "category": 1,
+        "num": 2,
+        "name": "Fulgurbloom"
+      },
+      {
+        "goodsId": 20652,
+        "category": 1,
+        "num": 0,
+        "name": "Fulgurbloom"
+      }
+    ],
+    "primaryItem": "Fulgurbloom",
+    "primaryGoodsId": 20652,
+    "primaryNum": 1
+  },
+  {
+    "model": "AEG099_685",
+    "modelNum": 685,
+    "pickUpItemLotParamId": 996850,
+    "isEnableRepick": false,
+    "isBreakOnPickUp": true,
+    "isHiddenOnRepick": false,
+    "items": [
+      {
+        "goodsId": 20683,
+        "category": 1,
+        "num": 1,
+        "name": "Golden Sunflower"
+      },
+      {
+        "goodsId": 20683,
+        "category": 1,
+        "num": 2,
+        "name": "Golden Sunflower"
+      }
+    ],
+    "primaryItem": "Golden Sunflower",
+    "primaryGoodsId": 20683,
+    "primaryNum": 1
+  },
+  {
+    "model": "AEG099_686",
+    "modelNum": 686,
+    "pickUpItemLotParamId": 996860,
+    "isEnableRepick": false,
+    "isBreakOnPickUp": true,
+    "isHiddenOnRepick": false,
+    "items": [
+      {
+        "goodsId": 17000,
+        "category": 1,
+        "num": 1,
+        "name": "???"
+      }
+    ],
+    "primaryItem": "???",
+    "primaryGoodsId": 17000,
+    "primaryNum": 1
+  },
+  {
+    "model": "AEG099_687",
+    "modelNum": 687,
+    "pickUpItemLotParamId": 996870,
+    "isEnableRepick": false,
+    "isBreakOnPickUp": true,
+    "isHiddenOnRepick": false,
+    "items": [
+      {
+        "goodsId": 20652,
+        "category": 1,
+        "num": 1,
+        "name": "Fulgurbloom"
+      },
+      {
+        "goodsId": 20652,
+        "category": 1,
+        "num": 2,
+        "name": "Fulgurbloom"
+      },
+      {
+        "goodsId": 20652,
+        "category": 1,
+        "num": 0,
+        "name": "Fulgurbloom"
+      }
+    ],
+    "primaryItem": "Fulgurbloom",
+    "primaryGoodsId": 20652,
+    "primaryNum": 1
+  },
+  {
+    "model": "AEG099_688",
+    "modelNum": 688,
+    "pickUpItemLotParamId": 996880,
+    "isEnableRepick": false,
+    "isBreakOnPickUp": true,
+    "isHiddenOnRepick": false,
+    "items": [
+      {
+        "goodsId": 17000,
+        "category": 1,
+        "num": 1,
+        "name": "???"
+      }
+    ],
+    "primaryItem": "???",
+    "primaryGoodsId": 17000,
+    "primaryNum": 1
+  },
+  {
+    "model": "AEG099_689",
+    "modelNum": 689,
+    "pickUpItemLotParamId": 996890,
+    "isEnableRepick": false,
+    "isBreakOnPickUp": true,
+    "isHiddenOnRepick": false,
+    "items": [
+      {
+        "goodsId": 17000,
+        "category": 1,
+        "num": 1,
+        "name": "???"
+      }
+    ],
+    "primaryItem": "???",
+    "primaryGoodsId": 17000,
+    "primaryNum": 1
+  },
+  {
+    "model": "AEG099_690",
+    "modelNum": 690,
+    "pickUpItemLotParamId": 996900,
+    "isEnableRepick": false,
+    "isBreakOnPickUp": true,
+    "isHiddenOnRepick": false,
+    "items": [
+      {
+        "goodsId": 20690,
+        "category": 1,
+        "num": 1,
+        "name": "Herba"
+      },
+      {
+        "goodsId": 20690,
+        "category": 1,
+        "num": 2,
+        "name": "Herba"
+      },
+      {
+        "goodsId": 20690,
+        "category": 1,
+        "num": 0,
+        "name": "Herba"
+      }
+    ],
+    "primaryItem": "Herba",
+    "primaryGoodsId": 20690,
+    "primaryNum": 1
+  },
+  {
+    "model": "AEG099_691",
+    "modelNum": 691,
+    "pickUpItemLotParamId": 996910,
+    "isEnableRepick": true,
+    "isBreakOnPickUp": true,
+    "isHiddenOnRepick": true,
+    "items": [
+      {
+        "goodsId": 20691,
+        "category": 1,
+        "num": 1,
+        "name": "Arteria Leaf"
+      },
+      {
+        "goodsId": 20691,
+        "category": 1,
+        "num": 2,
+        "name": "Arteria Leaf"
+      }
+    ],
+    "primaryItem": "Arteria Leaf",
+    "primaryGoodsId": 20691,
+    "primaryNum": 1
+  },
+  {
+    "model": "AEG099_692",
+    "modelNum": 692,
+    "pickUpItemLotParamId": 996920,
+    "isEnableRepick": false,
+    "isBreakOnPickUp": true,
+    "isHiddenOnRepick": false,
+    "items": [
+      {
+        "goodsId": 17000,
+        "category": 1,
+        "num": 1,
+        "name": "???"
+      }
+    ],
+    "primaryItem": "???",
+    "primaryGoodsId": 17000,
+    "primaryNum": 1
+  },
+  {
+    "model": "AEG099_693",
+    "modelNum": 693,
+    "pickUpItemLotParamId": 996930,
+    "isEnableRepick": false,
+    "isBreakOnPickUp": true,
+    "isHiddenOnRepick": false,
+    "items": [
+      {
+        "goodsId": 17000,
+        "category": 1,
+        "num": 1,
+        "name": "???"
+      }
+    ],
+    "primaryItem": "???",
+    "primaryGoodsId": 17000,
+    "primaryNum": 1
+  },
+  {
+    "model": "AEG099_694",
+    "modelNum": 694,
+    "pickUpItemLotParamId": 996940,
+    "isEnableRepick": false,
+    "isBreakOnPickUp": true,
+    "isHiddenOnRepick": false,
+    "items": [
+      {
+        "goodsId": 17000,
+        "category": 1,
+        "num": 1,
+        "name": "???"
+      }
+    ],
+    "primaryItem": "???",
+    "primaryGoodsId": 17000,
+    "primaryNum": 1
+  },
+  {
+    "model": "AEG099_695",
+    "modelNum": 695,
+    "pickUpItemLotParamId": 996950,
+    "isEnableRepick": false,
+    "isBreakOnPickUp": true,
+    "isHiddenOnRepick": false,
+    "items": [
+      {
+        "goodsId": 17000,
+        "category": 1,
+        "num": 1,
+        "name": "???"
+      }
+    ],
+    "primaryItem": "???",
+    "primaryGoodsId": 17000,
+    "primaryNum": 1
+  },
+  {
+    "model": "AEG099_696",
+    "modelNum": 696,
+    "pickUpItemLotParamId": 996960,
+    "isEnableRepick": true,
+    "isBreakOnPickUp": true,
+    "isHiddenOnRepick": true,
+    "items": [
+      {
+        "goodsId": 20691,
+        "category": 1,
+        "num": 1,
+        "name": "Arteria Leaf"
+      },
+      {
+        "goodsId": 20691,
+        "category": 1,
+        "num": 2,
+        "name": "Arteria Leaf"
+      }
+    ],
+    "primaryItem": "Arteria Leaf",
+    "primaryGoodsId": 20691,
+    "primaryNum": 1
+  },
+  {
+    "model": "AEG099_697",
+    "modelNum": 697,
+    "pickUpItemLotParamId": 996970,
+    "isEnableRepick": false,
+    "isBreakOnPickUp": true,
+    "isHiddenOnRepick": false,
+    "items": [
+      {
+        "goodsId": 17000,
+        "category": 1,
+        "num": 1,
+        "name": "???"
+      }
+    ],
+    "primaryItem": "???",
+    "primaryGoodsId": 17000,
+    "primaryNum": 1
+  },
+  {
+    "model": "AEG099_698",
+    "modelNum": 698,
+    "pickUpItemLotParamId": 996980,
+    "isEnableRepick": false,
+    "isBreakOnPickUp": true,
+    "isHiddenOnRepick": false,
+    "items": [
+      {
+        "goodsId": 17000,
+        "category": 1,
+        "num": 1,
+        "name": "???"
+      }
+    ],
+    "primaryItem": "???",
+    "primaryGoodsId": 17000,
+    "primaryNum": 1
+  },
+  {
+    "model": "AEG099_699",
+    "modelNum": 699,
+    "pickUpItemLotParamId": 996990,
+    "isEnableRepick": false,
+    "isBreakOnPickUp": true,
+    "isHiddenOnRepick": false,
+    "items": [
+      {
+        "goodsId": 17000,
+        "category": 1,
+        "num": 1,
+        "name": "???"
+      }
+    ],
+    "primaryItem": "???",
+    "primaryGoodsId": 17000,
+    "primaryNum": 1
+  },
+  {
+    "model": "AEG099_700",
+    "modelNum": 700,
+    "pickUpItemLotParamId": 997000,
+    "isEnableRepick": false,
+    "isBreakOnPickUp": true,
+    "isHiddenOnRepick": false,
+    "items": [
+      {
+        "goodsId": 20700,
+        "category": 1,
+        "num": 1,
+        "name": "???"
+      }
+    ],
+    "primaryItem": "???",
+    "primaryGoodsId": 20700,
+    "primaryNum": 1
+  },
+  {
+    "model": "AEG099_701",
+    "modelNum": 701,
+    "pickUpItemLotParamId": 997010,
+    "isEnableRepick": false,
+    "isBreakOnPickUp": true,
+    "isHiddenOnRepick": false,
+    "items": [
+      {
+        "goodsId": 15230,
+        "category": 1,
+        "num": 1,
+        "name": "???"
+      }
+    ],
+    "primaryItem": "???",
+    "primaryGoodsId": 15230,
+    "primaryNum": 1
+  },
+  {
+    "model": "AEG099_702",
+    "modelNum": 702,
+    "pickUpItemLotParamId": 997020,
+    "isEnableRepick": false,
+    "isBreakOnPickUp": true,
+    "isHiddenOnRepick": false,
+    "items": [
+      {
+        "goodsId": 17000,
+        "category": 1,
+        "num": 1,
+        "name": "???"
+      }
+    ],
+    "primaryItem": "???",
+    "primaryGoodsId": 17000,
+    "primaryNum": 1
+  },
+  {
+    "model": "AEG099_703",
+    "modelNum": 703,
+    "pickUpItemLotParamId": 997030,
+    "isEnableRepick": false,
+    "isBreakOnPickUp": true,
+    "isHiddenOnRepick": false,
+    "items": [
+      {
+        "goodsId": 17000,
+        "category": 1,
+        "num": 1,
+        "name": "???"
+      }
+    ],
+    "primaryItem": "???",
+    "primaryGoodsId": 17000,
+    "primaryNum": 1
+  },
+  {
+    "model": "AEG099_704",
+    "modelNum": 704,
+    "pickUpItemLotParamId": 997040,
+    "isEnableRepick": false,
+    "isBreakOnPickUp": true,
+    "isHiddenOnRepick": false,
+    "items": [
+      {
+        "goodsId": 17000,
+        "category": 1,
+        "num": 1,
+        "name": "???"
+      }
+    ],
+    "primaryItem": "???",
+    "primaryGoodsId": 17000,
+    "primaryNum": 1
+  },
+  {
+    "model": "AEG099_705",
+    "modelNum": 705,
+    "pickUpItemLotParamId": 997050,
+    "isEnableRepick": false,
+    "isBreakOnPickUp": true,
+    "isHiddenOnRepick": false,
+    "items": [
+      {
+        "goodsId": 17000,
+        "category": 1,
+        "num": 1,
+        "name": "???"
+      }
+    ],
+    "primaryItem": "???",
+    "primaryGoodsId": 17000,
+    "primaryNum": 1
+  },
+  {
+    "model": "AEG099_706",
+    "modelNum": 706,
+    "pickUpItemLotParamId": 997060,
+    "isEnableRepick": false,
+    "isBreakOnPickUp": true,
+    "isHiddenOnRepick": false,
+    "items": [
+      {
+        "goodsId": 17000,
+        "category": 1,
+        "num": 1,
+        "name": "???"
+      }
+    ],
+    "primaryItem": "???",
+    "primaryGoodsId": 17000,
+    "primaryNum": 1
+  },
+  {
+    "model": "AEG099_707",
+    "modelNum": 707,
+    "pickUpItemLotParamId": 997070,
+    "isEnableRepick": false,
+    "isBreakOnPickUp": true,
+    "isHiddenOnRepick": false,
+    "items": [
+      {
+        "goodsId": 17000,
+        "category": 1,
+        "num": 1,
+        "name": "???"
+      }
+    ],
+    "primaryItem": "???",
+    "primaryGoodsId": 17000,
+    "primaryNum": 1
+  },
+  {
+    "model": "AEG099_708",
+    "modelNum": 708,
+    "pickUpItemLotParamId": 997080,
+    "isEnableRepick": false,
+    "isBreakOnPickUp": true,
+    "isHiddenOnRepick": false,
+    "items": [
+      {
+        "goodsId": 17000,
+        "category": 1,
+        "num": 1,
+        "name": "???"
+      }
+    ],
+    "primaryItem": "???",
+    "primaryGoodsId": 17000,
+    "primaryNum": 1
+  },
+  {
+    "model": "AEG099_709",
+    "modelNum": 709,
+    "pickUpItemLotParamId": 997090,
+    "isEnableRepick": false,
+    "isBreakOnPickUp": true,
+    "isHiddenOnRepick": false,
+    "items": [
+      {
+        "goodsId": 17000,
+        "category": 1,
+        "num": 1,
+        "name": "???"
+      }
+    ],
+    "primaryItem": "???",
+    "primaryGoodsId": 17000,
+    "primaryNum": 1
+  },
+  {
+    "model": "AEG099_710",
+    "modelNum": 710,
+    "pickUpItemLotParamId": 997100,
+    "isEnableRepick": false,
+    "isBreakOnPickUp": true,
+    "isHiddenOnRepick": false,
+    "items": [
+      {
+        "goodsId": 20710,
+        "category": 1,
+        "num": 1,
+        "name": "Dewkissed Herba"
+      },
+      {
+        "goodsId": 20710,
+        "category": 1,
+        "num": 2,
+        "name": "Dewkissed Herba"
+      },
+      {
+        "goodsId": 20710,
+        "category": 1,
+        "num": 0,
+        "name": "Dewkissed Herba"
+      }
+    ],
+    "primaryItem": "Dewkissed Herba",
+    "primaryGoodsId": 20710,
+    "primaryNum": 1
+  },
+  {
+    "model": "AEG099_711",
+    "modelNum": 711,
+    "pickUpItemLotParamId": 997110,
+    "isEnableRepick": false,
+    "isBreakOnPickUp": true,
+    "isHiddenOnRepick": false,
+    "items": [
+      {
+        "goodsId": 17000,
+        "category": 1,
+        "num": 1,
+        "name": "???"
+      }
+    ],
+    "primaryItem": "???",
+    "primaryGoodsId": 17000,
+    "primaryNum": 1
+  },
+  {
+    "model": "AEG099_712",
+    "modelNum": 712,
+    "pickUpItemLotParamId": 997120,
+    "isEnableRepick": false,
+    "isBreakOnPickUp": true,
+    "isHiddenOnRepick": false,
+    "items": [
+      {
+        "goodsId": 17000,
+        "category": 1,
+        "num": 1,
+        "name": "???"
+      }
+    ],
+    "primaryItem": "???",
+    "primaryGoodsId": 17000,
+    "primaryNum": 1
+  },
+  {
+    "model": "AEG099_713",
+    "modelNum": 713,
+    "pickUpItemLotParamId": 997130,
+    "isEnableRepick": false,
+    "isBreakOnPickUp": true,
+    "isHiddenOnRepick": false,
+    "items": [
+      {
+        "goodsId": 17000,
+        "category": 1,
+        "num": 1,
+        "name": "???"
+      }
+    ],
+    "primaryItem": "???",
+    "primaryGoodsId": 17000,
+    "primaryNum": 1
+  },
+  {
+    "model": "AEG099_714",
+    "modelNum": 714,
+    "pickUpItemLotParamId": 997140,
+    "isEnableRepick": false,
+    "isBreakOnPickUp": true,
+    "isHiddenOnRepick": false,
+    "items": [
+      {
+        "goodsId": 17000,
+        "category": 1,
+        "num": 1,
+        "name": "???"
+      }
+    ],
+    "primaryItem": "???",
+    "primaryGoodsId": 17000,
+    "primaryNum": 1
+  },
+  {
+    "model": "AEG099_715",
+    "modelNum": 715,
+    "pickUpItemLotParamId": 997150,
+    "isEnableRepick": false,
+    "isBreakOnPickUp": true,
+    "isHiddenOnRepick": false,
+    "items": [
+      {
+        "goodsId": 17000,
+        "category": 1,
+        "num": 1,
+        "name": "???"
+      }
+    ],
+    "primaryItem": "???",
+    "primaryGoodsId": 17000,
+    "primaryNum": 1
+  },
+  {
+    "model": "AEG099_716",
+    "modelNum": 716,
+    "pickUpItemLotParamId": 997160,
+    "isEnableRepick": false,
+    "isBreakOnPickUp": true,
+    "isHiddenOnRepick": false,
+    "items": [
+      {
+        "goodsId": 17000,
+        "category": 1,
+        "num": 1,
+        "name": "???"
+      }
+    ],
+    "primaryItem": "???",
+    "primaryGoodsId": 17000,
+    "primaryNum": 1
+  },
+  {
+    "model": "AEG099_717",
+    "modelNum": 717,
+    "pickUpItemLotParamId": 997170,
+    "isEnableRepick": false,
+    "isBreakOnPickUp": true,
+    "isHiddenOnRepick": false,
+    "items": [
+      {
+        "goodsId": 17000,
+        "category": 1,
+        "num": 1,
+        "name": "???"
+      }
+    ],
+    "primaryItem": "???",
+    "primaryGoodsId": 17000,
+    "primaryNum": 1
+  },
+  {
+    "model": "AEG099_718",
+    "modelNum": 718,
+    "pickUpItemLotParamId": 997180,
+    "isEnableRepick": false,
+    "isBreakOnPickUp": true,
+    "isHiddenOnRepick": false,
+    "items": [
+      {
+        "goodsId": 17000,
+        "category": 1,
+        "num": 1,
+        "name": "???"
+      }
+    ],
+    "primaryItem": "???",
+    "primaryGoodsId": 17000,
+    "primaryNum": 1
+  },
+  {
+    "model": "AEG099_719",
+    "modelNum": 719,
+    "pickUpItemLotParamId": 997190,
+    "isEnableRepick": false,
+    "isBreakOnPickUp": true,
+    "isHiddenOnRepick": false,
+    "items": [
+      {
+        "goodsId": 17000,
+        "category": 1,
+        "num": 1,
+        "name": "???"
+      }
+    ],
+    "primaryItem": "???",
+    "primaryGoodsId": 17000,
+    "primaryNum": 1
+  },
+  {
+    "model": "AEG099_720",
+    "modelNum": 720,
+    "pickUpItemLotParamId": 997200,
+    "isEnableRepick": false,
+    "isBreakOnPickUp": true,
+    "isHiddenOnRepick": false,
+    "items": [
+      {
+        "goodsId": 20720,
+        "category": 1,
+        "num": 1,
+        "name": "Rowa Fruit"
+      },
+      {
+        "goodsId": 20720,
+        "category": 1,
+        "num": 2,
+        "name": "Rowa Fruit"
+      },
+      {
+        "goodsId": 20720,
+        "category": 1,
+        "num": 0,
+        "name": "Rowa Fruit"
+      },
+      {
+        "goodsId": 20720,
+        "category": 1,
+        "num": 0,
+        "name": "Rowa Fruit"
+      }
+    ],
+    "primaryItem": "Rowa Fruit",
+    "primaryGoodsId": 20720,
+    "primaryNum": 1
+  },
+  {
+    "model": "AEG099_721",
+    "modelNum": 721,
+    "pickUpItemLotParamId": 997210,
+    "isEnableRepick": false,
+    "isBreakOnPickUp": true,
+    "isHiddenOnRepick": false,
+    "items": [
+      {
+        "goodsId": 20721,
+        "category": 1,
+        "num": 1,
+        "name": "Golden Rowa"
+      },
+      {
+        "goodsId": 20721,
+        "category": 1,
+        "num": 2,
+        "name": "Golden Rowa"
+      },
+      {
+        "goodsId": 20721,
+        "category": 1,
+        "num": 0,
+        "name": "Golden Rowa"
+      },
+      {
+        "goodsId": 20721,
+        "category": 1,
+        "num": 0,
+        "name": "Golden Rowa"
+      }
+    ],
+    "primaryItem": "Golden Rowa",
+    "primaryGoodsId": 20721,
+    "primaryNum": 1
+  },
+  {
+    "model": "AEG099_722",
+    "modelNum": 722,
+    "pickUpItemLotParamId": 997220,
+    "isEnableRepick": false,
+    "isBreakOnPickUp": true,
+    "isHiddenOnRepick": false,
+    "items": [
+      {
+        "goodsId": 20722,
+        "category": 1,
+        "num": 1,
+        "name": "Rimed Rowa"
+      },
+      {
+        "goodsId": 20722,
+        "category": 1,
+        "num": 2,
+        "name": "Rimed Rowa"
+      },
+      {
+        "goodsId": 20722,
+        "category": 1,
+        "num": 0,
+        "name": "Rimed Rowa"
+      },
+      {
+        "goodsId": 20722,
+        "category": 1,
+        "num": 0,
+        "name": "Rimed Rowa"
+      }
+    ],
+    "primaryItem": "Rimed Rowa",
+    "primaryGoodsId": 20722,
+    "primaryNum": 1
+  },
+  {
+    "model": "AEG099_723",
+    "modelNum": 723,
+    "pickUpItemLotParamId": 997230,
+    "isEnableRepick": false,
+    "isBreakOnPickUp": true,
+    "isHiddenOnRepick": false,
+    "items": [
+      {
+        "goodsId": 20723,
+        "category": 1,
+        "num": 1,
+        "name": "Bloodrose"
+      },
+      {
+        "goodsId": 20723,
+        "category": 1,
+        "num": 2,
+        "name": "Bloodrose"
+      }
+    ],
+    "primaryItem": "Bloodrose",
+    "primaryGoodsId": 20723,
+    "primaryNum": 1
+  },
+  {
+    "model": "AEG099_724",
+    "modelNum": 724,
+    "pickUpItemLotParamId": 997240,
+    "isEnableRepick": false,
+    "isBreakOnPickUp": true,
+    "isHiddenOnRepick": false,
+    "items": [
+      {
+        "goodsId": 17000,
+        "category": 1,
+        "num": 1,
+        "name": "???"
+      }
+    ],
+    "primaryItem": "???",
+    "primaryGoodsId": 17000,
+    "primaryNum": 1
+  },
+  {
+    "model": "AEG099_725",
+    "modelNum": 725,
+    "pickUpItemLotParamId": 997250,
+    "isEnableRepick": false,
+    "isBreakOnPickUp": true,
+    "isHiddenOnRepick": false,
+    "items": [
+      {
+        "goodsId": 17000,
+        "category": 1,
+        "num": 1,
+        "name": "???"
+      }
+    ],
+    "primaryItem": "???",
+    "primaryGoodsId": 17000,
+    "primaryNum": 1
+  },
+  {
+    "model": "AEG099_726",
+    "modelNum": 726,
+    "pickUpItemLotParamId": 997260,
+    "isEnableRepick": false,
+    "isBreakOnPickUp": true,
+    "isHiddenOnRepick": false,
+    "items": [
+      {
+        "goodsId": 17000,
+        "category": 1,
+        "num": 1,
+        "name": "???"
+      }
+    ],
+    "primaryItem": "???",
+    "primaryGoodsId": 17000,
+    "primaryNum": 1
+  },
+  {
+    "model": "AEG099_727",
+    "modelNum": 727,
+    "pickUpItemLotParamId": 997270,
+    "isEnableRepick": false,
+    "isBreakOnPickUp": true,
+    "isHiddenOnRepick": false,
+    "items": [
+      {
+        "goodsId": 17000,
+        "category": 1,
+        "num": 1,
+        "name": "???"
+      }
+    ],
+    "primaryItem": "???",
+    "primaryGoodsId": 17000,
+    "primaryNum": 1
+  },
+  {
+    "model": "AEG099_728",
+    "modelNum": 728,
+    "pickUpItemLotParamId": 997280,
+    "isEnableRepick": false,
+    "isBreakOnPickUp": true,
+    "isHiddenOnRepick": false,
+    "items": [
+      {
+        "goodsId": 17000,
+        "category": 1,
+        "num": 1,
+        "name": "???"
+      }
+    ],
+    "primaryItem": "???",
+    "primaryGoodsId": 17000,
+    "primaryNum": 1
+  },
+  {
+    "model": "AEG099_729",
+    "modelNum": 729,
+    "pickUpItemLotParamId": 997290,
+    "isEnableRepick": false,
+    "isBreakOnPickUp": true,
+    "isHiddenOnRepick": false,
+    "items": [
+      {
+        "goodsId": 17000,
+        "category": 1,
+        "num": 1,
+        "name": "???"
+      }
+    ],
+    "primaryItem": "???",
+    "primaryGoodsId": 17000,
+    "primaryNum": 1
+  },
+  {
+    "model": "AEG099_730",
+    "modelNum": 730,
+    "pickUpItemLotParamId": 997300,
+    "isEnableRepick": false,
+    "isBreakOnPickUp": true,
+    "isHiddenOnRepick": false,
+    "items": [
+      {
+        "goodsId": 20720,
+        "category": 1,
+        "num": 1,
+        "name": "Rowa Fruit"
+      },
+      {
+        "goodsId": 20720,
+        "category": 1,
+        "num": 2,
+        "name": "Rowa Fruit"
+      },
+      {
+        "goodsId": 20720,
+        "category": 1,
+        "num": 0,
+        "name": "Rowa Fruit"
+      },
+      {
+        "goodsId": 20720,
+        "category": 1,
+        "num": 0,
+        "name": "Rowa Fruit"
+      }
+    ],
+    "primaryItem": "Rowa Fruit",
+    "primaryGoodsId": 20720,
+    "primaryNum": 1
+  },
+  {
+    "model": "AEG099_731",
+    "modelNum": 731,
+    "pickUpItemLotParamId": 997310,
+    "isEnableRepick": false,
+    "isBreakOnPickUp": true,
+    "isHiddenOnRepick": false,
+    "items": [
+      {
+        "goodsId": 17000,
+        "category": 1,
+        "num": 1,
+        "name": "???"
+      }
+    ],
+    "primaryItem": "???",
+    "primaryGoodsId": 17000,
+    "primaryNum": 1
+  },
+  {
+    "model": "AEG099_732",
+    "modelNum": 732,
+    "pickUpItemLotParamId": 997320,
+    "isEnableRepick": false,
+    "isBreakOnPickUp": true,
+    "isHiddenOnRepick": false,
+    "items": [
+      {
+        "goodsId": 17000,
+        "category": 1,
+        "num": 1,
+        "name": "???"
+      }
+    ],
+    "primaryItem": "???",
+    "primaryGoodsId": 17000,
+    "primaryNum": 1
+  },
+  {
+    "model": "AEG099_733",
+    "modelNum": 733,
+    "pickUpItemLotParamId": 997330,
+    "isEnableRepick": false,
+    "isBreakOnPickUp": true,
+    "isHiddenOnRepick": false,
+    "items": [
+      {
+        "goodsId": 17000,
+        "category": 1,
+        "num": 1,
+        "name": "???"
+      }
+    ],
+    "primaryItem": "???",
+    "primaryGoodsId": 17000,
+    "primaryNum": 1
+  },
+  {
+    "model": "AEG099_734",
+    "modelNum": 734,
+    "pickUpItemLotParamId": 997340,
+    "isEnableRepick": false,
+    "isBreakOnPickUp": true,
+    "isHiddenOnRepick": false,
+    "items": [
+      {
+        "goodsId": 17000,
+        "category": 1,
+        "num": 1,
+        "name": "???"
+      }
+    ],
+    "primaryItem": "???",
+    "primaryGoodsId": 17000,
+    "primaryNum": 1
+  },
+  {
+    "model": "AEG099_735",
+    "modelNum": 735,
+    "pickUpItemLotParamId": 997350,
+    "isEnableRepick": false,
+    "isBreakOnPickUp": true,
+    "isHiddenOnRepick": false,
+    "items": [
+      {
+        "goodsId": 17000,
+        "category": 1,
+        "num": 1,
+        "name": "???"
+      }
+    ],
+    "primaryItem": "???",
+    "primaryGoodsId": 17000,
+    "primaryNum": 1
+  },
+  {
+    "model": "AEG099_736",
+    "modelNum": 736,
+    "pickUpItemLotParamId": 997360,
+    "isEnableRepick": false,
+    "isBreakOnPickUp": true,
+    "isHiddenOnRepick": false,
+    "items": [
+      {
+        "goodsId": 17000,
+        "category": 1,
+        "num": 1,
+        "name": "???"
+      }
+    ],
+    "primaryItem": "???",
+    "primaryGoodsId": 17000,
+    "primaryNum": 1
+  },
+  {
+    "model": "AEG099_737",
+    "modelNum": 737,
+    "pickUpItemLotParamId": 997370,
+    "isEnableRepick": false,
+    "isBreakOnPickUp": true,
+    "isHiddenOnRepick": false,
+    "items": [
+      {
+        "goodsId": 17000,
+        "category": 1,
+        "num": 1,
+        "name": "???"
+      }
+    ],
+    "primaryItem": "???",
+    "primaryGoodsId": 17000,
+    "primaryNum": 1
+  },
+  {
+    "model": "AEG099_738",
+    "modelNum": 738,
+    "pickUpItemLotParamId": 997380,
+    "isEnableRepick": false,
+    "isBreakOnPickUp": true,
+    "isHiddenOnRepick": false,
+    "items": [
+      {
+        "goodsId": 17000,
+        "category": 1,
+        "num": 1,
+        "name": "???"
+      }
+    ],
+    "primaryItem": "???",
+    "primaryGoodsId": 17000,
+    "primaryNum": 1
+  },
+  {
+    "model": "AEG099_739",
+    "modelNum": 739,
+    "pickUpItemLotParamId": 997390,
+    "isEnableRepick": false,
+    "isBreakOnPickUp": true,
+    "isHiddenOnRepick": false,
+    "items": [
+      {
+        "goodsId": 17000,
+        "category": 1,
+        "num": 1,
+        "name": "???"
+      }
+    ],
+    "primaryItem": "???",
+    "primaryGoodsId": 17000,
+    "primaryNum": 1
+  },
+  {
+    "model": "AEG099_740",
+    "modelNum": 740,
+    "pickUpItemLotParamId": 997400,
+    "isEnableRepick": true,
+    "isBreakOnPickUp": true,
+    "isHiddenOnRepick": true,
+    "items": [
+      {
+        "goodsId": 20740,
+        "category": 1,
+        "num": 1,
+        "name": "Eye of Yelough"
+      },
+      {
+        "goodsId": 20740,
+        "category": 1,
+        "num": 2,
+        "name": "Eye of Yelough"
+      }
+    ],
+    "primaryItem": "Eye of Yelough",
+    "primaryGoodsId": 20740,
+    "primaryNum": 1
+  },
+  {
+    "model": "AEG099_741",
+    "modelNum": 741,
+    "pickUpItemLotParamId": 997410,
+    "isEnableRepick": false,
+    "isBreakOnPickUp": true,
+    "isHiddenOnRepick": false,
+    "items": [
+      {
+        "goodsId": 17000,
+        "category": 1,
+        "num": 1,
+        "name": "???"
+      }
+    ],
+    "primaryItem": "???",
+    "primaryGoodsId": 17000,
+    "primaryNum": 1
+  },
+  {
+    "model": "AEG099_742",
+    "modelNum": 742,
+    "pickUpItemLotParamId": 997420,
+    "isEnableRepick": false,
+    "isBreakOnPickUp": true,
+    "isHiddenOnRepick": false,
+    "items": [
+      {
+        "goodsId": 17000,
+        "category": 1,
+        "num": 1,
+        "name": "???"
+      }
+    ],
+    "primaryItem": "???",
+    "primaryGoodsId": 17000,
+    "primaryNum": 1
+  },
+  {
+    "model": "AEG099_743",
+    "modelNum": 743,
+    "pickUpItemLotParamId": 997430,
+    "isEnableRepick": false,
+    "isBreakOnPickUp": true,
+    "isHiddenOnRepick": false,
+    "items": [
+      {
+        "goodsId": 17000,
+        "category": 1,
+        "num": 1,
+        "name": "???"
+      }
+    ],
+    "primaryItem": "???",
+    "primaryGoodsId": 17000,
+    "primaryNum": 1
+  },
+  {
+    "model": "AEG099_744",
+    "modelNum": 744,
+    "pickUpItemLotParamId": 997440,
+    "isEnableRepick": false,
+    "isBreakOnPickUp": true,
+    "isHiddenOnRepick": false,
+    "items": [
+      {
+        "goodsId": 17000,
+        "category": 1,
+        "num": 1,
+        "name": "???"
+      }
+    ],
+    "primaryItem": "???",
+    "primaryGoodsId": 17000,
+    "primaryNum": 1
+  },
+  {
+    "model": "AEG099_745",
+    "modelNum": 745,
+    "pickUpItemLotParamId": 997450,
+    "isEnableRepick": false,
+    "isBreakOnPickUp": true,
+    "isHiddenOnRepick": false,
+    "items": [
+      {
+        "goodsId": 17000,
+        "category": 1,
+        "num": 1,
+        "name": "???"
+      }
+    ],
+    "primaryItem": "???",
+    "primaryGoodsId": 17000,
+    "primaryNum": 1
+  },
+  {
+    "model": "AEG099_746",
+    "modelNum": 746,
+    "pickUpItemLotParamId": 997460,
+    "isEnableRepick": false,
+    "isBreakOnPickUp": true,
+    "isHiddenOnRepick": false,
+    "items": [
+      {
+        "goodsId": 17000,
+        "category": 1,
+        "num": 1,
+        "name": "???"
+      }
+    ],
+    "primaryItem": "???",
+    "primaryGoodsId": 17000,
+    "primaryNum": 1
+  },
+  {
+    "model": "AEG099_747",
+    "modelNum": 747,
+    "pickUpItemLotParamId": 997470,
+    "isEnableRepick": false,
+    "isBreakOnPickUp": true,
+    "isHiddenOnRepick": false,
+    "items": [
+      {
+        "goodsId": 17000,
+        "category": 1,
+        "num": 1,
+        "name": "???"
+      }
+    ],
+    "primaryItem": "???",
+    "primaryGoodsId": 17000,
+    "primaryNum": 1
+  },
+  {
+    "model": "AEG099_748",
+    "modelNum": 748,
+    "pickUpItemLotParamId": 997480,
+    "isEnableRepick": false,
+    "isBreakOnPickUp": true,
+    "isHiddenOnRepick": false,
+    "items": [
+      {
+        "goodsId": 17000,
+        "category": 1,
+        "num": 1,
+        "name": "???"
+      }
+    ],
+    "primaryItem": "???",
+    "primaryGoodsId": 17000,
+    "primaryNum": 1
+  },
+  {
+    "model": "AEG099_749",
+    "modelNum": 749,
+    "pickUpItemLotParamId": 997490,
+    "isEnableRepick": false,
+    "isBreakOnPickUp": true,
+    "isHiddenOnRepick": false,
+    "items": [
+      {
+        "goodsId": 17000,
+        "category": 1,
+        "num": 1,
+        "name": "???"
+      }
+    ],
+    "primaryItem": "???",
+    "primaryGoodsId": 17000,
+    "primaryNum": 1
+  },
+  {
+    "model": "AEG099_750",
+    "modelNum": 750,
+    "pickUpItemLotParamId": 997500,
+    "isEnableRepick": false,
+    "isBreakOnPickUp": true,
+    "isHiddenOnRepick": false,
+    "items": [
+      {
+        "goodsId": 20750,
+        "category": 1,
+        "num": 1,
+        "name": "Crystal Bud"
+      },
+      {
+        "goodsId": 20750,
+        "category": 1,
+        "num": 2,
+        "name": "Crystal Bud"
+      },
+      {
+        "goodsId": 20750,
+        "category": 1,
+        "num": 0,
+        "name": "Crystal Bud"
+      }
+    ],
+    "primaryItem": "Crystal Bud",
+    "primaryGoodsId": 20750,
+    "primaryNum": 1
+  },
+  {
+    "model": "AEG099_751",
+    "modelNum": 751,
+    "pickUpItemLotParamId": 997510,
+    "isEnableRepick": false,
+    "isBreakOnPickUp": true,
+    "isHiddenOnRepick": false,
+    "items": [
+      {
+        "goodsId": 20751,
+        "category": 1,
+        "num": 1,
+        "name": "Rimed Crystal Bud"
+      },
+      {
+        "goodsId": 20751,
+        "category": 1,
+        "num": 2,
+        "name": "Rimed Crystal Bud"
+      },
+      {
+        "goodsId": 20751,
+        "category": 1,
+        "num": 0,
+        "name": "Rimed Crystal Bud"
+      }
+    ],
+    "primaryItem": "Rimed Crystal Bud",
+    "primaryGoodsId": 20751,
+    "primaryNum": 1
+  },
+  {
+    "model": "AEG099_752",
+    "modelNum": 752,
+    "pickUpItemLotParamId": 997520,
+    "isEnableRepick": false,
+    "isBreakOnPickUp": true,
+    "isHiddenOnRepick": false,
+    "items": [
+      {
+        "goodsId": 17000,
+        "category": 1,
+        "num": 1,
+        "name": "???"
+      }
+    ],
+    "primaryItem": "???",
+    "primaryGoodsId": 17000,
+    "primaryNum": 1
+  },
+  {
+    "model": "AEG099_753",
+    "modelNum": 753,
+    "pickUpItemLotParamId": 997530,
+    "isEnableRepick": true,
+    "isBreakOnPickUp": true,
+    "isHiddenOnRepick": true,
+    "items": [
+      {
+        "goodsId": 20753,
+        "category": 1,
+        "num": 1,
+        "name": "Sacramental Burgeon"
+      },
+      {
+        "goodsId": 20753,
+        "category": 1,
+        "num": 2,
+        "name": "Sacramental Burgeon"
+      }
+    ],
+    "primaryItem": "Sacramental Burgeon",
+    "primaryGoodsId": 20753,
+    "primaryNum": 1
+  },
+  {
+    "model": "AEG099_754",
+    "modelNum": 754,
+    "pickUpItemLotParamId": 997540,
+    "isEnableRepick": false,
+    "isBreakOnPickUp": true,
+    "isHiddenOnRepick": false,
+    "items": [
+      {
+        "goodsId": 17000,
+        "category": 1,
+        "num": 1,
+        "name": "???"
+      }
+    ],
+    "primaryItem": "???",
+    "primaryGoodsId": 17000,
+    "primaryNum": 1
+  },
+  {
+    "model": "AEG099_755",
+    "modelNum": 755,
+    "pickUpItemLotParamId": 997550,
+    "isEnableRepick": false,
+    "isBreakOnPickUp": true,
+    "isHiddenOnRepick": false,
+    "items": [
+      {
+        "goodsId": 17000,
+        "category": 1,
+        "num": 1,
+        "name": "???"
+      }
+    ],
+    "primaryItem": "???",
+    "primaryGoodsId": 17000,
+    "primaryNum": 1
+  },
+  {
+    "model": "AEG099_756",
+    "modelNum": 756,
+    "pickUpItemLotParamId": 997560,
+    "isEnableRepick": false,
+    "isBreakOnPickUp": true,
+    "isHiddenOnRepick": false,
+    "items": [
+      {
+        "goodsId": 17000,
+        "category": 1,
+        "num": 1,
+        "name": "???"
+      }
+    ],
+    "primaryItem": "???",
+    "primaryGoodsId": 17000,
+    "primaryNum": 1
+  },
+  {
+    "model": "AEG099_757",
+    "modelNum": 757,
+    "pickUpItemLotParamId": 997570,
+    "isEnableRepick": false,
+    "isBreakOnPickUp": true,
+    "isHiddenOnRepick": false,
+    "items": [
+      {
+        "goodsId": 17000,
+        "category": 1,
+        "num": 1,
+        "name": "???"
+      }
+    ],
+    "primaryItem": "???",
+    "primaryGoodsId": 17000,
+    "primaryNum": 1
+  },
+  {
+    "model": "AEG099_758",
+    "modelNum": 758,
+    "pickUpItemLotParamId": 997580,
+    "isEnableRepick": false,
+    "isBreakOnPickUp": true,
+    "isHiddenOnRepick": false,
+    "items": [
+      {
+        "goodsId": 17000,
+        "category": 1,
+        "num": 1,
+        "name": "???"
+      }
+    ],
+    "primaryItem": "???",
+    "primaryGoodsId": 17000,
+    "primaryNum": 1
+  },
+  {
+    "model": "AEG099_759",
+    "modelNum": 759,
+    "pickUpItemLotParamId": 997590,
+    "isEnableRepick": false,
+    "isBreakOnPickUp": true,
+    "isHiddenOnRepick": false,
+    "items": [
+      {
+        "goodsId": 17000,
+        "category": 1,
+        "num": 1,
+        "name": "???"
+      }
+    ],
+    "primaryItem": "???",
+    "primaryGoodsId": 17000,
+    "primaryNum": 1
+  },
+  {
+    "model": "AEG099_760",
+    "modelNum": 760,
+    "pickUpItemLotParamId": 997600,
+    "isEnableRepick": false,
+    "isBreakOnPickUp": true,
+    "isHiddenOnRepick": false,
+    "items": [
+      {
+        "goodsId": 20760,
+        "category": 1,
+        "num": 1,
+        "name": "Mushroom"
+      },
+      {
+        "goodsId": 20760,
+        "category": 1,
+        "num": 2,
+        "name": "Mushroom"
+      },
+      {
+        "goodsId": 20760,
+        "category": 1,
+        "num": 0,
+        "name": "Mushroom"
+      }
+    ],
+    "primaryItem": "Mushroom",
+    "primaryGoodsId": 20760,
+    "primaryNum": 1
+  },
+  {
+    "model": "AEG099_761",
+    "modelNum": 761,
+    "pickUpItemLotParamId": 997610,
+    "isEnableRepick": false,
+    "isBreakOnPickUp": true,
+    "isHiddenOnRepick": false,
+    "items": [
+      {
+        "goodsId": 20761,
+        "category": 1,
+        "num": 1,
+        "name": "Melted Mushroom"
+      },
+      {
+        "goodsId": 20761,
+        "category": 1,
+        "num": 2,
+        "name": "Melted Mushroom"
+      },
+      {
+        "goodsId": 20761,
+        "category": 1,
+        "num": 0,
+        "name": "Melted Mushroom"
+      }
+    ],
+    "primaryItem": "Melted Mushroom",
+    "primaryGoodsId": 20761,
+    "primaryNum": 1
+  },
+  {
+    "model": "AEG099_762",
+    "modelNum": 762,
+    "pickUpItemLotParamId": 997620,
+    "isEnableRepick": false,
+    "isBreakOnPickUp": true,
+    "isHiddenOnRepick": false,
+    "items": [
+      {
+        "goodsId": 17000,
+        "category": 1,
+        "num": 1,
+        "name": "???"
+      }
+    ],
+    "primaryItem": "???",
+    "primaryGoodsId": 17000,
+    "primaryNum": 1
+  },
+  {
+    "model": "AEG099_763",
+    "modelNum": 763,
+    "pickUpItemLotParamId": 997630,
+    "isEnableRepick": false,
+    "isBreakOnPickUp": true,
+    "isHiddenOnRepick": false,
+    "items": [
+      {
+        "goodsId": 17000,
+        "category": 1,
+        "num": 1,
+        "name": "???"
+      }
+    ],
+    "primaryItem": "???",
+    "primaryGoodsId": 17000,
+    "primaryNum": 1
+  },
+  {
+    "model": "AEG099_764",
+    "modelNum": 764,
+    "pickUpItemLotParamId": 997640,
+    "isEnableRepick": false,
+    "isBreakOnPickUp": true,
+    "isHiddenOnRepick": false,
+    "items": [
+      {
+        "goodsId": 17000,
+        "category": 1,
+        "num": 1,
+        "name": "???"
+      }
+    ],
+    "primaryItem": "???",
+    "primaryGoodsId": 17000,
+    "primaryNum": 1
+  },
+  {
+    "model": "AEG099_765",
+    "modelNum": 765,
+    "pickUpItemLotParamId": 997650,
+    "isEnableRepick": false,
+    "isBreakOnPickUp": true,
+    "isHiddenOnRepick": false,
+    "items": [
+      {
+        "goodsId": 17000,
+        "category": 1,
+        "num": 1,
+        "name": "???"
+      }
+    ],
+    "primaryItem": "???",
+    "primaryGoodsId": 17000,
+    "primaryNum": 1
+  },
+  {
+    "model": "AEG099_766",
+    "modelNum": 766,
+    "pickUpItemLotParamId": 997660,
+    "isEnableRepick": false,
+    "isBreakOnPickUp": true,
+    "isHiddenOnRepick": false,
+    "items": [
+      {
+        "goodsId": 17000,
+        "category": 1,
+        "num": 1,
+        "name": "???"
+      }
+    ],
+    "primaryItem": "???",
+    "primaryGoodsId": 17000,
+    "primaryNum": 1
+  },
+  {
+    "model": "AEG099_767",
+    "modelNum": 767,
+    "pickUpItemLotParamId": 997670,
+    "isEnableRepick": false,
+    "isBreakOnPickUp": true,
+    "isHiddenOnRepick": false,
+    "items": [
+      {
+        "goodsId": 17000,
+        "category": 1,
+        "num": 1,
+        "name": "???"
+      }
+    ],
+    "primaryItem": "???",
+    "primaryGoodsId": 17000,
+    "primaryNum": 1
+  },
+  {
+    "model": "AEG099_768",
+    "modelNum": 768,
+    "pickUpItemLotParamId": 997680,
+    "isEnableRepick": false,
+    "isBreakOnPickUp": true,
+    "isHiddenOnRepick": false,
+    "items": [
+      {
+        "goodsId": 17000,
+        "category": 1,
+        "num": 1,
+        "name": "???"
+      }
+    ],
+    "primaryItem": "???",
+    "primaryGoodsId": 17000,
+    "primaryNum": 1
+  },
+  {
+    "model": "AEG099_769",
+    "modelNum": 769,
+    "pickUpItemLotParamId": 997690,
+    "isEnableRepick": false,
+    "isBreakOnPickUp": true,
+    "isHiddenOnRepick": false,
+    "items": [
+      {
+        "goodsId": 17000,
+        "category": 1,
+        "num": 1,
+        "name": "???"
+      }
+    ],
+    "primaryItem": "???",
+    "primaryGoodsId": 17000,
+    "primaryNum": 1
+  },
+  {
+    "model": "AEG099_770",
+    "modelNum": 770,
+    "pickUpItemLotParamId": 997700,
+    "isEnableRepick": false,
+    "isBreakOnPickUp": true,
+    "isHiddenOnRepick": false,
+    "items": [
+      {
+        "goodsId": 20770,
+        "category": 1,
+        "num": 1,
+        "name": "Toxic Mushroom"
+      },
+      {
+        "goodsId": 20770,
+        "category": 1,
+        "num": 2,
+        "name": "Toxic Mushroom"
+      },
+      {
+        "goodsId": 20770,
+        "category": 1,
+        "num": 0,
+        "name": "Toxic Mushroom"
+      }
+    ],
+    "primaryItem": "Toxic Mushroom",
+    "primaryGoodsId": 20770,
+    "primaryNum": 1
+  },
+  {
+    "model": "AEG099_771",
+    "modelNum": 771,
+    "pickUpItemLotParamId": 997710,
+    "isEnableRepick": false,
+    "isBreakOnPickUp": true,
+    "isHiddenOnRepick": false,
+    "items": [
+      {
+        "goodsId": 17000,
+        "category": 1,
+        "num": 1,
+        "name": "???"
+      }
+    ],
+    "primaryItem": "???",
+    "primaryGoodsId": 17000,
+    "primaryNum": 1
+  },
+  {
+    "model": "AEG099_772",
+    "modelNum": 772,
+    "pickUpItemLotParamId": 997720,
+    "isEnableRepick": false,
+    "isBreakOnPickUp": true,
+    "isHiddenOnRepick": false,
+    "items": [
+      {
+        "goodsId": 17000,
+        "category": 1,
+        "num": 1,
+        "name": "???"
+      }
+    ],
+    "primaryItem": "???",
+    "primaryGoodsId": 17000,
+    "primaryNum": 1
+  },
+  {
+    "model": "AEG099_773",
+    "modelNum": 773,
+    "pickUpItemLotParamId": 997730,
+    "isEnableRepick": false,
+    "isBreakOnPickUp": true,
+    "isHiddenOnRepick": false,
+    "items": [
+      {
+        "goodsId": 17000,
+        "category": 1,
+        "num": 1,
+        "name": "???"
+      }
+    ],
+    "primaryItem": "???",
+    "primaryGoodsId": 17000,
+    "primaryNum": 1
+  },
+  {
+    "model": "AEG099_774",
+    "modelNum": 774,
+    "pickUpItemLotParamId": 997740,
+    "isEnableRepick": false,
+    "isBreakOnPickUp": true,
+    "isHiddenOnRepick": false,
+    "items": [
+      {
+        "goodsId": 17000,
+        "category": 1,
+        "num": 1,
+        "name": "???"
+      }
+    ],
+    "primaryItem": "???",
+    "primaryGoodsId": 17000,
+    "primaryNum": 1
+  },
+  {
+    "model": "AEG099_775",
+    "modelNum": 775,
+    "pickUpItemLotParamId": 997750,
+    "isEnableRepick": false,
+    "isBreakOnPickUp": true,
+    "isHiddenOnRepick": false,
+    "items": [
+      {
+        "goodsId": 20775,
+        "category": 1,
+        "num": 1,
+        "name": "Root Resin"
+      },
+      {
+        "goodsId": 20775,
+        "category": 1,
+        "num": 2,
+        "name": "Root Resin"
+      },
+      {
+        "goodsId": 20775,
+        "category": 1,
+        "num": 0,
+        "name": "Root Resin"
+      }
+    ],
+    "primaryItem": "Root Resin",
+    "primaryGoodsId": 20775,
+    "primaryNum": 1
+  },
+  {
+    "model": "AEG099_776",
+    "modelNum": 776,
+    "pickUpItemLotParamId": 997760,
+    "isEnableRepick": false,
+    "isBreakOnPickUp": true,
+    "isHiddenOnRepick": false,
+    "items": [
+      {
+        "goodsId": 17000,
+        "category": 1,
+        "num": 1,
+        "name": "???"
+      }
+    ],
+    "primaryItem": "???",
+    "primaryGoodsId": 17000,
+    "primaryNum": 1
+  },
+  {
+    "model": "AEG099_777",
+    "modelNum": 777,
+    "pickUpItemLotParamId": 997770,
+    "isEnableRepick": false,
+    "isBreakOnPickUp": true,
+    "isHiddenOnRepick": false,
+    "items": [
+      {
+        "goodsId": 17000,
+        "category": 1,
+        "num": 1,
+        "name": "???"
+      }
+    ],
+    "primaryItem": "???",
+    "primaryGoodsId": 17000,
+    "primaryNum": 1
+  },
+  {
+    "model": "AEG099_778",
+    "modelNum": 778,
+    "pickUpItemLotParamId": 997780,
+    "isEnableRepick": false,
+    "isBreakOnPickUp": true,
+    "isHiddenOnRepick": false,
+    "items": [
+      {
+        "goodsId": 17000,
+        "category": 1,
+        "num": 1,
+        "name": "???"
+      }
+    ],
+    "primaryItem": "???",
+    "primaryGoodsId": 17000,
+    "primaryNum": 1
+  },
+  {
+    "model": "AEG099_779",
+    "modelNum": 779,
+    "pickUpItemLotParamId": 997790,
+    "isEnableRepick": false,
+    "isBreakOnPickUp": true,
+    "isHiddenOnRepick": false,
+    "items": [
+      {
+        "goodsId": 17000,
+        "category": 1,
+        "num": 1,
+        "name": "???"
+      }
+    ],
+    "primaryItem": "???",
+    "primaryGoodsId": 17000,
+    "primaryNum": 1
+  },
+  {
+    "model": "AEG099_780",
+    "modelNum": 780,
+    "pickUpItemLotParamId": 997800,
+    "isEnableRepick": false,
+    "isBreakOnPickUp": true,
+    "isHiddenOnRepick": false,
+    "items": [
+      {
+        "goodsId": 20780,
+        "category": 1,
+        "num": 1,
+        "name": "Cracked Crystal"
+      },
+      {
+        "goodsId": 20780,
+        "category": 1,
+        "num": 2,
+        "name": "Cracked Crystal"
+      },
+      {
+        "goodsId": 20780,
+        "category": 1,
+        "num": 0,
+        "name": "Cracked Crystal"
+      }
+    ],
+    "primaryItem": "Cracked Crystal",
+    "primaryGoodsId": 20780,
+    "primaryNum": 1
+  },
+  {
+    "model": "AEG099_781",
+    "modelNum": 781,
+    "pickUpItemLotParamId": 997810,
+    "isEnableRepick": false,
+    "isBreakOnPickUp": true,
+    "isHiddenOnRepick": false,
+    "items": [
+      {
+        "goodsId": 17000,
+        "category": 1,
+        "num": 1,
+        "name": "???"
+      }
+    ],
+    "primaryItem": "???",
+    "primaryGoodsId": 17000,
+    "primaryNum": 1
+  },
+  {
+    "model": "AEG099_782",
+    "modelNum": 782,
+    "pickUpItemLotParamId": 997820,
+    "isEnableRepick": false,
+    "isBreakOnPickUp": true,
+    "isHiddenOnRepick": false,
+    "items": [
+      {
+        "goodsId": 17000,
+        "category": 1,
+        "num": 1,
+        "name": "???"
+      }
+    ],
+    "primaryItem": "???",
+    "primaryGoodsId": 17000,
+    "primaryNum": 1
+  },
+  {
+    "model": "AEG099_783",
+    "modelNum": 783,
+    "pickUpItemLotParamId": 997830,
+    "isEnableRepick": false,
+    "isBreakOnPickUp": true,
+    "isHiddenOnRepick": false,
+    "items": [
+      {
+        "goodsId": 17000,
+        "category": 1,
+        "num": 1,
+        "name": "???"
+      }
+    ],
+    "primaryItem": "???",
+    "primaryGoodsId": 17000,
+    "primaryNum": 1
+  },
+  {
+    "model": "AEG099_784",
+    "modelNum": 784,
+    "pickUpItemLotParamId": 997840,
+    "isEnableRepick": false,
+    "isBreakOnPickUp": true,
+    "isHiddenOnRepick": false,
+    "items": [
+      {
+        "goodsId": 17000,
+        "category": 1,
+        "num": 1,
+        "name": "???"
+      }
+    ],
+    "primaryItem": "???",
+    "primaryGoodsId": 17000,
+    "primaryNum": 1
+  },
+  {
+    "model": "AEG099_785",
+    "modelNum": 785,
+    "pickUpItemLotParamId": 997850,
+    "isEnableRepick": false,
+    "isBreakOnPickUp": true,
+    "isHiddenOnRepick": false,
+    "items": [
+      {
+        "goodsId": 10090,
+        "category": 1,
+        "num": 1,
+        "name": "Golden Ore"
+      }
+    ],
+    "primaryItem": "Golden Ore",
+    "primaryGoodsId": 10090,
+    "primaryNum": 1
+  },
+  {
+    "model": "AEG099_786",
+    "modelNum": 786,
+    "pickUpItemLotParamId": 997860,
+    "isEnableRepick": false,
+    "isBreakOnPickUp": true,
+    "isHiddenOnRepick": false,
+    "items": [
+      {
+        "goodsId": 17000,
+        "category": 1,
+        "num": 1,
+        "name": "???"
+      }
+    ],
+    "primaryItem": "???",
+    "primaryGoodsId": 17000,
+    "primaryNum": 1
+  },
+  {
+    "model": "AEG099_787",
+    "modelNum": 787,
+    "pickUpItemLotParamId": 997870,
+    "isEnableRepick": false,
+    "isBreakOnPickUp": true,
+    "isHiddenOnRepick": false,
+    "items": [
+      {
+        "goodsId": 17000,
+        "category": 1,
+        "num": 1,
+        "name": "???"
+      }
+    ],
+    "primaryItem": "???",
+    "primaryGoodsId": 17000,
+    "primaryNum": 1
+  },
+  {
+    "model": "AEG099_788",
+    "modelNum": 788,
+    "pickUpItemLotParamId": 997880,
+    "isEnableRepick": false,
+    "isBreakOnPickUp": true,
+    "isHiddenOnRepick": false,
+    "items": [
+      {
+        "goodsId": 17000,
+        "category": 1,
+        "num": 1,
+        "name": "???"
+      }
+    ],
+    "primaryItem": "???",
+    "primaryGoodsId": 17000,
+    "primaryNum": 1
+  },
+  {
+    "model": "AEG099_789",
+    "modelNum": 789,
+    "pickUpItemLotParamId": 997890,
+    "isEnableRepick": false,
+    "isBreakOnPickUp": true,
+    "isHiddenOnRepick": false,
+    "items": [
+      {
+        "goodsId": 17000,
+        "category": 1,
+        "num": 1,
+        "name": "???"
+      }
+    ],
+    "primaryItem": "???",
+    "primaryGoodsId": 17000,
+    "primaryNum": 1
+  },
+  {
+    "model": "AEG099_790",
+    "modelNum": 790,
+    "pickUpItemLotParamId": 997900,
+    "isEnableRepick": false,
+    "isBreakOnPickUp": true,
+    "isHiddenOnRepick": false,
+    "items": [
+      {
+        "goodsId": 13900,
+        "category": 1,
+        "num": 10,
+        "name": "???"
+      },
+      {
+        "goodsId": 13900,
+        "category": 1,
+        "num": 9,
+        "name": "???"
+      },
+      {
+        "goodsId": 13900,
+        "category": 1,
+        "num": 8,
+        "name": "???"
+      },
+      {
+        "goodsId": 13900,
+        "category": 1,
+        "num": 7,
+        "name": "???"
+      },
+      {
+        "goodsId": 13900,
+        "category": 1,
+        "num": 6,
+        "name": "???"
+      },
+      {
+        "goodsId": 13900,
+        "category": 1,
+        "num": 5,
+        "name": "???"
+      }
+    ],
+    "primaryItem": "???",
+    "primaryGoodsId": 13900,
+    "primaryNum": 10
+  },
+  {
+    "model": "AEG099_791",
+    "modelNum": 791,
+    "pickUpItemLotParamId": 997910,
+    "isEnableRepick": false,
+    "isBreakOnPickUp": true,
+    "isHiddenOnRepick": false,
+    "items": [
+      {
+        "goodsId": 13900,
+        "category": 1,
+        "num": 20,
+        "name": "???"
+      },
+      {
+        "goodsId": 13900,
+        "category": 1,
+        "num": 18,
+        "name": "???"
+      },
+      {
+        "goodsId": 13900,
+        "category": 1,
+        "num": 16,
+        "name": "???"
+      },
+      {
+        "goodsId": 13900,
+        "category": 1,
+        "num": 14,
+        "name": "???"
+      },
+      {
+        "goodsId": 13900,
+        "category": 1,
+        "num": 12,
+        "name": "???"
+      },
+      {
+        "goodsId": 13900,
+        "category": 1,
+        "num": 10,
+        "name": "???"
+      }
+    ],
+    "primaryItem": "???",
+    "primaryGoodsId": 13900,
+    "primaryNum": 20
+  },
+  {
+    "model": "AEG099_792",
+    "modelNum": 792,
+    "pickUpItemLotParamId": 997920,
+    "isEnableRepick": false,
+    "isBreakOnPickUp": true,
+    "isHiddenOnRepick": false,
+    "items": [
+      {
+        "goodsId": 13900,
+        "category": 1,
+        "num": 30,
+        "name": "???"
+      },
+      {
+        "goodsId": 13900,
+        "category": 1,
+        "num": 28,
+        "name": "???"
+      },
+      {
+        "goodsId": 13900,
+        "category": 1,
+        "num": 26,
+        "name": "???"
+      },
+      {
+        "goodsId": 13900,
+        "category": 1,
+        "num": 24,
+        "name": "???"
+      },
+      {
+        "goodsId": 13900,
+        "category": 1,
+        "num": 22,
+        "name": "???"
+      },
+      {
+        "goodsId": 13900,
+        "category": 1,
+        "num": 20,
+        "name": "???"
+      }
+    ],
+    "primaryItem": "???",
+    "primaryGoodsId": 13900,
+    "primaryNum": 30
+  },
+  {
+    "model": "AEG099_793",
+    "modelNum": 793,
+    "pickUpItemLotParamId": 997930,
+    "isEnableRepick": false,
+    "isBreakOnPickUp": true,
+    "isHiddenOnRepick": false,
+    "items": [
+      {
+        "goodsId": 17000,
+        "category": 1,
+        "num": 1,
+        "name": "???"
+      }
+    ],
+    "primaryItem": "???",
+    "primaryGoodsId": 17000,
+    "primaryNum": 1
+  },
+  {
+    "model": "AEG099_794",
+    "modelNum": 794,
+    "pickUpItemLotParamId": 997940,
+    "isEnableRepick": false,
+    "isBreakOnPickUp": true,
+    "isHiddenOnRepick": false,
+    "items": [
+      {
+        "goodsId": 17000,
+        "category": 1,
+        "num": 1,
+        "name": "???"
+      }
+    ],
+    "primaryItem": "???",
+    "primaryGoodsId": 17000,
+    "primaryNum": 1
+  },
+  {
+    "model": "AEG099_795",
+    "modelNum": 795,
+    "pickUpItemLotParamId": 997950,
+    "isEnableRepick": false,
+    "isBreakOnPickUp": true,
+    "isHiddenOnRepick": false,
+    "items": [
+      {
+        "goodsId": 20795,
+        "category": 1,
+        "num": 1,
+        "name": "Sanctuary Stone"
+      },
+      {
+        "goodsId": 20795,
+        "category": 1,
+        "num": 2,
+        "name": "Sanctuary Stone"
+      }
+    ],
+    "primaryItem": "Sanctuary Stone",
+    "primaryGoodsId": 20795,
+    "primaryNum": 1
+  },
+  {
+    "model": "AEG099_796",
+    "modelNum": 796,
+    "pickUpItemLotParamId": 997960,
+    "isEnableRepick": false,
+    "isBreakOnPickUp": true,
+    "isHiddenOnRepick": false,
+    "items": [
+      {
+        "goodsId": 1760,
+        "category": 1,
+        "num": 1,
+        "name": "Ruin Fragment"
+      },
+      {
+        "goodsId": 1760,
+        "category": 1,
+        "num": 2,
+        "name": "Ruin Fragment"
+      }
+    ],
+    "primaryItem": "Ruin Fragment",
+    "primaryGoodsId": 1760,
+    "primaryNum": 1
+  },
+  {
+    "model": "AEG099_797",
+    "modelNum": 797,
+    "pickUpItemLotParamId": 997970,
+    "isEnableRepick": false,
+    "isBreakOnPickUp": true,
+    "isHiddenOnRepick": false,
+    "items": [
+      {
+        "goodsId": 17000,
+        "category": 1,
+        "num": 1,
+        "name": "???"
+      }
+    ],
+    "primaryItem": "???",
+    "primaryGoodsId": 17000,
+    "primaryNum": 1
+  },
+  {
+    "model": "AEG099_798",
+    "modelNum": 798,
+    "pickUpItemLotParamId": 997980,
+    "isEnableRepick": false,
+    "isBreakOnPickUp": true,
+    "isHiddenOnRepick": false,
+    "items": [
+      {
+        "goodsId": 17000,
+        "category": 1,
+        "num": 1,
+        "name": "???"
+      }
+    ],
+    "primaryItem": "???",
+    "primaryGoodsId": 17000,
+    "primaryNum": 1
+  },
+  {
+    "model": "AEG099_799",
+    "modelNum": 799,
+    "pickUpItemLotParamId": 997990,
+    "isEnableRepick": false,
+    "isBreakOnPickUp": true,
+    "isHiddenOnRepick": false,
+    "items": [
+      {
+        "goodsId": 17000,
+        "category": 1,
+        "num": 1,
+        "name": "???"
+      }
+    ],
+    "primaryItem": "???",
+    "primaryGoodsId": 17000,
+    "primaryNum": 1
+  },
+  {
+    "model": "AEG099_800",
+    "modelNum": 800,
+    "pickUpItemLotParamId": 998000,
+    "isEnableRepick": true,
+    "isBreakOnPickUp": true,
+    "isHiddenOnRepick": true,
+    "items": [
+      {
+        "goodsId": 20800,
+        "category": 1,
+        "num": 1,
+        "name": "Nascent Butterfly"
+      },
+      {
+        "goodsId": 20800,
+        "category": 1,
+        "num": 2,
+        "name": "Nascent Butterfly"
+      }
+    ],
+    "primaryItem": "Nascent Butterfly",
+    "primaryGoodsId": 20800,
+    "primaryNum": 1
+  },
+  {
+    "model": "AEG099_801",
+    "modelNum": 801,
+    "pickUpItemLotParamId": 998010,
+    "isEnableRepick": true,
+    "isBreakOnPickUp": true,
+    "isHiddenOnRepick": true,
+    "items": [
+      {
+        "goodsId": 20801,
+        "category": 1,
+        "num": 1,
+        "name": "Aeonian Butterfly"
+      },
+      {
+        "goodsId": 20801,
+        "category": 1,
+        "num": 2,
+        "name": "Aeonian Butterfly"
+      }
+    ],
+    "primaryItem": "Aeonian Butterfly",
+    "primaryGoodsId": 20801,
+    "primaryNum": 1
+  },
+  {
+    "model": "AEG099_802",
+    "modelNum": 802,
+    "pickUpItemLotParamId": 998020,
+    "isEnableRepick": false,
+    "isBreakOnPickUp": true,
+    "isHiddenOnRepick": false,
+    "items": [
+      {
+        "goodsId": 20802,
+        "category": 1,
+        "num": 1,
+        "name": "Smoldering Butterfly"
+      },
+      {
+        "goodsId": 20802,
+        "category": 1,
+        "num": 2,
+        "name": "Smoldering Butterfly"
+      },
+      {
+        "goodsId": 20802,
+        "category": 1,
+        "num": 0,
+        "name": "Smoldering Butterfly"
+      }
+    ],
+    "primaryItem": "Smoldering Butterfly",
+    "primaryGoodsId": 20802,
+    "primaryNum": 1
+  },
+  {
+    "model": "AEG099_803",
+    "modelNum": 803,
+    "pickUpItemLotParamId": 998030,
+    "isEnableRepick": false,
+    "isBreakOnPickUp": true,
+    "isHiddenOnRepick": false,
+    "items": [
+      {
+        "goodsId": 17000,
+        "category": 1,
+        "num": 1,
+        "name": "???"
+      }
+    ],
+    "primaryItem": "???",
+    "primaryGoodsId": 17000,
+    "primaryNum": 1
+  },
+  {
+    "model": "AEG099_804",
+    "modelNum": 804,
+    "pickUpItemLotParamId": 998040,
+    "isEnableRepick": false,
+    "isBreakOnPickUp": true,
+    "isHiddenOnRepick": false,
+    "items": [
+      {
+        "goodsId": 17000,
+        "category": 1,
+        "num": 1,
+        "name": "???"
+      }
+    ],
+    "primaryItem": "???",
+    "primaryGoodsId": 17000,
+    "primaryNum": 1
+  },
+  {
+    "model": "AEG099_805",
+    "modelNum": 805,
+    "pickUpItemLotParamId": 998050,
+    "isEnableRepick": false,
+    "isBreakOnPickUp": true,
+    "isHiddenOnRepick": false,
+    "items": [
+      {
+        "goodsId": 17000,
+        "category": 1,
+        "num": 1,
+        "name": "???"
+      }
+    ],
+    "primaryItem": "???",
+    "primaryGoodsId": 17000,
+    "primaryNum": 1
+  },
+  {
+    "model": "AEG099_806",
+    "modelNum": 806,
+    "pickUpItemLotParamId": 998060,
+    "isEnableRepick": false,
+    "isBreakOnPickUp": true,
+    "isHiddenOnRepick": false,
+    "items": [
+      {
+        "goodsId": 17000,
+        "category": 1,
+        "num": 1,
+        "name": "???"
+      }
+    ],
+    "primaryItem": "???",
+    "primaryGoodsId": 17000,
+    "primaryNum": 1
+  },
+  {
+    "model": "AEG099_807",
+    "modelNum": 807,
+    "pickUpItemLotParamId": 998070,
+    "isEnableRepick": false,
+    "isBreakOnPickUp": true,
+    "isHiddenOnRepick": false,
+    "items": [
+      {
+        "goodsId": 17000,
+        "category": 1,
+        "num": 1,
+        "name": "???"
+      }
+    ],
+    "primaryItem": "???",
+    "primaryGoodsId": 17000,
+    "primaryNum": 1
+  },
+  {
+    "model": "AEG099_808",
+    "modelNum": 808,
+    "pickUpItemLotParamId": 998080,
+    "isEnableRepick": false,
+    "isBreakOnPickUp": true,
+    "isHiddenOnRepick": false,
+    "items": [
+      {
+        "goodsId": 17000,
+        "category": 1,
+        "num": 1,
+        "name": "???"
+      }
+    ],
+    "primaryItem": "???",
+    "primaryGoodsId": 17000,
+    "primaryNum": 1
+  },
+  {
+    "model": "AEG099_809",
+    "modelNum": 809,
+    "pickUpItemLotParamId": 998090,
+    "isEnableRepick": false,
+    "isBreakOnPickUp": true,
+    "isHiddenOnRepick": false,
+    "items": [
+      {
+        "goodsId": 17000,
+        "category": 1,
+        "num": 1,
+        "name": "???"
+      }
+    ],
+    "primaryItem": "???",
+    "primaryGoodsId": 17000,
+    "primaryNum": 1
+  },
+  {
+    "model": "AEG099_810",
+    "modelNum": 810,
+    "pickUpItemLotParamId": 998100,
+    "isEnableRepick": false,
+    "isBreakOnPickUp": true,
+    "isHiddenOnRepick": false,
+    "items": [
+      {
+        "goodsId": 20810,
+        "category": 1,
+        "num": 1,
+        "name": "Silver Firefly"
+      },
+      {
+        "goodsId": 20810,
+        "category": 1,
+        "num": 2,
+        "name": "Silver Firefly"
+      }
+    ],
+    "primaryItem": "Silver Firefly",
+    "primaryGoodsId": 20810,
+    "primaryNum": 1
+  },
+  {
+    "model": "AEG099_811",
+    "modelNum": 811,
+    "pickUpItemLotParamId": 998110,
+    "isEnableRepick": false,
+    "isBreakOnPickUp": true,
+    "isHiddenOnRepick": false,
+    "items": [
+      {
+        "goodsId": 20811,
+        "category": 1,
+        "num": 1,
+        "name": "Gold Firefly"
+      },
+      {
+        "goodsId": 20811,
+        "category": 1,
+        "num": 2,
+        "name": "Gold Firefly"
+      }
+    ],
+    "primaryItem": "Gold Firefly",
+    "primaryGoodsId": 20811,
+    "primaryNum": 1
+  },
+  {
+    "model": "AEG099_812",
+    "modelNum": 812,
+    "pickUpItemLotParamId": 998120,
+    "isEnableRepick": false,
+    "isBreakOnPickUp": true,
+    "isHiddenOnRepick": false,
+    "items": [
+      {
+        "goodsId": 20812,
+        "category": 1,
+        "num": 1,
+        "name": "Glintstone Firefly"
+      },
+      {
+        "goodsId": 20812,
+        "category": 1,
+        "num": 2,
+        "name": "Glintstone Firefly"
+      }
+    ],
+    "primaryItem": "Glintstone Firefly",
+    "primaryGoodsId": 20812,
+    "primaryNum": 1
+  },
+  {
+    "model": "AEG099_813",
+    "modelNum": 813,
+    "pickUpItemLotParamId": 998130,
+    "isEnableRepick": false,
+    "isBreakOnPickUp": true,
+    "isHiddenOnRepick": false,
+    "items": [
+      {
+        "goodsId": 17000,
+        "category": 1,
+        "num": 1,
+        "name": "???"
+      }
+    ],
+    "primaryItem": "???",
+    "primaryGoodsId": 17000,
+    "primaryNum": 1
+  },
+  {
+    "model": "AEG099_814",
+    "modelNum": 814,
+    "pickUpItemLotParamId": 998140,
+    "isEnableRepick": false,
+    "isBreakOnPickUp": true,
+    "isHiddenOnRepick": false,
+    "items": [
+      {
+        "goodsId": 17000,
+        "category": 1,
+        "num": 1,
+        "name": "???"
+      }
+    ],
+    "primaryItem": "???",
+    "primaryGoodsId": 17000,
+    "primaryNum": 1
+  },
+  {
+    "model": "AEG099_815",
+    "modelNum": 815,
+    "pickUpItemLotParamId": 998150,
+    "isEnableRepick": false,
+    "isBreakOnPickUp": true,
+    "isHiddenOnRepick": false,
+    "items": [
+      {
+        "goodsId": 17000,
+        "category": 1,
+        "num": 1,
+        "name": "???"
+      }
+    ],
+    "primaryItem": "???",
+    "primaryGoodsId": 17000,
+    "primaryNum": 1
+  },
+  {
+    "model": "AEG099_816",
+    "modelNum": 816,
+    "pickUpItemLotParamId": 998160,
+    "isEnableRepick": false,
+    "isBreakOnPickUp": true,
+    "isHiddenOnRepick": false,
+    "items": [
+      {
+        "goodsId": 17000,
+        "category": 1,
+        "num": 1,
+        "name": "???"
+      }
+    ],
+    "primaryItem": "???",
+    "primaryGoodsId": 17000,
+    "primaryNum": 1
+  },
+  {
+    "model": "AEG099_817",
+    "modelNum": 817,
+    "pickUpItemLotParamId": 998170,
+    "isEnableRepick": false,
+    "isBreakOnPickUp": true,
+    "isHiddenOnRepick": false,
+    "items": [
+      {
+        "goodsId": 17000,
+        "category": 1,
+        "num": 1,
+        "name": "???"
+      }
+    ],
+    "primaryItem": "???",
+    "primaryGoodsId": 17000,
+    "primaryNum": 1
+  },
+  {
+    "model": "AEG099_818",
+    "modelNum": 818,
+    "pickUpItemLotParamId": 998180,
+    "isEnableRepick": false,
+    "isBreakOnPickUp": true,
+    "isHiddenOnRepick": false,
+    "items": [
+      {
+        "goodsId": 17000,
+        "category": 1,
+        "num": 1,
+        "name": "???"
+      }
+    ],
+    "primaryItem": "???",
+    "primaryGoodsId": 17000,
+    "primaryNum": 1
+  },
+  {
+    "model": "AEG099_819",
+    "modelNum": 819,
+    "pickUpItemLotParamId": 998190,
+    "isEnableRepick": false,
+    "isBreakOnPickUp": true,
+    "isHiddenOnRepick": false,
+    "items": [
+      {
+        "goodsId": 17000,
+        "category": 1,
+        "num": 1,
+        "name": "???"
+      }
+    ],
+    "primaryItem": "???",
+    "primaryGoodsId": 17000,
+    "primaryNum": 1
+  },
+  {
+    "model": "AEG099_820",
+    "modelNum": 820,
+    "pickUpItemLotParamId": 998200,
+    "isEnableRepick": true,
+    "isBreakOnPickUp": true,
+    "isHiddenOnRepick": true,
+    "items": [
+      {
+        "goodsId": 20820,
+        "category": 1,
+        "num": 1,
+        "name": "Golden Centipede"
+      },
+      {
+        "goodsId": 20820,
+        "category": 1,
+        "num": 2,
+        "name": "Golden Centipede"
+      }
+    ],
+    "primaryItem": "Golden Centipede",
+    "primaryGoodsId": 20820,
+    "primaryNum": 1
+  },
+  {
+    "model": "AEG099_821",
+    "modelNum": 821,
+    "pickUpItemLotParamId": 998210,
+    "isEnableRepick": true,
+    "isBreakOnPickUp": true,
+    "isHiddenOnRepick": true,
+    "items": [
+      {
+        "goodsId": 800011,
+        "category": 1,
+        "num": 1,
+        "name": "Runic Trace"
+      }
+    ],
+    "primaryItem": "Runic Trace",
+    "primaryGoodsId": 800011,
+    "primaryNum": 1
+  },
+  {
+    "model": "AEG099_822",
+    "modelNum": 822,
+    "pickUpItemLotParamId": 998220,
+    "isEnableRepick": true,
+    "isBreakOnPickUp": true,
+    "isHiddenOnRepick": true,
+    "items": [
+      {
+        "goodsId": 850011,
+        "category": 1,
+        "num": 1,
+        "name": "Ember Trace"
+      }
+    ],
+    "primaryItem": "Ember Trace",
+    "primaryGoodsId": 850011,
+    "primaryNum": 1
+  },
+  {
+    "model": "AEG099_824",
+    "modelNum": 824,
+    "pickUpItemLotParamId": 998240,
+    "isEnableRepick": false,
+    "isBreakOnPickUp": true,
+    "isHiddenOnRepick": false,
+    "items": [
+      {
+        "goodsId": 17000,
+        "category": 1,
+        "num": 1,
+        "name": "???"
+      }
+    ],
+    "primaryItem": "???",
+    "primaryGoodsId": 17000,
+    "primaryNum": 1
+  },
+  {
+    "model": "AEG099_825",
+    "modelNum": 825,
+    "pickUpItemLotParamId": 998250,
+    "isEnableRepick": false,
+    "isBreakOnPickUp": true,
+    "isHiddenOnRepick": false,
+    "items": [
+      {
+        "goodsId": 20825,
+        "category": 1,
+        "num": 1,
+        "name": "Silver Tear Husk"
+      },
+      {
+        "goodsId": 20825,
+        "category": 1,
+        "num": 2,
+        "name": "Silver Tear Husk"
+      }
+    ],
+    "primaryItem": "Silver Tear Husk",
+    "primaryGoodsId": 20825,
+    "primaryNum": 1
+  },
+  {
+    "model": "AEG099_826",
+    "modelNum": 826,
+    "pickUpItemLotParamId": 998260,
+    "isEnableRepick": false,
+    "isBreakOnPickUp": true,
+    "isHiddenOnRepick": false,
+    "items": [
+      {
+        "goodsId": 17000,
+        "category": 1,
+        "num": 1,
+        "name": "???"
+      }
+    ],
+    "primaryItem": "???",
+    "primaryGoodsId": 17000,
+    "primaryNum": 1
+  },
+  {
+    "model": "AEG099_827",
+    "modelNum": 827,
+    "pickUpItemLotParamId": 998270,
+    "isEnableRepick": false,
+    "isBreakOnPickUp": true,
+    "isHiddenOnRepick": false,
+    "items": [
+      {
+        "goodsId": 17000,
+        "category": 1,
+        "num": 1,
+        "name": "???"
+      }
+    ],
+    "primaryItem": "???",
+    "primaryGoodsId": 17000,
+    "primaryNum": 1
+  },
+  {
+    "model": "AEG099_828",
+    "modelNum": 828,
+    "pickUpItemLotParamId": 998280,
+    "isEnableRepick": false,
+    "isBreakOnPickUp": true,
+    "isHiddenOnRepick": false,
+    "items": [
+      {
+        "goodsId": 17000,
+        "category": 1,
+        "num": 1,
+        "name": "???"
+      }
+    ],
+    "primaryItem": "???",
+    "primaryGoodsId": 17000,
+    "primaryNum": 1
+  },
+  {
+    "model": "AEG099_829",
+    "modelNum": 829,
+    "pickUpItemLotParamId": 998290,
+    "isEnableRepick": false,
+    "isBreakOnPickUp": true,
+    "isHiddenOnRepick": false,
+    "items": [
+      {
+        "goodsId": 17000,
+        "category": 1,
+        "num": 1,
+        "name": "???"
+      }
+    ],
+    "primaryItem": "???",
+    "primaryGoodsId": 17000,
+    "primaryNum": 1
+  },
+  {
+    "model": "AEG099_830",
+    "modelNum": 830,
+    "pickUpItemLotParamId": 998300,
+    "isEnableRepick": false,
+    "isBreakOnPickUp": true,
+    "isHiddenOnRepick": false,
+    "items": [
+      {
+        "goodsId": 20830,
+        "category": 1,
+        "num": 1,
+        "name": "Gold-Tinged Excrement"
+      },
+      {
+        "goodsId": 20830,
+        "category": 1,
+        "num": 2,
+        "name": "Gold-Tinged Excrement"
+      },
+      {
+        "goodsId": 20830,
+        "category": 1,
+        "num": 0,
+        "name": "Gold-Tinged Excrement"
+      }
+    ],
+    "primaryItem": "Gold-Tinged Excrement",
+    "primaryGoodsId": 20830,
+    "primaryNum": 1
+  },
+  {
+    "model": "AEG099_831",
+    "modelNum": 831,
+    "pickUpItemLotParamId": 998310,
+    "isEnableRepick": false,
+    "isBreakOnPickUp": true,
+    "isHiddenOnRepick": false,
+    "items": [
+      {
+        "goodsId": 20831,
+        "category": 1,
+        "num": 1,
+        "name": "Blood-Tainted Excrement"
+      },
+      {
+        "goodsId": 20831,
+        "category": 1,
+        "num": 2,
+        "name": "Blood-Tainted Excrement"
+      },
+      {
+        "goodsId": 20831,
+        "category": 1,
+        "num": 0,
+        "name": "Blood-Tainted Excrement"
+      }
+    ],
+    "primaryItem": "Blood-Tainted Excrement",
+    "primaryGoodsId": 20831,
+    "primaryNum": 1
+  },
+  {
+    "model": "AEG099_832",
+    "modelNum": 832,
+    "pickUpItemLotParamId": 998320,
+    "isEnableRepick": false,
+    "isBreakOnPickUp": true,
+    "isHiddenOnRepick": false,
+    "items": [
+      {
+        "goodsId": 17000,
+        "category": 1,
+        "num": 1,
+        "name": "???"
+      }
+    ],
+    "primaryItem": "???",
+    "primaryGoodsId": 17000,
+    "primaryNum": 1
+  },
+  {
+    "model": "AEG099_833",
+    "modelNum": 833,
+    "pickUpItemLotParamId": 998330,
+    "isEnableRepick": false,
+    "isBreakOnPickUp": true,
+    "isHiddenOnRepick": false,
+    "items": [
+      {
+        "goodsId": 17000,
+        "category": 1,
+        "num": 1,
+        "name": "???"
+      }
+    ],
+    "primaryItem": "???",
+    "primaryGoodsId": 17000,
+    "primaryNum": 1
+  },
+  {
+    "model": "AEG099_834",
+    "modelNum": 834,
+    "pickUpItemLotParamId": 998340,
+    "isEnableRepick": false,
+    "isBreakOnPickUp": true,
+    "isHiddenOnRepick": false,
+    "items": [
+      {
+        "goodsId": 17000,
+        "category": 1,
+        "num": 1,
+        "name": "???"
+      }
+    ],
+    "primaryItem": "???",
+    "primaryGoodsId": 17000,
+    "primaryNum": 1
+  },
+  {
+    "model": "AEG099_835",
+    "modelNum": 835,
+    "pickUpItemLotParamId": 998350,
+    "isEnableRepick": false,
+    "isBreakOnPickUp": true,
+    "isHiddenOnRepick": false,
+    "items": [
+      {
+        "goodsId": 17000,
+        "category": 1,
+        "num": 1,
+        "name": "???"
+      }
+    ],
+    "primaryItem": "???",
+    "primaryGoodsId": 17000,
+    "primaryNum": 1
+  },
+  {
+    "model": "AEG099_836",
+    "modelNum": 836,
+    "pickUpItemLotParamId": 998360,
+    "isEnableRepick": false,
+    "isBreakOnPickUp": true,
+    "isHiddenOnRepick": false,
+    "items": [
+      {
+        "goodsId": 17000,
+        "category": 1,
+        "num": 1,
+        "name": "???"
+      }
+    ],
+    "primaryItem": "???",
+    "primaryGoodsId": 17000,
+    "primaryNum": 1
+  },
+  {
+    "model": "AEG099_837",
+    "modelNum": 837,
+    "pickUpItemLotParamId": 998370,
+    "isEnableRepick": false,
+    "isBreakOnPickUp": true,
+    "isHiddenOnRepick": false,
+    "items": [
+      {
+        "goodsId": 17000,
+        "category": 1,
+        "num": 1,
+        "name": "???"
+      }
+    ],
+    "primaryItem": "???",
+    "primaryGoodsId": 17000,
+    "primaryNum": 1
+  },
+  {
+    "model": "AEG099_838",
+    "modelNum": 838,
+    "pickUpItemLotParamId": 998380,
+    "isEnableRepick": false,
+    "isBreakOnPickUp": true,
+    "isHiddenOnRepick": false,
+    "items": [
+      {
+        "goodsId": 17000,
+        "category": 1,
+        "num": 1,
+        "name": "???"
+      }
+    ],
+    "primaryItem": "???",
+    "primaryGoodsId": 17000,
+    "primaryNum": 1
+  },
+  {
+    "model": "AEG099_839",
+    "modelNum": 839,
+    "pickUpItemLotParamId": 998390,
+    "isEnableRepick": false,
+    "isBreakOnPickUp": true,
+    "isHiddenOnRepick": false,
+    "items": [
+      {
+        "goodsId": 17000,
+        "category": 1,
+        "num": 1,
+        "name": "???"
+      }
+    ],
+    "primaryItem": "???",
+    "primaryGoodsId": 17000,
+    "primaryNum": 1
+  },
+  {
+    "model": "AEG099_840",
+    "modelNum": 840,
+    "pickUpItemLotParamId": 998400,
+    "isEnableRepick": false,
+    "isBreakOnPickUp": true,
+    "isHiddenOnRepick": false,
+    "items": [
+      {
+        "goodsId": 20840,
+        "category": 1,
+        "num": 1,
+        "name": "Medicinal Moss"
+      },
+      {
+        "goodsId": 20840,
+        "category": 1,
+        "num": 2,
+        "name": "Medicinal Moss"
+      },
+      {
+        "goodsId": 20840,
+        "category": 1,
+        "num": 0,
+        "name": "Medicinal Moss"
+      }
+    ],
+    "primaryItem": "Medicinal Moss",
+    "primaryGoodsId": 20840,
+    "primaryNum": 1
+  },
+  {
+    "model": "AEG099_841",
+    "modelNum": 841,
+    "pickUpItemLotParamId": 998410,
+    "isEnableRepick": false,
+    "isBreakOnPickUp": true,
+    "isHiddenOnRepick": false,
+    "items": [
+      {
+        "goodsId": 20841,
+        "category": 1,
+        "num": 1,
+        "name": "Budding Moss"
+      },
+      {
+        "goodsId": 20841,
+        "category": 1,
+        "num": 2,
+        "name": "Budding Moss"
+      },
+      {
+        "goodsId": 20841,
+        "category": 1,
+        "num": 0,
+        "name": "Budding Moss"
+      }
+    ],
+    "primaryItem": "Budding Moss",
+    "primaryGoodsId": 20841,
+    "primaryNum": 1
+  },
+  {
+    "model": "AEG099_842",
+    "modelNum": 842,
+    "pickUpItemLotParamId": 998420,
+    "isEnableRepick": false,
+    "isBreakOnPickUp": true,
+    "isHiddenOnRepick": false,
+    "items": [
+      {
+        "goodsId": 20842,
+        "category": 1,
+        "num": 1,
+        "name": "Crystal Moss"
+      },
+      {
+        "goodsId": 20842,
+        "category": 1,
+        "num": 2,
+        "name": "Crystal Moss"
+      },
+      {
+        "goodsId": 20842,
+        "category": 1,
+        "num": 0,
+        "name": "Crystal Moss"
+      }
+    ],
+    "primaryItem": "Crystal Moss",
+    "primaryGoodsId": 20842,
+    "primaryNum": 1
+  },
+  {
+    "model": "AEG099_843",
+    "modelNum": 843,
+    "pickUpItemLotParamId": 998430,
+    "isEnableRepick": false,
+    "isBreakOnPickUp": true,
+    "isHiddenOnRepick": false,
+    "items": [
+      {
+        "goodsId": 17000,
+        "category": 1,
+        "num": 1,
+        "name": "???"
+      }
+    ],
+    "primaryItem": "???",
+    "primaryGoodsId": 17000,
+    "primaryNum": 1
+  },
+  {
+    "model": "AEG099_844",
+    "modelNum": 844,
+    "pickUpItemLotParamId": 998440,
+    "isEnableRepick": false,
+    "isBreakOnPickUp": true,
+    "isHiddenOnRepick": false,
+    "items": [
+      {
+        "goodsId": 17000,
+        "category": 1,
+        "num": 1,
+        "name": "???"
+      }
+    ],
+    "primaryItem": "???",
+    "primaryGoodsId": 17000,
+    "primaryNum": 1
+  },
+  {
+    "model": "AEG099_845",
+    "modelNum": 845,
+    "pickUpItemLotParamId": 998450,
+    "isEnableRepick": false,
+    "isBreakOnPickUp": true,
+    "isHiddenOnRepick": false,
+    "items": [
+      {
+        "goodsId": 20845,
+        "category": 1,
+        "num": 1,
+        "name": "Yellow Ember"
+      },
+      {
+        "goodsId": 20845,
+        "category": 1,
+        "num": 2,
+        "name": "Yellow Ember"
+      }
+    ],
+    "primaryItem": "Yellow Ember",
+    "primaryGoodsId": 20845,
+    "primaryNum": 1
+  },
+  {
+    "model": "AEG099_846",
+    "modelNum": 846,
+    "pickUpItemLotParamId": 998460,
+    "isEnableRepick": false,
+    "isBreakOnPickUp": true,
+    "isHiddenOnRepick": false,
+    "items": [
+      {
+        "goodsId": 17000,
+        "category": 1,
+        "num": 1,
+        "name": "???"
+      }
+    ],
+    "primaryItem": "???",
+    "primaryGoodsId": 17000,
+    "primaryNum": 1
+  },
+  {
+    "model": "AEG099_847",
+    "modelNum": 847,
+    "pickUpItemLotParamId": 998470,
+    "isEnableRepick": false,
+    "isBreakOnPickUp": true,
+    "isHiddenOnRepick": false,
+    "items": [
+      {
+        "goodsId": 17000,
+        "category": 1,
+        "num": 1,
+        "name": "???"
+      }
+    ],
+    "primaryItem": "???",
+    "primaryGoodsId": 17000,
+    "primaryNum": 1
+  },
+  {
+    "model": "AEG099_848",
+    "modelNum": 848,
+    "pickUpItemLotParamId": 998480,
+    "isEnableRepick": false,
+    "isBreakOnPickUp": true,
+    "isHiddenOnRepick": false,
+    "items": [
+      {
+        "goodsId": 17000,
+        "category": 1,
+        "num": 1,
+        "name": "???"
+      }
+    ],
+    "primaryItem": "???",
+    "primaryGoodsId": 17000,
+    "primaryNum": 1
+  },
+  {
+    "model": "AEG099_849",
+    "modelNum": 849,
+    "pickUpItemLotParamId": 998490,
+    "isEnableRepick": false,
+    "isBreakOnPickUp": true,
+    "isHiddenOnRepick": false,
+    "items": [
+      {
+        "goodsId": 17000,
+        "category": 1,
+        "num": 1,
+        "name": "???"
+      }
+    ],
+    "primaryItem": "???",
+    "primaryGoodsId": 17000,
+    "primaryNum": 1
+  },
+  {
+    "model": "AEG099_850",
+    "modelNum": 850,
+    "pickUpItemLotParamId": 998500,
+    "isEnableRepick": false,
+    "isBreakOnPickUp": true,
+    "isHiddenOnRepick": false,
+    "items": [
+      {
+        "goodsId": 20850,
+        "category": 1,
+        "num": 1,
+        "name": "Gaseous Stone"
+      },
+      {
+        "goodsId": 20850,
+        "category": 1,
+        "num": 2,
+        "name": "Gaseous Stone"
+      },
+      {
+        "goodsId": 20850,
+        "category": 1,
+        "num": 0,
+        "name": "Gaseous Stone"
+      }
+    ],
+    "primaryItem": "Gaseous Stone",
+    "primaryGoodsId": 20850,
+    "primaryNum": 1
+  },
+  {
+    "model": "AEG099_851",
+    "modelNum": 851,
+    "pickUpItemLotParamId": 998510,
+    "isEnableRepick": false,
+    "isBreakOnPickUp": true,
+    "isHiddenOnRepick": false,
+    "items": [
+      {
+        "goodsId": 17000,
+        "category": 1,
+        "num": 1,
+        "name": "???"
+      }
+    ],
+    "primaryItem": "???",
+    "primaryGoodsId": 17000,
+    "primaryNum": 1
+  },
+  {
+    "model": "AEG099_852",
+    "modelNum": 852,
+    "pickUpItemLotParamId": 998520,
+    "isEnableRepick": true,
+    "isBreakOnPickUp": true,
+    "isHiddenOnRepick": true,
+    "items": [
+      {
+        "goodsId": 20852,
+        "category": 1,
+        "num": 1,
+        "name": "Formic Rock"
+      },
+      {
+        "goodsId": 20852,
+        "category": 1,
+        "num": 2,
+        "name": "Formic Rock"
+      }
+    ],
+    "primaryItem": "Formic Rock",
+    "primaryGoodsId": 20852,
+    "primaryNum": 1
+  },
+  {
+    "model": "AEG099_853",
+    "modelNum": 853,
+    "pickUpItemLotParamId": 998530,
+    "isEnableRepick": false,
+    "isBreakOnPickUp": true,
+    "isHiddenOnRepick": false,
+    "items": [
+      {
+        "goodsId": 17000,
+        "category": 1,
+        "num": 1,
+        "name": "???"
+      }
+    ],
+    "primaryItem": "???",
+    "primaryGoodsId": 17000,
+    "primaryNum": 1
+  },
+  {
+    "model": "AEG099_854",
+    "modelNum": 854,
+    "pickUpItemLotParamId": 998540,
+    "isEnableRepick": false,
+    "isBreakOnPickUp": true,
+    "isHiddenOnRepick": false,
+    "items": [
+      {
+        "goodsId": 17000,
+        "category": 1,
+        "num": 1,
+        "name": "???"
+      }
+    ],
+    "primaryItem": "???",
+    "primaryGoodsId": 17000,
+    "primaryNum": 1
+  },
+  {
+    "model": "AEG099_855",
+    "modelNum": 855,
+    "pickUpItemLotParamId": 998550,
+    "isEnableRepick": true,
+    "isBreakOnPickUp": true,
+    "isHiddenOnRepick": true,
+    "items": [
+      {
+        "goodsId": 20855,
+        "category": 1,
+        "num": 1,
+        "name": "Gravel Stone"
+      },
+      {
+        "goodsId": 20855,
+        "category": 1,
+        "num": 2,
+        "name": "Gravel Stone"
+      }
+    ],
+    "primaryItem": "Gravel Stone",
+    "primaryGoodsId": 20855,
+    "primaryNum": 1
+  },
+  {
+    "model": "AEG099_856",
+    "modelNum": 856,
+    "pickUpItemLotParamId": 998560,
+    "isEnableRepick": false,
+    "isBreakOnPickUp": true,
+    "isHiddenOnRepick": false,
+    "items": [
+      {
+        "goodsId": 17000,
+        "category": 1,
+        "num": 1,
+        "name": "???"
+      }
+    ],
+    "primaryItem": "???",
+    "primaryGoodsId": 17000,
+    "primaryNum": 1
+  },
+  {
+    "model": "AEG099_857",
+    "modelNum": 857,
+    "pickUpItemLotParamId": 998570,
+    "isEnableRepick": false,
+    "isBreakOnPickUp": true,
+    "isHiddenOnRepick": false,
+    "items": [
+      {
+        "goodsId": 17000,
+        "category": 1,
+        "num": 1,
+        "name": "???"
+      }
+    ],
+    "primaryItem": "???",
+    "primaryGoodsId": 17000,
+    "primaryNum": 1
+  },
+  {
+    "model": "AEG099_858",
+    "modelNum": 858,
+    "pickUpItemLotParamId": 998580,
+    "isEnableRepick": false,
+    "isBreakOnPickUp": true,
+    "isHiddenOnRepick": false,
+    "items": [
+      {
+        "goodsId": 17000,
+        "category": 1,
+        "num": 1,
+        "name": "???"
+      }
+    ],
+    "primaryItem": "???",
+    "primaryGoodsId": 17000,
+    "primaryNum": 1
+  },
+  {
+    "model": "AEG099_859",
+    "modelNum": 859,
+    "pickUpItemLotParamId": 998590,
+    "isEnableRepick": false,
+    "isBreakOnPickUp": true,
+    "isHiddenOnRepick": false,
+    "items": [
+      {
+        "goodsId": 17000,
+        "category": 1,
+        "num": 1,
+        "name": "???"
+      }
+    ],
+    "primaryItem": "???",
+    "primaryGoodsId": 17000,
+    "primaryNum": 1
+  },
+  {
+    "model": "AEG099_860",
+    "modelNum": 860,
+    "pickUpItemLotParamId": 998600,
+    "isEnableRepick": true,
+    "isBreakOnPickUp": true,
+    "isHiddenOnRepick": true,
+    "items": [
+      {
+        "goodsId": 10100,
+        "category": 1,
+        "num": 1,
+        "name": "Smithing Stone [1]"
+      }
+    ],
+    "primaryItem": "Smithing Stone [1]",
+    "primaryGoodsId": 10100,
+    "primaryNum": 1
+  },
+  {
+    "model": "AEG099_861",
+    "modelNum": 861,
+    "pickUpItemLotParamId": 998610,
+    "isEnableRepick": true,
+    "isBreakOnPickUp": true,
+    "isHiddenOnRepick": true,
+    "items": [
+      {
+        "goodsId": 10101,
+        "category": 1,
+        "num": 1,
+        "name": "Smithing Stone [2]"
+      }
+    ],
+    "primaryItem": "Smithing Stone [2]",
+    "primaryGoodsId": 10101,
+    "primaryNum": 1
+  },
+  {
+    "model": "AEG099_862",
+    "modelNum": 862,
+    "pickUpItemLotParamId": 998620,
+    "isEnableRepick": true,
+    "isBreakOnPickUp": true,
+    "isHiddenOnRepick": true,
+    "items": [
+      {
+        "goodsId": 10102,
+        "category": 1,
+        "num": 1,
+        "name": "Smithing Stone [3]"
+      }
+    ],
+    "primaryItem": "Smithing Stone [3]",
+    "primaryGoodsId": 10102,
+    "primaryNum": 1
+  },
+  {
+    "model": "AEG099_863",
+    "modelNum": 863,
+    "pickUpItemLotParamId": 998630,
+    "isEnableRepick": true,
+    "isBreakOnPickUp": true,
+    "isHiddenOnRepick": true,
+    "items": [
+      {
+        "goodsId": 10103,
+        "category": 1,
+        "num": 1,
+        "name": "Smithing Stone [4]"
+      }
+    ],
+    "primaryItem": "Smithing Stone [4]",
+    "primaryGoodsId": 10103,
+    "primaryNum": 1
+  },
+  {
+    "model": "AEG099_864",
+    "modelNum": 864,
+    "pickUpItemLotParamId": 998640,
+    "isEnableRepick": true,
+    "isBreakOnPickUp": true,
+    "isHiddenOnRepick": true,
+    "items": [
+      {
+        "goodsId": 10104,
+        "category": 1,
+        "num": 1,
+        "name": "Smithing Stone [5]"
+      }
+    ],
+    "primaryItem": "Smithing Stone [5]",
+    "primaryGoodsId": 10104,
+    "primaryNum": 1
+  },
+  {
+    "model": "AEG099_865",
+    "modelNum": 865,
+    "pickUpItemLotParamId": 998650,
+    "isEnableRepick": true,
+    "isBreakOnPickUp": true,
+    "isHiddenOnRepick": true,
+    "items": [
+      {
+        "goodsId": 10105,
+        "category": 1,
+        "num": 1,
+        "name": "Smithing Stone [6]"
+      }
+    ],
+    "primaryItem": "Smithing Stone [6]",
+    "primaryGoodsId": 10105,
+    "primaryNum": 1
+  },
+  {
+    "model": "AEG099_866",
+    "modelNum": 866,
+    "pickUpItemLotParamId": 998660,
+    "isEnableRepick": true,
+    "isBreakOnPickUp": true,
+    "isHiddenOnRepick": true,
+    "items": [
+      {
+        "goodsId": 10106,
+        "category": 1,
+        "num": 1,
+        "name": "Smithing Stone [7]"
+      }
+    ],
+    "primaryItem": "Smithing Stone [7]",
+    "primaryGoodsId": 10106,
+    "primaryNum": 1
+  },
+  {
+    "model": "AEG099_867",
+    "modelNum": 867,
+    "pickUpItemLotParamId": 998670,
+    "isEnableRepick": true,
+    "isBreakOnPickUp": true,
+    "isHiddenOnRepick": true,
+    "items": [
+      {
+        "goodsId": 10107,
+        "category": 1,
+        "num": 1,
+        "name": "Smithing Stone [8]"
+      }
+    ],
+    "primaryItem": "Smithing Stone [8]",
+    "primaryGoodsId": 10107,
+    "primaryNum": 1
+  },
+  {
+    "model": "AEG099_868",
+    "modelNum": 868,
+    "pickUpItemLotParamId": 998680,
+    "isEnableRepick": true,
+    "isBreakOnPickUp": true,
+    "isHiddenOnRepick": true,
+    "items": [
+      {
+        "goodsId": 10140,
+        "category": 1,
+        "num": 1,
+        "name": "Ancient Dragon Smithing Stone"
+      }
+    ],
+    "primaryItem": "Ancient Dragon Smithing Stone",
+    "primaryGoodsId": 10140,
+    "primaryNum": 1
+  },
+  {
+    "model": "AEG099_869",
+    "modelNum": 869,
+    "pickUpItemLotParamId": 998690,
+    "isEnableRepick": true,
+    "isBreakOnPickUp": true,
+    "isHiddenOnRepick": true,
+    "items": [
+      {
+        "goodsId": 17000,
+        "category": 1,
+        "num": 1,
+        "name": "???"
+      }
+    ],
+    "primaryItem": "???",
+    "primaryGoodsId": 17000,
+    "primaryNum": 1
+  },
+  {
+    "model": "AEG099_870",
+    "modelNum": 870,
+    "pickUpItemLotParamId": 998700,
+    "isEnableRepick": true,
+    "isBreakOnPickUp": true,
+    "isHiddenOnRepick": true,
+    "items": [
+      {
+        "goodsId": 10160,
+        "category": 1,
+        "num": 1,
+        "name": "Somber Smithing Stone [1]"
+      }
+    ],
+    "primaryItem": "Somber Smithing Stone [1]",
+    "primaryGoodsId": 10160,
+    "primaryNum": 1
+  },
+  {
+    "model": "AEG099_871",
+    "modelNum": 871,
+    "pickUpItemLotParamId": 998710,
+    "isEnableRepick": true,
+    "isBreakOnPickUp": true,
+    "isHiddenOnRepick": true,
+    "items": [
+      {
+        "goodsId": 10161,
+        "category": 1,
+        "num": 1,
+        "name": "Somber Smithing Stone [2]"
+      }
+    ],
+    "primaryItem": "Somber Smithing Stone [2]",
+    "primaryGoodsId": 10161,
+    "primaryNum": 1
+  },
+  {
+    "model": "AEG099_872",
+    "modelNum": 872,
+    "pickUpItemLotParamId": 998720,
+    "isEnableRepick": true,
+    "isBreakOnPickUp": true,
+    "isHiddenOnRepick": true,
+    "items": [
+      {
+        "goodsId": 10162,
+        "category": 1,
+        "num": 1,
+        "name": "Somber Smithing Stone [3]"
+      }
+    ],
+    "primaryItem": "Somber Smithing Stone [3]",
+    "primaryGoodsId": 10162,
+    "primaryNum": 1
+  },
+  {
+    "model": "AEG099_873",
+    "modelNum": 873,
+    "pickUpItemLotParamId": 998730,
+    "isEnableRepick": true,
+    "isBreakOnPickUp": true,
+    "isHiddenOnRepick": true,
+    "items": [
+      {
+        "goodsId": 10163,
+        "category": 1,
+        "num": 1,
+        "name": "Somber Smithing Stone [4]"
+      }
+    ],
+    "primaryItem": "Somber Smithing Stone [4]",
+    "primaryGoodsId": 10163,
+    "primaryNum": 1
+  },
+  {
+    "model": "AEG099_874",
+    "modelNum": 874,
+    "pickUpItemLotParamId": 998740,
+    "isEnableRepick": true,
+    "isBreakOnPickUp": true,
+    "isHiddenOnRepick": true,
+    "items": [
+      {
+        "goodsId": 10164,
+        "category": 1,
+        "num": 1,
+        "name": "Somber Smithing Stone [5]"
+      }
+    ],
+    "primaryItem": "Somber Smithing Stone [5]",
+    "primaryGoodsId": 10164,
+    "primaryNum": 1
+  },
+  {
+    "model": "AEG099_875",
+    "modelNum": 875,
+    "pickUpItemLotParamId": 998750,
+    "isEnableRepick": true,
+    "isBreakOnPickUp": true,
+    "isHiddenOnRepick": true,
+    "items": [
+      {
+        "goodsId": 10165,
+        "category": 1,
+        "num": 1,
+        "name": "Somber Smithing Stone [6]"
+      }
+    ],
+    "primaryItem": "Somber Smithing Stone [6]",
+    "primaryGoodsId": 10165,
+    "primaryNum": 1
+  },
+  {
+    "model": "AEG099_876",
+    "modelNum": 876,
+    "pickUpItemLotParamId": 998760,
+    "isEnableRepick": true,
+    "isBreakOnPickUp": true,
+    "isHiddenOnRepick": true,
+    "items": [
+      {
+        "goodsId": 10166,
+        "category": 1,
+        "num": 1,
+        "name": "Somber Smithing Stone [7]"
+      }
+    ],
+    "primaryItem": "Somber Smithing Stone [7]",
+    "primaryGoodsId": 10166,
+    "primaryNum": 1
+  },
+  {
+    "model": "AEG099_877",
+    "modelNum": 877,
+    "pickUpItemLotParamId": 998770,
+    "isEnableRepick": true,
+    "isBreakOnPickUp": true,
+    "isHiddenOnRepick": true,
+    "items": [
+      {
+        "goodsId": 10167,
+        "category": 1,
+        "num": 1,
+        "name": "Somber Smithing Stone [8]"
+      }
+    ],
+    "primaryItem": "Somber Smithing Stone [8]",
+    "primaryGoodsId": 10167,
+    "primaryNum": 1
+  },
+  {
+    "model": "AEG099_878",
+    "modelNum": 878,
+    "pickUpItemLotParamId": 998780,
+    "isEnableRepick": true,
+    "isBreakOnPickUp": true,
+    "isHiddenOnRepick": true,
+    "items": [
+      {
+        "goodsId": 10168,
+        "category": 1,
+        "num": 1,
+        "name": "Somber Ancient Dragon Smithing Stone"
+      }
+    ],
+    "primaryItem": "Somber Ancient Dragon Smithing Stone",
+    "primaryGoodsId": 10168,
+    "primaryNum": 1
+  },
+  {
+    "model": "AEG099_879",
+    "modelNum": 879,
+    "pickUpItemLotParamId": 998790,
+    "isEnableRepick": true,
+    "isBreakOnPickUp": true,
+    "isHiddenOnRepick": true,
+    "items": [
+      {
+        "goodsId": 10200,
+        "category": 1,
+        "num": 1,
+        "name": "Somber Smithing Stone [9]"
+      }
+    ],
+    "primaryItem": "Somber Smithing Stone [9]",
+    "primaryGoodsId": 10200,
+    "primaryNum": 1
+  },
+  {
+    "model": "AEG099_880",
+    "modelNum": 880,
+    "pickUpItemLotParamId": 998800,
+    "isEnableRepick": true,
+    "isBreakOnPickUp": true,
+    "isHiddenOnRepick": true,
+    "items": [
+      {
+        "goodsId": 10150,
+        "category": 1,
+        "num": 1,
+        "name": "Smithing Scadushard"
+      }
+    ],
+    "primaryItem": "Smithing Scadushard",
+    "primaryGoodsId": 10150,
+    "primaryNum": 1
+  },
+  {
+    "model": "AEG099_881",
+    "modelNum": 881,
+    "pickUpItemLotParamId": 998810,
+    "isEnableRepick": true,
+    "isBreakOnPickUp": true,
+    "isHiddenOnRepick": true,
+    "items": [
+      {
+        "goodsId": 10150,
+        "category": 1,
+        "num": 3,
+        "name": "Smithing Scadushard"
+      }
+    ],
+    "primaryItem": "Smithing Scadushard",
+    "primaryGoodsId": 10150,
+    "primaryNum": 3
+  },
+  {
+    "model": "AEG099_882",
+    "modelNum": 882,
+    "pickUpItemLotParamId": 998820,
+    "isEnableRepick": true,
+    "isBreakOnPickUp": true,
+    "isHiddenOnRepick": true,
+    "items": [
+      {
+        "goodsId": 10150,
+        "category": 1,
+        "num": 6,
+        "name": "Smithing Scadushard"
+      }
+    ],
+    "primaryItem": "Smithing Scadushard",
+    "primaryGoodsId": 10150,
+    "primaryNum": 6
+  },
+  {
+    "model": "AEG099_883",
+    "modelNum": 883,
+    "pickUpItemLotParamId": 998830,
+    "isEnableRepick": true,
+    "isBreakOnPickUp": true,
+    "isHiddenOnRepick": true,
+    "items": [
+      {
+        "goodsId": 10150,
+        "category": 1,
+        "num": 9,
+        "name": "Smithing Scadushard"
+      }
+    ],
+    "primaryItem": "Smithing Scadushard",
+    "primaryGoodsId": 10150,
+    "primaryNum": 9
+  },
+  {
+    "model": "AEG099_884",
+    "modelNum": 884,
+    "pickUpItemLotParamId": 998840,
+    "isEnableRepick": true,
+    "isBreakOnPickUp": true,
+    "isHiddenOnRepick": true,
+    "items": [
+      {
+        "goodsId": 10150,
+        "category": 1,
+        "num": 14,
+        "name": "Smithing Scadushard"
+      }
+    ],
+    "primaryItem": "Smithing Scadushard",
+    "primaryGoodsId": 10150,
+    "primaryNum": 14
+  },
+  {
+    "model": "AEG099_885",
+    "modelNum": 885,
+    "pickUpItemLotParamId": 998850,
+    "isEnableRepick": true,
+    "isBreakOnPickUp": true,
+    "isHiddenOnRepick": true,
+    "items": [
+      {
+        "goodsId": 10150,
+        "category": 1,
+        "num": 18,
+        "name": "Smithing Scadushard"
+      }
+    ],
+    "primaryItem": "Smithing Scadushard",
+    "primaryGoodsId": 10150,
+    "primaryNum": 18
+  },
+  {
+    "model": "AEG099_886",
+    "modelNum": 886,
+    "pickUpItemLotParamId": 998860,
+    "isEnableRepick": true,
+    "isBreakOnPickUp": true,
+    "isHiddenOnRepick": true,
+    "items": [
+      {
+        "goodsId": 10150,
+        "category": 1,
+        "num": 24,
+        "name": "Smithing Scadushard"
+      }
+    ],
+    "primaryItem": "Smithing Scadushard",
+    "primaryGoodsId": 10150,
+    "primaryNum": 24
+  },
+  {
+    "model": "AEG099_887",
+    "modelNum": 887,
+    "pickUpItemLotParamId": 998870,
+    "isEnableRepick": true,
+    "isBreakOnPickUp": true,
+    "isHiddenOnRepick": true,
+    "items": [
+      {
+        "goodsId": 10150,
+        "category": 1,
+        "num": 30,
+        "name": "Smithing Scadushard"
+      }
+    ],
+    "primaryItem": "Smithing Scadushard",
+    "primaryGoodsId": 10150,
+    "primaryNum": 30
+  },
+  {
+    "model": "AEG099_888",
+    "modelNum": 888,
+    "pickUpItemLotParamId": 998880,
+    "isEnableRepick": true,
+    "isBreakOnPickUp": true,
+    "isHiddenOnRepick": true,
+    "items": [
+      {
+        "goodsId": 10150,
+        "category": 1,
+        "num": 30,
+        "name": "Smithing Scadushard"
+      }
+    ],
+    "primaryItem": "Smithing Scadushard",
+    "primaryGoodsId": 10150,
+    "primaryNum": 30
+  },
+  {
+    "model": "AEG099_889",
+    "modelNum": 889,
+    "pickUpItemLotParamId": 998890,
+    "isEnableRepick": false,
+    "isBreakOnPickUp": true,
+    "isHiddenOnRepick": false,
+    "items": [
+      {
+        "goodsId": 17000,
+        "category": 1,
+        "num": 1,
+        "name": "???"
+      }
+    ],
+    "primaryItem": "???",
+    "primaryGoodsId": 17000,
+    "primaryNum": 1
+  },
+  {
+    "model": "AEG099_890",
+    "modelNum": 890,
+    "pickUpItemLotParamId": 998900,
+    "isEnableRepick": true,
+    "isBreakOnPickUp": true,
+    "isHiddenOnRepick": true,
+    "items": [
+      {
+        "goodsId": 10151,
+        "category": 1,
+        "num": 2,
+        "name": "Somber Smithing Scadushard"
+      }
+    ],
+    "primaryItem": "Somber Smithing Scadushard",
+    "primaryGoodsId": 10151,
+    "primaryNum": 2
+  },
+  {
+    "model": "AEG099_891",
+    "modelNum": 891,
+    "pickUpItemLotParamId": 998910,
+    "isEnableRepick": true,
+    "isBreakOnPickUp": true,
+    "isHiddenOnRepick": true,
+    "items": [
+      {
+        "goodsId": 10151,
+        "category": 1,
+        "num": 6,
+        "name": "Somber Smithing Scadushard"
+      }
+    ],
+    "primaryItem": "Somber Smithing Scadushard",
+    "primaryGoodsId": 10151,
+    "primaryNum": 6
+  },
+  {
+    "model": "AEG099_892",
+    "modelNum": 892,
+    "pickUpItemLotParamId": 998920,
+    "isEnableRepick": true,
+    "isBreakOnPickUp": true,
+    "isHiddenOnRepick": true,
+    "items": [
+      {
+        "goodsId": 10151,
+        "category": 1,
+        "num": 8,
+        "name": "Somber Smithing Scadushard"
+      }
+    ],
+    "primaryItem": "Somber Smithing Scadushard",
+    "primaryGoodsId": 10151,
+    "primaryNum": 8
+  },
+  {
+    "model": "AEG099_893",
+    "modelNum": 893,
+    "pickUpItemLotParamId": 998930,
+    "isEnableRepick": true,
+    "isBreakOnPickUp": true,
+    "isHiddenOnRepick": true,
+    "items": [
+      {
+        "goodsId": 10151,
+        "category": 1,
+        "num": 12,
+        "name": "Somber Smithing Scadushard"
+      }
+    ],
+    "primaryItem": "Somber Smithing Scadushard",
+    "primaryGoodsId": 10151,
+    "primaryNum": 12
+  },
+  {
+    "model": "AEG099_894",
+    "modelNum": 894,
+    "pickUpItemLotParamId": 998940,
+    "isEnableRepick": true,
+    "isBreakOnPickUp": true,
+    "isHiddenOnRepick": true,
+    "items": [
+      {
+        "goodsId": 10151,
+        "category": 1,
+        "num": 18,
+        "name": "Somber Smithing Scadushard"
+      }
+    ],
+    "primaryItem": "Somber Smithing Scadushard",
+    "primaryGoodsId": 10151,
+    "primaryNum": 18
+  },
+  {
+    "model": "AEG099_895",
+    "modelNum": 895,
+    "pickUpItemLotParamId": 998950,
+    "isEnableRepick": true,
+    "isBreakOnPickUp": true,
+    "isHiddenOnRepick": true,
+    "items": [
+      {
+        "goodsId": 10151,
+        "category": 1,
+        "num": 24,
+        "name": "Somber Smithing Scadushard"
+      }
+    ],
+    "primaryItem": "Somber Smithing Scadushard",
+    "primaryGoodsId": 10151,
+    "primaryNum": 24
+  },
+  {
+    "model": "AEG099_896",
+    "modelNum": 896,
+    "pickUpItemLotParamId": 998960,
+    "isEnableRepick": true,
+    "isBreakOnPickUp": true,
+    "isHiddenOnRepick": true,
+    "items": [
+      {
+        "goodsId": 10151,
+        "category": 1,
+        "num": 32,
+        "name": "Somber Smithing Scadushard"
+      }
+    ],
+    "primaryItem": "Somber Smithing Scadushard",
+    "primaryGoodsId": 10151,
+    "primaryNum": 32
+  },
+  {
+    "model": "AEG099_897",
+    "modelNum": 897,
+    "pickUpItemLotParamId": 998970,
+    "isEnableRepick": true,
+    "isBreakOnPickUp": true,
+    "isHiddenOnRepick": true,
+    "items": [
+      {
+        "goodsId": 10151,
+        "category": 1,
+        "num": 40,
+        "name": "Somber Smithing Scadushard"
+      }
+    ],
+    "primaryItem": "Somber Smithing Scadushard",
+    "primaryGoodsId": 10151,
+    "primaryNum": 40
+  },
+  {
+    "model": "AEG099_898",
+    "modelNum": 898,
+    "pickUpItemLotParamId": 998980,
+    "isEnableRepick": true,
+    "isBreakOnPickUp": true,
+    "isHiddenOnRepick": true,
+    "items": [
+      {
+        "goodsId": 10151,
+        "category": 1,
+        "num": 50,
+        "name": "Somber Smithing Scadushard"
+      }
+    ],
+    "primaryItem": "Somber Smithing Scadushard",
+    "primaryGoodsId": 10151,
+    "primaryNum": 50
+  },
+  {
+    "model": "AEG099_899",
+    "modelNum": 899,
+    "pickUpItemLotParamId": 998990,
+    "isEnableRepick": true,
+    "isBreakOnPickUp": true,
+    "isHiddenOnRepick": true,
+    "items": [
+      {
+        "goodsId": 10151,
+        "category": 1,
+        "num": 50,
+        "name": "Somber Smithing Scadushard"
+      }
+    ],
+    "primaryItem": "Somber Smithing Scadushard",
+    "primaryGoodsId": 10151,
+    "primaryNum": 50
+  },
+  {
+    "model": "AEG099_920",
+    "modelNum": 920,
+    "pickUpItemLotParamId": 999200,
+    "isEnableRepick": true,
+    "isBreakOnPickUp": true,
+    "isHiddenOnRepick": true,
+    "items": [
+      {
+        "goodsId": 10900,
+        "category": 1,
+        "num": 1,
+        "name": "Grave Glovewort [1]"
+      }
+    ],
+    "primaryItem": "Grave Glovewort [1]",
+    "primaryGoodsId": 10900,
+    "primaryNum": 1
+  },
+  {
+    "model": "AEG099_921",
+    "modelNum": 921,
+    "pickUpItemLotParamId": 999210,
+    "isEnableRepick": true,
+    "isBreakOnPickUp": true,
+    "isHiddenOnRepick": true,
+    "items": [
+      {
+        "goodsId": 10901,
+        "category": 1,
+        "num": 1,
+        "name": "Grave Glovewort [2]"
+      }
+    ],
+    "primaryItem": "Grave Glovewort [2]",
+    "primaryGoodsId": 10901,
+    "primaryNum": 1
+  },
+  {
+    "model": "AEG099_922",
+    "modelNum": 922,
+    "pickUpItemLotParamId": 999220,
+    "isEnableRepick": true,
+    "isBreakOnPickUp": true,
+    "isHiddenOnRepick": true,
+    "items": [
+      {
+        "goodsId": 10902,
+        "category": 1,
+        "num": 1,
+        "name": "Grave Glovewort [3]"
+      }
+    ],
+    "primaryItem": "Grave Glovewort [3]",
+    "primaryGoodsId": 10902,
+    "primaryNum": 1
+  },
+  {
+    "model": "AEG099_923",
+    "modelNum": 923,
+    "pickUpItemLotParamId": 999230,
+    "isEnableRepick": true,
+    "isBreakOnPickUp": true,
+    "isHiddenOnRepick": true,
+    "items": [
+      {
+        "goodsId": 10903,
+        "category": 1,
+        "num": 1,
+        "name": "Grave Glovewort [4]"
+      }
+    ],
+    "primaryItem": "Grave Glovewort [4]",
+    "primaryGoodsId": 10903,
+    "primaryNum": 1
+  },
+  {
+    "model": "AEG099_924",
+    "modelNum": 924,
+    "pickUpItemLotParamId": 999240,
+    "isEnableRepick": true,
+    "isBreakOnPickUp": true,
+    "isHiddenOnRepick": true,
+    "items": [
+      {
+        "goodsId": 10904,
+        "category": 1,
+        "num": 1,
+        "name": "Grave Glovewort [5]"
+      }
+    ],
+    "primaryItem": "Grave Glovewort [5]",
+    "primaryGoodsId": 10904,
+    "primaryNum": 1
+  },
+  {
+    "model": "AEG099_925",
+    "modelNum": 925,
+    "pickUpItemLotParamId": 999250,
+    "isEnableRepick": true,
+    "isBreakOnPickUp": true,
+    "isHiddenOnRepick": true,
+    "items": [
+      {
+        "goodsId": 10905,
+        "category": 1,
+        "num": 1,
+        "name": "Grave Glovewort [6]"
+      }
+    ],
+    "primaryItem": "Grave Glovewort [6]",
+    "primaryGoodsId": 10905,
+    "primaryNum": 1
+  },
+  {
+    "model": "AEG099_926",
+    "modelNum": 926,
+    "pickUpItemLotParamId": 999260,
+    "isEnableRepick": true,
+    "isBreakOnPickUp": true,
+    "isHiddenOnRepick": true,
+    "items": [
+      {
+        "goodsId": 10906,
+        "category": 1,
+        "num": 1,
+        "name": "Grave Glovewort [7]"
+      }
+    ],
+    "primaryItem": "Grave Glovewort [7]",
+    "primaryGoodsId": 10906,
+    "primaryNum": 1
+  },
+  {
+    "model": "AEG099_927",
+    "modelNum": 927,
+    "pickUpItemLotParamId": 999270,
+    "isEnableRepick": true,
+    "isBreakOnPickUp": true,
+    "isHiddenOnRepick": true,
+    "items": [
+      {
+        "goodsId": 10907,
+        "category": 1,
+        "num": 1,
+        "name": "Grave Glovewort [8]"
+      }
+    ],
+    "primaryItem": "Grave Glovewort [8]",
+    "primaryGoodsId": 10907,
+    "primaryNum": 1
+  },
+  {
+    "model": "AEG099_928",
+    "modelNum": 928,
+    "pickUpItemLotParamId": 999280,
+    "isEnableRepick": true,
+    "isBreakOnPickUp": true,
+    "isHiddenOnRepick": true,
+    "items": [
+      {
+        "goodsId": 10908,
+        "category": 1,
+        "num": 1,
+        "name": "Grave Glovewort [9]"
+      }
+    ],
+    "primaryItem": "Grave Glovewort [9]",
+    "primaryGoodsId": 10908,
+    "primaryNum": 1
+  },
+  {
+    "model": "AEG099_929",
+    "modelNum": 929,
+    "pickUpItemLotParamId": 999290,
+    "isEnableRepick": true,
+    "isBreakOnPickUp": true,
+    "isHiddenOnRepick": true,
+    "items": [
+      {
+        "goodsId": 10909,
+        "category": 1,
+        "num": 1,
+        "name": "Great Grave Glovewort"
+      }
+    ],
+    "primaryItem": "Great Grave Glovewort",
+    "primaryGoodsId": 10909,
+    "primaryNum": 1
+  },
+  {
+    "model": "AEG099_930",
+    "modelNum": 930,
+    "pickUpItemLotParamId": 999300,
+    "isEnableRepick": true,
+    "isBreakOnPickUp": true,
+    "isHiddenOnRepick": true,
+    "items": [
+      {
+        "goodsId": 10910,
+        "category": 1,
+        "num": 1,
+        "name": "Ghost Glovewort [1]"
+      }
+    ],
+    "primaryItem": "Ghost Glovewort [1]",
+    "primaryGoodsId": 10910,
+    "primaryNum": 1
+  },
+  {
+    "model": "AEG099_931",
+    "modelNum": 931,
+    "pickUpItemLotParamId": 999310,
+    "isEnableRepick": true,
+    "isBreakOnPickUp": true,
+    "isHiddenOnRepick": true,
+    "items": [
+      {
+        "goodsId": 10911,
+        "category": 1,
+        "num": 1,
+        "name": "Ghost Glovewort [2]"
+      }
+    ],
+    "primaryItem": "Ghost Glovewort [2]",
+    "primaryGoodsId": 10911,
+    "primaryNum": 1
+  },
+  {
+    "model": "AEG099_932",
+    "modelNum": 932,
+    "pickUpItemLotParamId": 999320,
+    "isEnableRepick": true,
+    "isBreakOnPickUp": true,
+    "isHiddenOnRepick": true,
+    "items": [
+      {
+        "goodsId": 10912,
+        "category": 1,
+        "num": 1,
+        "name": "Ghost Glovewort [3]"
+      }
+    ],
+    "primaryItem": "Ghost Glovewort [3]",
+    "primaryGoodsId": 10912,
+    "primaryNum": 1
+  },
+  {
+    "model": "AEG099_933",
+    "modelNum": 933,
+    "pickUpItemLotParamId": 999330,
+    "isEnableRepick": true,
+    "isBreakOnPickUp": true,
+    "isHiddenOnRepick": true,
+    "items": [
+      {
+        "goodsId": 10913,
+        "category": 1,
+        "num": 1,
+        "name": "Ghost Glovewort [4]"
+      }
+    ],
+    "primaryItem": "Ghost Glovewort [4]",
+    "primaryGoodsId": 10913,
+    "primaryNum": 1
+  },
+  {
+    "model": "AEG099_934",
+    "modelNum": 934,
+    "pickUpItemLotParamId": 999340,
+    "isEnableRepick": true,
+    "isBreakOnPickUp": true,
+    "isHiddenOnRepick": true,
+    "items": [
+      {
+        "goodsId": 10914,
+        "category": 1,
+        "num": 1,
+        "name": "Ghost Glovewort [5]"
+      }
+    ],
+    "primaryItem": "Ghost Glovewort [5]",
+    "primaryGoodsId": 10914,
+    "primaryNum": 1
+  },
+  {
+    "model": "AEG099_935",
+    "modelNum": 935,
+    "pickUpItemLotParamId": 999350,
+    "isEnableRepick": true,
+    "isBreakOnPickUp": true,
+    "isHiddenOnRepick": true,
+    "items": [
+      {
+        "goodsId": 10915,
+        "category": 1,
+        "num": 1,
+        "name": "Ghost Glovewort [6]"
+      }
+    ],
+    "primaryItem": "Ghost Glovewort [6]",
+    "primaryGoodsId": 10915,
+    "primaryNum": 1
+  },
+  {
+    "model": "AEG099_936",
+    "modelNum": 936,
+    "pickUpItemLotParamId": 999360,
+    "isEnableRepick": true,
+    "isBreakOnPickUp": true,
+    "isHiddenOnRepick": true,
+    "items": [
+      {
+        "goodsId": 10916,
+        "category": 1,
+        "num": 1,
+        "name": "Ghost Glovewort [7]"
+      }
+    ],
+    "primaryItem": "Ghost Glovewort [7]",
+    "primaryGoodsId": 10916,
+    "primaryNum": 1
+  },
+  {
+    "model": "AEG099_937",
+    "modelNum": 937,
+    "pickUpItemLotParamId": 999370,
+    "isEnableRepick": true,
+    "isBreakOnPickUp": true,
+    "isHiddenOnRepick": true,
+    "items": [
+      {
+        "goodsId": 10917,
+        "category": 1,
+        "num": 1,
+        "name": "Ghost Glovewort [8]"
+      }
+    ],
+    "primaryItem": "Ghost Glovewort [8]",
+    "primaryGoodsId": 10917,
+    "primaryNum": 1
+  },
+  {
+    "model": "AEG099_938",
+    "modelNum": 938,
+    "pickUpItemLotParamId": 999380,
+    "isEnableRepick": true,
+    "isBreakOnPickUp": true,
+    "isHiddenOnRepick": true,
+    "items": [
+      {
+        "goodsId": 10918,
+        "category": 1,
+        "num": 1,
+        "name": "Ghost Glovewort [9]"
+      }
+    ],
+    "primaryItem": "Ghost Glovewort [9]",
+    "primaryGoodsId": 10918,
+    "primaryNum": 1
+  },
+  {
+    "model": "AEG099_939",
+    "modelNum": 939,
+    "pickUpItemLotParamId": 999390,
+    "isEnableRepick": true,
+    "isBreakOnPickUp": true,
+    "isHiddenOnRepick": true,
+    "items": [
+      {
+        "goodsId": 10919,
+        "category": 1,
+        "num": 1,
+        "name": "Great Ghost Glovewort"
+      }
+    ],
+    "primaryItem": "Great Ghost Glovewort",
+    "primaryGoodsId": 10919,
+    "primaryNum": 1
+  }
+]
