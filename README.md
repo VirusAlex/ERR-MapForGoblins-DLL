@@ -114,7 +114,7 @@ This project builds on the work of many people and projects:
 ### Game & Mod
 
 - **FromSoftware** - Elden Ring
-- **Elden Ring Reforged** team - the overhaul mod that inspired this project. Thanks to **ivi** and the ERR Discord
+- **Elden Ring Reforged** team - the overhaul mod that inspired this project. Thanks to [**ividyon**](https://github.com/ividyon) and the ERR Discord
 - **Gacsam** - [Goblin-ERR](https://github.com/Gacsam/Goblin-ERR), the original map icons mod for ERR. MapForGoblins started as a fork of this project and reuses its map fragment logic
 - **Nox** - [Goblin Maps](https://www.nexusmods.com/eldenring/mods/3091), the original Elden Ring map icons mod that started it all
 
@@ -128,6 +128,7 @@ This project builds on the work of many people and projects:
 - **TsudaKageyu** - [MinHook](https://github.com/TsudaKageyu/minhook), API hooking framework
 - **gabime** - [spdlog](https://github.com/gabime/spdlog), logging library
 - **metayeti** - [mINI](https://github.com/metayeti/mINI), INI file parser
+- **[Claude Code](https://claude.com/claude-code)** (Anthropic) - heavy lifting on the data-extraction pipeline automation and on reverse-engineering the game's in-memory geom-object state (the collected-piece detection research)
 
 ### Community
 
