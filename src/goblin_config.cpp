@@ -83,12 +83,14 @@ bool goblin::config::showSpiritspringHawks = true;
 bool goblin::config::showStakesOfMarika = true;
 bool goblin::config::showSummoningPools = true;
 
-// Bosses
-bool goblin::config::showOverworldBossIcons = true;
-bool goblin::config::showDungeonBossIcons = true;
-bool goblin::config::showCampIcons = true;
-bool goblin::config::showMerchantIcons = true;
+// ERR Markers (patches to ERR-placed map markers; see goblin_config.hpp)
+bool goblin::config::patchOverworldBossIcons = true;
+bool goblin::config::patchDungeonBossIcons = true;
+bool goblin::config::patchCampIcons = true;
+bool goblin::config::patchMerchantIcons = true;
 bool goblin::config::redifyBossIcons = false;
+bool goblin::config::redifyDungeonIcons = false;
+bool goblin::config::hideDungeonIconsOnClear = false;
 
 bool goblin::config::enableMarkerDump = true;
 uint32_t goblin::config::markerDumpKey = 0x78;  // VK_F9
@@ -215,14 +217,16 @@ void goblin::load_config(const std::filesystem::path &ini_path)
         load_line(cfg, "show_summoning_pools", config::showSummoningPools);
     }
 
-    if (ini.has("Bosses"))
+    if (ini.has("ERR Markers"))
     {
-        auto &cfg = ini["Bosses"];
-        load_line(cfg, "show_overworld_boss_icons", config::showOverworldBossIcons);
-        load_line(cfg, "show_dungeon_boss_icons", config::showDungeonBossIcons);
-        load_line(cfg, "show_camp_icons", config::showCampIcons);
-        load_line(cfg, "show_merchant_icons", config::showMerchantIcons);
+        auto &cfg = ini["ERR Markers"];
+        load_line(cfg, "patch_overworld_boss_icons", config::patchOverworldBossIcons);
+        load_line(cfg, "patch_dungeon_boss_icons", config::patchDungeonBossIcons);
+        load_line(cfg, "patch_camp_icons", config::patchCampIcons);
+        load_line(cfg, "patch_merchant_icons", config::patchMerchantIcons);
         load_line(cfg, "redify_boss_icons", config::redifyBossIcons);
+        load_line(cfg, "redify_dungeon_icons", config::redifyDungeonIcons);
+        load_line(cfg, "hide_dungeon_icons_on_clear", config::hideDungeonIconsOnClear);
     }
 
     if (ini.has("Debug"))

@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 3.28.1)
 set(CMAKE_GENERATOR_PLATFORM x64)
 
 project( MapForGoblins
-  VERSION   "1.0.9"
+  VERSION   "1.0.10"
   LANGUAGES CXX)
 
 set(VERSION_PRE "pre")  # set to "" for release builds
@@ -82,7 +82,9 @@ if(VERSION_PRE)
 else()
   set(FULL_VERSION "${CMAKE_PROJECT_VERSION}")
 endif()
-add_definitions(-DPROJECT_VERSION="${FULL_VERSION}")
+configure_file(${CMAKE_SOURCE_DIR}/src/version.h.in
+               ${CMAKE_BINARY_DIR}/generated/version.h @ONLY)
+target_include_directories(MapForGoblins PRIVATE ${CMAKE_BINARY_DIR}/generated)
 
 add_custom_command(TARGET MapForGoblins POST_BUILD
   COMMAND ${CMAKE_COMMAND} -E copy -t $<TARGET_FILE_DIR:MapForGoblins>

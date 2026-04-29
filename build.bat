@@ -108,7 +108,10 @@ echo.
 echo Building MapForGoblins...
 echo ----------------------------------------
 
-cmd /c "call "%VS_PATH%" -arch=amd64 >nul 2>&1 && cd /d "%BUILD_DIR%" && msbuild MapForGoblins.sln /p:Configuration=Release /p:Platform=x64 /t:MapForGoblins /v:minimal /m"
+REM /t:MapForGoblins:Rebuild forces clean rebuild of just the DLL target,
+REM avoiding LTCG "copied from previous compilation" cache quirks that can
+REM embed stale code (e.g. the PROJECT_VERSION macro not propagating).
+cmd /c "call "%VS_PATH%" -arch=amd64 >nul 2>&1 && cd /d "%BUILD_DIR%" && msbuild MapForGoblins.sln /p:Configuration=Release /p:Platform=x64 /t:MapForGoblins:Rebuild /v:minimal /m"
 if errorlevel 1 (
     echo [FAILED] Snapshot build
     exit /b 1
@@ -163,7 +166,9 @@ if errorlevel 1 (
 )
 
 cd /d "%BUILD_DIR%"
-msbuild MapForGoblins.sln /p:Configuration=Release /p:Platform=x64 /t:MapForGoblins /v:minimal /m
+REM Rebuild forces a clean LTCG pass so the version macro and any recently
+REM changed sources are actually re-emitted into the DLL.
+msbuild MapForGoblins.sln /p:Configuration=Release /p:Platform=x64 /t:MapForGoblins:Rebuild /v:minimal /m
 if errorlevel 1 (
     echo [FAILED] Release build
     exit /b 1

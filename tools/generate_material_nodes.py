@@ -13,7 +13,7 @@ import json
 import os
 import sys
 from pathlib import Path
-from massedit_common import UNDERGROUND_AREAS, DLC_AREAS
+from massedit_common import UNDERGROUND_AREAS, DLC_AREAS, OVERWORLD_AREAS, resolve_location_id
 
 def main():
     project_dir = Path(__file__).parent.parent
@@ -29,9 +29,30 @@ def main():
     with open(data_dir / "all_gathering_nodes_final.json") as f:
         all_nodes = json.load(f)
 
-    # One-time models: isEnableRepick=True AND isHiddenOnRepick=True
+    # ERR-specific per-instance collection flags extracted from EMEVD.
+    # Only the `by_tile_entity` path is trusted: it's derived from actual
+    # EMEVD instructions that wire a tile+EntityID pair to a specific
+    # collection flag. The old `by_name_suffix` fallback was a naive
+    # heuristic that reused any tile's flag for every node with a matching
+    # name suffix — producing phantom flags pointing at the wrong tile.
+    # Nodes with entity_id=0 (no EMEVD binding) fall back to runtime-only
+    # hiding via collected::refresh(), same as Rune/Ember Pieces.
+    gn_flags_path = data_dir / "gathering_node_flags.json"
+    if gn_flags_path.exists():
+        with open(gn_flags_path) as f:
+            gn_flags_data = json.load(f)
+        gn_flags_by_tile = gn_flags_data.get("by_tile_entity", {})
+    else:
+        gn_flags_by_tile = {}
+
+    # One-time models: isEnableRepick=True AND isHiddenOnRepick=True.
+    # AEG099_821 (Rune Piece) and AEG099_822 (Ember Piece) also match but are
+    # handled by generate_pieces_massedit.py — don't double-generate markers.
+    PIECES_MODELS = {"AEG099_821", "AEG099_822"}
     onetime_models = {}
     for e in aeg099 + aeg463:
+        if e["model"] in PIECES_MODELS:
+            continue
         if e.get("isEnableRepick") and e.get("isHiddenOnRepick"):
             onetime_models[e["model"]] = e
 
@@ -75,6 +96,25 @@ def main():
             "textId1": goods_id + 500000000,  # offset-encoded to avoid PlaceName collision
             "selectMinZoomStep": 1,
         }
+        # Location subtitle for non-overworld maps (dungeons, legacy dungeons, DLC dungeons)
+        if area not in OVERWORLD_AREAS:
+            loc_id = resolve_location_id(n.get("map", ""))
+            if loc_id > 0:
+                entry["textId2"] = loc_id
+
+        # ERR per-instance collection flag — hides the marker once the node
+        # has been picked even on tiles that are currently unloaded. Only
+        # emit the flag when we have a genuine EMEVD-derived mapping for
+        # this specific (tile, entity_id); no heuristic fallback. Nodes
+        # without a mapping rely on runtime collected::refresh() to hide.
+        entity_id = n.get("entity_id", 0)
+        if entity_id:
+            tile_flags = gn_flags_by_tile.get(n.get("map", ""), {})
+            flag = tile_flags.get(str(entity_id))
+            if flag:
+                entry["textDisableFlagId1"] = flag
+                if "textId2" in entry:
+                    entry["textDisableFlagId2"] = flag
         if area in (60, 61):
             entry["gridXNo"] = n["p1"]
             entry["gridZNo"] = n["p2"]
@@ -133,6 +173,12 @@ def main():
             f.write(f'param WorldMapPointParam: id {rid}: posY: = {e["posY"]};\n')
             f.write(f'param WorldMapPointParam: id {rid}: posZ: = {e["posZ"]};\n')
             f.write(f'param WorldMapPointParam: id {rid}: textId1: = {e["textId1"]};\n')
+            if "textDisableFlagId1" in e:
+                f.write(f'param WorldMapPointParam: id {rid}: textDisableFlagId1: = {e["textDisableFlagId1"]};\n')
+            if "textId2" in e:
+                f.write(f'param WorldMapPointParam: id {rid}: textId2: = {e["textId2"]};\n')
+            if "textDisableFlagId2" in e:
+                f.write(f'param WorldMapPointParam: id {rid}: textDisableFlagId2: = {e["textDisableFlagId2"]};\n')
             f.write(f'param WorldMapPointParam: id {rid}: selectMinZoomStep: = {e["selectMinZoomStep"]};\n')
 
     print(f"Written to {massedit_path}")

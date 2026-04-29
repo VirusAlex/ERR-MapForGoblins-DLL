@@ -31,6 +31,7 @@ enum class Category : uint8_t
     LootCraftingMaterials,
     LootMPFingers,
     LootMaterialNodes,
+    LootMerchantBellBearings,
     LootReusables,
     LootSmithingStones,
     LootSmithingStonesLow,

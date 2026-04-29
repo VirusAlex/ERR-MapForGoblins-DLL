@@ -111,6 +111,11 @@ static void HideOnCompletion(int rowId, from::paramdef::WORLD_MAP_POINT_PARAM_ST
     }
 }
 
+// In ERR's custom icon tga, iconId 372/373 regions are transparent — assigning
+// them makes the marker invisible. iconId 374 is the valid "red skull / boss"
+// region. The rest of the generator already uses 374 for boss markers.
+static constexpr int kRedSkullIconId = 374;
+
 static void SetupOverworldERR(int rowId, from::paramdef::WORLD_MAP_POINT_PARAM_ST &row)
 {
     row.textEnableFlagId2 = row.eventFlagId;
@@ -118,7 +123,7 @@ static void SetupOverworldERR(int rowId, from::paramdef::WORLD_MAP_POINT_PARAM_S
 
     if (config::redifyBossIcons)
     {
-        row.iconId = 372;
+        row.iconId = kRedSkullIconId;
         HideOnCompletion(rowId, row);
     }
 }
@@ -131,9 +136,12 @@ static void SetupDungeonERR(int rowId, from::paramdef::WORLD_MAP_POINT_PARAM_ST 
     row.textEnableFlagId3 = row.eventFlagId;
     row.eventFlagId = 0;
 
-    if (config::redifyBossIcons)
+    if (config::redifyDungeonIcons)
     {
-        row.iconId = 372;
+        row.iconId = kRedSkullIconId;
+    }
+    if (config::hideDungeonIconsOnClear)
+    {
         HideOnCompletion(rowId, row);
     }
 }
@@ -170,30 +178,30 @@ void goblin::apply_map_logic()
             row.eventFlagId = GetIconFlag(rowId, row);
             modified_goblin++;
         }
-        // Camp icons
+        // Camp markers (textId2=5000) — ERR-placed, opt-in patching
         else if (row.textId2 == 5000)
         {
-            if (config::showCampIcons)
+            if (config::patchCampIcons)
             {
                 SetupCampsERR(rowId, row);
                 modified_camp++;
             }
         }
-        // Merchant icons
+        // Merchant markers (textId4=8800) — ERR-placed, opt-in patching
         else if (row.textId4 == 8800)
         {
-            if (config::showMerchantIcons)
+            if (config::patchMerchantIcons)
             {
                 SetupMerchants(rowId, row);
                 modified_merchant++;
             }
         }
-        // Boss icons
+        // Boss markers — overworld (textId2=5100) or dungeon (textId3=5100/5300)
         else if (row.textId2 == 5100 || row.textId3 == 5100 || row.textId3 == 5300)
         {
             if (row.textId2 == 5100)
             {
-                if (config::showOverworldBossIcons)
+                if (config::patchOverworldBossIcons)
                 {
                     SetupOverworldERR(rowId, row);
                     modified_boss++;
@@ -201,7 +209,7 @@ void goblin::apply_map_logic()
             }
             else
             {
-                if (config::showDungeonBossIcons)
+                if (config::patchDungeonBossIcons)
                 {
                     SetupDungeonERR(rowId, row);
                     modified_boss++;

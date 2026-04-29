@@ -50,7 +50,11 @@ def main():
         aeg099_models = set(e["model"] for e in json.load(f))
     aeg463_prefix = "AEG463_"
 
-    msb_dir = str(config.GAME_DIR / "map" / "MapStudio")
+    # Scan ERR's MODDED MapStudio — vanilla has a different layout for some
+    # tiles (e.g. m32_00 where ERR replaces several AEG099_860 smithing stones
+    # with respawning AEG099_780 cracked crystals in-place). We must reflect
+    # the actually-played layout, not vanilla.
+    msb_dir = str(config.require_err_mod_dir() / "map" / "MapStudio")
     pat = re.compile(r"^m(\d+)_(\d+)_(\d+)_(\d+)$")
 
     all_nodes = []
@@ -73,10 +77,13 @@ def main():
                 if not is_gather:
                     continue
                 pos = part.Position
+                entity_id = int(part.EntityID) if hasattr(part, 'EntityID') else 0
+                instance_id = int(part.InstanceID) if hasattr(part, 'InstanceID') else -1
                 all_nodes.append({
                     "model": model, "name": str(part.Name), "map": fname,
                     "area": area, "p1": p1, "p2": p2, "p3": p3,
                     "x": float(pos.X), "y": float(pos.Y), "z": float(pos.Z),
+                    "entity_id": entity_id, "instance_id": instance_id,
                 })
         except:
             errors += 1

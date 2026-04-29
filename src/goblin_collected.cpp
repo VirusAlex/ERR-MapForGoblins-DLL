@@ -2,13 +2,13 @@
 #include "goblin_config.hpp"
 #include "generated/goblin_map_data.hpp"
 
+#include <cmath>
 #include <cstring>
-#include <filesystem>
-#include <fstream>
 #include <map>
 #include <set>
 #include <spdlog/spdlog.h>
 #include <string>
+#include <tuple>
 #include <vector>
 
 #define WIN32_LEAN_AND_MEAN
@@ -69,39 +69,11 @@ static std::map<uint32_t, std::vector<uint64_t>> g_tile_to_rows;                
 static std::map<uint32_t, std::map<std::string, uint64_t>> g_tile_name_to_row;  // tile → object_name → row_id
 // 3D slot map: tile → prefix → geom_slot → row_id  (no cross-model collisions)
 static std::map<uint32_t, std::map<std::string, std::map<int, uint64_t>>> g_tile_slot_to_row;
+// MSB-local (posX, posY, posZ) per tracked row — used to detect ERR-style
+// "replacement" where a different AEG099_* spawns at the same coords.
+static std::map<uint64_t, std::tuple<float, float, float>> g_entry_positions;
 static bool g_initialized = false;
-static bool g_dumped_geom_ins = false;
 
-
-// ─── save file discovery ───────────────────────────────────────────────
-
-static std::filesystem::path find_save_file()
-{
-    char *appdata = nullptr;
-    size_t len = 0;
-    _dupenv_s(&appdata, &len, "APPDATA");
-    if (!appdata)
-        return {};
-
-    std::filesystem::path er_dir = std::filesystem::path(appdata) / "EldenRing";
-    free(appdata);
-
-    if (!std::filesystem::exists(er_dir))
-        return {};
-
-    for (auto &entry : std::filesystem::directory_iterator(er_dir))
-    {
-        if (!entry.is_directory())
-            continue;
-        for (auto ext : {"ER0000.err", "ER0000.sl2"})
-        {
-            auto candidate = entry.path() / ext;
-            if (std::filesystem::exists(candidate))
-                return candidate;
-        }
-    }
-    return {};
-}
 
 struct GEOFEntry
 {
@@ -111,85 +83,10 @@ struct GEOFEntry
     uint32_t model_hash;  // bytes 4-7 of GEOF entry, identifies model type
 };
 
-struct GEOFSection
-{
-    size_t offset;
-    int piece_count;
-    std::vector<GEOFEntry> pieces;
-};
-
 // Each geom_idx holds two slots: flags=0x00 → even, flags=0x80 → odd
 static int aeg099_index_from_geof(uint16_t geom_idx, uint8_t flags)
 {
     return (geom_idx - GEOM_IDX_MIN) * 2 + ((flags & 0x80) ? 1 : 0);
-}
-
-// ─── GEOF parsing from save file ──────────────────────────────────────
-
-static bool is_aeg099_geom(uint16_t geom_idx, uint8_t flags)
-{
-    return geom_idx >= GEOM_IDX_MIN &&
-           (flags == 0x00 || flags == 0x80);
-}
-
-static std::vector<GEOFSection> parse_all_geof_sections(const std::vector<uint8_t> &data)
-{
-    std::vector<GEOFSection> sections;
-    const uint8_t magic[] = {'F', 'O', 'E', 'G'};
-
-    for (size_t pos = 4; pos + 4 < data.size(); pos++)
-    {
-        if (memcmp(data.data() + pos, magic, 4) != 0)
-            continue;
-
-        int32_t total_size = 0;
-        memcpy(&total_size, data.data() + pos - 4, 4);
-        if (total_size <= 12 || total_size > 0x100000)
-            continue;
-
-        size_t section_start = pos - 4;
-        size_t chunk_pos = section_start + 12;
-        size_t section_end = section_start + total_size;
-
-        GEOFSection sec;
-        sec.offset = section_start;
-        sec.piece_count = 0;
-
-        while (chunk_pos + 16 <= section_end && chunk_pos + 16 <= data.size())
-        {
-            if (data[chunk_pos] == 0xFF && data[chunk_pos + 1] == 0xFF &&
-                data[chunk_pos + 2] == 0xFF && data[chunk_pos + 3] == 0xFF)
-                break;
-
-            int32_t entry_size = 0;
-            memcpy(&entry_size, data.data() + chunk_pos + 4, 4);
-            if (entry_size <= 0 || entry_size > 0x100000)
-                break;
-
-            uint32_t tile_id = 0, count = 0;
-            memcpy(&tile_id, data.data() + chunk_pos, 4);
-            memcpy(&count, data.data() + chunk_pos + 8, 4);
-
-            for (uint32_t ei = 0; ei < count; ei++)
-            {
-                size_t eoff = chunk_pos + 16 + ei * 8;
-                if (eoff + 8 > data.size())
-                    break;
-
-                uint8_t entry_flags = data[eoff + 1];
-                uint16_t geom_idx = data[eoff + 2] | (data[eoff + 3] << 8);
-
-                if (is_aeg099_geom(geom_idx, entry_flags))
-                {
-                    sec.pieces.push_back({tile_id, entry_flags, geom_idx});
-                    sec.piece_count++;
-                }
-            }
-            chunk_pos += entry_size;
-        }
-        sections.push_back(std::move(sec));
-    }
-    return sections;
 }
 
 // ─── GEOF from memory (GeomFlagSaveDataManager) ──────────────────────
@@ -203,6 +100,24 @@ static bool safe_read(void *addr, void *out, size_t count)
     __try
     {
         memcpy(out, addr, count);
+        return true;
+    }
+    __except (EXCEPTION_EXECUTE_HANDLER)
+    {
+        return false;
+    }
+}
+
+// SEH-guarded single byte write. Returns true on success, false if the
+// write access-violated (stale param pointer after another mod or the
+// game relocated our buffer). Used per-pointer in refresh() so we can
+// evict just the bad entries instead of tripping the top-level SEH and
+// skipping the whole refresh cycle.
+static bool safe_write_byte(uint8_t *addr, uint8_t val)
+{
+    __try
+    {
+        *addr = val;
         return true;
     }
     __except (EXCEPTION_EXECUTE_HANDLER)
@@ -292,12 +207,27 @@ static void read_singleton_entries(uintptr_t game_base, uintptr_t rva,
 
 }
 
-// ─── Read ALIVE pieces from CSWorldGeomMan (loaded tiles) ───────────
-
-// Returns tile_id → set of alive MSB part names for ALL tracked model prefixes
-static std::map<uint32_t, std::set<std::string>> read_alive_from_world_geom_man()
+// ─── Read geom state from CSWorldGeomMan (loaded tiles) ─────────────
+//
+// Returns per-tile:
+//   alive_names: set of ALIVE tracked-model names (for direct-name match)
+//   occupied_positions: all AEG099_* instances at MSB-local coords, regardless
+//     of name. Used to detect ERR-style "replacement" — e.g. a collected
+//     AEG099_860 slot gets replaced by a respawning AEG099_780 at the same
+//     position, so the original slot is effectively gone/collected.
+//
+// Name-based detection alone is not enough: the game spawns gathering-node
+// CSWorldGeomIns lazily, so a truly-alive instance may simply not be loaded
+// yet (and would be wrongly treated as dead by "not in alive list" logic).
+struct WGMSnapshot
 {
-    std::map<uint32_t, std::set<std::string>> result;
+    std::set<std::string> alive_names;
+    std::vector<std::tuple<float, float, float, std::string>> occupied;  // (x, y, z, name)
+};
+
+static std::map<uint32_t, WGMSnapshot> read_wgm_snapshot()
+{
+    std::map<uint32_t, WGMSnapshot> result;
 
     uintptr_t game_base = (uintptr_t)GetModuleHandleA("eldenring.exe");
     if (!game_base) return result;
@@ -399,23 +329,41 @@ static std::map<uint32_t, std::set<std::string>> read_alive_from_world_geom_man(
                     for (int c = 0; c < 63 && name_buf[c]; c++)
                         narrow[c] = (char)(name_buf[c] & 0xFF);
 
-                    // Check if this object belongs to any tracked model prefix
+                    // Keep only tracked AEG families. ERR uses both AEG099_*
+                    // (base-game gathering assets) and AEG463_* (DLC flowers/
+                    // bodies). Everything else (AEG001 decorations, colliders,
+                    // signs, …) is noise — drop it early.
+                    std::string narrow_str(narrow);
+                    bool is_tracked_family =
+                        narrow_str.compare(0, 7, "AEG099_") == 0 ||
+                        narrow_str.compare(0, 7, "AEG463_") == 0;
+                    if (!is_tracked_family)
+                        continue;
+
+                    // Runtime position lives in MsbPart +0x20 (3 floats)
+                    float px = 0, py = 0, pz = 0;
+                    safe_read((char *)msb_part_ptr + 0x20 + 0, &px, 4);
+                    safe_read((char *)msb_part_ptr + 0x20 + 4, &py, 4);
+                    safe_read((char *)msb_part_ptr + 0x20 + 8, &pz, 4);
+
+                    auto &snap = result[block_id];
+
+                    // Record occupancy for position-based replacement detection
+                    snap.occupied.emplace_back(px, py, pz, narrow_str);
+
+                    // Track alive state only for models we're actually hiding on the map
                     std::string prefix = prefix_from_object_name(narrow);
                     if (!prefix.empty() && g_tracked_prefixes.count(prefix))
                     {
-                        if (result.find(block_id) == result.end())
-                            result[block_id] = {};
-
                         // +0x263 bit1: persistent alive flag (survives restart)
-                        // +0x26B bit4: immediate collection flag (all model types, lost on restart)
+                        // +0x26B bit4: immediate collection flag (lost on tile reload)
                         uint8_t f263 = 0, f26B = 0;
                         safe_read((char *)geom_ins + 0x263, &f263, 1);
                         safe_read((char *)geom_ins + 0x26B, &f26B, 1);
 
                         bool alive = (f263 & 0x02) && !(f26B & 0x10);
-
                         if (alive)
-                            result[block_id].insert(std::string(narrow));
+                            snap.alive_names.insert(narrow_str);
                     }
                 }
             }
@@ -443,57 +391,7 @@ static std::map<uint32_t, std::set<std::string>> read_alive_from_world_geom_man(
         }
     }
 
-    if (!g_dumped_geom_ins)
-        g_dumped_geom_ins = true;
-
     return result;
-}
-
-
-static void dump_singleton_raw(uintptr_t game_base, uintptr_t rva, const char *name)
-{
-    void *ptr = nullptr;
-    if (!safe_read((void *)(game_base + rva), &ptr, 8) || !ptr)
-    {
-        spdlog::info("[DUMP] {} @ base+0x{:X}: NULL", name, rva);
-        return;
-    }
-
-    spdlog::info("[DUMP] {} @ base+0x{:X} -> {:016X}", name, rva, (uintptr_t)ptr);
-
-    uint8_t raw[512] = {};
-    if (!safe_read(ptr, raw, 512))
-    {
-        spdlog::info("[DUMP]   Cannot read memory");
-        return;
-    }
-
-    for (int i = 0; i < 512; i += 16)
-    {
-        char hex[80];
-        int h = 0;
-        for (int j = 0; j < 16; j++)
-            h += snprintf(hex + h, sizeof(hex) - h, "%02X ", raw[i + j]);
-        spdlog::info("[DUMP]   +{:02X}: {}", i, hex);
-    }
-
-    for (int i = 0; i < 512; i += 8)
-    {
-        uint64_t val = 0;
-        memcpy(&val, raw + i, 8);
-        if (val > 0x10000 && val < 0x7FFFFFFFFFFF && (val & 0x7) == 0)
-        {
-            uint8_t probe[16] = {};
-            if (safe_read((void *)val, probe, 16))
-            {
-                char hex2[60];
-                int h2 = 0;
-                for (int j = 0; j < 16; j++)
-                    h2 += snprintf(hex2 + h2, sizeof(hex2) - h2, "%02X ", probe[j]);
-                spdlog::info("[DUMP]   +{:02X} PTR -> {:016X}: {}", i, val, hex2);
-            }
-        }
-    }
 }
 
 static std::vector<GEOFEntry> read_geof_from_memory()
@@ -537,6 +435,7 @@ void goblin::collected::initialize()
     g_tile_name_to_row.clear();
     g_tracked_prefixes.clear();
     g_tracked_model_ids.clear();
+    g_entry_positions.clear();
 
     // Build tracking tables from MAP_ENTRIES — any entry with object_name is tracked.
     // Adding a new model type only requires adding entries + _slots.json.
@@ -561,6 +460,9 @@ void goblin::collected::initialize()
 
         // WGM name tracking: full object name for accurate alive matching
         g_tile_name_to_row[tile][e.object_name] = e.row_id;
+
+        // MSB-local position for replacement detection via WGM occupancy
+        g_entry_positions[e.row_id] = {e.data.posX, e.data.posY, e.data.posZ};
     }
 
     // Build model_id set for GEOF filtering
@@ -588,8 +490,12 @@ void goblin::collected::initialize()
 
 // ─── remap row IDs after dynamic assignment ────────────────────────
 
+static std::unordered_map<uint64_t, uint64_t> g_original_to_dynamic;
+
 void goblin::collected::remap_row_ids(const std::unordered_map<uint64_t, uint64_t> &old_to_new)
 {
+    g_original_to_dynamic = old_to_new;
+
     // Remap g_tile_to_rows
     for (auto &[tile, rows] : g_tile_to_rows)
     {
@@ -625,6 +531,16 @@ void goblin::collected::remap_row_ids(const std::unordered_map<uint64_t, uint64_
                 rid = it->second;
         }
     }
+
+    // Remap g_entry_positions (keyed by row_id)
+    decltype(g_entry_positions) remapped;
+    for (auto &[rid, pos] : g_entry_positions)
+    {
+        auto it = old_to_new.find(rid);
+        uint64_t new_rid = (it != old_to_new.end()) ? it->second : rid;
+        remapped[new_rid] = pos;
+    }
+    g_entry_positions = std::move(remapped);
 
     spdlog::debug("[COLLECTED] Remapped {} row IDs", old_to_new.size());
 }
@@ -682,28 +598,70 @@ int goblin::collected::refresh()
         geof_tile_prefix_slots[e.tile_id][prefix].push_back(slot);
     }
 
-    // ── WGM: accurate tracking for loaded tiles ──
-    auto alive = read_alive_from_world_geom_man();
+    // ── WGM: tracking for loaded tiles ──
+    // A row is collected if EITHER:
+    //   (A) Its MSB-part name is NOT present as alive in WGM, AND a different
+    //       AEG099_* instance occupies the same MSB-local position (ERR-style
+    //       replacement: collected smithing stone becomes a respawning
+    //       cracked-crystal of a different model at the same coords).
+    //   (B) No replacement at the position, but we at least KNOW the row's
+    //       own instance is loaded and dead (name directly present but not in
+    //       alive_names).
+    //
+    // We CANNOT simply say "name not in alive_names → collected" because the
+    // game spawns alive gathering-node CSWorldGeomIns lazily — an absent name
+    // may just mean "not yet spawned near the player".
+    auto wgm = read_wgm_snapshot();
     std::set<uint32_t> wgm_tiles;
 
-    for (auto &[tile_id, alive_names] : alive)
+    // Position key uses X/Z only (rounded to int). posY in MAP_ENTRIES is sometimes
+    // not set (defaults to 0) while WGM's posY is the real MSB height — matching on
+    // Y would cause false negatives. Same-XZ collisions are extremely rare in
+    // practice (gathering nodes don't stack vertically).
+    auto pos_key = [](float x, float z) {
+        return std::make_pair((int)std::lround(x), (int)std::lround(z));
+    };
+
+    for (auto &[tile_id, snap] : wgm)
     {
         wgm_tiles.insert(tile_id);
 
         auto name_it = g_tile_name_to_row.find(tile_id);
         if (name_it == g_tile_name_to_row.end())
-        {
-            // WGM has tracked objects on this tile, but we have no map data for it
-            if (!alive_names.empty())
-                spdlog::debug("[COLLECTED] WGM tile 0x{:08X} NOT in map data ({} alive objects)",
-                              tile_id, alive_names.size());
             continue;
-        }
 
+        std::map<std::pair<int, int>, std::vector<std::string>> pos_to_names;
+        for (auto &[x, y, z, name] : snap.occupied)
+            pos_to_names[pos_key(x, z)].push_back(name);
+
+        // Walk every tracked MAP_ENTRY on this tile and classify it.
         for (auto &[object_name, row_id] : name_it->second)
         {
-            if (alive_names.count(object_name) == 0)
-                new_collected.insert(row_id);
+            // Its own instance is alive → visible, stop here
+            if (snap.alive_names.count(object_name)) continue;
+
+            // Look up MAP_ENTRY coords to probe the position index
+            auto pt_it = g_entry_positions.find(row_id);
+            if (pt_it == g_entry_positions.end()) continue;
+            auto [ex, ey, ez] = pt_it->second;
+
+            // Check a 3x3 integer-bucket neighborhood. Strict single-key lookup
+            // misses cases where an adjacent asset sits on the border of the
+            // rounding boundary — e.g. AEG463_600 at X=-60.48 rounds to -60
+            // while the gathered AEG463_840 at X=-60.96 probes key -61.
+            bool occupied = false;
+            int cx = (int)std::lround(ex);
+            int cz = (int)std::lround(ez);
+            for (int dx = -1; dx <= 1 && !occupied; ++dx)
+                for (int dz = -1; dz <= 1 && !occupied; ++dz)
+                    if (pos_to_names.count({cx + dx, cz + dz}))
+                        occupied = true;
+            if (!occupied) continue;  // nothing nearby → undetermined, keep visible
+
+            // Something is there. Either our own dead instance, or a replacement
+            // spawned by ERR (collected AEG099_860 → respawning AEG099_780 at the
+            // same coords, or AEG463_600 body where the AEG463_840 flower stood).
+            new_collected.insert(row_id);
         }
     }
 
@@ -747,9 +705,17 @@ int goblin::collected::refresh()
             for (auto r : removed) spdlog::info("[COLLECTED]   -row {}", r);
     }
 
-    // Restore all to visible, then re-hide collected
+    // Restore all to visible, then re-hide collected.
+    // Each write is SEH-guarded individually so a single stale pointer
+    // (e.g. from another mod or game reloading the param file) gets
+    // evicted instead of tripping the top-level SEH and skipping the
+    // entire refresh cycle until the game is restarted.
+    std::vector<uint64_t> stale;
     for (auto &[row_id, ref] : g_param_ptrs)
-        ref.ptr[0x20] = ref.original_areaNo;
+    {
+        if (!safe_write_byte(ref.ptr + 0x20, ref.original_areaNo))
+            stale.push_back(row_id);
+    }
 
     int applied = 0, missed = 0;
     for (uint64_t row_id : new_collected)
@@ -757,11 +723,24 @@ int goblin::collected::refresh()
         auto pit = g_param_ptrs.find(row_id);
         if (pit != g_param_ptrs.end())
         {
-            pit->second.ptr[0x20] = 99;
-            applied++;
+            if (safe_write_byte(pit->second.ptr + 0x20, 99))
+                applied++;
+            else
+                stale.push_back(row_id);
         }
         else
             missed++;
+    }
+
+    if (!stale.empty())
+    {
+        // Dedup and evict — these pointers are no longer writable.
+        std::sort(stale.begin(), stale.end());
+        stale.erase(std::unique(stale.begin(), stale.end()), stale.end());
+        for (auto id : stale)
+            g_param_ptrs.erase(id);
+        spdlog::warn("[COLLECTED] Evicted {} stale param pointer(s) (write AV); {} remain",
+                     stale.size(), g_param_ptrs.size());
     }
     if (missed > 0)
         spdlog::warn("[COLLECTED] {} row IDs NOT in param_ptrs (out of {} collected)", missed, new_collected.size());
@@ -781,6 +760,13 @@ int goblin::collected::refresh()
 bool goblin::collected::is_row_collected(uint64_t row_id)
 {
     return g_collected_rows.count(row_id) > 0;
+}
+
+bool goblin::collected::is_original_row_collected(uint64_t original_row_id)
+{
+    auto it = g_original_to_dynamic.find(original_row_id);
+    uint64_t id = (it != g_original_to_dynamic.end()) ? it->second : original_row_id;
+    return g_collected_rows.count(id) > 0;
 }
 
 int goblin::collected::collected_count()

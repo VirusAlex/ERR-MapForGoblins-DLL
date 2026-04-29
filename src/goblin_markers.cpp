@@ -9,6 +9,7 @@
 // Strategy: AOB-scan all committed memory for the beacon-array signature.
 
 #include "goblin_markers.hpp"
+#include "goblin_collected.hpp"
 #include "goblin_config.hpp"
 #include "modutils.hpp"
 #include "generated/goblin_legacy_conv.hpp"
@@ -103,7 +104,7 @@ static bool is_flag_set(uint32_t flag_id)
 static bool slot_is_empty(const MarkerSlot &s)
 {
     return s.idx == -1 && s.x == 0.0f && s.z == 0.0f
-        && s.type == 0x0100 && s.pad == 0;
+        && ((s.type >> 8) & 0xFF) == 0x01 && s.pad == 0;
 }
 
 // Map coords are always >100 magnitude in real markers. Rejects denormals /
@@ -114,16 +115,23 @@ static bool coord_plausible(float v)
     return a > 100.0f && a < 25000.0f;
 }
 
+// Beacon types share high byte 0x01, low byte varies by placement context:
+//   0x0100 — empty/uninitialized slot
+//   0x0101 — base game world placement
+//   0x010A — DLC / Shadow Realm placement
+// (Other low-byte values may appear for events / unique world states; we
+// accept any high-byte 0x01 here. Coord/idx/pad checks below filter out
+// random memory hits that happen to have a 0x01 byte at the type offset.)
 static bool slot_is_empty_beacon(const MarkerSlot &s)
 {
     return s.idx == -1 && s.x == 0.0f && s.z == 0.0f
-        && (s.type == 0x0100 || s.type == 0x010A) && s.pad == 0;
+        && ((s.type >> 8) & 0xFF) == 0x01 && s.pad == 0;
 }
 
 static bool slot_is_filled_beacon(const MarkerSlot &s)
 {
     if (s.pad != 0) return false;
-    if (s.type != 0x0100 && s.type != 0x010A) return false;
+    if (((s.type >> 8) & 0xFF) != 0x01) return false;
     if (s.idx < 0 || s.idx > 65535) return false;
     return coord_plausible(s.x) && coord_plausible(s.z);
 }
@@ -232,14 +240,17 @@ static const char *type_name(uint16_t type)
 {
     switch (type)
     {
-        case 0x0100: return "beacon";
+        case 0x0100: return "beacon-empty";
+        case 0x0101: return "beacon";
         case 0x010A: return "beacon-dlc";
         case 0x0600: return "stamp-icon";
         case 0x080A: return "stamp-dlc-alt";
         case 0x0900: return "stamp";
         case 0x0901: return "stamp-var";
         case 0x090A: return "stamp-dlc";
-        default:     return "?";
+        default:
+            if (((type >> 8) & 0xFF) == 0x01) return "beacon-other";
+            return "?";
     }
 }
 
@@ -439,13 +450,17 @@ static void dump_to_file()
         for (const auto &n : nearby)
         {
             std::snprintf(tile, sizeof(tile), "m%02u_%02u_%02u", n.area, n.gx, n.gz);
-            bool hidden = n.disable_flag1 && is_flag_set(n.disable_flag1);
+            bool hidden_by_flag = n.disable_flag1 && is_flag_set(n.disable_flag1);
+            bool hidden_by_mod = goblin::collected::is_original_row_collected(n.row_id);
+            const char *status = hidden_by_flag  ? "hidden(flag)"
+                               : hidden_by_mod   ? "hidden(collected)"
+                                                 : "visible";
             f << "        dist=" << std::fixed << std::setprecision(1) << n.dist
               << "  " << tile
               << "  icon=" << n.icon_id
               << "  row=" << n.row_id
               << "  [" << category_name(n.category) << "]"
-              << "  " << (hidden ? "hidden" : "visible");
+              << "  " << status;
             if (n.object_name) f << "  " << n.object_name;
             f << "\n";
         }
@@ -508,6 +523,23 @@ static void dump_to_file()
 
 // ── Hotkey loop ──
 
+// SEH-isolated invocation of dump_to_file. The outer try/catch only
+// catches C++ exceptions; this additionally traps access violations from
+// reading stale game memory during multiplayer transitions or param
+// reloads.
+static bool seh_dump_to_file_invoke()
+{
+    __try
+    {
+        dump_to_file();
+        return true;
+    }
+    __except (EXCEPTION_EXECUTE_HANDLER)
+    {
+        return false;
+    }
+}
+
 void hotkey_loop()
 {
     bool prev_down = false;
@@ -520,11 +552,14 @@ void hotkey_loop()
         bool down = (state & 0x8000) != 0;
         if (down && !prev_down)
         {
-            try { dump_to_file(); }
+            bool ok = false;
+            try { ok = seh_dump_to_file_invoke(); }
             catch (const std::exception &e) {
                 spdlog::error("Marker dump failed: {}", e.what());
             }
             catch (...) { spdlog::error("Marker dump failed: unknown"); }
+            if (!ok)
+                spdlog::error("Marker dump failed: access violation (stale memory)");
         }
         prev_down = down;
     }

@@ -49,6 +49,7 @@ CATEGORY_MAP = {
     "Loot - Great Gloveworts": "LootGreatGloveworts",
     "Loot - Greases": "LootGreases",
     "Loot - Material Nodes": "LootMaterialNodes",
+    "Loot - Merchant Bell-Bearings": "LootMerchantBellBearings",
     "Loot - MP-Fingers": "LootMPFingers",
     "Loot - Prattling Pates": "LootPrattlingPates",
     "Loot - Rada Fruit": "LootRadaFruit",

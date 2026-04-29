@@ -17,6 +17,8 @@
 #include "goblin_markers.hpp"
 #include "goblin_messages.hpp"
 
+#include "version.h"
+
 static std::thread mod_thread;
 
 // SEH wrapper — catches access violations from refresh() during multiplayer transitions
@@ -30,6 +32,34 @@ static int safe_refresh_seh()
     {
         return 0;
     }
+}
+
+// ── SEH-guarded init-phase wrappers ──
+// MSVC's /EHsc disallows __try in functions that contain C++ objects with
+// destructors, so each init step goes through a plain C-style adapter +
+// a shared invoker. If any step access-violates (e.g. another mod shifted
+// the game's memory map mid-init), we log and continue — losing that
+// feature is better than the DLL crashing the entire game.
+
+using InitFn = void (*)();
+
+static bool seh_invoke_void(InitFn fn)
+{
+    __try { fn(); return true; }
+    __except (EXCEPTION_EXECUTE_HANDLER) { return false; }
+}
+
+static void init_modutils()         { modutils::initialize(); }
+static void init_from_params()      { from::params::initialize(); }
+static void init_collected()        { goblin::collected::initialize(); }
+static void init_inject_entries()   { goblin::inject_map_entries(); }
+static void init_apply_map_logic()  { goblin::apply_map_logic(); }
+static void init_setup_messages()   { goblin::setup_messages(); }
+
+static void safe_init_step(InitFn fn, const char *name)
+{
+    if (!seh_invoke_void(fn))
+        spdlog::error("SEH exception in init step '{}' — feature may be degraded", name);
 }
 
 static void setup_logger(std::filesystem::path log_file)
@@ -57,16 +87,16 @@ static std::filesystem::path g_mod_folder;
 
 static void setup_mod()
 {
-    modutils::initialize();
-    from::params::initialize();
+    safe_init_step(&init_modutils,    "modutils::initialize");
+    safe_init_step(&init_from_params, "from::params::initialize");
 
     spdlog::info("Waiting {}s for game init...", goblin::config::loadDelay);
     std::this_thread::sleep_for(std::chrono::seconds(goblin::config::loadDelay));
 
-    goblin::collected::initialize();
-    goblin::inject_map_entries();
-    goblin::apply_map_logic();
-    goblin::setup_messages();
+    safe_init_step(&init_collected,       "collected::initialize");
+    safe_init_step(&init_inject_entries,  "inject_map_entries");
+    safe_init_step(&init_apply_map_logic, "apply_map_logic");
+    safe_init_step(&init_setup_messages,  "setup_messages");
 
     try
     {
@@ -126,9 +156,7 @@ bool WINAPI DllMain(HINSTANCE dll_instance, unsigned int fdw_reason, void *lpv_r
 
         setup_logger(folder / "logs" / "MapForGoblins.log");
 
-#ifdef PROJECT_VERSION
         spdlog::info("Map For Goblins DLL v{}", PROJECT_VERSION);
-#endif
         goblin::load_config(folder / "MapForGoblins.ini");
 
         if (goblin::config::debugLogging)

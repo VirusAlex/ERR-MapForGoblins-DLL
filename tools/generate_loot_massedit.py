@@ -315,11 +315,20 @@ LOOT_CATEGORIES = {
         'startId': 5000000,
     },
     'Loot - Bell-Bearings': {
-        # Bell bearings from treasures only (not merchant enemy drops)
+        # Bell bearings from treasures / EMEVD awards (chests, quest rewards).
         'filter': lambda items: any('bell bearing' in i.get('name', '').lower() for i in items),
         'source_filter': lambda rec: rec.get('source') != 'enemy',
         'iconId': 426,
         'startId': 5100000,
+    },
+    'Loot - Merchant Bell-Bearings': {
+        # Bell bearings dropped by killed merchant NPCs (Kalé, Patches, Gostoc,
+        # nomadic/hermit/isolated merchants, etc.). Separated so players can
+        # toggle merchant-killing rewards independently of chest pickups.
+        'filter': lambda items: any('bell bearing' in i.get('name', '').lower() for i in items),
+        'source_filter': lambda rec: rec.get('source') == 'enemy',
+        'iconId': 426,
+        'startId': 5150000,
     },
     'Loot - Ammo': {
         # Ammo = weapon category (cat=2) with IDs 50000000+ (arrows/bolts/greatbolts)
@@ -496,7 +505,6 @@ LOOT_CATEGORIES = {
             110,   # Small Red Effigy
             111,   # Festering Bloody Finger
             112,   # Recusant Finger
-            8920,  # Kalé's Bell Bearing (merchant-related MP item)
         ) and i['category'] == 1 for i in items),
         'iconId': 414,
         'startId': 5850000,

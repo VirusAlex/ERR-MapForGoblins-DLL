@@ -381,37 +381,74 @@ def main():
             msb_errors += 1
             continue
 
-        part_positions = {}
+        live_positions = {}
+        dummy_positions = {}
+        dummy_entity_ids = {}
         for p in msb.Parts.Assets:
-            part_positions[str(p.Name)] = {
+            live_positions[str(p.Name)] = {
                 'x': float(p.Position.X),
                 'y': float(p.Position.Y),
                 'z': float(p.Position.Z),
             }
         for p in msb.Parts.DummyAssets:
-            part_positions[str(p.Name)] = {
+            name = str(p.Name)
+            dummy_positions[name] = {
                 'x': float(p.Position.X),
                 'y': float(p.Position.Y),
                 'z': float(p.Position.Z),
             }
-        for p in msb.Parts.Enemies:
-            part_positions[str(p.Name)] = {
-                'x': float(p.Position.X),
-                'y': float(p.Position.Y),
-                'z': float(p.Position.Z),
-            }
+            # Capture EntityID + EntityGroupIDs to tell activator-reachable
+            # DummyAssets from structurally-inert ones. A DummyAsset with
+            # zero EntityID and zero EntityGroupIDs cannot be addressed by
+            # any EMEVD instruction and is therefore unreachable.
+            try:
+                eid = int(p.EntityID) if hasattr(p, 'EntityID') else 0
+            except Exception:
+                eid = 0
+            groups = []
+            try:
+                for g in getattr(p, 'EntityGroupIDs', []) or []:
+                    if int(g) != 0:
+                        groups.append(int(g))
+            except Exception:
+                pass
+            dummy_entity_ids[name] = (eid, tuple(groups))
 
+        # Group treasure events by lot and prefer the live part when a
+        # single ItemLotID is bound to both a Parts.Assets and a
+        # Parts.DummyAssets entry. Lots bound only to a dummy are skipped
+        # entirely — the engine never spawns them.
+        by_lot = {}
         for t in msb.Events.Treasures:
             part_name = str(t.TreasurePartName) if t.TreasurePartName else ''
             item_lot_id = int(t.ItemLotID)
-
-            if item_lot_id <= 0:
+            if item_lot_id <= 0 or not part_name:
                 continue
-
-            pos = part_positions.get(part_name)
-            if not pos:
+            if part_name in live_positions:
+                bucket, pos = 'live', live_positions[part_name]
+            elif part_name in dummy_positions:
+                bucket, pos = 'dummy', dummy_positions[part_name]
+            else:
                 continue
+            by_lot.setdefault(item_lot_id, []).append((part_name, bucket, pos))
 
+        for lot_id, refs in by_lot.items():
+            live_refs = [r for r in refs if r[1] == 'live']
+            if live_refs:
+                part_name, bucket, pos = live_refs[0]
+            else:
+                # Only keep a dummy-only lot if the DummyAsset has a non-
+                # zero EntityID or EntityGroupID — otherwise no EMEVD can
+                # target it and the lot is unreachable in-game.
+                reachable = []
+                for r in refs:
+                    eid, groups = dummy_entity_ids.get(r[0], (0, ()))
+                    if eid != 0 or groups:
+                        reachable.append(r)
+                if not reachable:
+                    continue
+                part_name, _, pos = reachable[0]
+                bucket = 'reachable_dummy'
             treasures.append({
                 'map': map_info['map'],
                 'areaNo': map_info['areaNo'],
@@ -420,9 +457,10 @@ def main():
                 'x': pos['x'],
                 'y': pos['y'],
                 'z': pos['z'],
-                'itemLotId': item_lot_id,
+                'itemLotId': lot_id,
                 'partName': part_name,
                 'source': 'treasure',
+                'partBucket': bucket,
             })
 
         # Enemy drops: NPC → NpcParam → itemLotId_map or itemLotId_enemy
@@ -719,6 +757,8 @@ def main():
             record['defeatFlag'] = tr['defeatFlag']
         if tr.get('emevdEventId'):
             record['emevdEventId'] = tr['emevdEventId']
+        if tr.get('partBucket'):
+            record['partBucket'] = tr['partBucket']
         database.append(record)
 
     print(f'  {len(database)} records (no lot: {no_lot}, no items: {no_items})')

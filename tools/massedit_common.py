@@ -6,7 +6,21 @@ from pathlib import Path
 DATA_DIR = Path(__file__).parent.parent / 'data'
 OUT_DIR = DATA_DIR / 'massedit_generated'
 
-UNDERGROUND_AREAS = {12, 20, 21, 22, 25, 28, 40, 41, 42, 43}
+# Vanilla WorldMapPointParam dispMask conventions (verified against the 740
+# rows shipped in regulation.bin):
+#   dispMask00 (bit 0) = base game overworld + small/legacy dungeons
+#                        (m10-19 except m12, m30-39, m60)
+#   dispMask01 (bit 1) = m12 only — the base-game underground map plane
+#   dispMask02 (bit 2) = base legacy dungeons that share the DLC plane
+#                        (m20-28), DLC legacy dungeons (m40-43), and the
+#                        DLC overworld (m61). In our paramdef this bit
+#                        is exposed as `pad2_0` (legacy field name).
+#
+# IMPORTANT: UNDERGROUND_AREAS must be JUST {12}. Earlier versions lumped
+# m20-43 in here too, which sent every DLC-dungeon marker to dispMask01,
+# i.e. the base-underground plane — exactly where the user reported them
+# wrongly appearing instead of on the DLC map.
+UNDERGROUND_AREAS = {12}
 DLC_AREAS = {20, 21, 22, 25, 28, 40, 41, 42, 43, 61}
 DLC_OVERWORLD_AREAS = {61}
 OVERWORLD_AREAS = {60, 61}
@@ -72,9 +86,14 @@ def resolve_location_id(map_name):
 
 
 def get_disp_mask(area):
-    """Get display mask field name for a given area."""
+    """Get display mask field name for a given area.
+
+    Returns the paramdef field that, when set to 1, makes the marker show
+    on the matching map plane. Mirrors the vanilla WorldMapPointParam
+    convention (see comments above the *_AREAS sets)."""
     if area in UNDERGROUND_AREAS:
-        return 'dispMask01'
-    elif area in DLC_AREAS:
-        return 'pad2_0'
-    return 'dispMask00'
+        return 'dispMask01'      # base-game underground (m12)
+    if area in DLC_AREAS:
+        return 'pad2_0'           # bit 2 = dispMask02 in updated paramdefs
+                                  # (DLC overworld + DLC/base legacy dungeons)
+    return 'dispMask00'           # base-game overworld + small dungeons

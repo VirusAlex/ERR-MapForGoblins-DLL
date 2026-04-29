@@ -93,12 +93,24 @@ namespace goblin
         extern bool showStakesOfMarika;
         extern bool showSummoningPools;
 
-        // Boss/camp/merchant settings
-        extern bool showOverworldBossIcons;
-        extern bool showDungeonBossIcons;
-        extern bool showCampIcons;
-        extern bool showMerchantIcons;
-        extern bool redifyBossIcons;
+        // ── ERR Markers ─────────────────────────────────────────────────
+        // Patches to ERR's pre-placed WorldMapPointParam entries (camps,
+        // merchants, field bosses, dungeon entrances). Each `patch*` flag
+        // decides whether we rewrite that category's flags so the marker
+        // appears/hides in sync with map-fragment discovery and (for
+        // dungeons) boss completion. `false` = leave the row alone — the
+        // icon still appears with whatever flags ERR ships.
+        extern bool patchOverworldBossIcons;
+        extern bool patchDungeonBossIcons;
+        extern bool patchCampIcons;
+        extern bool patchMerchantIcons;
+        // Cosmetic options layered on top of the patch flags above. Each
+        // requires its corresponding `patch*` flag to be true to take
+        // effect (we only touch the icon when we're already rewriting
+        // the row).
+        extern bool redifyBossIcons;            // overworld bosses: red icon + auto-hide on kill
+        extern bool redifyDungeonIcons;         // dungeon entrances: red icon
+        extern bool hideDungeonIconsOnClear;    // dungeon entrances: hide on boss kill
 
         // Marker dump (hotkey → dump beacon/stamp coords to file)
         extern bool enableMarkerDump;
