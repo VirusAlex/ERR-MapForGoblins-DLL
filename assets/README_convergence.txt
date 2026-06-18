@@ -48,6 +48,9 @@ Settings & notes
 - Edit MapForGoblins/MapForGoblins.ini to turn icon categories
   on/off. The mod creates this file if missing and auto-adds any
   new options on launch, so it stays current across updates.
+- In-game config overlay: press F10 (or Y+R3 on a controller) to open
+  a settings panel and toggle icon categories live. Re-open the world
+  map to see the changes.
 - Markers come from The Convergence's map data merged over the base
   game, so loot the mod didn't change is covered too.
 - Questions and bug reports: https://discord.gg/JvTMwPCygB

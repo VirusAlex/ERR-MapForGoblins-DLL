@@ -6,6 +6,7 @@
 
 #include <algorithm>
 #include <cctype>
+#include <cstdio>
 #include <fstream>
 #include <set>
 #include <sstream>
@@ -162,9 +163,54 @@ void goblin::ensure_ini(const std::filesystem::path &ini_path)
     }
 }
 
+std::filesystem::path goblin::g_ini_path;
+
+void goblin::save_config(const std::filesystem::path &ini_path)
+{
+    const bool include_err = !profile_is_vanilla();
+
+    IniValueResolver resolve =
+        [&](const std::string &section, const IniEntry &e, std::string &out) -> bool
+    {
+        switch (e.type)
+        {
+        case IniType::Bool:
+            out = *static_cast<bool *>(e.target) ? "true" : "false";
+            return true;
+        case IniType::U8:
+            out = std::to_string(static_cast<int>(*static_cast<uint8_t *>(e.target)));
+            return true;
+        case IniType::VkKey: // live value (the overlay can rebind these now)
+            out = format_vk_code(*static_cast<uint32_t *>(e.target));
+            return true;
+        case IniType::GamepadMask:
+            out = format_gamepad_combo(*static_cast<uint16_t *>(e.target));
+            return true;
+        default:
+            return false;
+        }
+    };
+
+    std::ostringstream ss;
+    emit_ini(ss, include_err, resolve);
+
+    std::error_code ec;
+    if (ini_path.has_parent_path())
+        std::filesystem::create_directories(ini_path.parent_path(), ec);
+    std::ofstream out(ini_path, std::ios::binary | std::ios::trunc);
+    if (!out)
+    {
+        spdlog::warn("save_config: cannot open {}", ini_path.string());
+        return;
+    }
+    out << ss.str();
+    spdlog::info("Config: saved to {}", ini_path.string());
+}
+
 void goblin::load_config(const std::filesystem::path &ini_path)
 {
     spdlog::info("Config: {}", ini_path.string());
+    g_ini_path = ini_path;
 
     ensure_ini(ini_path);
     apply_defaults();
@@ -248,6 +294,12 @@ uint32_t goblin::parse_vk_code(std::string name)
 
     if (name.empty()) return 0;
 
+    if (name.size() > 2 && name[0] == '0' && name[1] == 'X') // raw "0xNN" code
+    {
+        try { return static_cast<uint32_t>(std::stoul(name.substr(2), nullptr, 16)); }
+        catch (...) {}
+    }
+
     if (name.size() >= 2 && name[0] == 'F')
     {
         try
@@ -273,4 +325,46 @@ uint32_t goblin::parse_vk_code(std::string name)
     for (auto &p : named)
         if (name == p.first) return p.second;
     return 0;
+}
+
+// Inverse of parse_vk_code: a name parse_vk_code accepts (or "0xNN" fallback).
+std::string goblin::format_vk_code(uint32_t vk)
+{
+    if (vk >= 0x70 && vk <= 0x87) return "F" + std::to_string(vk - 0x6F); // F1..F24
+    if ((vk >= 'A' && vk <= 'Z') || (vk >= '0' && vk <= '9'))
+        return std::string(1, static_cast<char>(vk));
+    switch (vk)
+    {
+    case 0x20: return "Space";
+    case 0x1B: return "Escape";
+    case 0x09: return "Tab";
+    case 0x0D: return "Enter";
+    case 0x08: return "Backspace";
+    case 0x24: return "Home";
+    case 0x23: return "End";
+    case 0x21: return "PageUp";
+    case 0x22: return "PageDown";
+    case 0x2D: return "Insert";
+    case 0x2E: return "Delete";
+    case 0x26: return "Up";
+    case 0x28: return "Down";
+    case 0x25: return "Left";
+    case 0x27: return "Right";
+    default: { char b[8]; std::snprintf(b, sizeof b, "0x%02X", vk); return b; }
+    }
+}
+
+// Inverse of parse_gamepad_combo: tokens joined with '+', in a stable order.
+std::string goblin::format_gamepad_combo(uint16_t mask)
+{
+    static const std::pair<uint16_t, const char *> order[] = {
+        {0x8000, "Y"}, {0x4000, "X"}, {0x1000, "A"}, {0x2000, "B"},
+        {0x0100, "LB"}, {0x0200, "RB"}, {0x0040, "L3"}, {0x0080, "R3"},
+        {0x0020, "BACK"}, {0x0010, "START"},
+        {0x0001, "UP"}, {0x0002, "DOWN"}, {0x0004, "LEFT"}, {0x0008, "RIGHT"},
+    };
+    std::string out;
+    for (auto &p : order)
+        if (mask & p.first) { if (!out.empty()) out += '+'; out += p.second; }
+    return out;
 }

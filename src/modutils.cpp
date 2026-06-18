@@ -18,35 +18,19 @@ using namespace std;
 
 static span<unsigned char> memory;
 
-static string sus_filenames[] = {
-    "ALI213.ini",      "ColdAPI.ini",   "ColdClientLoader.ini",  "CPY.ini",
-    "ds.ini",          "hlm.ini",       "local_save.txt",        "SmartSteamEmu.ini",
-    "steam_api.ini",   "steam_emu.ini", "steam_interfaces.ini",  "steam_settings",
-    "SteamConfig.ini", "valve.ini",     "Language Selector.exe",
-};
-
 void modutils::initialize()
 {
     HMODULE module_handle = GetModuleHandleA("eldenring.exe");
     if (!module_handle)
     {
-        throw runtime_error("Failed to get handle for eldenring.exe process");
+        throw runtime_error("Failed to get handle for host process");
     }
 
     wstring_convert<codecvt_utf8_utf16<wchar_t>, wchar_t> convert;
 
     wchar_t exe_filename[MAX_PATH] = {0};
     GetModuleFileNameW(module_handle, exe_filename, MAX_PATH);
-    spdlog::info("Found handle for eldenring.exe process: {}", convert.to_bytes(exe_filename));
-
-    auto exe_directory = filesystem::path(exe_filename).parent_path();
-    for (auto i = 0; i < size(sus_filenames); i++)
-    {
-        if (filesystem::exists(exe_directory / sus_filenames[i]))
-        {
-            spdlog::error("Game may be modified, compatibility is unlikely [{}]", i);
-        }
-    }
+    spdlog::info("Attached to host process: {}", convert.to_bytes(exe_filename));
 
     MEMORY_BASIC_INFORMATION memory_info;
     if (VirtualQuery((void *)module_handle, &memory_info, sizeof(memory_info)) == 0)

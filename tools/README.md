@@ -21,7 +21,7 @@ Dependencies:
 
 ## Core Pipeline
 
-**Run `build.bat snapshot` from repo root** — this invokes `build_pipeline.py` which
+**Run `build.bat snapshot` from repo root** - this invokes `build_pipeline.py` which
 orchestrates all stages with hash-based incremental caching, then compiles the DLL
 and packages it into `pre-release/`.
 
@@ -34,10 +34,10 @@ aggregate for directories). A stage is skipped iff its signature matches
 Args: `[--force <stage>]` `[--force-all]`.
 
 Pipeline stages:
-1. `extract_items` — regulation + MSBs → items_database + goods classification
-2. `entity_index` — all MSBs → `msb_entity_index.json`
-3. `emevd_scan` — all EMEVDs → `emevd_lot_mapping.json` (scripted-item → entity mapping)
-4. `enrich_fallback` — upgrades fallback records in items_database with EMEVD-derived coords
+1. `extract_items` - regulation + MSBs → items_database + goods classification
+2. `entity_index` - all MSBs → `msb_entity_index.json`
+3. `emevd_scan` - all EMEVDs → `emevd_lot_mapping.json` (scripted-item → entity mapping)
+4. `enrich_fallback` - upgrades fallback records in items_database with EMEVD-derived coords
 5. `generate_boss_list` → boss_list.json
 6. `generate_loot_massedit` → all Loot/Equipment/Key/Quest/Magic/Reforged .MASSEDIT
 7. `generate_pieces_massedit` → Rune/Ember Pieces .MASSEDIT
@@ -51,7 +51,7 @@ Pipeline stages:
 15. `generate_maps` → World Maps
 16. `generate_gestures` → Gestures (via common event 90005570 scan)
 17. `generate_hostile_npcs` → invaders (via `teamType=24` in NpcParam + MSB)
-18. `generate_data` — parses all .MASSEDIT → `goblin_map_data.cpp` +
+18. `generate_data` - parses all .MASSEDIT → `goblin_map_data.cpp` +
     `goblin_legacy_conv.hpp` (dungeon→overworld coord conversion from WorldMapLegacyConvParam).
 
 Direct build order (manual invocation):
@@ -113,7 +113,7 @@ Reads all MASSEDIT files and generates C++ arrays compiled into the DLL. Maps
 MASSEDIT categories to C++ enums, embeds geom_slot from slot JSONs, de-overlaps
 icons that share coords via a square spiral. Also emits the legacy dungeon→overworld
 conversion table from WorldMapLegacyConvParam. Text rendering is done at runtime
-via an offset-encoded ID that redirects to the game's own FMG entries — no custom
+via an offset-encoded ID that redirects to the game's own FMG entries - no custom
 text file is generated.
 Args: `[--massedit-dir PATH]` (default: `data/massedit`; pipeline uses `data/massedit_generated`).
 Output: `src/generated/goblin_map_data.cpp`, `src/generated/goblin_legacy_conv.hpp`.
@@ -129,7 +129,7 @@ Output: `data/massedit_generated/*.MASSEDIT` (50+ category files + `World - Boss
 ### generate_gestures.py - Gesture pickup markers
 EMEVD-driven: scans Event 0 initializer calls for RunEvent targeting common template
 `90005570` (the gesture-spawn template). Each call's args contain
-`[flag, gesture_param, entity_id]` — entity resolves to MSB position. Covers the 5
+`[flag, gesture_param, entity_id]` - entity resolves to MSB position. Covers the 5
 standard world-pickup gesture flags plus DLC variants (7 total).
 No arguments.
 Output: `data/massedit_generated/Loot - Gestures.MASSEDIT`.

@@ -310,8 +310,7 @@ static bool patch_fmg_in_memory(uint8_t *fmg_ptr, uint8_t **slot_ptr,
     spdlog::debug("[PATCH] New layout: groups={}, strings={}, fileSize={}",
                   total_groups, total_strings, new_file_size);
 
-    // HeapAlloc (not VirtualAlloc): see goblin_inject.cpp — Seamless Co-op
-    // hosting crashes if expanded mod buffers live outside the process heap.
+    // Allocate the expanded FMG buffer from the process heap.
     fmg_allocation = HeapAlloc(GetProcessHeap(), HEAP_ZERO_MEMORY, new_file_size);
     if (!fmg_allocation)
     {
@@ -764,8 +763,11 @@ void goblin::setup_messages()
     // Spoiler-free mode: pull the generic localized label ("something",
     // BloodMsg word 32004) into PlaceName so anonymous loot markers can point at
     // it. Offset 950M, same band as the vanilla enemy-type vocabulary.
-    if (goblin::config::anonymousLoot)
-        bloodmsg_ids_needed.insert(950000000 + 32004);
+    // ALWAYS inject it (not gated on anonymousLoot): the marker re-point to this
+    // id happens live when the user toggles anonymous_loot in the overlay, but FMG
+    // text injection is init-only - so without this, a live toggle shows
+    // "?PlaceName?" (the id has no PlaceName entry). One harmless extra entry.
+    bloodmsg_ids_needed.insert(950000000 + 32004);
 
     copy_fmg_layered(bloodmsg_slots, bloodmsg_ids_needed, 950000000, "BloodMsg");
 

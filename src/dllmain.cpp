@@ -17,6 +17,8 @@
 #include "goblin_logic.hpp"
 #include "goblin_markers.hpp"
 #include "goblin_messages.hpp"
+#include "goblin_overlay.hpp"
+#include "goblin_map_timing.hpp"
 
 #include "version.h"
 
@@ -82,6 +84,8 @@ static void init_apply_map_logic()  { goblin::apply_map_logic(); }
 static void init_tutorial_popup()   { goblin::inject_tutorial_popup_rows(); }
 static void init_setup_messages()   { goblin::setup_messages(); }
 static void init_live_loot()        { goblin::refresh_loot_from_itemlot(); }
+static void init_overlay()          { goblin::overlay::setup(); }
+static void init_map_timing()       { goblin::map_timing::setup(); }
 
 static void safe_init_step(InitFn fn, const char *name)
 {
@@ -127,6 +131,8 @@ static void setup_mod()
     safe_init_step(&init_tutorial_popup,  "inject_tutorial_popup_rows");
     safe_init_step(&init_setup_messages,  "setup_messages");
     safe_init_step(&init_live_loot,       "refresh_loot_from_itemlot");
+    safe_init_step(&init_overlay,         "overlay::setup");
+    safe_init_step(&init_map_timing,      "map_timing::setup");
 
     try
     {
@@ -138,9 +144,6 @@ static void setup_mod()
     }
 
     spdlog::info("Initialization complete");
-
-    if (GetModuleHandleA("ersc.dll"))
-        spdlog::info("Seamless Co-op detected (ersc.dll)");
 
     if (goblin::config::enableMarkerDump)
     {
@@ -156,14 +159,13 @@ static void setup_mod()
     }
 
     // The watcher is the single owner of the WorldMapPointParam state — it
-    // applies the F10/gamepad master-off flag and shows the toggle banner.
-    // (The map-based auto-hide it used to run was removed after the 16-align
-    // fix made the expanded table safe during hosting — see
-    // docs/ersc_hosting_and_map_autohide.md.) Run it whenever the hotkey is on.
-    if (goblin::config::enableToggleHotkey)
+    // applies the master-off flag (set by the toggle hotkey OR the overlay's
+    // "Show map icons" checkbox). Run it whenever EITHER path can set that flag,
+    // so the overlay's master switch works even if the toggle hotkey is disabled.
+    if (goblin::config::enableToggleHotkey || goblin::config::enableOverlay)
     {
         std::thread(goblin::menu_auto_toggle_loop).detach();
-        spdlog::info("Icon-state watcher started (icons EXPANDED always; F10 = personal show/hide)");
+        spdlog::info("Icon-state watcher started (icons EXPANDED always; master show/hide via hotkey or overlay)");
     }
 
     bool first_read = true;

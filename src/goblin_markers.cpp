@@ -442,24 +442,11 @@ static bool seh_copy(const void *src, void *dst, size_t n)
 
 // Returns the number of marker slots written (beacons + stamps), or -1 if the
 // output path isn't set. 0 is a valid result (no beacon arrays live yet).
-static int dump_to_file()
+static int dump_impl(std::ostream &f)
 {
-    if (g_output_path.empty())
-    {
-        spdlog::warn("Marker dump: output path not set");
-        return -1;
-    }
-
     resolve_flag_api();
     auto arrays = find_beacon_arrays();
     spdlog::info("Marker dump: found {} beacon-array candidate(s)", arrays.size());
-
-    std::ofstream f(g_output_path, std::ios::app);
-    if (!f)
-    {
-        spdlog::warn("Marker dump: cannot open {}", g_output_path.string());
-        return -1;
-    }
 
     auto now = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
     std::tm tm_buf{};
@@ -507,7 +494,8 @@ static int dump_to_file()
         }
     };
 
-    constexpr int N_BEACONS = 10;
+    constexpr int N_BEACONS = 10;        // physical slots before the stamp array
+    constexpr int N_BEACONS_SHOWN = 5;   // the game only lets you place 5 (slots 0-4)
     constexpr int N_STAMPS  = 200;
     int total_markers = 0;
 
@@ -533,16 +521,16 @@ static int dump_to_file()
           << std::hex << base << std::dec << " ----\n";
 
         const MarkerSlot *beacons = buf;
-        for (int i = 0; i < N_BEACONS; ++i)
+        for (int i = 0; i < N_BEACONS_SHOWN; ++i)
         {
             const auto &s = beacons[i];
             if (slot_is_empty(s))
             {
-                f << "  [beacon " << i << "] empty\n";
+                f << "  [beacon " << (i + 1) << "] empty\n";
                 continue;
             }
             float wx = s.x + 7042.0f, wz = -s.z + 16511.0f;
-            f << "  [beacon " << i << "] idx=" << s.idx
+            f << "  [beacon " << (i + 1) << "] idx=" << s.idx
               << " type=0x" << std::hex << s.type << std::dec
               << " (" << type_name(s.type) << ")"
               << " map=(" << std::fixed << std::setprecision(2) << s.x << "," << s.z << ")"
@@ -578,8 +566,44 @@ static int dump_to_file()
         f << "  -- " << stamp_count << " stamps --\n";
     }
 
-    spdlog::info("Marker dump written to {} ({} markers)", g_output_path.string(), total_markers);
     return total_markers;
+}
+
+// SEH-guarded body invocation (only an ostream& in this frame, so __try is OK).
+static int seh_dump_impl(std::ostream &f)
+{
+    __try { return dump_impl(f); }
+    __except (EXCEPTION_EXECUTE_HANDLER) { return -2; }
+}
+
+// File wrapper: append the dump to the configured log path.
+static int dump_to_file()
+{
+    if (g_output_path.empty())
+    {
+        spdlog::warn("Marker dump: output path not set");
+        return -1;
+    }
+    std::ofstream f(g_output_path, std::ios::app);
+    if (!f)
+    {
+        spdlog::warn("Marker dump: cannot open {}", g_output_path.string());
+        return -1;
+    }
+    int n = seh_dump_impl(f);
+    spdlog::info("Marker dump written to {} ({} markers)", g_output_path.string(), n);
+    return n;
+}
+
+// In-memory dump for the in-game overlay's Tools tab (copyable text box).
+std::string dump_to_string()
+{
+    std::ostringstream ss;
+    int n = seh_dump_impl(ss);
+    if (n < 0)
+        ss << "\n(no markers found / dump error code " << n
+           << " - open the world map first, then dump)\n";
+    return ss.str();
 }
 
 

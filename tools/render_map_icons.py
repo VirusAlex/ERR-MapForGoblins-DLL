@@ -33,6 +33,7 @@ Examples:
 """
 
 import argparse
+import json
 import os
 import subprocess
 import sys
@@ -133,15 +134,33 @@ def find_texture(name, tex_dirs):
 
 
 # ── compositing ──────────────────────────────────────────────────────────────
-def _apply_color(layer, ct):
+def _apply_ct(img, ct):
+    """Apply a Scaleform CXFORMWITHALPHA: out = in*mult/256 + add, per channel."""
     if not ct:
-        return layer
-    r, g, b, a = layer.split()
-    r = r.point(lambda p: min(255, max(0, int(p * ct["rm"] / 256 + ct["ra"]))))
-    g = g.point(lambda p: min(255, max(0, int(p * ct["gm"] / 256 + ct["ga"]))))
-    b = b.point(lambda p: min(255, max(0, int(p * ct["bm"] / 256 + ct["ba"]))))
-    a = a.point(lambda p: min(255, max(0, int(p * ct["am"] / 256 + ct["aa"]))))
+        return img
+    r, g, b, a = img.split()
+    if (ct["rm"], ct["gm"], ct["bm"], ct["ra"], ct["ga"], ct["ba"]) != (256, 256, 256, 0, 0, 0):
+        r = r.point(lambda p: min(255, max(0, p * ct["rm"] // 256 + ct["ra"])))
+        g = g.point(lambda p: min(255, max(0, p * ct["gm"] // 256 + ct["ga"])))
+        b = b.point(lambda p: min(255, max(0, p * ct["bm"] // 256 + ct["ba"])))
+    if ct["am"] != 256:
+        a = a.point(lambda p: min(255, max(0, p * ct["am"] // 256)))
     return Image.merge("RGBA", (r, g, b, a))
+
+
+def _ct_compose(parent, child):
+    """Compose color transforms for nested sprites (child applied, then parent)."""
+    if not parent:
+        return child
+    if not child:
+        return parent
+    def comb(pm, pa, cm, ca):
+        return pm * cm // 256, pm * ca // 256 + pa
+    rm, ra = comb(parent["rm"], parent["ra"], child["rm"], child["ra"])
+    gm, ga = comb(parent["gm"], parent["ga"], child["gm"], child["ga"])
+    bm, ba = comb(parent["bm"], parent["ba"], child["bm"], child["ba"])
+    return {"rm": rm, "gm": gm, "bm": bm, "am": parent["am"] * child["am"] // 256,
+            "ra": ra, "ga": ga, "ba": ba}
 
 
 def _parse_meta(root):
@@ -193,7 +212,11 @@ def _parse_sprite_frames(sprite_elem):
             layer.setdefault("sx", 1.0); layer.setdefault("sy", 1.0)
             layer.setdefault("tx", 0.0); layer.setdefault("ty", 0.0)
             if ct is not None:
-                layer["am"] = int(ct.get("alphaMultTerm", 256))
+                layer["ct"] = {
+                    "rm": int(ct.get("redMultTerm", 256)), "gm": int(ct.get("greenMultTerm", 256)),
+                    "bm": int(ct.get("blueMultTerm", 256)), "am": int(ct.get("alphaMultTerm", 256)),
+                    "ra": int(ct.get("redAddTerm", 0)), "ga": int(ct.get("greenAddTerm", 0)),
+                    "ba": int(ct.get("blueAddTerm", 0))}
             current[depth] = layer
         elif tt == "RemoveObject2Tag":
             current.pop(int(tag.get("depth", 0)), None)
@@ -216,8 +239,9 @@ def render_icons(xml_path, tex_dirs, out_dir, frame_range=None,
             char_type[int(sid)] = "sprite"
 
     miss_names = set()
+    leaf_count = [0]   # leaves actually drawn for the current frame (plate+glyph -> >=2)
 
-    def draw_leaf(cvs, cx, cy, cid, sx, sy, tx, ty, am):
+    def draw_leaf(cvs, cx, cy, cid, sx, sy, tx, ty, ct):
         """Composite one image/shape/bitmap char at the effective transform."""
         img, origin, extent_tw = None, (0.0, 0.0), None
         kind = char_type.get(cid)
@@ -246,17 +270,16 @@ def render_icons(xml_path, tex_dirs, out_dir, frame_range=None,
             nw = max(1, int(round(img.width * sx)))
             nh = max(1, int(round(img.height * sy)))
         img = img.resize((nw, nh), Image.LANCZOS)
-        if am != 256:
-            r, g, b, a = img.split()
-            img = Image.merge("RGBA", (r, g, b, a.point(lambda p: int(p * am / 256))))
+        img = _apply_ct(img, ct)
         px = cx + (origin[0] * sx + tx) / TWIPS
         py = cy + (origin[1] * sy + ty) / TWIPS
         cvs.alpha_composite(img, (int(round(px)), int(round(py))))
+        leaf_count[0] += 1
         return True
 
-    def composite(cvs, cx, cy, sid, frame_idx, Asx, Asy, Atx, Aty, Aam, stack=()):
+    def composite(cvs, cx, cy, sid, frame_idx, Asx, Asy, Atx, Aty, Act, stack=()):
         """Draw sprite `sid`'s frame, recursing into nested sprites. Transform
-        composes A∘layer for scale+translate; alpha multiplies."""
+        composes A∘layer for scale+translate; color transforms compose too."""
         frames = sprite_frames.get(str(sid))
         if not frames or sid in stack:   # missing or cycle guard
             return False
@@ -269,11 +292,11 @@ def render_icons(xml_path, tex_dirs, out_dir, frame_range=None,
                 continue
             esx, esy = Asx * info["sx"], Asy * info["sy"]
             etx, ety = Asx * info["tx"] + Atx, Asy * info["ty"] + Aty
-            eam = Aam * info.get("am", 256) // 256
+            ect = _ct_compose(Act, info.get("ct"))
             if char_type.get(cid) == "sprite":
-                drew |= composite(cvs, cx, cy, cid, 0, esx, esy, etx, ety, eam, stack + (sid,))
+                drew |= composite(cvs, cx, cy, cid, 0, esx, esy, etx, ety, ect, stack + (sid,))
             else:
-                drew |= draw_leaf(cvs, cx, cy, cid, esx, esy, etx, ety, eam)
+                drew |= draw_leaf(cvs, cx, cy, cid, esx, esy, etx, ety, ect)
         return drew
 
     os.makedirs(out_dir, exist_ok=True)
@@ -290,7 +313,7 @@ def render_icons(xml_path, tex_dirs, out_dir, frame_range=None,
             if sid == sprite_id:
                 continue
             cvs = Image.new("RGBA", (BIG, BIG), (0, 0, 0, 0))
-            if not composite(cvs, BIG // 2, BIG // 2, sid, 0, 1.0, 1.0, 0.0, 0.0, 256):
+            if not composite(cvs, BIG // 2, BIG // 2, sid, 0, 1.0, 1.0, 0.0, 0.0, None):
                 continue
             bbox = cvs.getbbox()
             if not bbox:
@@ -311,6 +334,7 @@ def render_icons(xml_path, tex_dirs, out_dir, frame_range=None,
         frame_range = range(1, len(frames) + 1)
 
     rendered = 0
+    layer_counts = {}   # iconId -> leaves drawn (>=2 => has a background plate)
     for fnum in frame_range:
         if fnum < 1 or fnum > len(frames):
             continue
@@ -318,17 +342,21 @@ def render_icons(xml_path, tex_dirs, out_dir, frame_range=None,
         if not layers:
             continue
         cvs = Image.new("RGBA", (canvas, canvas), (0, 0, 0, 0))
+        leaf_count[0] = 0
         for depth in sorted(layers):
             info = layers[depth]
             cid = info.get("cid")
             if cid is None:
                 continue
             if char_type.get(cid) == "sprite":
-                composite(cvs, cx, cy, cid, 0, info["sx"], info["sy"], info["tx"], info["ty"], info.get("am", 256))
+                composite(cvs, cx, cy, cid, 0, info["sx"], info["sy"], info["tx"], info["ty"], info.get("ct"))
             else:
-                draw_leaf(cvs, cx, cy, cid, info["sx"], info["sy"], info["tx"], info["ty"], info.get("am", 256))
+                draw_leaf(cvs, cx, cy, cid, info["sx"], info["sy"], info["tx"], info["ty"], info.get("ct"))
         cvs.save(os.path.join(out_dir, f"iconId_{fnum}.png"))
+        layer_counts[fnum] = leaf_count[0]
         rendered += 1
+    with open(os.path.join(out_dir, "layer_counts.json"), "w", encoding="utf-8") as lf:
+        json.dump(layer_counts, lf)
     print(f"Rendered {rendered} icons to {out_dir}")
     if miss_names:
         print(f"  ({len(miss_names)} unresolved chars; e.g. {', '.join(sorted(miss_names)[:8])})")

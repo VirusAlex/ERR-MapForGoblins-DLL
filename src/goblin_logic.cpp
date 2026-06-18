@@ -111,21 +111,10 @@ static void HideOnCompletion(int rowId, from::paramdef::WORLD_MAP_POINT_PARAM_ST
     }
 }
 
-// In ERR's custom icon tga, iconId 372/373 regions are transparent — assigning
-// them makes the marker invisible. iconId 374 is the valid "red skull / boss"
-// region. The rest of the generator already uses 374 for boss markers.
-static constexpr int kRedSkullIconId = 374;
-
 static void SetupOverworldERR(int rowId, from::paramdef::WORLD_MAP_POINT_PARAM_ST &row)
 {
     row.textEnableFlagId2 = row.eventFlagId;
     row.eventFlagId = GetIconFlag(rowId, row);
-
-    if (config::redifyBossIcons)
-    {
-        row.iconId = kRedSkullIconId;
-        HideOnCompletion(rowId, row);
-    }
 }
 
 static void SetupDungeonERR(int rowId, from::paramdef::WORLD_MAP_POINT_PARAM_ST &row)
@@ -136,10 +125,6 @@ static void SetupDungeonERR(int rowId, from::paramdef::WORLD_MAP_POINT_PARAM_ST 
     row.textEnableFlagId3 = row.eventFlagId;
     row.eventFlagId = 0;
 
-    if (config::redifyDungeonIcons)
-    {
-        row.iconId = kRedSkullIconId;
-    }
     if (config::hideDungeonIconsOnClear)
     {
         HideOnCompletion(rowId, row);

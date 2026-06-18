@@ -12,10 +12,11 @@ Collected Rune Pieces, Ember Pieces and gathering nodes are automatically hidden
 
 ## Features
 
-- ~9000 map icons across 60+ toggleable categories (configurable via INI)
-- Map text sourced from existing in-game FMG entries (all 14 languages) via a MsgRepository hook — each marker redirects to a goods/weapon/armour/etc. name by ID, so translations come for free
+- In-game config overlay (Dear ImGui on a DX12 Present hook): open with **F10** (keyboard) or **Y+R3** (gamepad) to toggle any icon category live, flip the master switch, and copy a marker dump - no ini editing or alt-tab. Mouse/keyboard/controller input; changes apply on the next world-map open
+- ~9000 map icons across 60+ toggleable categories (configurable via INI or the overlay)
+- Map text sourced from existing in-game FMG entries (all 14 languages) via a MsgRepository hook - each marker redirects to a goods/weapon/armour/etc. name by ID, so translations come for free
 - Collected Rune/Ember Piece detection: GEOF singletons for unloaded tiles + CSWorldGeomMan flags for loaded tiles
-- [Item & Enemy Randomizer](https://www.nexusmods.com/eldenring/mods/428) support (vanilla build, on by default): loot markers read the loaded `ItemLotParam` from live memory at startup, so each shows the item actually placed by your seed (name + icon) and hides on the real light-point pickup — seed-agnostic, no per-seed data
+- [Item & Enemy Randomizer](https://www.nexusmods.com/eldenring/mods/428) support (vanilla build, on by default): loot markers read the loaded `ItemLotParam` from live memory at startup, so each shows the item actually placed by your seed (name + icon) and hides on the real light-point pickup - seed-agnostic, no per-seed data
 - Spoiler-free mode (`anonymous_loot` INI option): every loot marker shows a gray "?" icon and a generic localized label instead of the real item, for blind / randomizer runs
 - No regulation.bin changes - no conflicts with other mods
 - Addon-compatible folder structure for ERR
@@ -45,7 +46,7 @@ Output: `build/Release/MapForGoblins.dll` + `MapForGoblins.ini`
 
 ## Installation
 
-Grab a packaged release from [Nexus Mods](https://www.nexusmods.com/eldenring/mods/10062) — it has step-by-step instructions for all four builds (ERR; vanilla via ModEngine2/me3; The Convergence via its bundled ModEngine2; ERTE via Mod Engine 3).
+Grab a packaged release from [Nexus Mods](https://www.nexusmods.com/eldenring/mods/10062) - it has step-by-step instructions for all four builds (ERR; vanilla via ModEngine2/me3; The Convergence via its bundled ModEngine2; ERTE via Mod Engine 3).
 
 Manual install of the ERR build:
 1. Copy `MapForGoblins.dll` and `MapForGoblins.ini` to your ERR `dll/offline/` directory
@@ -143,6 +144,7 @@ This project builds on the work of many people and projects:
 - **TsudaKageyu** - [MinHook](https://github.com/TsudaKageyu/minhook), API hooking framework
 - **gabime** - [spdlog](https://github.com/gabime/spdlog), logging library
 - **metayeti** - [mINI](https://github.com/metayeti/mINI), INI file parser
+- **ocornut** - [Dear ImGui](https://github.com/ocornut/imgui), the in-game config overlay UI
 - **[Claude Code](https://claude.com/claude-code)** (Anthropic) - heavy lifting on the data-extraction pipeline automation and on reverse-engineering the game's in-memory geom-object state (the collected-piece detection research)
 
 ### Community
@@ -151,4 +153,4 @@ Thanks to the ERR Discord for testing and bug reports, especially **AngryPhiloso
 
 ## License
 
-MIT-style, see [LICENSE.txt](LICENSE.txt) — includes the original [Goblin-ERR](https://github.com/Gacsam/Goblin-ERR) notice (this project started as its fork) and the bundled third-party licenses (Pattern16, MinHook, HDE64, mINI, spdlog).
+MIT-style, see [LICENSE.txt](LICENSE.txt) - includes the original [Goblin-ERR](https://github.com/Gacsam/Goblin-ERR) notice (this project started as its fork) and the bundled third-party licenses (Pattern16, MinHook, HDE64, mINI, spdlog, Dear ImGui).

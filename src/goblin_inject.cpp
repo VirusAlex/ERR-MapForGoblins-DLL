@@ -1,6 +1,7 @@
 #include "goblin_inject.hpp"
 #include "goblin_collected.hpp"
 #include "goblin_kindling.hpp"
+#include "goblin_logic.hpp"
 #include "goblin_config.hpp"
 #include "goblin_messages.hpp"
 #include "modutils.hpp"
@@ -50,11 +51,33 @@ static bool g_param_injection_active = false;
 // textIds that don't resolve to a real string.
 static std::vector<uint8_t *> g_injected_row_ptrs;
 
+// Per-injected-row category-visibility control. Every category is injected; a
+// marker shows only if its category is enabled (dispMask00). Flipped live by
+// apply_category_visibility() when the in-game overlay toggles a category.
+struct CategoryRow
+{
+    from::paramdef::WORLD_MAP_POINT_PARAM_ST *p;
+    Category cat;
+    bool baked_disp;        // dispMask00 as baked; restored when the category is on
+    unsigned baked_cleared; // clearedEventFlagId as baked (for live hide_killed_bosses)
+    unsigned baked_dis1;    // textDisableFlagId1 as baked
+    unsigned baked_dis2;    // textDisableFlagId2 as baked
+};
+static std::vector<CategoryRow> g_category_rows;
+
 // Live-loot: lot-backed injected rows. refresh_loot_from_itemlot() reads the
 // LIVE ItemLotParam getItemFlagId for each and rewrites textDisableFlagId1 so
 // the marker hides on the actual light-point pickup for the loaded regulation
 // (Randomizer-compatible). g_lot_backed_set lets apply_flag_or_pairs skip them.
-struct LotBackedRow { uint8_t *ptr; uint32_t lotId; uint8_t lotType; };
+struct LotBackedRow
+{
+    uint8_t *ptr;
+    uint32_t lotId;
+    uint8_t lotType;
+    int baked_icon;        // iconId as baked (restored when live-loot/anon off)
+    int32_t baked_text1;   // textId1 as baked (the item-name label)
+    unsigned baked_dis[8]; // textDisableFlagId1..8 as baked
+};
 static std::vector<LotBackedRow> g_lot_backed_rows;
 static std::set<uint8_t *> g_lot_backed_set;
 
@@ -313,11 +336,10 @@ void goblin::inject_map_entries()
             }
         }
 
-        if (!is_category_enabled(gate_cat))
-        {
-            skipped_by_config++;
-            continue;
-        }
+        // Inject EVERY category's rows. Per-category visibility is applied as a
+        // dispMask00 gate during the write loop below and stays live-toggleable
+        // from the in-game config overlay (goblin::apply_category_visibility).
+        (void)gate_cat;
         entries.push_back({0, e.row_id, &e.data, is_piece, is_kindling, e.category, lotId, lotType});
     }
 
@@ -397,10 +419,8 @@ void goblin::inject_map_entries()
     size_t param_file_size = wrapper_row_loc_end;
     size_t total_alloc = WRAPPER_HEADER + param_file_size;
 
-    // HeapAlloc (not VirtualAlloc): Seamless Co-op's `game_memory_unlimiter`
-    // module crashes when hosting if our expanded ParamTable lives on a
-    // dedicated VirtualAlloc'd page region — ERSC apparently expects param
-    // memory to come from the process heap. HEAP_ZERO_MEMORY zero-inits.
+    // Allocate the expanded ParamTable from the process heap.
+    // HEAP_ZERO_MEMORY zero-inits.
     allocation = HeapAlloc(GetProcessHeap(), HEAP_ZERO_MEMORY, total_alloc);
     if (!allocation)
     {
@@ -472,13 +492,38 @@ void goblin::inject_map_entries()
         // sanitize_injected_textids() can later strip any textId that the
         // expanded PlaceName FMG didn't end up containing.
         if (all_rows[i].original_row_id)
+        {
             g_injected_row_ptrs.push_back(new_param_file + data_offset);
+            auto *wp = reinterpret_cast<from::paramdef::WORLD_MAP_POINT_PARAM_ST *>(
+                new_param_file + data_offset);
+            // Capture baked fields BEFORE the kill-display mutation below, so
+            // live re-apply (apply_kill_display) can restore either mode.
+            g_category_rows.push_back({wp, all_rows[i].category, wp->dispMask00 != 0,
+                                       wp->clearedEventFlagId, wp->textDisableFlagId1,
+                                       wp->textDisableFlagId2});
+            if (!is_category_enabled(all_rows[i].category))
+                wp->dispMask00 = false; // category off -> hidden until toggled on
+        }
 
         // Live-loot: remember lot-backed rows for refresh_loot_from_itemlot().
         if (all_rows[i].lotType != 0 && all_rows[i].lotId != 0)
         {
             uint8_t *rp = new_param_file + data_offset;
-            g_lot_backed_rows.push_back({rp, all_rows[i].lotId, all_rows[i].lotType});
+            // Capture baked icon/label/flags BEFORE the icon override + live-loot
+            // pass, so apply_loot_settings() can revert when those options are off.
+            auto *wp = reinterpret_cast<from::paramdef::WORLD_MAP_POINT_PARAM_ST *>(rp);
+            LotBackedRow lb{};
+            lb.ptr = rp;
+            lb.lotId = all_rows[i].lotId;
+            lb.lotType = all_rows[i].lotType;
+            lb.baked_icon = wp->iconId;
+            lb.baked_text1 = wp->textId1;
+            unsigned *bfls[8] = {&wp->textDisableFlagId1, &wp->textDisableFlagId2,
+                                 &wp->textDisableFlagId3, &wp->textDisableFlagId4,
+                                 &wp->textDisableFlagId5, &wp->textDisableFlagId6,
+                                 &wp->textDisableFlagId7, &wp->textDisableFlagId8};
+            for (int k = 0; k < 8; ++k) lb.baked_dis[k] = *bfls[k];
+            g_lot_backed_rows.push_back(lb);
             g_lot_backed_set.insert(rp);
 
             // Live-loot icons: re-icon the marker to match the live item's
@@ -883,32 +928,150 @@ static bool gamepad_combo_held()
     return false;
 }
 
+void goblin::apply_category_visibility()
+{
+    for (auto &cr : g_category_rows)
+        cr.p->dispMask00 = is_category_enabled(cr.cat) ? cr.baked_disp : false;
+}
+
+// Live re-apply of hide_killed_bosses (boss / spiritspring-hawk / hostile-NPC
+// rows). Re-derives from the baked fields so either mode is reversible.
+void goblin::apply_kill_display()
+{
+    for (auto &cr : g_category_rows)
+    {
+        if (cr.cat != Category::WorldBosses &&
+            cr.cat != Category::WorldSpiritspringHawks &&
+            cr.cat != Category::WorldHostileNPC)
+            continue;
+        if (goblin::config::hideKilledBosses)
+        {
+            cr.p->clearedEventFlagId = 0; // text hides on kill -> icon hides
+            // Hide on the defeat flag. Bosses bake it into textDisableFlagId1;
+            // Spiritspring Hawks only carry it in clearedEventFlagId, so fall back
+            // to that (else the hawk icon never hides, only loses its checkmark).
+            cr.p->textDisableFlagId1 = cr.baked_dis1 ? cr.baked_dis1 : cr.baked_cleared;
+            cr.p->textDisableFlagId2 = cr.baked_dis2;
+        }
+        else
+        {
+            cr.p->clearedEventFlagId = cr.baked_cleared; // keep green checkmark
+            cr.p->textDisableFlagId1 = 0;
+            cr.p->textDisableFlagId2 = 0;
+        }
+    }
+}
+
+// Live re-apply of the loot icon/label/flag options (anonymous_loot,
+// live_loot_icons/labels/flags) across every lot-backed marker. Re-reads the
+// live ItemLotParam and re-derives each marker's icon, item-name label, and
+// hide-on-pickup flag — reverting to the baked values when an option is off.
+static void apply_loot_settings()
+{
+    if (g_lot_backed_rows.empty())
+        return;
+    const bool anon = goblin::config::anonymousLoot;
+    const bool do_icons = goblin::config::liveLootIcons;
+    const bool do_labels = goblin::config::liveLootLabels;
+    const bool do_flags = goblin::config::liveLootFlags;
+
+    LotReader lots;
+    lots.init();
+    const bool have_lots = lots.ok();
+
+    for (auto &lr : g_lot_backed_rows)
+    {
+        auto *p = reinterpret_cast<from::paramdef::WORLD_MAP_POINT_PARAM_ST *>(lr.ptr);
+        RawItemLotRow *row = have_lots ? lots.row(lr.lotId, lr.lotType) : nullptr;
+        int32_t item = 0, cat = 0;
+        if (row)
+        {
+            item = *reinterpret_cast<int32_t *>(row->b + 0x00); // lotItemId01
+            cat = *reinterpret_cast<int32_t *>(row->b + 0x20);  // lotItemCategory01
+        }
+
+        // Icon
+        int icon = lr.baked_icon;
+        if (anon)
+            icon = goblin::generated::ANON_ICON_ID;
+        else if (do_icons && item > 0)
+            if (const auto *ic = lookup_item_icon(encode_live_item(item, cat)))
+                icon = ic->iconId;
+        p->iconId = static_cast<decltype(p->iconId)>(icon);
+
+        // Item-name label (only touch an item-name slot)
+        if (lr.baked_text1 >= 50000000 && lr.baked_text1 < 600000000)
+        {
+            int32_t label = lr.baked_text1;
+            if (anon)
+                label = ANON_LABEL_TEXTID;
+            else if (do_labels && item > 0)
+            {
+                int32_t enc = encode_live_item(item, cat);
+                if (enc > 0) label = enc;
+            }
+            p->textId1 = label;
+        }
+
+        // Hide-on-pickup flag (all populated lines that had a baked flag)
+        int *tids[8] = {&p->textId1, &p->textId2, &p->textId3, &p->textId4,
+                        &p->textId5, &p->textId6, &p->textId7, &p->textId8};
+        unsigned *fls[8] = {&p->textDisableFlagId1, &p->textDisableFlagId2,
+                            &p->textDisableFlagId3, &p->textDisableFlagId4,
+                            &p->textDisableFlagId5, &p->textDisableFlagId6,
+                            &p->textDisableFlagId7, &p->textDisableFlagId8};
+        uint32_t flag = 0;
+        if (do_flags && row)
+        {
+            flag = *reinterpret_cast<uint32_t *>(row->b + 0x80);
+            if (flag == 0)
+            {
+                int32_t item2 = *reinterpret_cast<int32_t *>(row->b + 0x04);
+                if (item2 == 0) flag = *reinterpret_cast<uint32_t *>(row->b + 0x60);
+            }
+        }
+        for (int i = 0; i < 8; ++i)
+            *fls[i] = (do_flags && flag && *tids[i] > 0 && lr.baked_dis[i] != 0)
+                          ? flag
+                          : lr.baked_dis[i]; // else restore baked
+    }
+}
+
+// One call to re-apply every LIVE-capable setting after the overlay edits the
+// config. Each step re-derives from baked state (idempotent). Takes effect on
+// the next world-map (re)open.
+void goblin::reapply_live_settings()
+{
+    apply_category_visibility();           // show_* categories
+    apply_kill_display();                  // hide_killed_bosses
+    apply_loot_settings();                 // anonymous_loot + live_loot_icons/labels/flags
+    goblin::apply_map_logic();             // require_map_fragments + ERR patch_* markers
+}
+
+void goblin::set_icons_hidden(bool hidden) { g_icons_user_disabled.store(hidden); }
+bool goblin::icons_hidden() { return g_icons_user_disabled.load(); }
+
 void goblin::toggle_hotkey_loop()
 {
-    bool prev_kbd = false, prev_pad = false, prev_f11 = false;
+    bool prev_kbd = false, prev_pad = false;
     while (true)
     {
         std::this_thread::sleep_for(std::chrono::milliseconds(100));
-        if (!config::enableToggleHotkey) { prev_kbd = false; prev_pad = false; prev_f11 = false; continue; }
+        if (!config::enableToggleHotkey) { prev_kbd = false; prev_pad = false; continue; }
 
-        SHORT state = GetAsyncKeyState(static_cast<int>(config::toggleInjectionKey));
-        bool kbd = (state & 0x8000) != 0;
-        bool pad = gamepad_combo_held();
+        // The toggle key/combo OPEN the overlay when it's enabled (handled in the
+        // overlay's hkPresent). This master show/hide path only fires when the
+        // overlay is DISABLED, so the same press never both opens the menu AND
+        // toggles icons.
+        const bool master_mode = !config::enableOverlay;
+        bool kbd = master_mode &&
+                   (GetAsyncKeyState(static_cast<int>(config::toggleInjectionKey)) & 0x8000) != 0;
+        bool pad = master_mode && gamepad_combo_held();
 
         // Rising-edge on either input source independently.
         bool fired = (kbd && !prev_kbd) || (pad && !prev_pad);
         prev_kbd = kbd;
         prev_pad = pad;
-
-        // EXPERIMENT: F11 cycles the toast method (see TOAST_METHOD_NAMES).
-        bool f11 = (GetAsyncKeyState(VK_F11) & 0x8000) != 0;
-        if (f11 && !prev_f11)
-        {
-            int m = (g_toast_method.load() + 1) % TOAST_METHOD_COUNT;
-            g_toast_method.store(m);
-            spdlog::info("[TOAST] method -> [{}]", TOAST_METHOD_NAMES[m]);
-        }
-        prev_f11 = f11;
 
         if (fired)
         {

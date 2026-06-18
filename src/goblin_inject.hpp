@@ -30,6 +30,26 @@ namespace goblin
     void set_param_injection_active(bool active);
     bool is_param_injection_active();
 
+    // Live per-category visibility: re-applies each injected row's dispMask00
+    // from the current goblin::config show_* flags (every category is injected,
+    // gated by dispMask). Call after the in-game overlay changes a toggle; the
+    // change shows next time the map is (re)opened. No rebuild, no restart.
+    void apply_category_visibility();
+
+    // Live re-apply of hide_killed_bosses across boss/hawk/hostile-NPC rows.
+    void apply_kill_display();
+
+    // Re-apply ALL live-capable settings at once (show_* + hide_killed_bosses +
+    // require_map_fragments + ERR patch markers). Call from the overlay on a
+    // settings change; effective on next world-map open. (anonymous_loot /
+    // live_loot_* are not live — they rewrite markers from ItemLotParam.)
+    void reapply_live_settings();
+
+    // Master show/hide of ALL icons (the former F10 behavior), now driven from
+    // the in-game overlay. The watcher (menu_auto_toggle_loop) applies it.
+    void set_icons_hidden(bool hidden);
+    bool icons_hidden();
+
     // Row ids used for both the TutorialParam rows AND the TutorialBody.fmg
     // entries holding each banner's STATIC text. Injected by
     // inject_tutorial_popup_rows() (param table) and goblin_messages

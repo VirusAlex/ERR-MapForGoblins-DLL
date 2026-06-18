@@ -14,6 +14,7 @@ namespace goblin::config
     uint8_t loadDelay = 5;
     bool requireMapFragments = true;
     bool debugLogging = false;
+    bool fastMapOpen = true;          // key fast_map_open: skip redundant relayout on re-open + amortize the first open
 
     bool showArmaments = false, showArmour = false, showAshesOfWar = false,
          showSpirits = false, showTalismans = false;
@@ -61,9 +62,9 @@ namespace goblin::config
 
     bool patchOverworldBossIcons = true, patchDungeonBossIcons = true,
          patchCampIcons = true, patchMerchantIcons = true,
-         redifyBossIcons = false, redifyDungeonIcons = false,
          hideDungeonIconsOnClear = false;
 
+    bool enableOverlay = true;
     bool enableMarkerDump = false;
     uint32_t markerDumpKey = 0x78; // VK_F9
     bool enableToggleHotkey = true;
@@ -104,6 +105,9 @@ namespace
                   "Require map fragment discovery before showing icons in that area"),
                 B("debug_logging", debugLogging, "false",
                   "Enable verbose debug logging (memory addresses, param details, FMG internals)"),
+                IniEntry{"fast_map_open", IniType::Bool, &cfg::fastMapOpen, "true",
+                         "BETA: makes the world map open faster when many icons are shown.\nTurn off if the map glitches or crashes.",
+                         false, "fast_map_reopen"},
             }},
 
             {"Equipment", nullptr, false, {
@@ -132,7 +136,7 @@ namespace
                 B("show_ammo", showAmmo, "false", "Arrows, bolts, greatarrows, greatbolts"),
                 B("show_bell_bearings", showBellBearings, "false", "Bell Bearings from treasures/chests/quest rewards"),
                 B("show_merchant_bell_bearings", showMerchantBellBearings, "false",
-                  "Bell Bearings dropped by KILLING merchants (Kale, Patches, Gostoc, nomadic\nmerchants, etc.) - off by default; this is a kill-the-merchant reward"),
+                  "Bell Bearings dropped by killing merchants (Kale, Patches, Gostoc,\nnomadic merchants, etc.)"),
                 B("show_consumables", showConsumables, "false", "Healing/buff consumables (boluses, cured meats, livers)"),
                 B("show_greases", showGreases, "false", "Weapon greases"),
                 B("show_utilities", showUtilities, "false", "Utility items (rainbow stone, glowstone, soap, soft cotton)"),
@@ -140,16 +144,16 @@ namespace
                 B("show_crafting_materials", showCraftingMaterials, "false", "Crafting materials (flowers, bones, bugs, etc.)"),
                 B("show_gloveworts", showGloveworts, "false", "Gloveworts (Grave/Ghost [1-9]) - Spirit Ash upgrade materials"),
                 B("show_golden_runes", showGoldenRunes, "false", "Golden Runes [4000+], Hero's/Numen's/Lord's/Shadow Realm Runes"),
-                B("show_golden_runes_low", showGoldenRunesLow, "false", "Golden Runes [200-3000], Broken Runes (disabled by default - many icons)"),
-                B("show_great_gloveworts", showGreatGloveworts, "false", "Great Gloveworts (Great Grave, Great Ghost) - rare boss drops"),
+                B("show_golden_runes_low", showGoldenRunesLow, "false", "Golden Runes [200-3000], Broken Runes"),
+                B("show_great_gloveworts", showGreatGloveworts, "false", "Great Gloveworts (Great Grave, Great Ghost)"),
                 B("show_material_nodes", showMaterialNodes, "false", "One-time gathering nodes (Erdleaf Flower, Trina's Lily, etc.)"),
                 B("show_mp_fingers", showMPFingers, "false", "Multiplayer items (Furlcalling/Wizened Fingers, Recusant/Bloody Finger)"),
                 B("show_prattling_pates", showPrattlingPates, "false", "Prattling Pates"),
                 B("show_rada_fruit", showRadaFruit, "false", "Rada Fruit (DLC stat-up consumable)"),
-                B("show_gestures", showGestures, "false", "Gestures (auto-discovered via gesture template 90005570 - covers 7/9 spawns)"),
+                B("show_gestures", showGestures, "false", "Gestures"),
                 B("show_reusables", showReusables, "false", "Reusable tools (Mimic Veil, Margit's Shackle, etc.)"),
                 B("show_smithing_stones", showSmithingStones, "false", "Smithing Stones [7-8], Somber [7-9], Scadushards"),
-                B("show_smithing_stones_low", showSmithingStonesLow, "false", "Smithing Stones [1-6], Somber [1-6] (disabled by default - many icons)"),
+                B("show_smithing_stones_low", showSmithingStonesLow, "false", "Smithing Stones [1-6], Somber [1-6]"),
                 B("show_smithing_stones_rare", showSmithingStonesRare, "false", "Ancient Dragon Smithing Stones (rare, endgame)"),
                 B("show_stonesword_keys", showStoneswordKeys, "false", "Stonesword Keys"),
                 B("show_throwables", showThrowables, "false", "Throwable items (darts, daggers, stones, chakrams, warming stones)"),
@@ -182,17 +186,17 @@ namespace
             {"World", nullptr, false, {
                 B("show_bosses", showBosses, "false", "Boss markers (field bosses, dungeon bosses)"),
                 B("show_graces", showGraces, "false", "Sites of Grace"),
-                B("show_hostile_npc", showHostileNPC, "false", "Hostile NPC invader spawn locations (auto-discovered via teamType 24/27)"),
+                B("show_hostile_npc", showHostileNPC, "false", "Hostile NPC invader locations"),
                 B("show_imp_statues", showImpStatues, "false", "Imp Statue (Stonesword Key fog gate) locations"),
                 B("show_paintings", showPaintings, "false", "Painting locations"),
                 B("show_spirit_springs", showSpiritSprings, "false", "Spirit Spring (horse jump) locations"),
-                B("show_spiritspring_hawks", showSpiritspringHawks, "false", "Spiritspring Hawk locations"),
+                BE("show_spiritspring_hawks", showSpiritspringHawks, "false", "Spiritspring Hawk locations"),
                 B("show_stakes_of_marika", showStakesOfMarika, "false", "Stakes of Marika (respawn points)"),
                 B("show_summoning_pools", showSummoningPools, "false", "Summoning Pool (Martyr Effigy) locations"),
                 BE("show_kindling_spirits", showKindlingSpirits, "true",
-                   "ERR Kindling Spirits in Misty Forest (m60_45_37_00) - collect all 5\nbetween rests for the Kindling Spirit incantation. Markers hide\npermanently once the incantation is acquired (engine flag 1045377500),\nand individually within a run via SFX-region runtime state."),
+                   "ERR Kindling Spirits in Misty Forest - collect all 5 between rests for\nthe Kindling Spirit incantation. Markers hide once you have the incantation."),
                 B("show_interactables", showInteractables, "false",
-                  "Interactive world objects & puzzles. Includes:\n  - Blue seal puzzles (~65 seals across the overworld, unlock hidden cellars)\n  - \"Light flame\" interacts: Sellia chalices (3), Snow Town seal-release\n    statues (4), Siofra River lanterns (~14)\n  - Hero's Tomb direction statues (16, point at hidden Hero's Tomb caves)\nEach marker hides on activation via its own engine flag."),
+                  "Interactive world objects & puzzles: blue seal puzzles (unlock hidden\ncellars), light-flame interacts (Sellia chalices, Snow Town statues, Siofra\nRiver lanterns), and Hero's Tomb direction statues."),
                 B("show_world_maps", showWorldMaps, "false", "World Map fragment locations"),
                 B("hide_killed_bosses", hideKilledBosses, "false", "Hide boss/invader/hawk markers after defeat (false = show green checkmark instead)"),
             }},
@@ -206,17 +210,13 @@ namespace
              "[World] show_bosses and independent of this section.",
              ERR, {
                 BE("patch_overworld_boss_icons", patchOverworldBossIcons, "true",
-                   "Tie ERR-placed overworld field-boss markers (textId2=5100) to\nour map-fragment discovery flag. Combine with redify_boss_icons below."),
+                   "Apply this mod's map-fragment discovery rule to ERR's overworld\nfield-boss markers."),
                 BE("patch_dungeon_boss_icons", patchDungeonBossIcons, "true",
-                   "Tie ERR-placed dungeon/cave entrance markers (textId3=5100/5300) to\nour map-fragment discovery flag. Required for redify/hide_dungeon below."),
+                   "Apply this mod's map-fragment discovery rule to ERR's dungeon/cave\nentrance markers. Required for hide_dungeon_icons_on_clear below."),
                 BE("patch_camp_icons", patchCampIcons, "true",
-                   "Tie ERR-placed enemy camp markers (textId2=5000) to our discovery flag."),
+                   "Apply this mod's map-fragment discovery rule to ERR's enemy camp markers."),
                 BE("patch_merchant_icons", patchMerchantIcons, "true",
-                   "Tie ERR-placed merchant markers (textId4=8800) to our discovery flag."),
-                BE("redify_boss_icons", redifyBossIcons, "false",
-                   "Cosmetic: when patching overworld bosses, recolour iconId to 374 (red) AND\nauto-hide once the boss is defeated. Requires patch_overworld_boss_icons."),
-                BE("redify_dungeon_icons", redifyDungeonIcons, "false",
-                   "Cosmetic: when patching dungeon entrances, recolour iconId to 374.\nRequires patch_dungeon_boss_icons."),
+                   "Apply this mod's map-fragment discovery rule to ERR's merchant markers."),
                 BE("hide_dungeon_icons_on_clear", hideDungeonIconsOnClear, "false",
                    "When patching dungeon entrances, hide the marker once the boss inside is\ndefeated. Requires patch_dungeon_boss_icons."),
             }},
@@ -235,17 +235,19 @@ namespace
             }},
 
             {"Debug",
-             "Hotkeys: in-memory marker dump, and the injection toggle (workaround for\nhosting Seamless Co-op). Key names: F1-F24, A-Z, 0-9, Space, Escape, Tab,\nEnter, Backspace, Home, End, PageUp, PageDown, Insert, Delete, arrows.",
+             "In-game config overlay + marker dump. toggle_key (keyboard) / toggle_gamepad_combo\n(gamepad) OPEN the overlay when enable_overlay is on, or toggle ALL map icons\non/off when it's off. Key names: F1-F24, A-Z, 0-9, Space, Escape, Tab, Enter,\nBackspace, Home, End, PageUp, PageDown, Insert, Delete, arrows.",
              false, {
+                B("enable_overlay", enableOverlay, "true",
+                  "In-game config overlay (Dear ImGui) opened with the toggle key below.\nSet false if a DX-hook conflict (Steam overlay/RTSS/GeForce Experience) or a\nGPU driver issue makes the game unstable."),
                 B("enable_marker_dump", enableMarkerDump, "false", "Master switch for the marker dump hotkey"),
                 IniEntry{"marker_dump_key", IniType::VkKey, &cfg::markerDumpKey, "F9",
                          "Key to dump decoded markers to logs/MapForGoblins_markers.log. Default: F9.", false, nullptr},
                 B("enable_toggle_hotkey", enableToggleHotkey, "true",
-                  "Injection toggle: revert WorldMapPointParam + PlaceName FMG to vanilla and\nback (press once before hosting Seamless Co-op, again after)."),
-                IniEntry{"toggle_injection_key", IniType::VkKey, &cfg::toggleInjectionKey, "F10",
-                         "Keyboard key for the injection toggle. Default: F10.", false, nullptr},
+                  "Enable toggle_key / toggle_gamepad_combo to switch ALL map icons on/off when\nthe overlay is DISABLED. (When the overlay is enabled, they open it instead.)"),
+                IniEntry{"toggle_key", IniType::VkKey, &cfg::toggleInjectionKey, "F10",
+                         "Keyboard toggle: OPENS the config overlay when enable_overlay is on, or\ntoggles ALL map icons on/off when the overlay is disabled. Default: F10.", false, "toggle_injection_key"},
                 IniEntry{"toggle_gamepad_combo", IniType::GamepadMask, &cfg::toggleGamepadMask, "Y+R3",
-                         "Gamepad combo (tokens joined with '+'): A,B,X,Y,LB,RB,L3/LSTICK,R3/RSTICK,\nBACK/SELECT/VIEW,START/MENU,UP/DOWN/LEFT/RIGHT. All held together. Default: Y+R3.", false, nullptr},
+                         "Gamepad toggle, same role as toggle_key (opens the overlay, or toggles all\nicons if the overlay is disabled). Tokens joined with '+': A,B,X,Y,LB,RB,\nL3/LSTICK,R3/RSTICK,BACK/SELECT/VIEW,START/MENU,UP/DOWN/LEFT/RIGHT. Default: Y+R3.", false, nullptr},
             }},
         };
     }

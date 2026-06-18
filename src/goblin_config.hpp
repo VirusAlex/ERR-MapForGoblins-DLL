@@ -12,11 +12,21 @@ namespace goblin
     void load_config(const std::filesystem::path &ini_path);
     void ensure_ini(const std::filesystem::path &ini_path);
 
+    // Write the CURRENT live config back to the ini (used by the in-game config
+    // overlay's "Save" button). Bool/U8 values come from the live config vars;
+    // key/gamepad bindings are preserved from the existing file. Keeps the
+    // schema's section layout + comments.
+    void save_config(const std::filesystem::path &ini_path);
+
+    // Path of the ini load_config() last used; the overlay saves back here.
+    extern std::filesystem::path g_ini_path;
+
     namespace config
     {
         extern uint8_t loadDelay;
         extern bool requireMapFragments;
         extern bool debugLogging;
+        extern bool fastMapOpen; // ini key: fast_map_open (skip relayout on reopen + amortize first open)
 
         // Equipment
         extern bool showArmaments;
@@ -128,9 +138,12 @@ namespace goblin
         // requires its corresponding `patch*` flag to be true to take
         // effect (we only touch the icon when we're already rewriting
         // the row).
-        extern bool redifyBossIcons;            // overworld bosses: red icon + auto-hide on kill
-        extern bool redifyDungeonIcons;         // dungeon entrances: red icon
         extern bool hideDungeonIconsOnClear;    // dungeon entrances: hide on boss kill
+
+        // In-game config overlay (Dear ImGui on a DX12 hook). Opens with the
+        // toggle key. Set false if a DX-hook conflict (Steam overlay/RTSS/etc.)
+        // or a GPU driver issue makes the game unstable.
+        extern bool enableOverlay;
 
         // Marker dump (hotkey → dump beacon/stamp coords to file)
         extern bool enableMarkerDump;
@@ -148,4 +161,8 @@ namespace goblin
 
     uint32_t parse_vk_code(std::string name);
     uint16_t parse_gamepad_combo(std::string s);
+    // Inverse of the above — produce a string that parse_*() round-trips, used by
+    // save_config to persist hotkeys rebound in the overlay.
+    std::string format_vk_code(uint32_t vk);
+    std::string format_gamepad_combo(uint16_t mask);
 };
