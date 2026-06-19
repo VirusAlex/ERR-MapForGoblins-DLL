@@ -81,6 +81,12 @@ def _is_merchant_bell(rec):
                for i in rec.get('items', []))
 
 
+# Rune Arc goods id differs by profile: ERR uses 150, vanilla/Convergence/ERTE use
+# 190 (in vanilla id 150 is Furlcalling Finger Remedy). Hardcoding 150 mislabeled
+# Furlcalling as Rune Arc and missed the real Rune Arcs on the non-ERR profiles.
+RUNE_ARC_ID = 150 if config.PROFILE == 'err' else 190
+
+
 # Which item names go into which file, with iconId and start row ID
 # Filter by item goodsId or item name
 # Equipment categories use ItemLotParam category (2=weapon, 3=armour, 4=accessory, 5=gem)
@@ -412,7 +418,7 @@ LOOT_CATEGORIES = {
         'startId': 5450000,
     },
     'Loot - Rune Arcs': {
-        'filter': lambda items: any(i['id'] == 150 and i['category'] == 1 for i in items),
+        'filter': lambda items: any(i['id'] == RUNE_ARC_ID and i['category'] == 1 for i in items),
         'iconId': 411,
         'startId': 5500000,
     },
@@ -475,11 +481,11 @@ LOOT_CATEGORIES = {
     'Loot - Stat Boosts': {
         # Permanent/session stat-up: Starlight Shards, Sacrificial Twig,
         # Blessing of Marika, Sign of the All-Knowing (sortGroup=10).
-        # Excludes Rune Arc (id 150, also sg=10) - it belongs to Unique Drops.
+        # Excludes Rune Arc (RUNE_ARC_ID, also sg=10) - it belongs to Unique Drops.
         'filter': lambda items: any(
             i['category'] == 1
             and GOODS_SORT_GROUPS.get(i['id'], -1) == 10
-            and i['id'] != 150  # Rune Arc → Unique Drops
+            and i['id'] != RUNE_ARC_ID  # Rune Arc -> Unique Drops
             for i in items
         ),
         'iconId': 410,
