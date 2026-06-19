@@ -25,7 +25,7 @@ Install (into an existing Convergence install)
    - under [modengine], add the DLL to the external_dlls list:
        external_dlls = [
            ...existing entries...,
-           "MapForGoblins\\MapForGoblins.dll",
+           "MapForGoblins/MapForGoblins.dll",
        ]
 
    - under [extension.mod_loader], add the asset folder ABOVE the
@@ -48,9 +48,10 @@ Settings & notes
 - Edit MapForGoblins/MapForGoblins.ini to turn icon categories
   on/off. The mod creates this file if missing and auto-adds any
   new options on launch, so it stays current across updates.
-- In-game config overlay: press F10 (or Y+R3 on a controller) to open
-  a settings panel and toggle icon categories live. Re-open the world
-  map to see the changes.
+- In-game mod menu: press F10 (or Y+R3 on a controller) to open a
+  settings panel and toggle icon categories. Category toggles take
+  effect right away on the open map; some options apply on the next
+  map open.
 - Markers come from The Convergence's map data merged over the base
   game, so loot the mod didn't change is covered too.
 - Questions and bug reports: https://discord.gg/JvTMwPCygB

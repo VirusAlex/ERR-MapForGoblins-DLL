@@ -12,7 +12,7 @@ Collected Rune Pieces, Ember Pieces and gathering nodes are automatically hidden
 
 ## Features
 
-- In-game config overlay (Dear ImGui on a DX12 Present hook): open with **F10** (keyboard) or **Y+R3** (gamepad) to toggle any icon category live, flip the master switch, and copy a marker dump - no ini editing or alt-tab. Mouse/keyboard/controller input; changes apply on the next world-map open
+- In-game mod menu (Dear ImGui on a DX12 Present hook): open with **F10** (keyboard) or **Y+R3** (gamepad) to toggle any icon category, flip the master switch, use Show all / Hide all, and copy a marker dump - no ini editing or alt-tab. Mouse/keyboard/controller input; category toggles take effect right away on the open map (some options apply on the next map open)
 - ~9000 map icons across 60+ toggleable categories (configurable via INI or the overlay)
 - Map text sourced from existing in-game FMG entries (all 14 languages) via a MsgRepository hook - each marker redirects to a goods/weapon/armour/etc. name by ID, so translations come for free
 - Collected Rune/Ember Piece detection: GEOF singletons for unloaded tiles + CSWorldGeomMan flags for loaded tiles

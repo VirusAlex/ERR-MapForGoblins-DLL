@@ -20,9 +20,19 @@ Based on [url=https://www.nexusmods.com/eldenring/mods/3091]Map for Goblins[/url
 [size=5][color=#ff8c00][b]Most icon categories are OFF by default - turn them on![/b][/color][/size]
 After installing, open [b]MapForGoblins.ini[/b] and set the categories you want to [b]= true[/b] (show_bosses, show_graces, show_smithing_stones, ...). Or just drop in the included [b]"all-on" preset[/b] - it replaces the default ini and switches everything on at once. [b]You can also enable categories in-game: press [color=#ff8c00]F10[/color] (or [color=#ff8c00]Y+R3[/color] on a controller) to open the new config overlay.[/b] [b]Seeing no icons? You almost certainly haven't enabled any in the ini - it is not broken.[/b]
 
+[size=5][color=#ff8c00][b]NEW in 2.0.0: in-game mod menu[/b][/color][/size]
+[img]https://staticdelivery.nexusmods.com/mods/4333/images/10062/10062-1781886515-155689242.png[/img]
+Press [b][color=#ff8c00]F10[/color][/b] (keyboard) or [b][color=#ff8c00]Y+R3[/color][/b] (controller) to open a settings panel right inside the game - no more alt-tabbing to edit the ini. From it you can:
+[list]
+[*]Turn any icon category on or off, or use [b]Show all[/b] / [b]Hide all[/b] at once[/*]
+[*]Flip the master "Show map icons" switch[/*]
+[*]Copy a marker dump for bug reports[/*]
+[/list]
+[b]Toggling a category takes effect right away on the open map[/b] - its icons appear or disappear without closing the map. (Some other options, such as spoiler-free mode, apply the next time you open the map.) Mouse, keyboard and controller supported.
+
 [size=4][b]Main features[/b][/size]
 [list]
-[*][b]In-game config overlay[/b] (new): press [b]F10[/b] (or [b]Y+R3[/b] on a controller) to open a settings panel right in the game - toggle any icon category on/off, flip the master switch, and copy a marker dump, without alt-tabbing to edit the ini. Mouse, keyboard and controller all work. Changes apply live; re-open the world map to see them.[/*]
+[*][b]In-game mod menu[/b] (new, see above): F10 (or Y+R3 on a controller) opens a settings panel to toggle icon categories, the master switch and Show all / Hide all without editing the ini. Category toggles take effect right away on the open map.[/*]
 [*]Icon categories that can be turned on/off individually in [b]MapForGoblins.ini[/b]: weapons, armour, talismans, spells, key items, smithing stones, gloveworts, cookbooks, bell bearings, gathering nodes, bosses, graces, stakes of Marika, spirit springs, imp statues, paintings, summoning pools, map fragments, gestures, NPC invaders, puzzles etc.[/*]
 [*]Icons in a region only show up after you've found that region's map fragment (can be disabled).[/*]
 [*]Things you've already collected disappear from the map: including gathered material nodes (like Arteria Leaf), Rune/Ember Pieces etc. Defeated bosses either hide or get a checkmark (configurable).[/*]
@@ -41,8 +51,7 @@ After installing, open [b]MapForGoblins.ini[/b] and set the categories you want 
 [*]Copy [b]dll/[/b] and [b]addons/[/b] into your ERR folder (merge with what's there)[/*]
 [*]Launch through ERR as usual[/*]
 [/list]
-Settings are in [b]dll/offline/MapForGoblins.ini[/b] [b]Reminder: most categories are OFF by default - enable the ones you want here, or use the included all-on preset.[/b]
-[/spoiler]
+Settings are in [b]dll/offline/MapForGoblins.ini[/b] [b]Reminder: most categories are OFF by default - enable the ones you want here, or use the included all-on preset.[/b][/spoiler]
 
 [size=4][b]Installation - Vanilla version[/b][/size]
 You need a mod loader, either [b]ModEngine3 (me3)[/b] or [b]ModEngine2[/b].
@@ -82,8 +91,7 @@ mods = [
 [/*]
 [*]Run launchmod_eldenring.bat[/*]
 [/list]
-[color=#ff8c00][b]Mind the slashes:[/b][/color] keep the paths with double backslashes (\\) or forward slashes (/) - a single backslash is a TOML escape, which makes the whole config invalid and stops [i]every[/i] mod from loading.
-[/spoiler]
+[color=#ff8c00][b]Mind the slashes:[/b][/color] keep the paths with double backslashes (\\) or forward slashes (/) - a single backslash is a TOML escape, which makes the whole config invalid and stops [i]every[/i] mod from loading.[/spoiler]
 [b]Option C: [url=https://www.nexusmods.com/eldenring/mods/5998]Mod Engine 2 with Lazy Loader[/url][/b] [i](popular on Steam Deck)[/i]
 [spoiler]
 Same as ModEngine2, but its config lives in the [b]base/[/b] folder.
@@ -91,18 +99,17 @@ Same as ModEngine2, but its config lives in the [b]base/[/b] folder.
 [*]Copy the [b]MapForGoblins[/b] folder into the main [b]Game[/b] folder (next to eldenring.exe, mod, mods - [b]not[/b] inside base/)[/*]
 [*]Open [b]base/config.toml[/b] and add the DLL to external_dlls and the asset folder to mods (MapForGoblins listed FIRST so its world-map file wins):
 [code]external_dlls = [
-    "MapForGoblins/MapForGoblins.dll"
+    "MapForGoblins/MapForGoblins.dll"
 ]
 
 mods = [
-    { enabled = true, name = "MapForGoblins", path = "MapForGoblins" },
-    { enabled = true, name = "default", path = "mod" }
+    { enabled = true, name = "MapForGoblins", path = "MapForGoblins" },
+    { enabled = true, name = "default", path = "mod" }
 ][/code]
 [/*]
 [*]Launch from eldenring.exe as usual[/*]
 [/list]
-[color=#ff8c00][b]Mind the slashes:[/b][/color] in this config a single backslash is an escape character, so a path like "MapForGoblins\MapForGoblins.dll" makes the WHOLE config.toml invalid and stops [i]every[/i] mod from loading - not just this one. Use forward slashes like above, or double every backslash (\\). The DLL must be in [b]external_dlls[/b]: Lazy Loader only loads ModEngine from base/, it does not auto-inject mod DLLs.
-[/spoiler]
+[color=#ff8c00][b]Mind the slashes:[/b][/color] in this config a single backslash is an escape character, so a path like "MapForGoblins\MapForGoblins.dll" makes the WHOLE config.toml invalid and stops [i]every[/i] mod from loading - not just this one. Use forward slashes like above, or double every backslash (\\). The DLL must be in [b]external_dlls[/b]: Lazy Loader only loads ModEngine from base/, it does not auto-inject mod DLLs.[/spoiler]
 Settings are in [b]MapForGoblins/MapForGoblins.ini[/b] [b]Reminder: most categories are OFF by default - enable the ones you want here, or use the included all-on preset.[/b]
 
 [size=4][b]Using it with the Item & Enemy Randomizer[/b][/size]
@@ -115,20 +122,19 @@ Use the [b]Vanilla version[/b]. Install it the same way (ModEngine3/me3 or ModEn
 [*]Copy the [b]MapForGoblins[/b] folder into your ConvergenceER folder (next to Start_Convergence.bat)[/*]
 [*]In [b]config_eldenring.toml[/b] add the DLL to external_dlls and the asset folder ABOVE the "mod" entry (in ModEngine2 the FIRST entry is highest priority - our world-map file already contains the Convergence map UI):
 [code]external_dlls = [
-    ...existing entries...,
-    "MapForGoblins\\MapForGoblins.dll",
+    ...existing entries...,
+    "MapForGoblins/MapForGoblins.dll",
 ]
 
 mods = [
-    { enabled = true, name = "MapForGoblins", path = "MapForGoblins" },
-    { enabled = true, name = "mod", path = "mod" }
+    { enabled = true, name = "MapForGoblins", path = "MapForGoblins" },
+    { enabled = true, name = "mod", path = "mod" }
 ][/code]
 [/*]
 [*]Launch through Start_Convergence.bat as usual[/*]
 [/list]
 [color=#ff8c00][b]Mind the slashes:[/b][/color] keep the paths with double backslashes (\\) or forward slashes (/) - a single backslash is a TOML escape, which makes the whole config invalid and stops [i]every[/i] mod from loading.
-Settings are in [b]MapForGoblins/MapForGoblins.ini[/b]. Note: the Convergence Launcher may rewrite config_eldenring.toml when it updates the mod - re-check the two edits after updates. [b]Reminder: most categories are OFF by default - enable the ones you want here, or use the included all-on preset.[/b]
-[/spoiler]
+Settings are in [b]MapForGoblins/MapForGoblins.ini[/b]. Note: the Convergence Launcher may rewrite config_eldenring.toml when it updates the mod - re-check the two edits after updates. [b]Reminder: most categories are OFF by default - enable the ones you want here, or use the included all-on preset.[/b][/spoiler]
 
 [size=4][b]Installation - ERTE version[/b][/size]
 [spoiler]
@@ -148,8 +154,7 @@ path = 'eldenring-mods\ERTE SOTE'[/code]
 (ERTE has no world-map UI of its own, so there's no conflict - this just makes sure our world-map file loads.)[/*]
 [*]Launch through the ERTE .me3 profile as usual[/*]
 [/list]
-Settings are in [b]MapForGoblins/MapForGoblins.ini[/b]. [b]Reminder: most categories are OFF by default - enable the ones you want here, or use the included all-on preset.[/b]
-[/spoiler]
+Settings are in [b]MapForGoblins/MapForGoblins.ini[/b]. [b]Reminder: most categories are OFF by default - enable the ones you want here, or use the included all-on preset.[/b][/spoiler]
 
 [size=4][b]Requirements[/b][/size]
 [list]
