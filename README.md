@@ -1,8 +1,22 @@
 # ELDEN RING Map For Goblins - DLL
 
+<p align="center">
+  <a href="https://github.com/VirusAlex/ERR-MapForGoblins-DLL/releases/latest"><img src="https://img.shields.io/github/v/release/VirusAlex/ERR-MapForGoblins-DLL?label=release" alt="Latest release"></a>
+  <a href="https://github.com/VirusAlex/ERR-MapForGoblins-DLL/releases"><img src="https://img.shields.io/github/downloads/VirusAlex/ERR-MapForGoblins-DLL/total" alt="Downloads"></a>
+  <a href="https://www.nexusmods.com/eldenring/mods/10062"><img src="https://img.shields.io/badge/Nexus%20Mods-MapForGoblins-da8e35?logo=nexusmods&logoColor=white" alt="Nexus Mods"></a>
+  <a href="https://discord.gg/JvTMwPCygB"><img src="https://img.shields.io/badge/Discord-Elden%20Ring%20DLL%20Mods-5865F2?logo=discord&logoColor=white" alt="Discord"></a>
+  <a href="LICENSE.txt"><img src="https://img.shields.io/badge/license-MIT--style-blue" alt="License"></a>
+</p>
+
 A DLL mod for Elden Ring that adds thousands of icons to the world map: weapons, armor, spells, quest items, bosses, NPCs, gathering nodes, etc. Four builds: one for [ERR](https://www.nexusmods.com/eldenring/mods/541) (~9000 icons, including ERR-specific content like Rune Pieces), one for the vanilla game + Shadow of the Erdtree (~6700 icons), one for [The Convergence](https://www.nexusmods.com/eldenring/mods/3419) (~7200 icons generated from the overhaul's own data), and one for [ERTE](https://www.nexusmods.com/eldenring/mods/2747) (~7600 icons generated from the overhaul's own data).
 
 **Download:** [Nexus Mods](https://www.nexusmods.com/eldenring/mods/10062) · **Community:** [Elden Ring - DLL Mods Discord](https://discord.gg/JvTMwPCygB)
+
+<p align="center">
+  <img src="assets/screenshots/mod-menu.png" alt="The in-game mod menu (F10 / Y+R3): toggle any icon category live" width="440">
+  <br>
+  <em>In-game mod menu (F10 / Y+R3): toggle any icon category live, no ini editing.</em>
+</p>
 
 Unlike [Map for Goblins](https://www.nexusmods.com/eldenring/mods/3091), this mod does not modify `regulation.bin`. All map point data is injected into memory at runtime, so it won't conflict with other regulation edits.
 
