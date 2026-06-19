@@ -43,7 +43,7 @@ def collect(msb):
             try:
                 name = str(p.Name)
                 model = str(getattr(p, 'ModelName', '') or '')
-                # Skip disabled placements — they don't spawn
+                # Skip disabled placements - they don't spawn
                 if int(getattr(p, 'GameEditionDisable', 0) or 0) == 1:
                     continue
                 out[name] = (f'Part.{cat}', float(p.Position.Y), model)

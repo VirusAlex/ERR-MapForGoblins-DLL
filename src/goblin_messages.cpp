@@ -37,7 +37,7 @@ static void *fmg_allocation = nullptr;
 static std::unordered_set<int32_t> g_placename_valid_ids;
 
 // Toggle state for PlaceName FMG (slot 19). Only this slot is a pointer
-// swap — other slots get surgical in-place additions we don't try to undo.
+// swap - other slots get surgical in-place additions we don't try to undo.
 static uint8_t **g_placename_slot_ptr = nullptr;
 static uint8_t *g_vanilla_placename_fmg = nullptr;
 static uint8_t *g_expanded_placename_fmg = nullptr;
@@ -45,7 +45,7 @@ static bool g_fmg_injection_active = false;
 
 // ── SEH-guarded slot access ──
 // Some runtimes keep STALE pointers in MsgRepository slots the game never
-// initialized — observed under ERR's loader with the DLC-layer slots
+// initialized - observed under ERR's loader with the DLC-layer slots
 // (dereferencing one access-violates; pre-1.0.15 code carried the same
 // warning for ActionButtonText 365/465). A bad slot must degrade to a
 // skipped layer, not kill the whole setup_messages init step (that is the
@@ -115,7 +115,7 @@ static int enemy_name_lang_index(const std::string &steam_lang)
 //   0x20: 8 bytes zeros
 //   0x28: groups[groupCount], each 16 bytes:
 //         int32 stringIndex, int32 firstId, int32 lastId, int32 pad(0)
-//   stringOffsetsOffset: uint64[stringCount] — each is offset from FMG start to UTF-16LE string
+//   stringOffsetsOffset: uint64[stringCount] - each is offset from FMG start to UTF-16LE string
 //   after offsets: UTF-16LE null-terminated string data
 
 struct FmgGroup
@@ -140,7 +140,7 @@ static bool patch_fmg_in_memory(uint8_t *fmg_ptr, uint8_t **slot_ptr,
     // group tables can cover the same id twice (observed in modded msgbnds),
     // and the two passes below (string-data append, then offset rebuild) MUST
     // agree on exactly which entries carry new strings: a single skipped
-    // duplicate desynchronized every later string offset — labels after it
+    // duplicate desynchronized every later string offset - labels after it
     // showed truncated/foreign text (reported in-game under The Convergence).
     std::vector<NewEntry> new_entries;
     {
@@ -210,7 +210,7 @@ static bool patch_fmg_in_memory(uint8_t *fmg_ptr, uint8_t **slot_ptr,
 
     // Injected entries OVERRIDE pre-existing ids. Overhaul mods can pre-seed
     // rows at ids our offset encoding also uses (The Convergence ships
-    // boss-text PlaceName rows in the 9xxM band, some with EMPTY text —
+    // boss-text PlaceName rows in the 9xxM band, some with EMPTY text -
     // observed shadowing our "Summoning Pools" label at 900301690). Keeping
     // the old row would make the merge below skip ours, so drop it first.
     if (!new_entries.empty())
@@ -283,7 +283,7 @@ static bool patch_fmg_in_memory(uint8_t *fmg_ptr, uint8_t **slot_ptr,
     // Record every PlaceName id that now resolves to a real string, so
     // sanitize_injected_textids() can strip marker textIds that point at a
     // missing entry (game's GetMessage returns null → wstring(null) → crash).
-    // ONLY for the PlaceName (slot 19) patch — this function is also used for
+    // ONLY for the PlaceName (slot 19) patch - this function is also used for
     // the TutorialBody (codex toast) patch, whose id set is unrelated; capturing
     // that would wrongly flag every marker textId as missing and clear them all.
     if (capture_valid_ids)
@@ -401,7 +401,7 @@ void goblin::setup_messages()
     std::vector<NewEntry> new_entries;
 
 
-    // Collect item IDs used as textId — need to copy from various FMGs to PlaceName
+    // Collect item IDs used as textId - need to copy from various FMGs to PlaceName
     // FmgId slots: GoodsName=10, WeaponName=11, ProtectorName=12, AccessoryName=13,
     //              MagicName=14, NpcName=18, PlaceName=19, GemName=35, ArtsName=42,
     //              TutorialTitle=207
@@ -411,11 +411,13 @@ void goblin::setup_messages()
     //   300000000+id:      AccessoryName (cat=4, talismans)
     //   400000000+id:      GemName (cat=5, ashes of war)
     //   500000000+id:      GoodsName (cat=1, goods)
-    //   600000000+id:      EventTextForMap (map event text, e.g. "Closed with an imp's seal")
+    //   (600M band = EventTextForMap is RESERVED but unused - no marker emits it in
+    //    any profile; resolving it would need the menu msgbnd bank. See
+    //    docs/messages_offline_research.md.)
     //   700000000+id:      NpcName (named-NPC and 9MMMMVVV "Characters" boss names)
     //   800000000+id:      ActionButtonText (in-game interact prompts, e.g. "Examine statue")
     //   900000000+id:      TutorialTitle (enemy names)
-    //   950000000+id:      BloodMsg (message-builder vocabulary words — generic
+    //   950000000+id:      BloodMsg (message-builder vocabulary words - generic
     //                      enemy-type labels for the vanilla build: "skeleton",
     //                      "demi-human", ... localized in all languages)
     // NpcName has two ID ranges in vanilla+ERR: small ids (Patches=130900,
@@ -428,7 +430,6 @@ void goblin::setup_messages()
     std::set<int32_t> protector_ids_needed;  // ProtectorName FMG, slot 12
     std::set<int32_t> accessory_ids_needed;  // AccessoryName FMG, slot 13
     std::set<int32_t> gem_ids_needed;        // GemName FMG, slot 14
-    std::set<int32_t> event_text_ids_needed; // EventTextForMap FMG, slot 34/467
     std::set<int32_t> npc_name_ids_needed;   // NpcName FMG, slot 18 (+ DLC 328, 428)
     std::set<int32_t> action_btn_ids_needed; // ActionButtonText FMG, slot 32 (+ DLC 365, 465)
     std::set<int32_t> tutorial_ids_needed;   // TutorialTitle FMG, slot 207 (enemy names from ERR Codex)
@@ -454,9 +455,7 @@ void goblin::setup_messages()
                 action_btn_ids_needed.insert(tid);
             else if (tid >= 700000000 && tid < 800000000) // NpcName low-range (small id+700M)
                 npc_name_ids_needed.insert(tid);
-            else if (tid >= 600000000)          // EventTextForMap (offset 600M)
-                event_text_ids_needed.insert(tid);
-            else if (tid >= 500000000)          // GoodsName (goods, offset 500M)
+            else if (tid >= 500000000 && tid < 600000000) // GoodsName (goods, offset 500M)
                 goods_ids_needed.insert(tid);
             else if (tid >= 400000000)          // GemName (ashes of war, offset 400M)
                 gem_ids_needed.insert(tid);
@@ -469,10 +468,10 @@ void goblin::setup_messages()
             // IDs < 100M are raw PlaceName IDs (location names, no copy needed)
         }
     }
-    spdlog::debug("{} Goods + {} Weapon + {} Protector + {} Accessory + {} Gem + {} EventText + {} NpcName + {} ActionBtn + {} Tutorial IDs need lookup",
+    spdlog::debug("{} Goods + {} Weapon + {} Protector + {} Accessory + {} Gem + {} NpcName + {} ActionBtn + {} Tutorial IDs need lookup",
                   goods_ids_needed.size(), weapon_ids_needed.size(),
                   protector_ids_needed.size(), accessory_ids_needed.size(),
-                  gem_ids_needed.size(), event_text_ids_needed.size(),
+                  gem_ids_needed.size(),
                   npc_name_ids_needed.size(), action_btn_ids_needed.size(),
                   tutorial_ids_needed.size());
 
@@ -517,7 +516,7 @@ void goblin::setup_messages()
         // would otherwise send us through garbage group tables.
         if (grp_cnt > 0x100000 || str_cnt > 0x100000 || raw_off == 0)
         {
-            spdlog::debug("{}: slot {} header implausible (groups={}, strings={}) — skipped",
+            spdlog::debug("{}: slot {} header implausible (groups={}, strings={}) - skipped",
                           label, slot, grp_cnt, str_cnt);
             return 0;
         }
@@ -556,7 +555,7 @@ void goblin::setup_messages()
                     new_entries.push_back({it->second, text});  // write at offset-encoded ID
                     needed_ids.erase(it->second);
                     // also drop from the reverse map: FMG group tables can
-                    // cover the same id twice — never push it twice
+                    // cover the same id twice - never push it twice
                     real_to_offset.erase(it);
                     copied++;
                 }
@@ -569,7 +568,7 @@ void goblin::setup_messages()
 
     // The runtime keeps every msgbnd FMG layer in its OWN MsgRepository slot
     // (base / _dlc01 / _dlc02) and merges them at LOOKUP time, highest layer
-    // first — verified live: WeaponName base slot 11 does NOT contain ids that
+    // first - verified live: WeaponName base slot 11 does NOT contain ids that
     // ship in WeaponName_dlc01 (slot 310). Overhaul mods (The Convergence) put
     // their added strings in the DLC layers, so the base slot alone misses
     // them. Walk the layers in the game's lookup priority; copy_fmg_entries
@@ -596,7 +595,7 @@ void goblin::setup_messages()
             {
                 new_entries.resize(entries_mark);
                 needed_ids = std::move(ids_snapshot);
-                spdlog::warn("{}: slot {} not readable in this runtime — layer skipped", label, slot);
+                spdlog::warn("{}: slot {} not readable in this runtime - layer skipped", label, slot);
                 continue;
             }
             total += copied;
@@ -658,7 +657,7 @@ void goblin::setup_messages()
             if (copied < 0)
             {
                 new_entries.resize(entries_mark);
-                spdlog::warn("{}(all): slot {} not readable in this runtime — layer skipped", label, slot);
+                spdlog::warn("{}(all): slot {} not readable in this runtime - layer skipped", label, slot);
                 continue;
             }
             total += copied;
@@ -672,7 +671,7 @@ void goblin::setup_messages()
     // (dlc02 → dlc01 → base). The ERR build walks ONLY the base slots:
     // everything its bake references lives there (proven through v1.0.14),
     // and the DLC-layer slots were observed to hold stale pointers under
-    // ERR's loader — touching them caused the "?PlaceName?" incident in
+    // ERR's loader - touching them caused the "?PlaceName?" incident in
     // v1.0.15 (SEH killed setup_messages before the PlaceName patch).
 #ifdef MFG_VANILLA
     const std::initializer_list<int>
@@ -717,7 +716,7 @@ void goblin::setup_messages()
     // Live-loot labels: pull the WHOLE item-name space into PlaceName so a
     // marker can be relabeled to any randomized item at runtime. Offsets match
     // the encoding above; the targeted copies stay (they're a subset, deduped
-    // first-wins by patch_fmg_in_memory). Gated — off by default it adds nothing.
+    // first-wins by patch_fmg_in_memory). Gated - off by default it adds nothing.
     if (goblin::config::liveLootLabels)
     {
         copy_fmg_all_layered(goods_slots, 500000000, "GoodsName", false);
@@ -727,26 +726,19 @@ void goblin::setup_messages()
         copy_fmg_all_layered(gem_slots, 400000000, "GemName", false);
     }
 
-    // TODO: EventTextForMap FMG (slots 34/367/467) is in a separate MsgRepository bank
-    // (menu msgbnd, not item msgbnd). Need to find the menu bank pointer to access it.
-    // For now, 600M+ textIds will show as ?PlaceName? until this is implemented.
-    if (!event_text_ids_needed.empty())
-        spdlog::warn("EventTextForMap: {} IDs requested but menu FMG bank not yet supported",
-                      event_text_ids_needed.size());
-
     // NpcName. Offset 700M.
-    // (Was break-on-first-success from base 18 — that missed every id living
+    // (Was break-on-first-success from base 18 - that missed every id living
     // only in a DLC layer, e.g. The Convergence's added bosses in slot 328.)
     copy_fmg_layered(npc_slots, npc_name_ids_needed, 700000000, "NpcName");
 
     // Read ActionButtonText FMG (slots 32 + DLC 365, 465): in-game interact
     // prompts ("Examine statue", "Light bonfire", ...). Offset 800M.
     // ActionButtonText lives in menu.msgbnd but MsgRepositoryImp's FMG slot
-    // array is indexed by global BND file ID — slot 32 returns the menu
+    // array is indexed by global BND file ID - slot 32 returns the menu
     // ActionButtonText FMG directly, no separate bank navigation needed.
     // DLC slots merge their own entries on top (e.g. DLC2 7041 = "Examine statue").
     // Slot 32 = ActionButtonText.fmg. ER runtime already merges DLC entries
-    // into the base FMG at this slot — we observed 7041 ("Examine statue",
+    // into the base FMG at this slot - we observed 7041 ("Examine statue",
     // added in DLC02) being readable from slot 32 in-game. Don't poke DLC
     // slots 365/465 directly: in past testing accessing those past the
     // valid count2 range derailed downstream FMG copies (TutorialTitle
@@ -756,7 +748,7 @@ void goblin::setup_messages()
 
     // Read BloodMsg FMG (slot 2, menu.msgbnd): message-builder vocabulary.
     // The vanilla build labels generic enemy drops with the closest vocabulary
-    // word ("skeleton", "demi-human", ...) — localized for free, same as the
+    // word ("skeleton", "demi-human", ...) - localized for free, same as the
     // in-game message composer. Offset 950M. Same direct-slot access as
     // ActionButtonText above (slot array is indexed by global BND file ID).
     // BloodMsg layers (vocabulary is base-game, but overhauls may extend it).
@@ -811,7 +803,7 @@ void goblin::setup_messages()
 
     // Composed labels for duplicate-named sub-zones (e.g. the two Hallowhorn Grounds):
     // synthesize "<sub> (<super>)" from the game's OWN PlaceName strings so the text is
-    // correct in any language. Storage is a function-local static deque — pointer-stable.
+    // correct in any language. Storage is a function-local static deque - pointer-stable.
     {
         auto fmg_find = [&](uint8_t *fmg, int32_t id) -> const wchar_t *
         {
@@ -834,9 +826,9 @@ void goblin::setup_messages()
             return nullptr;
         };
         // Look the parts up the way the game does: DLC PlaceName layers first
-        // (429, 329), then the base slot — overhauls keep reworked zone names
+        // (429, 329), then the base slot - overhauls keep reworked zone names
         // in the DLC layers only. ERR build: base slot only (its DLC slot
-        // pointers can be stale — see the slot-list comment above).
+        // pointers can be stale - see the slot-list comment above).
         auto find_layered = [&](int32_t id) -> const wchar_t *
         {
 #ifdef MFG_VANILLA
@@ -882,7 +874,7 @@ void goblin::setup_messages()
         // 329) and falls back to base slot 19. Ids that live only in a DLC
         // layer (vanilla DLC zones; The Convergence's reworked zones and boss
         // texts) are perfectly valid marker textIds even though our expanded
-        // base FMG doesn't carry them — whitelist them so the sanitizer
+        // base FMG doesn't carry them - whitelist them so the sanitizer
         // doesn't clear those labels (observed: 1330 false-cleared under The
         // Convergence, whose layers hold 520+ dlc01-only zone ids).
         // Not compiled for ERR: its bake never relies on DLC-layer-only ids,
@@ -923,7 +915,7 @@ void goblin::setup_messages()
             int found = seh_call(&seh_run_job_thunk, &job);
             if (found < 0)
             {
-                spdlog::warn("PlaceName layer slot {} not readable — skipped", slot);
+                spdlog::warn("PlaceName layer slot {} not readable - skipped", slot);
                 continue;
             }
             dlc_valid += found;
@@ -936,29 +928,29 @@ void goblin::setup_messages()
         spdlog::error("PlaceName FMG patching failed");
 
     // Inject NEW TutorialBody entries (slot 208 = 0xD0) for the codex toasts.
-    // CSPopupMenu::ShowTutorialPopup (trampoline, AOB-resolved at runtime — its
+    // CSPopupMenu::ShowTutorialPopup (trampoline, AOB-resolved at runtime - its
     // RVA shifts on game updates) looks up TutorialParam[id].textId then
     // TutorialBody.fmg[textId]. Matching TutorialParam rows are injected by
     // goblin::inject_tutorial_popup_rows. Using fresh ids leaves all vanilla/ERR
     // codex text untouched. All four entries (ON/OFF/DUMP_OK/DUMP_FAIL) are
-    // STATIC strings written below — there is no runtime text rewriting.
+    // STATIC strings written below - there is no runtime text rewriting.
     if (count2 > 208 && sub[208])
     {
         std::vector<NewEntry> tb_entries = {
             {goblin::TUTORIAL_FMG_ID_ON,        L"Map icons: ON"},
             {goblin::TUTORIAL_FMG_ID_OFF,       L"Map icons: OFF"},
             {goblin::TUTORIAL_FMG_ID_DUMP_OK,   L"Markers dumped"},
-            {goblin::TUTORIAL_FMG_ID_DUMP_FAIL, L"Marker dump failed — press again"},
+            {goblin::TUTORIAL_FMG_ID_DUMP_FAIL, L"Marker dump failed - press again"},
         };
         if (patch_fmg_in_memory(sub[208], &sub[208], tb_entries))
             spdlog::info("[TOAST] TutorialBody.fmg expanded (ON={}, OFF={}, DUMP_OK={}, DUMP_FAIL={})",
                          goblin::TUTORIAL_FMG_ID_ON, goblin::TUTORIAL_FMG_ID_OFF,
                          goblin::TUTORIAL_FMG_ID_DUMP_OK, goblin::TUTORIAL_FMG_ID_DUMP_FAIL);
         else
-            spdlog::warn("[TOAST] TutorialBody.fmg patch failed — codex banners unavailable");
+            spdlog::warn("[TOAST] TutorialBody.fmg patch failed - codex banners unavailable");
     }
     else
-        spdlog::warn("[TOAST] TutorialBody (slot 208) unavailable — codex banners unavailable");
+        spdlog::warn("[TOAST] TutorialBody (slot 208) unavailable - codex banners unavailable");
 
     // Final safety pass: strip any marker textId that didn't end up with a real
     // string in the expanded PlaceName FMG. The game's GetMessage returns null
@@ -974,11 +966,11 @@ void goblin::sanitize_injected_textids()
 {
     if (g_placename_valid_ids.empty())
     {
-        spdlog::warn("[SANITIZE] PlaceName valid-id set empty — skipping (FMG patch ran?)");
+        spdlog::warn("[SANITIZE] PlaceName valid-id set empty - skipping (FMG patch ran?)");
         return;
     }
     auto valid = [](int32_t id) {
-        // Logic sentinels the DLL/engine special-case (camp/boss markers) — leave alone.
+        // Logic sentinels the DLL/engine special-case (camp/boss markers) - leave alone.
         if (id == 5000 || id == 5100 || id == 5300 || id == 8800) return true;
         return g_placename_valid_ids.count(id) != 0;
     };
@@ -1013,7 +1005,7 @@ void goblin::set_fmg_injection_active(bool active)
 {
     if (!g_placename_slot_ptr)
     {
-        spdlog::warn("[TOGGLE] FMG swap state not initialized — setup_messages didn't run");
+        spdlog::warn("[TOGGLE] FMG swap state not initialized - setup_messages didn't run");
         return;
     }
     if (active == g_fmg_injection_active)

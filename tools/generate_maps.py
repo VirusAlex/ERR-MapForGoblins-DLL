@@ -72,7 +72,7 @@ def main():
         lines.append(f'param WorldMapPointParam: id {row_id}: textId1: = {500000000 + m["goods_id"]};')
         # Hide when collected
         lines.append(f'param WorldMapPointParam: id {row_id}: textDisableFlagId1: = {m["flag"]};')
-        # Location for dungeons — nearest-grace lookup
+        # Location for dungeons - nearest-grace lookup
         loc_id = resolve_location_id_at(m['map'], m.get('x', 0.0), m.get('y', 0.0), m.get('z', 0.0))
         if loc_id > 0:
             lines.append(f'param WorldMapPointParam: id {row_id}: textId2: = {loc_id};')

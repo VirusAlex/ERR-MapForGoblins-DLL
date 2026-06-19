@@ -2,7 +2,7 @@
 
 How to find out *what* and *where* an Elden Ring crash is, by parsing the Windows minidump in plain
 Python. Used when a player reports a crash and we need to know if MapForGoblins (or which subsystem)
-is involved. The throwaway scripts live in `scratch/_dmp*.py` (gitignored) — this doc preserves the
+is involved. The throwaway scripts live in `scratch/_dmp*.py` (gitignored) - this doc preserves the
 recipe so they can be recreated.
 
 ## 1. Find the dump
@@ -12,7 +12,7 @@ Windows Error Reporting writes local dumps to:
 C:\Users\<user>\AppData\Local\CrashDumps\eldenring.exe.<pid>.dmp
 ```
 
-~50–60 MB **triage** dumps = thread stacks + module list + thread contexts, **no heap**. (ER's own
+~50-60 MB **triage** dumps = thread stacks + module list + thread contexts, **no heap**. (ER's own
 crash log is elsewhere and usually unhelpful.) List recent ones:
 
 ```powershell

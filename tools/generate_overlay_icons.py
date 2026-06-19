@@ -171,7 +171,7 @@ def main():
     # assign each unique iconId a cell; build the atlas. render_map_icons now
     # applies the Scaleform color-transform (our per-iconId tints, baked into the
     # gfx via icon_tints_config.json), so the rendered PNG is already correctly
-    # tinted — no post-tint here.
+    # tinted - no post-tint here.
     icon_to_idx = {}
     cells = []
     for icon in needed:

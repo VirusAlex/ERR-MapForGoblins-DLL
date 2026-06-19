@@ -8,7 +8,7 @@ with the game closed. (Research run 2026-06, multi-agent workflow.)
 
 - **Recommended: a Dear ImGui overlay on a DX12 `Present` hook, compiled into the
   existing single DLL.** It is the only surveyed approach that actually delivers
-  the win — flip ~60 toggles + a few numerics from one gamepad-navigable screen —
+  the win - flip ~60 toggles + a few numerics from one gamepad-navigable screen -
   and it is proven on our exact deployment shape (single offline DLL, EAC off,
   Steam Deck/Proton) by **EROverlay** (MIT, ER-specific) and **veeenu/hudhook**
   (confirmed on Deck under Proton/VKD3D).
@@ -29,9 +29,9 @@ with the game closed. (Research run 2026-06, multi-agent workflow.)
 
 - **Single DLL:** ImGui is a clean CMake FetchContent add (we already pull
   minhook/pattern16/spdlog/mINI). Compiles into the one DLL, font atlas embedded,
-  no second redistributable. **Profile-agnostic** — no per-profile gfx work.
+  no second redistributable. **Profile-agnostic** - no per-profile gfx work.
 - **Offline/EAC:** non-issue; this is already our model.
-- **Steam Deck/Proton:** confirmed working via hudhook — **but AMD RDNA2 is exactly
+- **Steam Deck/Proton:** confirmed working via hudhook - **but AMD RDNA2 is exactly
   where DX12 overlays die** (imgui #7207), so the hand-written backend MUST be tested
   on real Deck hardware.
 - **Gamepad:** ImGui has first-class `NavEnableGamepad`; **we must also gate the
@@ -45,9 +45,9 @@ with the game closed. (Research run 2026-06, multi-agent workflow.)
 
 ## Effort (honest)
 
-- Toast-cycle MVP: **1–3 days** (almost all reused code).
-- ImGui overlay clean-PC happy path: ~2–4 days (copyable from EROverlay/UniversalHookX).
-- ImGui overlay realistic for THIS audience: **~1–2 weeks** — the costly must-test
+- Toast-cycle MVP: **1-3 days** (almost all reused code).
+- ImGui overlay clean-PC happy path: ~2-4 days (copyable from EROverlay/UniversalHookX).
+- ImGui overlay realistic for THIS audience: **~1-2 weeks** - the costly must-test
   items are (1) AMD/Deck device-removed debugging on the DX12 backend and (2) XInput
   gating under Proton, plus matrix testing across 4 loaders + 4 profiles.
 
@@ -60,7 +60,7 @@ with the game closed. (Research run 2026-06, multi-agent workflow.)
 1. **DX12 hook spike (gated decision point).** FetchContent imgui +
    `imgui_impl_dx12` + `imgui_impl_win32` (pin a tag). Hook `IDXGISwapChain::Present`
    (vtable idx 8), `ID3D12CommandQueue::ExecuteCommandLists` (idx ~10, to capture the
-   queue — mandatory in DX12), `IDXGISwapChain::ResizeBuffers` (idx 13). Lazy-init on
+   queue - mandatory in DX12), `IDXGISwapChain::ResizeBuffers` (idx 13). Lazy-init on
    first Present (device, BufferCount, SRV font heap, one RTV per back buffer,
    per-backbuffer allocator/list, RENDER_TARGET↔PRESENT barriers). **Exit criteria:**
    a test window renders and survives alt-tab/resize with **no device-removed crash
@@ -88,15 +88,15 @@ with the game closed. (Research run 2026-06, multi-agent workflow.)
 ## Risks
 
 - First per-frame path = game-wide crash blast radius (today: degrade-not-crash).
-- DX12 device-removed on AMD/Deck (imgui #7207) — most likely real failure; test on Deck.
-- Gamepad arbitration — must gate the game's XInput; mandatory for our audience.
+- DX12 device-removed on AMD/Deck (imgui #7207) - most likely real failure; test on Deck.
+- Gamepad arbitration - must gate the game's XInput; mandatory for our audience.
 - Proton focus/cursor edge cases; DX-hook conflicts (Steam overlay/RTSS/GFE).
 - Vendored imgui pin + binary size; config/param race + ERSC staleness.
-- Optimistic effort estimate (realistic ~1–2 weeks).
+- Optimistic effort estimate (realistic ~1-2 weeks).
 
 ## Open questions to spike before committing
 
-1. Capture the DX12 queue/swapchain vtables reliably under VMProtect — transient dummy
+1. Capture the DX12 queue/swapchain vtables reliably under VMProtect - transient dummy
    swapchain vs hooking `CreateDXGIFactory`?
 2. Does an `XInputGetState` hook actually suppress player input under Proton, or does
    ER read the pad another way (raw input / different XInput DLL)?
@@ -113,10 +113,10 @@ with the game closed. (Research run 2026-06, multi-agent workflow.)
 
 ## Key references
 
-- **EROverlay** — MIT, Elden Ring-specific ImGui+DX12 overlay; near drop-in reference
+- **EROverlay** - MIT, Elden Ring-specific ImGui+DX12 overlay; near drop-in reference
   for the hook/init/render layer.
-- **veeenu/hudhook** — DX12 ImGui overlay framework; evidence it renders + takes
+- **veeenu/hudhook** - DX12 ImGui overlay framework; evidence it renders + takes
   controller input under Proton/VKD3D on Steam Deck.
-- **UniversalHookX** — generic swapchain hook reference (Present idx 8,
+- **UniversalHookX** - generic swapchain hook reference (Present idx 8,
   ExecuteCommandLists, ResizeBuffers idx 13).
-- imgui issue #7207 — DX12 device-removed on AMD (the Deck failure mode to test).
+- imgui issue #7207 - DX12 device-removed on AMD (the Deck failure mode to test).

@@ -2,20 +2,20 @@
 
 ## Prerequisites
 
-- **[FFDEC](https://github.com/jindrapetrik/jpexs-decompiler)** (JPEXS Free Flash Decompiler) — any recent build. You need the CLI jar (`ffdec-cli.jar`) and a Java 8+ runtime to run it.
+- **[FFDEC](https://github.com/jindrapetrik/jpexs-decompiler)** (JPEXS Free Flash Decompiler) - any recent build. You need the CLI jar (`ffdec-cli.jar`) and a Java 8+ runtime to run it.
 - Set the environment variable `FFDEC_CLI` to a command that runs it. Examples:
   - Linux/macOS: `export FFDEC_CLI="java -jar /path/to/ffdec-cli.jar"`
   - Windows (PowerShell): `$env:FFDEC_CLI = 'java -jar "C:\Tools\FFDec\ffdec-cli.jar"'`
   - Windows with a non-system Java: `set FFDEC_CLI="C:\Java\jdk1.8\bin\java.exe" -jar "C:\Tools\FFDec\ffdec-cli.jar"`
 - If you add `ffdec-cli.jar` to your `PATH` wrapper script as just `ffdec`, you can use `FFDEC_CLI=ffdec`.
 
-The commands below use `$FFDEC_CLI` — substitute it literally with your own command if you prefer.
+The commands below use `$FFDEC_CLI` - substitute it literally with your own command if you prefer.
 
 ## Files
 
 - **Source of truth GFX XML**: decompile from `assets/menu/02_120_worldmap_new.gfx` each time
-- **DO NOT use** `worldmap_modified.xml` — it's outdated (only has up to frame 397)
-- **TGA textures**: `assets/menu/*.tga` — extracted from DDS sprite sheets
+- **DO NOT use** `worldmap_modified.xml` - it's outdated (only has up to frame 397)
+- **TGA textures**: `assets/menu/*.tga` - extracted from DDS sprite sheets
 - **Rendered previews**: `assets/map_icons/composed/iconId_XXX.png`
 
 ## Full Workflow
@@ -39,9 +39,9 @@ This extracts sub-textures from vanilla + ERR DDS sprite sheets into `assets/men
 
 **Known issue**: Some TGAs may have broken alpha (max=1). To fix:
 - Delete the broken `.tga` file
-- Re-run `extract_subtextures.py` — it skips existing files, so deleting forces re-extraction
+- Re-run `extract_subtextures.py` - it skips existing files, so deleting forces re-extraction
 
-**ERR path fix**: `extract_subtextures.py` uses `config.require_err_mod_dir() / "menu" / "hi"` (NOT `"mod" / "menu" / "hi"` — the mod dir already includes `\mod`).
+**ERR path fix**: `extract_subtextures.py` uses `config.require_err_mod_dir() / "menu" / "hi"` (NOT `"mod" / "menu" / "hi"` - the mod dir already includes `\mod`).
 
 ### 3. Find the charId and matrix for your icon
 
@@ -92,11 +92,11 @@ for elem in root.iter('item'):
 
 **CRITICAL**: Copy translateX/translateY from the SAME charId you're using, not from a different one! Different charIds have different texture sizes → different offsets.
 
-### 4. Edit XML — add new frame
+### 4. Edit XML - add new frame
 
 Find `</subTags>` that closes sprite 171. Insert BEFORE it:
 
-**Single-layer icon** (like iconId 371 — no background):
+**Single-layer icon** (like iconId 371 - no background):
 ```xml
 <item type="RemoveObject2Tag" depth="1" forceWriteAsLong="false"/>
 <item type="RemoveObject2Tag" depth="2" forceWriteAsLong="false"/>

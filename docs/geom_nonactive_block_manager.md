@@ -1,9 +1,9 @@
-# GeomNonActiveBlockManager — reverse-engineering notes
+# GeomNonActiveBlockManager - reverse-engineering notes
 
 Full RE of `CS::GeomNonActiveBlockManagerImp`, done to explain a stream of
 first-chance `0xc0000005` access violations reported from MapForGoblins'
 background worker on **ELDEN RING 2.6.2.0** (646 faults in ~2 min, same site,
-never crashing — caught by our `safe_read` SEH, surfaced only because the user
+never crashing - caught by our `safe_read` SEH, surfaced only because the user
 ran a VEH-based crash logger). All facts below are confirmed against the live
 game (RTTI + memory dump) and the on-disk `eldenring.exe` (disassembly), exe
 **FileVersion 2.6.2.0**, image base `0x7FF70B950000` in the captured session.
@@ -14,11 +14,11 @@ game (RTTI + memory dump) and the on-disk `eldenring.exe` (disassembly), exe
 (`0x3D69D98`) is **correct**, and its RTTI name is `GeomNonActiveBlockManagerImp@CS`.
 But its **memory layout is completely different** from `GeomFlagSaveDataManager`
 (`0x3D69D18`). Our `read_singleton_entries()` was written for the GeomFlag layout
-— an inline `(tile_id, ptr)` table starting at `+0x08` — and blindly applied the
+- an inline `(tile_id, ptr)` table starting at `+0x08` - and blindly applied the
 same parse to the NonActive manager. NonActive has no such table, so the scan
 walks ~126 KB past the end of a 0x820-byte object into unrelated heap, producing
 garbage "entries" and the AV storm. It never returned valid data on any game
-version. **We don't need it** — collected-geometry state comes from
+version. **We don't need it** - collected-geometry state comes from
 `GeomFlagSaveDataManager` (persistent flags) + `CSWorldGeomMan` (loaded tiles).
 
 ## How the three managers were identified (live RTTI)
@@ -32,7 +32,7 @@ Read `obj = *(base + rva)`, then `vtable = *obj`, `COL = *(vtable-8)`,
 | `0x3D69D98` | `GeomNonActiveBlockManagerImp@CS` | RVA_GEOM_NONACTIVE (faults) |
 | `0x3D69BA8` | `CSWorldGeomManImp@CS` | RVA_WORLD_GEOM_MAN (read by a different parser) |
 
-All three RVAs are correct on 2.6.2.0 — the game's `.data` did **not** shift
+All three RVAs are correct on 2.6.2.0 - the game's `.data` did **not** shift
 wholesale (GeomFlag still parses 206 clean tiles, 0 AV).
 
 ## GeomFlagSaveDataManager layout (the one our parser DOES match)
@@ -58,11 +58,11 @@ Confirmed object size **`0x820` bytes (2080)** three independent ways:
 Constructor (`eldenring.exe+0x6EA270`) initializes only:
 ```
 [obj+0x00]  = vtable (0x2A87DE8)
-[obj+0x08]  = 0        ; ONE byte — "has entries / active" flag
-[obj+0x818] = 0        ; qword — element COUNT
+[obj+0x08]  = 0        ; ONE byte - "has entries / active" flag
+[obj+0x818] = 0        ; qword - element COUNT
 ```
 The vtable (`0x2A87DE8`, `.rdata`) has a **single entry** (the scalar-deleting
-destructor) — no other virtuals; the class is a data holder driven by member
+destructor) - no other virtuals; the class is a data holder driven by member
 functions. One such member, `+0x6EAAD0`, is just `mov byte [rcx+8], 1 ; ret`
 (sets the active flag; this is the `1` seen live at `+0x08`).
 
@@ -99,7 +99,7 @@ struct Record {                 // 0x20 bytes
 ```
 
 This is **transient streaming bookkeeping** for map blocks that are currently
-*non-active* (streamed out), keyed by a block/asset id — **not** a per-tile
+*non-active* (streamed out), keyed by a block/asset id - **not** a per-tile
 collected-geometry flag store. Live, with the player standing still after load,
 it was essentially empty (`active=1`, one stray `0x0E` at `+0xC8`, count ~0).
 
@@ -113,11 +113,11 @@ layout and:
 
 But the object is only `0x820` (2 KB). Past `+0x820` the scan reads **~126 KB of
 unrelated heap**. Random qwords pass the loose `area 0x0A..0x3D` and pointer-range
-checks, so we `safe_read` arbitrary addresses — e.g. floats misread as pointers
+checks, so we `safe_read` arbitrary addresses - e.g. floats misread as pointers
 (`0x3F800000` = `1.0f`). Those that hit an uncommitted page raise `0xc0000005`,
 caught by `safe_read`'s `__except` (hence no crash), but logged first-chance by a
 VEH crash logger. On older game builds the adjacent heap happened to be readable
-more often, so faults were rare/invisible — the read was **never valid**, only
+more often, so faults were rare/invisible - the read was **never valid**, only
 quieter.
 
 GeomFlag does **not** fault because its real `(tile_id, ptr)` table ends in zero
@@ -135,9 +135,9 @@ per-AEG `+0x26B` flag). See `src/goblin_collected.cpp`.
 
 ## Repro / scripts (scratch, gitignored)
 
-- `_rtti_probe.py` — RTTI class name of each manager pointer.
-- `_nonactive_dump.py` — live object dump / vector-triple scan.
-- `_nonactive_xref.py` — RIP-relative xrefs to the singleton global + vtable.
-- `_nonactive_full_re.py` — vtable dump + member disassembly.
-- `_probe_geom_rva.py` — replicates `read_singleton_entries` and counts plausible
+- `_rtti_probe.py` - RTTI class name of each manager pointer.
+- `_nonactive_dump.py` - live object dump / vector-triple scan.
+- `_nonactive_xref.py` - RIP-relative xrefs to the singleton global + vtable.
+- `_nonactive_full_re.py` - vtable dump + member disassembly.
+- `_probe_geom_rva.py` - replicates `read_singleton_entries` and counts plausible
   vs. unreadable (AV) reads per manager.

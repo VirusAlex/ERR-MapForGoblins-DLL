@@ -10,7 +10,7 @@ namespace goblin::generated
 // baseline under the hybrid model (MSB volume containment + height-aware nearest anchor in 3D).
 // The DLL OVERWRITES textId<slot> with this value at injection time; rows absent from this
 // table keep their baked baseline (the tile/grace fallback).
-//   slot = the marker's LOCATION slot — textId2 for plain loot, textId3 for enemy-drop loot
+//   slot = the marker's LOCATION slot - textId2 for plain loot, textId3 for enemy-drop loot
 //          (textId1=item / textId2=enemy / textId3=location). slot 0 = no baseline location
 //          line; the DLL adds one (textId2 if free, else textId3).
 struct LocationAlt

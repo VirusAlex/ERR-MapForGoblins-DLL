@@ -2,7 +2,7 @@
 """Generate World - Hero's Tomb Statues.MASSEDIT.
 
 Each statue uses the common_func template 90005683 ("英雄の墓_指示像" =
-Hero's Tomb Instruction Statue) — when the player activates it, an SFX
+Hero's Tomb Instruction Statue) - when the player activates it, an SFX
 arrow appears pointing toward a hidden Hero's Tomb cave entrance.
 
 Template call signature (params, byte-offset N in args block):
@@ -16,7 +16,7 @@ We mark the statue at its MSB position, hide the marker once activated
 (textDisableFlagId = activated flag).
 
 The same model (AEG099_055) can also appear as non-interactive decoration
-in DLC/world — those instances are NOT in the EMEVD scan so they don't
+in DLC/world - those instances are NOT in the EMEVD scan so they don't
 become markers.
 """
 import sys, io, os, tempfile, struct
@@ -46,7 +46,7 @@ _emevd = asm.GetType('SoulsFormats.EMEVD').GetMethod('Read',
 
 
 HERO_TOMB_TEMPLATE = 90005683
-ICON_ID = 440  # added in 02_120_worldmap.gfx — single-layer MENU_MAP_85 (char 109)
+ICON_ID = 440  # added in 02_120_worldmap.gfx - single-layer MENU_MAP_85 (char 109)
 ROW_START = 9300000
 
 
@@ -170,7 +170,7 @@ def main():
         if part['y'] != 0:
             lines.append(f'param WorldMapPointParam: id {row_id}: posY: = {part["y"]:.3f};')
         lines.append(f'param WorldMapPointParam: id {row_id}: posZ: = {part["z"]:.3f};')
-        # Label "Examine statue" — ActionButtonText[7041] via +800M offset.
+        # Label "Examine statue" - ActionButtonText[7041] via +800M offset.
         # goblin_messages.cpp copies this from menu.msgbnd at runtime so
         # the text follows the player's selected game language.
         lines.append(f'param WorldMapPointParam: id {row_id}: textId1: = {800000000 + 7041};')

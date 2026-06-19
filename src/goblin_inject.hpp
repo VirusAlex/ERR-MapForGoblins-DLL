@@ -30,10 +30,12 @@ namespace goblin
     void set_param_injection_active(bool active);
     bool is_param_injection_active();
 
-    // Live per-category visibility: re-applies each injected row's dispMask00
-    // from the current goblin::config show_* flags (every category is injected,
-    // gated by dispMask). Call after the in-game overlay changes a toggle; the
-    // change shows next time the map is (re)opened. No rebuild, no restart.
+    // Live marker visibility: sets each injected row's textEnableFlagId1 so the
+    // primary line/icon shows only when its category is enabled AND the row is
+    // not collected. The engine re-evaluates this flag every frame, so the
+    // effect is INSTANT on the open map (no reopen). Call after the overlay
+    // changes a toggle, and from the refresh thread when the collected set
+    // changes. Idempotent.
     void apply_category_visibility();
 
     // Live re-apply of hide_killed_bosses across boss/hawk/hostile-NPC rows.
@@ -42,7 +44,7 @@ namespace goblin
     // Re-apply ALL live-capable settings at once (show_* + hide_killed_bosses +
     // require_map_fragments + ERR patch markers). Call from the overlay on a
     // settings change; effective on next world-map open. (anonymous_loot /
-    // live_loot_* are not live — they rewrite markers from ItemLotParam.)
+    // live_loot_* are not live - they rewrite markers from ItemLotParam.)
     void reapply_live_settings();
 
     // Master show/hide of ALL icons (the former F10 behavior), now driven from
@@ -54,8 +56,8 @@ namespace goblin
     // entries holding each banner's STATIC text. Injected by
     // inject_tutorial_popup_rows() (param table) and goblin_messages
     // setup_messages() (FMG bank). All texts are static (no runtime FMG
-    // rewrite — that approach crashed; each distinct message gets its own id).
-    // Chosen just past the highest existing ERR codex id (9004250) — keeps
+    // rewrite - that approach crashed; each distinct message gets its own id).
+    // Chosen just past the highest existing ERR codex id (9004250) - keeps
     // ids close to the original range to avoid any internal int32-cast or
     // size-bucket assumptions that hit far-out values.
     constexpr int TUTORIAL_FMG_ID_ON        = 9004251;  // "Map icons: ON"
@@ -70,7 +72,7 @@ namespace goblin
     bool inject_tutorial_popup_rows();
 
     // Fire an upper-left codex-style toast for one of the injected TutorialParam
-    // rows (pass a TUTORIAL_FMG_ID_* id). Static text, no FMG rewrite — same
+    // rows (pass a TUTORIAL_FMG_ID_* id). Static text, no FMG rewrite - same
     // path as the F10 banner. Safe from any thread once init has run.
     void show_codex_toast(int tutorial_id);
 

@@ -7,7 +7,7 @@ namespace goblin::kindling
 {
     /// Build slot table from MAP_ENTRIES (rows in WorldKindlingSpirits category).
     /// Decodes per-row kindling slot 1..5 + SFX entity ID from MAP_ENTRY metadata.
-    /// Safe to call before remap_row_ids — works on original row IDs.
+    /// Safe to call before remap_row_ids - works on original row IDs.
     void initialize();
 
     /// Remap row IDs after dynamic ID assignment in inject.
@@ -22,7 +22,7 @@ namespace goblin::kindling
     bool is_row_collected(uint64_t row_id);
 
     /// Register the param row pointer so refresh() can flip areaNo in-place.
-    /// Same trick as goblin::collected — write 0x20 = 99 to hide, restore original.
+    /// Same trick as goblin::collected - write 0x20 = 99 to hide, restore original.
     void register_param_ptr(uint64_t row_id, void *param_data);
 
     int collected_count();

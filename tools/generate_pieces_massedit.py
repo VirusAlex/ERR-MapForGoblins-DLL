@@ -16,7 +16,7 @@ from massedit_common import (DATA_DIR, OUT_DIR as OUTPUT_DIR, OVERWORLD_AREAS,
 
 CSV_PATH = DATA_DIR / "ItemLotParam_map.csv"
 
-# Alias for backward compatibility — tile-only resolver (legacy callers)
+# Alias for backward compatibility - tile-only resolver (legacy callers)
 place_name_id = resolve_location_id
 
 
@@ -105,7 +105,7 @@ def generate_massedit(items, item_name, text_id, icon_id, start_row_id, output_f
             flag_idx += 1
 
         next_text_slot = 2
-        # Per-marker nearest-grace lookup — disambiguates stacked dungeon regions
+        # Per-marker nearest-grace lookup - disambiguates stacked dungeon regions
         # (e.g. Nokron vs Siofra River in m12_02/m12_07).
         loc_id = resolve_location_id_at(item['map'], item['x'], item.get('y', 0.0), item['z'])
         if loc_id > 0:
@@ -115,8 +115,8 @@ def generate_massedit(items, item_name, text_id, icon_id, start_row_id, output_f
             next_text_slot += 1
 
         # Enemy name for boss-flag pieces. Two paths:
-        #   1. TutorialTitle (+900M offset) — for model-based enemies.
-        #   2. NpcName (+700M offset) — for named NPCs (DLL slot 18, "Characters").
+        #   1. TutorialTitle (+900M offset) - for model-based enemies.
+        #   2. NpcName (+700M offset) - for named NPCs (DLL slot 18, "Characters").
         enemy_model = item.get('enemy_model', '')
         npc_name_id = item.get('npc_name_id', 0)
         enemy_text_id = 0
@@ -147,7 +147,7 @@ def generate_massedit(items, item_name, text_id, icon_id, start_row_id, output_f
         iid = item.get('instance_id', -1)
         # Strip the SoulsFormats duplicate-name decoration: ERR copy-pastes parts keeping
         # the Name, the reader disambiguates as "AEG099_821_9000 {2}". In-game the part is
-        # plain "AEG099_821_9000" — bake THAT so collected-tracking can match it (decorated
+        # plain "AEG099_821_9000" - bake THAT so collected-tracking can match it (decorated
         # names never match the live WGM name → the marker would never hide).
         name = item.get('name', '').split(' {')[0]
         parts = name.rsplit('_', 1)
@@ -196,7 +196,7 @@ def resolve_enemy_tutorial_id(enemy_model, npc_param_id):
 
 
 # Manual override for c0000-model bosses (or other models not in
-# enemy_tutorial_mapping). Maps (map, partName) -> NpcName FMG entry id —
+# enemy_tutorial_mapping). Maps (map, partName) -> NpcName FMG entry id -
 # DLL resolves these via +700000000 offset (slot 18/328/428 NpcName.fmg).
 MANUAL_BOSS_NAMEID = {
     ('m30_20_00_00', 'c0000_9003'): 903320300,  # "Stray Mimic Tear" (NpcName "Characters")
@@ -329,7 +329,7 @@ def resolve_npc_name_id(enemy_model, npc_param, map_name, part_name):
 
 
 def load_boss_flag_pieces(goods_id):
-    """Pull boss-flag-driven pieces from items_database.json — these are
+    """Pull boss-flag-driven pieces from items_database.json - these are
     Rune/Ember Pieces awarded via common.emevd event 1200 on boss kill.
 
     Filter: keep only records whose enemy can be named via TutorialTitle FMG
@@ -410,7 +410,7 @@ def main():
 
     generate_massedit(
         rune_items, "Rune Pieces",
-        text_id=800010, icon_id=371,   # goodsId for "Rune Piece" / "Осколок Руны" — localized via GoodsName FMG
+        text_id=800010, icon_id=371,   # goodsId for "Rune Piece" / "Осколок Руны" - localized via GoodsName FMG
         start_row_id=2000000,
         output_file=OUTPUT_DIR / "Reforged - Rune Pieces.MASSEDIT",
         event_flags=rune_flags
@@ -418,7 +418,7 @@ def main():
 
     generate_massedit(
         ember_items, "Ember Pieces",
-        text_id=850010, icon_id=371,   # goodsId for "Ember Piece" — same star as Rune Pieces (distinguished by map location)
+        text_id=850010, icon_id=371,   # goodsId for "Ember Piece" - same star as Rune Pieces (distinguished by map location)
         start_row_id=3000000,
         output_file=OUTPUT_DIR / "Reforged - Ember Pieces.MASSEDIT",
         event_flags=ember_flags

@@ -80,7 +80,7 @@ static void resolve_flag_api()
 
     try
     {
-        // mov rdi, [rip+disp]; test rdi, rdi — resolve disp to pointer slot.
+        // mov rdi, [rip+disp]; test rdi, rdi - resolve disp to pointer slot.
         g_event_man_slot = modutils::scan<void *>(
             { .aob = "48 8B 3D ?? ?? ?? ?? 48 85 FF ?? ?? 32 C0 E9",
               .relative_offsets = { {3, 7} } });
@@ -117,7 +117,7 @@ static bool coord_plausible(float v)
 }
 
 // (Beacon-shape predicates were removed when the array moved from a full
-// memory scan to the static pointer chain in find_beacon_arrays — the chain
+// memory scan to the static pointer chain in find_beacon_arrays - the chain
 // gives the exact array, so no signature matching is needed. The slot format
 // lives in docs / memory: map-marker-anchor.)
 
@@ -154,7 +154,7 @@ static constexpr size_t    MARKER_OFF_OBJ1    = 0x68;
 static constexpr size_t    MARKER_OFF_BEACONS = 0x118;
 
 // Chain root slot + container vtable resolved by AOB (patch-resilient) instead
-// of hardcoded RVAs (was 0x3D5DF38 / 0x2AC21D8 — both move on game updates).
+// of hardcoded RVAs (was 0x3D5DF38 / 0x2AC21D8 - both move on game updates).
 // relative_offsets {{3,7}} extracts the target of the `mov/lea reg,[rip+X]`
 // xref; AOBs wildcard the rip-disp. Resolved once, cached, 0 if not found.
 static uintptr_t marker_resolve(const char *aob)
@@ -190,7 +190,7 @@ static std::vector<uintptr_t> find_beacon_arrays()
     { spdlog::warn("Markers: container unreadable"); return out; }
     if (vtab != vtable)
     {
-        spdlog::warn("Markers: container vtable 0x{:X} != resolved 0x{:X} — chain stale "
+        spdlog::warn("Markers: container vtable 0x{:X} != resolved 0x{:X} - chain stale "
                      "(game patch?) or not ready; skipping", vtab, vtable);
         return out;
     }
@@ -302,7 +302,7 @@ static const char *category_name(generated::Category c)
 // MAP_ENTRY (overworld m60/m61) world coords:
 //   worldX = gridX * 256 + posX
 //   worldZ = gridZ * 256 + posZ
-// Dungeons need WorldMapLegacyConvParam mapping — skipped for now.
+// Dungeons need WorldMapLegacyConvParam mapping - skipped for now.
 
 struct NearbyEntry
 {
@@ -325,9 +325,9 @@ struct NearbyEntry
 };
 
 // Classify a marker's textId slots into loot / location / drop-source by their
-// offset-encoding band. The slot ORDER is not fixed — plain loot is
+// offset-encoding band. The slot ORDER is not fixed - plain loot is
 // t1=item,t2=loc; enemy-drop loot is t1=item,t2=enemy,t3=loc; a boss marker is
-// t1=enemy,t2=loc — so we go by id range, never by slot index:
+// t1=enemy,t2=loc - so we go by id range, never by slot index:
 //   loot item:    [50M, 600M)   (weapon 100M / protector 200M / … / goods 500M)
 //   location:     (0, 50M)      raw PlaceName, minus logic sentinels
 //   drop source:  >= 700M       (NpcName +700M, enemy +900M, BloodMsg +950M, +1.6B)
@@ -431,7 +431,7 @@ static std::vector<NearbyEntry> find_nearby_overworld(float mapX, float mapZ, fl
 // Plain (POD-only) SEH-guarded memcpy: copies a found beacon array out of live
 // game memory into a local buffer before we read it field-by-field. The array
 // is located by a full process-memory scan, but the game's allocator can free
-// or move the region between the scan and the read (a TOCTOU race) — reading it
+// or move the region between the scan and the read (a TOCTOU race) - reading it
 // directly then access-violates and the whole dump aborts. Copying through this
 // guard means a stale array is skipped, not fatal.
 static bool seh_copy(const void *src, void *dst, size_t n)
@@ -511,8 +511,8 @@ static int dump_impl(std::ostream &f)
         if (!seh_copy(reinterpret_cast<const void *>(base), buf, sizeof(buf)))
         {
             f << "\n---- Array #" << (ai + 1) << " @ 0x" << std::hex << base << std::dec
-              << " — SKIPPED (memory freed mid-read) ----\n";
-            spdlog::warn("Marker dump: array #{} @ 0x{:X} vanished mid-read — skipped",
+              << " - SKIPPED (memory freed mid-read) ----\n";
+            spdlog::warn("Marker dump: array #{} @ 0x{:X} vanished mid-read - skipped",
                          ai + 1, base);
             continue;
         }
@@ -552,7 +552,7 @@ static int dump_impl(std::ostream &f)
                 // unknown layout; stop to avoid garbage
                 break;
             }
-            if (s.idx == -1) continue;  // empty slot — skip
+            if (s.idx == -1) continue;  // empty slot - skip
             float wx = s.x + 7042.0f, wz = -s.z + 16511.0f;
             f << "  [stamp  " << i << "] idx=" << s.idx
               << " type=0x" << std::hex << s.type << std::dec
@@ -645,7 +645,7 @@ void hotkey_loop()
             catch (...) { spdlog::error("Marker dump failed: unknown"); count = -2; }
 
             // On-screen feedback via the codex toast (static DUMP_OK/FAIL text).
-            // The earlier F9 crash here was NOT override/map related — it was
+            // The earlier F9 crash here was NOT override/map related - it was
             // the same broken trampoline RVA that also crashed F10 (the May-2026
             // game update shifted .text). With the trampoline now AOB-resolved,
             // this is safe again. Exact count goes to the log.

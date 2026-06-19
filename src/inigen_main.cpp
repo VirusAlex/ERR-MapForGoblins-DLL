@@ -1,4 +1,4 @@
-// mfg_inigen — emits a default MapForGoblins.ini from the in-code schema.
+// mfg_inigen - emits a default MapForGoblins.ini from the in-code schema.
 // Build-time tool so the shipped ini is generated, never hand-maintained.
 //
 //   mfg_inigen <out.ini> [--vanilla]

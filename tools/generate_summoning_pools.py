@@ -70,7 +70,7 @@ def main():
             area = map_ref % 256
             block = map_ref // 256
         else:
-            area = 0  # overworld — will resolve via MSB
+            area = 0  # overworld - will resolve via MSB
             block = 0
 
         pools.append({
@@ -102,7 +102,7 @@ def main():
             continue
         for p in msb.Parts.Assets:
             if int(getattr(p, 'GameEditionDisable', 0) or 0) == 1:
-                continue  # disabled placement — engine doesn't spawn it
+                continue  # disabled placement - engine doesn't spawn it
             if str(p.ModelName) != 'AEG099_015':
                 continue
             mx = round(float(p.Position.X), 3)
@@ -188,7 +188,7 @@ def main():
         if pool['y'] != 0:
             lines.append(f'param WorldMapPointParam: id {row_id}: posY: = {pool["y"]:.3f};')
         lines.append(f'param WorldMapPointParam: id {row_id}: posZ: = {pool["z"]:.3f};')
-        # Use SignPuddleParam row ID (670XXX) as activation flag — EMEVD sets these
+        # Use SignPuddleParam row ID (670XXX) as activation flag - EMEVD sets these
         # textDisableFlagId1 hides text when pool activated → engine hides icon without text
         if pool['rid'] > 0:
             lines.append(f'param WorldMapPointParam: id {row_id}: textDisableFlagId1: = {pool["rid"]};')

@@ -1,16 +1,16 @@
-"""Generate src/generated/goblin_location_alt.{cpp,hpp} — the PRIMARY loot-location naming.
+"""Generate src/generated/goblin_location_alt.{cpp,hpp} - the PRIMARY loot-location naming.
 
 The HYBRID sub-area resolver: MSB MapPoint sub-volume -> MapNameOverride super-volume ->
 nearest authored anchor in 3D (WorldMapPoint place-pin UNION grace). At runtime the DLL
 OVERWRITES each marker's textId2 with this name (goblin_inject.cpp), so this is the main
 location shown. The coarse tile/grace baseline baked by massedit_common.resolve_location_id_at
-is the FALLBACK — kept for rows this resolver is silent on (overworld / no volume / no anchor).
+is the FALLBACK - kept for rows this resolver is silent on (overworld / no volume / no anchor).
 
 Emits:
   - LOCATION_ALT[]    : row_id -> hybrid textId2, only where the hybrid name DIFFERS from the
                         baked baseline (rows absent from it keep the fallback).
   - LOCATION_COMPOSE[]: synthetic ids for duplicate-named sub-zones ("Hallowhorn Grounds
-                        (Nokron)") — goblin_messages composes the FMG string at runtime.
+                        (Nokron)") - goblin_messages composes the FMG string at runtime.
 
 Reads the baked entries straight from src/generated/goblin_map_data.cpp (row_id + areaNo/grid +
 posX/Y/Z + current textId2; posY recovered from source data where the cpp omits it). Overworld
@@ -39,7 +39,7 @@ VALID = set(int(k) for k in PLACE.keys())
 WMPP = {int(w["ID"]): w for w in json.load(open(os.path.join(PROF, "WorldMapPointParam.json"), encoding="utf-8"))}
 WP = json.load(open(os.path.join(D, "WorldMapPointParam.json"), encoding="utf-8"))
 GR = json.load(open(os.path.join(PROF, "grace_position_index.json"), encoding="utf-8"))
-SENTINELS = {5000, 5100, 5300, 8800}  # textId2/3/4 logic sentinels — never override
+SENTINELS = {5000, 5100, 5300, 8800}  # textId2/3/4 logic sentinels - never override
 from massedit_common import OVERWORLD_AREAS as OVERWORLD  # {60, 61}: no location subtitle, keep baked
 
 # ---- MSB volume cache ----
@@ -111,7 +111,7 @@ def anchors_for(area,gx,gz):
     for r in WP:
         if r.get("areaNo")!=area or r.get("gridXNo")!=gx or r.get("gridZNo")!=gz: continue
         t=r.get("textId1")
-        # 3xxxxxxx = boss/enemy markers (e.g. 30120200 Crucible Knight, 32100100 Grafted Scion) — not places
+        # 3xxxxxxx = boss/enemy markers (e.g. 30120200 Crucible Knight, 32100100 Grafted Scion) - not places
         if t is None or int(t)<0 or 30000000<=int(t)<40000000: continue
         if int(t) not in VALID: continue
         out.append((int(t),float(r["posX"]),float(r["posY"]),float(r["posZ"]),"wmp-pin"))
@@ -126,7 +126,7 @@ def anchors_for(area,gx,gz):
     return out
 
 # Vertical bounds follow the bottom-anchor semantics (Position.Y = the area's FLOOR):
-# a volume must NEVER claim points below its floor (small slope tolerance only) — e.g. a
+# a volume must NEVER claim points below its floor (small slope tolerance only) - e.g. a
 # riverbank node 13u under the Hallowhorn Grounds floor is Siofra River, not Hallowhorn.
 def _v_ok(dy,H):
     return -max(3.0,0.15*H)<=dy<=1.25*H
@@ -134,7 +134,7 @@ def _v_ok(dy,H):
 def _h_excess(px,py,pz,pos,rotY,dims,kind):
     """Horizontal distance OUTSIDE the shape footprint (0 = inside), or None if the
     vertical band rejects the point. Hand-drawn boxes undershoot the real named area,
-    so sub-areas may claim within a horizontal margin — but only on their own floor."""
+    so sub-areas may claim within a horizontal margin - but only on their own floor."""
     if kind=="Sphere":
         R=dims.get("Radius",0)
         d=math.sqrt((px-pos[0])**2+(py-pos[1])**2+(pz-pos[2])**2)
@@ -170,7 +170,7 @@ def _nearest_grace(area,gx,gz,x,y,z):
     return best
 
 # Duplicate-name sub-zone disambiguation: when one PlaceName labels SEVERAL distinct
-# volumes in a block (e.g. the two Hallowhorn Grounds — Siofra-level and Nokron-level),
+# volumes in a block (e.g. the two Hallowhorn Grounds - Siofra-level and Nokron-level),
 # loot claimed by each instance gets a COMPOSED label "<sub> (<super>)". The DLL builds
 # the text at runtime from the game's own PlaceName FMG strings (localization-safe).
 COMPOSE={}        # (subTextId, superTextId) -> composeId
@@ -214,12 +214,12 @@ def hybrid_id(area,gx,gz,x,y,z):
     hit=_claim(sups,x,y,z,0.0)                # super override: strict containment
     if hit is not None: return hit[0]
     # fallback: nearest GRACE only (3D). WorldMapPoint pins are deliberately NOT free
-    # Voronoi anchors — their authority is their volume; open-range pins over-claim
+    # Voronoi anchors - their authority is their volume; open-range pins over-claim
     # (e.g. Hallowhorn pin 65u grabbing a Siofra riverbank node from a 90u grace).
     return _nearest_grace(area,gx,gz,x,y,z)
 
 # ---- name-keyed source index for pieces: (area,gx,gz,object_name) -> (x,y,z) MSB-local ----
-# Bypasses cpp coords entirely — also fixes maps whose baked coords are display-shifted
+# Bypasses cpp coords entirely - also fixes maps whose baked coords are display-shifted
 # (generate_data.py COORD_SHIFTS, e.g. (11,10) Roundtable Hold x-2195 z-352).
 _NIDX={}
 for fn,key in (("rune_pieces.json","map"),("ember_pieces.json","map")):
@@ -228,7 +228,7 @@ for fn,key in (("rune_pieces.json","map"),("ember_pieces.json","map")):
         mp=r.get(key,"")
         if len(mp)<9: continue
         _NIDX[(int(mp[1:3]),int(mp[4:6]),int(mp[7:9]),r.get("name",""))]=(float(r["x"]),float(r["y"]),float(r["z"]))
-# COORD_SHIFTS mirror of generate_data.py — unshift baked coords for spatial lookup
+# COORD_SHIFTS mirror of generate_data.py - unshift baked coords for spatial lookup
 COORD_SHIFTS={(11,10):(-2195.0,-352.0)}
 
 # ---- parse baked cpp ----
@@ -248,7 +248,7 @@ for m in ENTRY.finditer(txt):
         v=fget(body,n); return int(float(v)) if v is not None else None
     def gf(n):
         v=fget(body,n); return float(v) if v is not None else 0.0
-    yv=fget(body,"posY")  # MASSEDIT generators omit posY when 0 — absent != 0 for our 3D math!
+    yv=fget(body,"posY")  # MASSEDIT generators omit posY when 0 - absent != 0 for our 3D math!
     area=gi("areaNo") or 0; gx=gi("gridXNo") or 0; gz=gi("gridZNo") or 0
     x=gf("posX"); z=gf("posZ"); y=float(yv) if yv is not None else None
     # undo display-space shift so spatial lookup/volumes work in MSB-local space
@@ -263,7 +263,7 @@ for m in ENTRY.finditer(txt):
     # location in textId2, but enemy-drop loot is textId1=item / textId2=enemy /
     # textId3=LOCATION. The location id is always a PlaceName id < 50,000,000
     # (item names are 100M+ offsets, enemy names 700M/900M/1.6B), and never a
-    # logic sentinel — so the only textId in [1,50M) non-sentinel is the location.
+    # logic sentinel - so the only textId in [1,50M) non-sentinel is the location.
     SENT={5000,5100,5300,8800}
     loc_slot=0; loc_val=None
     for s in range(2,9):
@@ -318,13 +318,13 @@ def recover_y(area,gx,gz,x,z,tol=1.5):
 # ---- compute hybrid overrides ----
 # Each override is (row_id, slot, new_textId): the DLL overwrites textId<slot> with
 # new_textId. slot is the marker's LOCATION slot (textId2 for plain loot, textId3 for
-# enemy-drops); slot 0 means "no baseline location line — add one (textId2 if free)".
+# enemy-drops); slot 0 means "no baseline location line - add one (textId2 if free)".
 from collections import Counter
 recs=[]; changed=0; kept=0; by_area=Counter()
 nameffmt=lambda t: PLACE.get(str(t),"?")
 no_y=0
 for e in entries:
-    if e["cat"]=="WorldGraces": continue  # graces ARE location markers — no location line
+    if e["cat"]=="WorldGraces": continue  # graces ARE location markers - no location line
     cur=e["loc_val"]                       # baseline location id (None if marker has none)
     y=e["y"]
     if y is None:
@@ -340,7 +340,7 @@ for e in entries:
     changed+=1
     by_area[e["area"]]+=1
 
-# Bake as a generated C++ table (sorted by row_id for binary search) — no external file.
+# Bake as a generated C++ table (sorted by row_id for binary search) - no external file.
 GEN=str(config.GENERATED_DIR)
 os.makedirs(GEN, exist_ok=True)
 trips=sorted((rid,slot,tid) for rid,slot,tid in recs)
@@ -357,7 +357,7 @@ namespace goblin::generated
 // baseline under the hybrid model (MSB volume containment + height-aware nearest anchor in 3D).
 // The DLL OVERWRITES textId<slot> with this value at injection time; rows absent from this
 // table keep their baked baseline (the tile/grace fallback).
-//   slot = the marker's LOCATION slot — textId2 for plain loot, textId3 for enemy-drop loot
+//   slot = the marker's LOCATION slot - textId2 for plain loot, textId3 for enemy-drop loot
 //          (textId1=item / textId2=enemy / textId3=location). slot 0 = no baseline location
 //          line; the DLL adds one (textId2 if free, else textId3).
 struct LocationAlt
@@ -400,7 +400,7 @@ with open(os.path.join(GEN,"goblin_location_alt.cpp"),"w",encoding="utf-8") as f
     for cid,sub,sup in comp:
         f.write(f"    {{{cid}, {sub}, {sup}}},  // \"{PLACE.get(str(sub),'?')} ({PLACE.get(str(sup),'?')})\"\n")
     if not comp:
-        f.write("    {0, 0, 0},  // none generated — keep array non-empty for MSVC\n")
+        f.write("    {0, 0, 0},  // none generated - keep array non-empty for MSVC\n")
     f.write("};\n\n} // namespace goblin::generated\n")
 if comp:
     print(f"{len(comp)} composed duplicate-zone labels:")

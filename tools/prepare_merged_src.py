@@ -94,7 +94,7 @@ def collect_plan(overlay: Path, base: Path):
 def main():
     base = config.GAME_DIR
     if config.PROFILE not in ("convergence", "erte"):
-        print(f"NOTE: profile is '{config.PROFILE}' — merged staging only applies "
+        print(f"NOTE: profile is '{config.PROFILE}' - merged staging only applies "
               f"to overlay profiles; nothing to do.")
         return 0
     overlay = config.CONVERGENCE_MOD_DIR if config.PROFILE == "convergence" else config.ERTE_MOD_DIR

@@ -1,5 +1,5 @@
 #pragma once
-// AUTO-GENERATED — do not edit.
+// AUTO-GENERATED - do not edit.
 // Dungeon-area → overworld-tile conversion table (first base-point per src key).
 
 #include <cstdint>

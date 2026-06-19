@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Produce assets/badges/cleared_badge.png — the "cleared" map-marker badge.
+"""Produce assets/badges/cleared_badge.png - the "cleared" map-marker badge.
 
 The worldmap marker (sprite 174) draws the icon (sprite 171) + a "cleared"
 badge (sprite 173 -> shape 172), shown when a boss/invader is defeated. The
@@ -9,7 +9,7 @@ our non-ERR builds we use OUR OWN art (assets/badges/mark2.png) embedded into
 the gfx as a raster (DefineBitsLossless2).
 
 WHY A RASTER, not a vector: FFDEC can't import detailed SVGs as Scaleform
-shapes — clip-paths/gradients garble, and a shape crashes the map once it
+shapes - clip-paths/gradients garble, and a shape crashes the map once it
 exceeds ~30-45 filled figures. A bitmap has no such limit, embeds self-
 contained in the gfx (no atlas/extra files), and renders fine in-game
 (verified). See [[reference_cleared_badge]].
@@ -17,7 +17,7 @@ contained in the gfx (no atlas/extra files), and renders fine in-game
 This tool just DOWNSCALES the source art to the badge size and writes the
 committed PNG. build_vanilla_gfx.py then embeds that PNG via
 `ffdec -replace ... 172 cleared_badge.png` (which centres it at ±257 = 26px).
-The downscale is a one-time step — run this only when the source art changes;
+The downscale is a one-time step - run this only when the source art changes;
 the regular build (build.bat) consumes the committed cleared_badge.png as-is.
 
 Run:  py tools/make_cleared_badge.py

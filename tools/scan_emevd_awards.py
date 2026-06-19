@@ -2,7 +2,7 @@
 """
 Scan all EMEVD files for item-award references.
 For each ItemLotID found in instruction/initializer arg bytes, record
-any nearby 4-byte values that match MSB EntityIDs — these are likely
+any nearby 4-byte values that match MSB EntityIDs - these are likely
 spawn positions for scripted treasure.
 
 Output: data/emevd_lot_mapping.json
@@ -76,10 +76,10 @@ def scan_arg_blob(arg_bytes, lot_set, entity_set, skip_offsets=()):
 
     Returns (lots, ents). Dungeon ENTITY ids share the ItemLot numbering space
     (both 12NNxxxx), so a value that is a known MSB entity id is treated as an
-    entity reference, NEVER as a lot — otherwise e.g. Clayman entity 12070250
+    entity reference, NEVER as a lot - otherwise e.g. Clayman entity 12070250
     becomes a phantom "Golden Rune" treasure at the enemy's feet.
     skip_offsets: arg byte-offsets that hold known NON-lot ids (e.g. the
-    event-id arg of InitializeEvent — 12020700 there is an event id, not a lot).
+    event-id arg of InitializeEvent - 12020700 there is an event id, not a lot).
     """
     vals = []
     # Scan every 4-byte aligned (step by 4 to match common arg layout)
@@ -128,7 +128,7 @@ def main():
                 ab = bytes(inst.ArgData) if inst.ArgData else b''
                 if not ab: continue
                 # InitializeEvent (2000[0]) / InitializeCommonEvent (2000[6]):
-                # args = [slot, event_id, params...] — the event-id at byte
+                # args = [slot, event_id, params...] - the event-id at byte
                 # offset 4 is never an item lot (dungeon event ids collide
                 # with the lot numbering, e.g. 12020700).
                 skip = (4,) if (int(inst.Bank) == 2000 and int(inst.ID) in (0, 6)) else ()

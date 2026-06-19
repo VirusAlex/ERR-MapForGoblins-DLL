@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Generate Loot - Gestures.MASSEDIT — auto-discovered via gesture template.
+Generate Loot - Gestures.MASSEDIT - auto-discovered via gesture template.
 
 Common event 90005570 is ER's gesture-spawn template: it sets a gesture
 flag when player interacts with a specific asset. We scan Event 0 across
@@ -11,7 +11,7 @@ Calls use args pattern [0, 90005570, flag, gesture_param, entity_id, ...].
 Entity ID is then resolved to MSB position via entity index.
 
 Map-specific gesture templates (e.g. m16 event 16003762, m18 chest chain)
-are not covered by this generator — they'd need per-map heuristics which
+are not covered by this generator - they'd need per-map heuristics which
 conflict with clean auto-generation.
 """
 import sys, io, os, tempfile, struct, json
@@ -54,7 +54,7 @@ def load_gesture_items():
             pf = f
             break
     if pf is None:
-        print('WARNING: GestureParam not found in regulation — gesture markers stay nameless')
+        print('WARNING: GestureParam not found in regulation - gesture markers stay nameless')
         return {}
     tmp = os.path.join(tempfile.gettempdir(), str(os.getpid()) + '_gstp.param')
     SysFile.WriteAllBytes(tmp, pf.Bytes.ToArray() if hasattr(pf.Bytes, 'ToArray') else pf.Bytes)

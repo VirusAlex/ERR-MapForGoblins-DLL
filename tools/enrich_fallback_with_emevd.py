@@ -45,7 +45,7 @@ def map_to_area(map_name):
 
 
 def pick_best_candidate(lot_id, candidates):
-    """Choose best candidate for a lot — prefer entity_id prefix matching lot_id."""
+    """Choose best candidate for a lot - prefer entity_id prefix matching lot_id."""
     if not candidates:
         return None
     # Try prefix-match first
@@ -76,7 +76,7 @@ def main():
     unreach_path = DATA / 'unreachable_msb_lots.json'
     if unreach_path.exists():
         unreachable_lots = set(int(x) for x in json.load(open(unreach_path)))
-        print(f'Loaded {len(unreachable_lots)} unreachable-only MSB lots — these will be skipped')
+        print(f'Loaded {len(unreachable_lots)} unreachable-only MSB lots - these will be skipped')
     else:
         unreachable_lots = set()
 
@@ -94,7 +94,7 @@ def main():
     for lot_str, candidates in emevd_map.items():
         lot_id = int(lot_str)
         if lot_id in unreachable_lots:
-            continue  # orphan in MSB — don't fabricate coords from EMEVD coincidence
+            continue  # orphan in MSB - don't fabricate coords from EMEVD coincidence
         existing = by_lot.get(lot_id, [])
         # Has any record with real coords already?
         has_coords = any(not r.get('from_fallback') for r in existing)
@@ -108,7 +108,7 @@ def main():
 
         area, gx, gz = map_to_area(chosen['msb_map'])
 
-        if existing:  # all fallback — upgrade them
+        if existing:  # all fallback - upgrade them
             for r in existing:
                 r['x'] = chosen['x']
                 r['y'] = chosen['y']
@@ -123,11 +123,11 @@ def main():
                 r.pop('from_fallback', None)
                 upgraded += 1
         else:
-            # No record at all — would need to create from ItemLotParam_map
+            # No record at all - would need to create from ItemLotParam_map
             # Skip for now; these should have been picked up by fallback loop in extract_all_items
             pass
 
-    # Save (no backup — extract_all_items regenerates from regulation each build)
+    # Save (no backup - extract_all_items regenerates from regulation each build)
     with open(DB_PATH, 'w', encoding='utf-8') as f:
         json.dump(db, f, indent=1)
     print(f'\nUpgraded {upgraded} fallback records to real coords')

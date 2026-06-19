@@ -379,7 +379,7 @@ def main():
     msb_errors = 0
     # Lots whose MSB Treasure events bind ONLY to unreachable DummyAssets
     # (eid=0, no group IDs). These are orphan rows in ItemLotParam_map that
-    # the engine never delivers — used to skip them in the fallback enrich
+    # the engine never delivers - used to skip them in the fallback enrich
     # pass and avoid fabricating phantom map markers from byte-pattern
     # coincidences in EMEVD args (e.g. flag args of 2009:0 RegisterLadder).
     unreachable_only_lots = set()
@@ -442,7 +442,7 @@ def main():
         # reference the same part with DIFFERENT lots, the one iterated last
         # wins during map load and the earlier lots are never awarded.
         # (Verified in-game at Ruin-Strewn Precipice: corpse AEG099_620_9000
-        # carries lots 39200000 Golden Rune + 39200080 Rune Arc — only the
+        # carries lots 39200000 Golden Rune + 39200080 Rune Arc - only the
         # Rune Arc drops. Only 2 such parts exist in the whole game.)
         # A marker for an overridden lot would point at unobtainable loot.
         part_last_lot = {}
@@ -455,7 +455,7 @@ def main():
         # Group treasure events by lot and prefer the live part when a
         # single ItemLotID is bound to both a Parts.Assets and a
         # Parts.DummyAssets entry. Lots bound only to a dummy are skipped
-        # entirely — the engine never spawns them.
+        # entirely - the engine never spawns them.
         by_lot = {}
         for t in msb.Events.Treasures:
             part_name = str(t.TreasurePartName) if t.TreasurePartName else ''
@@ -463,7 +463,7 @@ def main():
             if item_lot_id <= 0 or not part_name:
                 continue
             if part_last_lot.get(part_name) != item_lot_id:
-                # Overridden by a later Treasure event on the same part —
+                # Overridden by a later Treasure event on the same part -
                 # never awarded in-game. Keep it out of enrich too.
                 unreachable_only_lots.add(item_lot_id)
                 print(f"  skipping overridden treasure lot {item_lot_id} on "
@@ -484,7 +484,7 @@ def main():
                 part_name, bucket, pos = live_refs[0]
             else:
                 # Only keep a dummy-only lot if the DummyAsset has a non-
-                # zero EntityID or EntityGroupID — otherwise no EMEVD can
+                # zero EntityID or EntityGroupID - otherwise no EMEVD can
                 # target it and the lot is unreachable in-game.
                 reachable = []
                 for r in refs:
@@ -776,7 +776,7 @@ def main():
     # explicitly, so we recover it heuristically: walk the trigger event's
     # instructions, find any entity_id reference matching an MSB enemy in the
     # same map; prefer boss-like entities (eid%1000 in 800..899).
-    print('\n=== Scanning common.emevd ev0 for RunEvent(1200, ...) — flag→lot map ===')
+    print('\n=== Scanning common.emevd ev0 for RunEvent(1200, ...) - flag→lot map ===')
     flag_to_lot = {}
     common_path = ERR_MOD_DIR / 'event' / 'common.emevd.dcx'
     if common_path.exists():
@@ -838,12 +838,12 @@ def main():
     # For each setter event, find the entity it references in MSB; prefer boss eid.
     #
     # entity_to_pos so far only contains entities referenced by TEMPLATE_EVENTS
-    # callers — boss entities like Tombsward's 30000800 aren't included because
+    # callers - boss entities like Tombsward's 30000800 aren't included because
     # they're spawned/managed by per-map emevd events, not by common_func
     # templates. Extend entity_to_pos by scanning every MSB enemy for the maps
     # that have setter events.
     emevd1200_matched = 0
-    seen_pairs = set()  # (entity_id, lot_id) — dedup
+    seen_pairs = set()  # (entity_id, lot_id) - dedup
     maps_with_setters = {m for _, m, _ in setter_events}
     for msb_path in sorted(MSB_DIR.glob('*.msb.dcx')):
         map_info_msb = parse_map_name(msb_path.name)
@@ -964,14 +964,14 @@ def main():
         if (is_enemy or tr.get('source') == 'emevd') and lot_id in item_lots_enemy:
             # Scan base + sequential sub-lots, STOPPING at the first gap.
             # Without the break, the scan walks across the gap and picks up
-            # sub-lots that belong to a *different* NpcParam's chain — e.g.
+            # sub-lots that belong to a *different* NpcParam's chain - e.g.
             # base 337000000 (c3370 NpcParam 33700065) would otherwise bleed
             # into 337000800..337000807 (NpcParam 33700865) and falsely award
             # Shining Horned Headband (lot 337000805) to every c3370 in MSB.
             for offset in range(1000):
                 sub_lot = item_lots_enemy.get(lot_id + offset)
                 if sub_lot is None:
-                    break  # gap in sequence — chain belongs to another NPC
+                    break  # gap in sequence - chain belongs to another NPC
                 lots_to_check.append((lot_id + offset, sub_lot))
         elif lot_id in item_lots:
             # Treasure: scan base + sequential sub-lots (chests can have multiple items)
@@ -1076,7 +1076,7 @@ def main():
     for lot_id, lot in item_lots.items():
         if lot_id in matched_lot_ids or lot_id <= 0:
             continue
-        # Skip lots whose only MSB binding was to unreachable DummyAssets —
+        # Skip lots whose only MSB binding was to unreachable DummyAssets -
         # the engine never spawns them, and the EMEVD-enrich pass would
         # otherwise glue them to a random entity by byte-pattern coincidence.
         if lot_id in unreachable_only_lots:

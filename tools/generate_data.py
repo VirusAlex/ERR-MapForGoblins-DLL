@@ -237,7 +237,7 @@ def parse_massedit_files(massedit_dir):
                     entries[row_id]["_category"] = category
 
     # Fix interior areas that don't display correctly on overworld
-    # e.g. m11_10 (Roundtable Hold) — MSB coords land in ocean
+    # e.g. m11_10 (Roundtable Hold) - MSB coords land in ocean
     # Shift all coords to match grace display positions (area stays unchanged)
     # m11_10: MSB ~(-305,-298) → grace display ~(-2500,-650) = offset (-2195,-352)
     COORD_SHIFTS = {(11, 10): (-2195.0, -352.0)}
@@ -386,13 +386,13 @@ def generate_item_icons_cpp(output_path):
     # Spoiler-free "?" map-icon frame. Our 92 custom icons occupy iconIds
     # OUR_ICON_RANGE = 349..440 (the game's iconId is the 1-based sprite-171 frame
     # number; our frames append right after the base's frames). The "?" frame is
-    # appended AFTER our 92 icons, so it is iconId 441 (= 440 + 1), NOT 440 — 440
+    # appended AFTER our 92 icons, so it is iconId 441 (= 440 + 1), NOT 440 - 440
     # is our LAST real icon and pointing the anon override there showed that icon
     # (a statue on Convergence) instead of the "?". On overlay bases that add
     # their own frames (Convergence) every iconId shifts by ICON_FRAME_OFFSET, so
     # the "?" is 441 + offset (441 vanilla/erte/err, 849 convergence). build_vanilla_gfx
     # places the frame at 0-indexed position 440(+offset); that 0-indexed position
-    # is 1-based iconId 441(+offset) in-game — the +1 is this off-by-one.
+    # is 1-based iconId 441(+offset) in-game - the +1 is this off-by-one.
     anon_icon_id = 441 + off
 
     with open(output_path, "w", encoding="utf-8") as f:
@@ -623,7 +623,7 @@ def generate_legacy_conv_cpp(conv_json, output_path):
         }
     entries = sorted(by_key.values(), key=lambda e: (e['src_area'], e['src_gx']))
     with open(output_path, 'w', encoding='utf-8') as f:
-        f.write("#pragma once\n// AUTO-GENERATED — do not edit.\n")
+        f.write("#pragma once\n// AUTO-GENERATED - do not edit.\n")
         f.write("// Dungeon-area → overworld-tile conversion table (first base-point per src key).\n\n")
         f.write("#include <cstdint>\n#include <cstddef>\n\n")
         f.write("namespace goblin::generated {\n\n")

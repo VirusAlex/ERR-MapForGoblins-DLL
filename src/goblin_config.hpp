@@ -128,7 +128,7 @@ namespace goblin
         // merchants, field bosses, dungeon entrances). Each `patch*` flag
         // decides whether we rewrite that category's flags so the marker
         // appears/hides in sync with map-fragment discovery and (for
-        // dungeons) boss completion. `false` = leave the row alone — the
+        // dungeons) boss completion. `false` = leave the row alone - the
         // icon still appears with whatever flags ERR ships.
         extern bool patchOverworldBossIcons;
         extern bool patchDungeonBossIcons;
@@ -161,7 +161,7 @@ namespace goblin
 
     uint32_t parse_vk_code(std::string name);
     uint16_t parse_gamepad_combo(std::string s);
-    // Inverse of the above — produce a string that parse_*() round-trips, used by
+    // Inverse of the above - produce a string that parse_*() round-trips, used by
     // save_config to persist hotkeys rebound in the overlay.
     std::string format_vk_code(uint32_t vk);
     std::string format_gamepad_combo(uint16_t mask);

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""EMEVD decompiler — DarkScript3-style listings of Elden Ring event scripts.
+"""EMEVD decompiler - DarkScript3-style listings of Elden Ring event scripts.
 
 Usage:
   py emevd_decompile.py <map>                   # decompile all events in ERR
@@ -78,7 +78,7 @@ def load_emedf():
 def load_name_map(filename):
     """Read DarkScript3 resource file: '<id> <name>' per line.
 
-    Returns an empty dict if DarkScript3 isn't configured — callers degrade
+    Returns an empty dict if DarkScript3 isn't configured - callers degrade
     gracefully to raw numeric IDs."""
     out = {}
     if not DARKSCRIPT_RESOURCES: return out

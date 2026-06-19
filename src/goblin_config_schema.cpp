@@ -1,4 +1,4 @@
-// AUTHORITATIVE ini layout — see goblin_config_schema.hpp.
+// AUTHORITATIVE ini layout - see goblin_config_schema.hpp.
 // Dependency-free (no spdlog / mINI) so tools/mfg_inigen can link just this.
 
 #include "goblin_config_schema.hpp"
@@ -50,7 +50,7 @@ namespace goblin::config
 
     // Live-loot / randomizer-compat options default ON for the plain VANILLA
     // build only (that's what Item/Enemy Randomizer players use) and OFF for ERR
-    // and Convergence (opt-in — they add memory/CPU with no benefit without a
+    // and Convergence (opt-in - they add memory/CPU with no benefit without a
     // regulation mod). MFG_PROFILE_VANILLA is set by CMake for the vanilla bake
     // only (MFG_VANILLA covers vanilla AND convergence, so it can't be used here).
 #ifdef MFG_PROFILE_VANILLA
@@ -82,7 +82,7 @@ namespace
 
     constexpr bool ERR = true; // err-only marker for readability
 
-    // Default string for the live-loot options — "true" only in the vanilla
+    // Default string for the live-loot options - "true" only in the vanilla
     // bake (see the var defs above), "false" elsewhere. Must match the compiled
     // bool defaults so the generated ini and the DLL agree.
 #ifdef MFG_PROFILE_VANILLA
@@ -103,8 +103,6 @@ namespace
                          "Delay in seconds before loading map icons (wait for game initialization)", false, nullptr},
                 B("require_map_fragments", requireMapFragments, "true",
                   "Require map fragment discovery before showing icons in that area"),
-                B("debug_logging", debugLogging, "false",
-                  "Enable verbose debug logging (memory addresses, param details, FMG internals)"),
                 IniEntry{"fast_map_open", IniType::Bool, &cfg::fastMapOpen, "true",
                          "BETA: makes the world map open faster when many icons are shown.\nTurn off if the map glitches or crashes.",
                          false, "fast_map_reopen"},
@@ -234,20 +232,27 @@ namespace
                   "Spoiler-free: every loot marker shows a gray \"?\" and a generic label instead\nof the real item. Overrides live_loot_labels/icons; markers still hide on pickup."),
             }},
 
-            {"Debug",
-             "In-game config overlay + marker dump. toggle_key (keyboard) / toggle_gamepad_combo\n(gamepad) OPEN the overlay when enable_overlay is on, or toggle ALL map icons\non/off when it's off. Key names: F1-F24, A-Z, 0-9, Space, Escape, Tab, Enter,\nBackspace, Home, End, PageUp, PageDown, Insert, Delete, arrows.",
+            {"Overlay & Hotkeys",
+             "The in-game config overlay and the key/button that opens it. toggle_key\n(keyboard) / toggle_gamepad_combo (gamepad) OPEN the overlay when enable_overlay\nis on, or toggle ALL map icons on/off when it's off. Key names: F1-F24, A-Z,\n0-9, Space, Escape, Tab, Enter, Backspace, Home, End, PageUp, PageDown, Insert,\nDelete, arrows.",
              false, {
                 B("enable_overlay", enableOverlay, "true",
                   "In-game config overlay (Dear ImGui) opened with the toggle key below.\nSet false if a DX-hook conflict (Steam overlay/RTSS/GeForce Experience) or a\nGPU driver issue makes the game unstable."),
-                B("enable_marker_dump", enableMarkerDump, "false", "Master switch for the marker dump hotkey"),
-                IniEntry{"marker_dump_key", IniType::VkKey, &cfg::markerDumpKey, "F9",
-                         "Key to dump decoded markers to logs/MapForGoblins_markers.log. Default: F9.", false, nullptr},
                 B("enable_toggle_hotkey", enableToggleHotkey, "true",
                   "Enable toggle_key / toggle_gamepad_combo to switch ALL map icons on/off when\nthe overlay is DISABLED. (When the overlay is enabled, they open it instead.)"),
                 IniEntry{"toggle_key", IniType::VkKey, &cfg::toggleInjectionKey, "F10",
                          "Keyboard toggle: OPENS the config overlay when enable_overlay is on, or\ntoggles ALL map icons on/off when the overlay is disabled. Default: F10.", false, "toggle_injection_key"},
                 IniEntry{"toggle_gamepad_combo", IniType::GamepadMask, &cfg::toggleGamepadMask, "Y+R3",
                          "Gamepad toggle, same role as toggle_key (opens the overlay, or toggles all\nicons if the overlay is disabled). Tokens joined with '+': A,B,X,Y,LB,RB,\nL3/LSTICK,R3/RSTICK,BACK/SELECT/VIEW,START/MENU,UP/DOWN/LEFT/RIGHT. Default: Y+R3.", false, nullptr},
+            }},
+
+            {"Debug",
+             "Diagnostics, shown on the overlay's Debug tab.",
+             false, {
+                B("debug_logging", debugLogging, "false",
+                  "Enable verbose debug logging (memory addresses, param details, FMG internals)"),
+                B("enable_marker_dump", enableMarkerDump, "false", "Master switch for the marker dump hotkey"),
+                IniEntry{"marker_dump_key", IniType::VkKey, &cfg::markerDumpKey, "F9",
+                         "Key to dump decoded markers to logs/MapForGoblins_markers.log. Default: F9.", false, nullptr},
             }},
         };
     }

@@ -164,7 +164,7 @@ def main():
             goods_id = 8200 + (flag - 580000) // 10
         lines.append(f'param WorldMapPointParam: id {row_id}: textId1: = {500000000 + goods_id};')
         lines.append(f'param WorldMapPointParam: id {row_id}: textDisableFlagId1: = {p["flag"]};')
-        # Location text for dungeons — nearest-grace lookup
+        # Location text for dungeons - nearest-grace lookup
         map_code = f'm{area:02d}_{gx:02d}_{gz:02d}_00'
         loc_id = resolve_location_id_at(map_code, p.get("x", 0.0), p.get("y", 0.0), p.get("z", 0.0))
         if loc_id > 0:

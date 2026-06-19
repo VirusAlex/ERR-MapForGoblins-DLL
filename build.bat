@@ -128,7 +128,7 @@ echo === Building snapshot (pre-release) ===
 
 call :parse_version
 if errorlevel 1 exit /b 1
-echo Snapshot version: pre-%VER%
+echo Snapshot version: %VER%
 
 REM Incremental data pipeline (hash-based cache). Pass --force-all to rebuild everything.
 echo Running incremental pipeline...
@@ -156,10 +156,10 @@ if errorlevel 1 (
 
 REM Package into pre-release folder (SNAP_DIR set per profile at top)
 call :package "%SNAP_DIR%"
-powershell -NoProfile -Command "(Get-Content '%README_SRC%') -replace '%%VERSION%%','pre-%VER%' | Set-Content '%SNAP_DIR%\README.txt'"
+powershell -NoProfile -Command "(Get-Content '%README_SRC%') -replace '%%VERSION%%','%VER%' | Set-Content '%SNAP_DIR%\README.txt'"
 
 echo.
-echo [SUCCESS] Snapshot packaged: %SNAP_DIR% (pre-%VER%)
+echo [SUCCESS] Snapshot packaged: %SNAP_DIR% (%VER%)
 echo.
 exit /b 0
 
@@ -186,10 +186,11 @@ if errorlevel 1 (
     exit /b 1
 )
 
-REM Build with VERSION_PRE="" (release, no pre- prefix)
+REM Build the release DLL. Same version string as snapshots, so with /Brepro +
+REM the same data this is byte-identical to the snapshot you already tested/scanned.
 call "%VS_PATH%" -arch=amd64 >nul 2>&1
 cd /d "%SCRIPT_DIR%"
-cmake -B "%BUILD_DIR%" -G "Visual Studio 17 2022" -A x64 -DGENERATED_SUBDIR=%GEN_SUBDIR% -DVERSION_PRE=""
+cmake -B "%BUILD_DIR%" -G "Visual Studio 17 2022" -A x64 -DGENERATED_SUBDIR=%GEN_SUBDIR%
 if errorlevel 1 (
     echo ERROR: CMake configuration failed!
     exit /b 1
@@ -228,12 +229,12 @@ powershell -Command "(Get-Content '%SCRIPT_DIR%CMakeLists.txt') -replace '  VERS
 REM Reconfigure with pre- prefix
 cmake -B "%BUILD_DIR%" -G "Visual Studio 17 2022" -A x64 -DGENERATED_SUBDIR=%GEN_SUBDIR% >nul 2>&1
 
-echo Done. Next dev version: pre-%NEXT_VER%
+echo Done. Next dev version: %NEXT_VER%
 echo.
 exit /b 0
 
 :release_nobump
-REM Reconfigure back to pre- prefix at the SAME version (no bump)
+REM Reconfigure at the SAME version (no bump)
 cmake -B "%BUILD_DIR%" -G "Visual Studio 17 2022" -A x64 -DGENERATED_SUBDIR=%GEN_SUBDIR% >nul 2>&1
 echo Done. Version kept at %VER% (--no-bump).
 echo.

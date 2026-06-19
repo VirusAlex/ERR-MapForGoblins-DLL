@@ -3,7 +3,7 @@
 
 ERR drops 5 KindlingSpirit_* SFX-regions in m60_45_37_00. Picking up all
 five between two Site-of-Grace rests grants Incantation 6610 ("Kindling
-Spirit") via ItemLot 1045370500 — engine auto-sets flag 1045377500 on
+Spirit") via ItemLot 1045370500 - engine auto-sets flag 1045377500 on
 award.
 
 Per-spirit collection state lives only in the in-game SFX manager (RAM);
@@ -12,7 +12,7 @@ generator emits a static per-spirit `WorldMapPointParam` row with
 `textDisableFlagId1 = 1045377500` (permanent acquired-incantation flag) as
 a fallback hide path. The DLL's `goblin::kindling::refresh()` does the
 in-run hiding by reading SFX-region state and writing `areaNo = 99` on
-collected rows — same trick as material_nodes but keyed off SFX state
+collected rows - same trick as material_nodes but keyed off SFX state
 instead of CSWorldGeomMan.
 
 Output: data/massedit_generated/World - Kindling Spirits.MASSEDIT
@@ -34,7 +34,7 @@ KINDLING_GOODS_ID = 6610
 PERMANENT_FLAG = 1045377500
 
 # Row IDs: keep well clear of other generators (graces use 7M, summoning
-# pools 8.7M, material nodes 6M). Use 8.8M block — close to summoning
+# pools 8.7M, material nodes 6M). Use 8.8M block - close to summoning
 # pools without overlap.
 START_ROW_ID = 8800000
 
@@ -90,7 +90,7 @@ def main():
         lines.append(f"param WorldMapPointParam: id {rid}: selectMinZoomStep: = 1;")
 
         # Pass entity_id and slot to the DLL via the side-car JSON. The
-        # DLL reads MAP_ENTRY metadata to build its tracking table — same
+        # DLL reads MAP_ENTRY metadata to build its tracking table - same
         # mechanism material_nodes uses for `geom_slot`/`object_name`.
         # We repurpose `name_suffix` to hold the SFX entity_id (it fits
         # in int16 if we mask, but to avoid range issues we encode the

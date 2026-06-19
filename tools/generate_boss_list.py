@@ -150,7 +150,7 @@ def main():
     # markers (textId2==5100), which vanilla doesn't have. Vanilla's
     # authoritative boss registry is GameAreaParam: row id == boss entity id,
     # each row carries defeatBossFlagId + bossPos + bossMap. Names: most boss
-    # NpcParam rows have nameId==0 — the HP-bar name is assigned by EMEVD
+    # NpcParam rows have nameId==0 - the HP-bar name is assigned by EMEVD
     # DisplayBossHealthBar 2003[11] (entity, slot, nameId), so we scan the
     # event scripts (resolving parameterized common-event initializations).
     if config.PROFILE != 'err':
@@ -237,7 +237,7 @@ def main():
         ga_data = param_to_dict(ga, ga_fields)
 
         # GameAreaParam.defeatBossFlagId is, for many field bosses, the boss
-        # ENTITY id — NOT the flag the game sets on kill (verified live: e.g. tile
+        # ENTITY id - NOT the flag the game sets on kill (verified live: e.g. tile
         # m60_36_45 stored 1036450340 = entity, but the death flag is 1036450800).
         # The boss-death template events 90005860/61/80 carry the real defeat flag
         # at arg offset 8 and the boss entity at offset 16. Build entity -> flag so
@@ -294,7 +294,7 @@ def main():
                 if mp in dungeon_flag:
                     flag = dungeon_flag[mp]
             if flag in seen_flags:
-                continue  # boss duos share one defeat flag — one marker
+                continue  # boss duos share one defeat flag - one marker
             seen_flags.add(flag)
 
             ent = all_entities.get(rid)

@@ -8,7 +8,7 @@ namespace goblin::generated
 
 // Rows whose gather part NAME differs from its ACTUAL model (ERR substituted the asset,
 // e.g. part AEG099_753_9000 instantiates DLC model AEG463_860). GEOF save entries carry
-// the ACTUAL model's hash — collected-tracking must bucket these rows by it.
+// the ACTUAL model's hash - collected-tracking must bucket these rows by it.
 struct GeofModelOverride
 {
     uint64_t row_id;    // ORIGINAL (pre-remap) row id, matches MAP_ENTRIES[].row_id

@@ -137,7 +137,7 @@ def extract_menu_dir(menu_hi_dir, out_dir):
     """Extract sub-textures from a menu/hi dir (vanilla game or a mod overlay)
     into out_dir as <name>.tga, using 01_common.sblytbnd's layouts. Pulls DDS
     sheets from the unpacked `01_common-tpf-dcx/` folder AND every `*.tpf.dcx` in
-    the dir — the layouts reference sheets spread across multiple tpfs (e.g. ERR's
+    the dir - the layouts reference sheets spread across multiple tpfs (e.g. ERR's
     `SB_MapCursor_ERR` map markers, incl. the green "Completed" check, live in
     `05_dummy.tpf.dcx`, not `01_common.tpf.dcx`). Returns sub-textures written
     (0 if no 01_common.sblytbnd). Importable by render_map_icons."""

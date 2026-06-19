@@ -45,7 +45,7 @@ New INI key: `show_merchant_bell_bearings` (`Category::LootMerchantBellBearings`
 1. Wait for params to load (`from::params::initialize()`)
 2. Find `ParamResCap` for "WorldMapPointParam" in ParamList
 3. Get pointer to param_file via `rescap + 0x80`
-4. `HeapAlloc (GetProcessHeap, HEAP_ZERO_MEMORY)` a new buffer: header (0x40) + row locators + data + type string + wrapper locators (changed from `VirtualAlloc` for Seamless Co-op compatibility — ERSC's `game_memory_unlimiter` crashes on a dedicated `VirtualAlloc`'d page region)
+4. `HeapAlloc (GetProcessHeap, HEAP_ZERO_MEMORY)` a new buffer: header (0x40) + row locators + data + type string + wrapper locators (changed from `VirtualAlloc` for Seamless Co-op compatibility - ERSC's `game_memory_unlimiter` crashes on a dedicated `VirtualAlloc`'d page region)
 5. Copy original rows + add ours, sort by row_id
 6. Atomically swap the pointer: `file_ptr_ref = new_param_file`
 
@@ -63,7 +63,7 @@ ParamTable (param_file):
 ### How text works (goblin_messages.cpp)
 
 Hook on `MsgRepositoryImp::LookupEntry` (AOB: `48 8B 3D ?? ?? ?? ?? 44 0F B6 30 48 85 FF 75`).
-All our PlaceName IDs use **offset-encoding** — no custom compiled text. The high digits
+All our PlaceName IDs use **offset-encoding** - no custom compiled text. The high digits
 of the ID encode which existing game FMG category the marker borrows from:
 
 | Offset range | Redirects to FMG category |
@@ -91,7 +91,7 @@ while the map is open" auto-hide (which read `CSMenuMan + 0xCD`) was **REMOVED**
 ### On-screen banners (F10 / F9)
 
 The F10/F9 confirmation banner uses `CSPopupMenu::ShowTutorialPopup` (the EMEVD `2007[15]` toast).
-It is **AOB-resolved at runtime — NOT a hardcoded RVA** — because game updates shift `.text` RVAs
+It is **AOB-resolved at runtime - NOT a hardcoded RVA** - because game updates shift `.text` RVAs
 (`0x80DA50 -> 0x80D960` in May 2026). By contrast, `.data` singleton slots and `.rdata` vtables stay put.
 
 ### Data generation pipeline
@@ -131,7 +131,7 @@ MSB files + regulation.bin + EMEVD
 ```
 
 MSB parsing via Andre.SoulsFormats.dll (from Smithbox, bundled in `tools/lib/`).
-`MSBE.Read(string path)` via reflection — supports both base game and DLC maps.
+`MSBE.Read(string path)` via reflection - supports both base game and DLC maps.
 
 ---
 
@@ -216,7 +216,7 @@ Stored inside BND4 archives (`item_dlc02.msgbnd.dcx`), compressed with DCX (Oodl
 
 ### DCX / BND4 / BHD5
 
-- **DCX** - compression container (magic `DCX\0`; ER/ERR use Oodle Kraken — tag `KRAK` at header offset 0x28, NOT zstd)
+- **DCX** - compression container (magic `DCX\0`; ER/ERR use Oodle Kraken - tag `KRAK` at header offset 0x28, NOT zstd)
 - **BND4** - file archive (MSB, FMG, etc.)
 - **BHD5** - encrypted vanilla archive index (Data0-3.bdt), key for EldenRing = Game enum value 3
 
@@ -328,15 +328,15 @@ Details: `geom_collection_tracking.md` in the project root.
 
 `src/goblin_kindling.cpp` runs `Category::WorldKindlingSpirits`.
 
-- `textDisableFlagId1` = `PERMANENT_FLAG 1045377500` — the engine auto-sets it when all 5 spirits are collected.
+- `textDisableFlagId1` = `PERMANENT_FLAG 1045377500` - the engine auto-sets it when all 5 spirits are collected.
 - Per-spirit liveness is detected via a heap scan for `CS::EcTestDistance` condition objects (vftable RVA `0x2A5BB90`). Each object self-identifies via `cond+0x30 == entity_id`, with eids `1045373501..505`. These objects only appear ~1 minute after entering the Misty Forest.
-- There is **NO static anchor** and **NO per-spirit event flag** — the heap scan is the only per-spirit source.
+- There is **NO static anchor** and **NO per-spirit event flag** - the heap scan is the only per-spirit source.
 
 ---
 
 ## Remaining Tasks
 
-### ~~1. Seamless Co-op hosting~~ — SOLVED (2026-05-29)
+### ~~1. Seamless Co-op hosting~~ - SOLVED (2026-05-29)
 Hosting now works. The ParamTable buffer was switched from `VirtualAlloc` to `HeapAlloc (GetProcessHeap, HEAP_ZERO_MEMORY)` and the `wrapper_row_locator` array was 16-aligned (the real root cause was a 16-align bug in that layout). The old map-open auto-hide workaround was removed; hosting verified live. See `docs/ersc_hosting_and_map_autohide.md`.
 
 ### 1. Reference Offsets

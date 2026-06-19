@@ -28,7 +28,7 @@ paramdefs = load_paramdefs()
 
 # Set of map tiles that actually exist as an MSB. Some BonfireWarpParam rows
 # point at cut-content maps with no MSB (e.g. area 12 / grid 6 = "m12_06",
-# which exists in neither ERR nor vanilla) — their graces are unreachable and
+# which exists in neither ERR nor vanilla) - their graces are unreachable and
 # their textId1 (e.g. 120600/120601) has no PlaceName entry, so a marker for
 # them would be a nameless/null icon. Skip any grace whose tile has no MSB.
 _MSB_DIR = ERR_MOD_DIR / 'map' / 'MapStudio'
@@ -67,7 +67,7 @@ def main():
         # Respect ERR's intentional hides: if ALL dispMaskXX = 0 in the
         # source BonfireWarpParam row, ERR has explicitly hidden this grace
         # (e.g. spoiler-hides for Inner Aeonia / Primeval Sorcerer Azur /
-        # Fortified Manor 1F — soft-disabled with rebound bonfireEntityId
+        # Fortified Manor 1F - soft-disabled with rebound bonfireEntityId
         # pointing to non-existent MSB asset). Don't override the hide.
         if (not row.get('dispMask00') and not row.get('dispMask01')
                 and not row.get('dispMask02')):
@@ -115,7 +115,7 @@ def main():
         # engine shows the icon as long as ANY text slot is visible, and
         # the two flags never fire simultaneously (Event 923 resets 76253
         # OFF in the same step it sets 1035469430 ON). Trade-off: between
-        # lighting and Dreambrew, our marker overlaps with vanilla icon —
+        # lighting and Dreambrew, our marker overlaps with vanilla icon -
         # small cosmetic price for correct post-Dreambrew hiding.
         disable_flag = 1035469430 if rid == 62354601 else flag
         lines.append(f'param WorldMapPointParam: id {row_id}: textId1: = {tid1};')

@@ -134,7 +134,7 @@ Mask:     0x10 (bit 4)
 Address:  CSWorldGeomIns + 0x269
 Mask:     0x60 (bits 5 and 6)
 
-  0x00 → ALIVE (or gathering node — this flag does NOT work for 651!)
+  0x00 → ALIVE (or gathering node - this flag does NOT work for 651!)
   0x60 → COLLECTED (only set for rune pieces 821, ember pieces 822, and one-time nodes like 691)
 ```
 
@@ -157,7 +157,7 @@ alive = (byte_263 & 0x02) != 0  AND  (byte_26B & 0x10) == 0
 
 - **+0x263** catches objects collected in previous sessions (persists in save, restored on tile load)
 - **+0x26B** catches objects collected just now while the tile is loaded (immediate)
-- Both flags reset to their "alive" state when a tile unloads and reloads — but +0x263 gets restored from save data with the correct "dead" state
+- Both flags reset to their "alive" state when a tile unloads and reloads - but +0x263 gets restored from save data with the correct "dead" state
 
 ### AEG099_651 Caveat
 
@@ -416,7 +416,7 @@ CSWorldGeomIns + 0x18 + 0x18 + 0x18 = +0x48 → *msb_part_ptr → *name_ptr (wch
 Адрес:  CSWorldGeomIns + 0x269
 Маска:  0x60 (биты 5 и 6)
 
-  0x00 → ЖИВ (или gathering node — этот флаг НЕ работает для 651!)
+  0x00 → ЖИВ (или gathering node - этот флаг НЕ работает для 651!)
   0x60 → СОБРАН (только для rune pieces 821, ember pieces 822, one-time nodes вроде 691)
 ```
 
@@ -439,7 +439,7 @@ alive = (byte_263 & 0x02) != 0  AND  (byte_26B & 0x10) == 0
 
 - **+0x263** ловит объекты, собранные в предыдущих сессиях (сохраняется в сейве, восстанавливается при загрузке тайла)
 - **+0x26B** ловит объекты, собранные прямо сейчас пока тайл загружен (мгновенно)
-- Оба флага сбрасываются в "живое" состояние при выгрузке/загрузке тайла — но +0x263 восстанавливается из сейва с правильным "мёртвым" состоянием
+- Оба флага сбрасываются в "живое" состояние при выгрузке/загрузке тайла - но +0x263 восстанавливается из сейва с правильным "мёртвым" состоянием
 
 ### Особенность AEG099_651
 

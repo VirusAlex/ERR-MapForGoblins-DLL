@@ -12,7 +12,7 @@ Consumed by generate_loot_massedit.py category filters. Rules were derived by
 matching the previously-committed tables against EquipParamGoods: ash/craft
 matched their goodsType sets exactly; sorcery/incantation/sort_groups matched
 on goodsType with only since-added rows differing (the old tables were a
-snapshot of an earlier data version — this extractor keeps them fresh).
+snapshot of an earlier data version - this extractor keeps them fresh).
 """
 import sys
 import io

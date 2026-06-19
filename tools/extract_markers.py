@@ -199,7 +199,7 @@ def find_markers(slot_data):
 
         idx = struct.unpack_from("<i", raw, 0)[0]
         if idx == -1:
-            # Empty slot — skip
+            # Empty slot - skip
             off += MARKER_SIZE
             continue
 

@@ -209,7 +209,7 @@ static void log_all_chains()
         spdlog::warn("[POS] WorldChrMan not available");
         return;
     }
-    spdlog::info("[POS] WorldChrMan @ {:016X} — scanning {} chains:", (uintptr_t)wcm, NUM_CHAINS);
+    spdlog::info("[POS] WorldChrMan @ {:016X} - scanning {} chains:", (uintptr_t)wcm, NUM_CHAINS);
 
     for (int i = 0; i < NUM_CHAINS; i++) {
         auto &ch = g_chains[i];

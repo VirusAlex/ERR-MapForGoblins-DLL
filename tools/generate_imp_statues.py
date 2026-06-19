@@ -71,7 +71,7 @@ def main():
 
         for p in msb.Parts.Assets:
             if int(getattr(p, 'GameEditionDisable', 0) or 0) == 1:
-                continue  # disabled placement — engine doesn't spawn it
+                continue  # disabled placement - engine doesn't spawn it
             eid = int(p.EntityID) if hasattr(p, 'EntityID') else 0
             if eid <= 0:
                 continue
@@ -86,7 +86,7 @@ def main():
             y = round(float(p.Position.Y), 3)
             z = round(float(p.Position.Z), 3)
             # Skip seals that ERR moved DOWN below vanilla into unreachable
-            # terrain. Conditional on actual vs vanilla Y — self-disarms if
+            # terrain. Conditional on actual vs vanilla Y - self-disarms if
             # a future ERR update fixes the position.
             if is_unreachable_in_err(map_name, str(p.Name), y):
                 continue
@@ -156,7 +156,7 @@ def main():
             lines.append(f'param WorldMapPointParam: id {row_id}: textId1: = 500008000;')  # Stonesword Key
         # Seal unlock flag = entity ID
         lines.append(f'param WorldMapPointParam: id {row_id}: textDisableFlagId1: = {s["flag"]};')
-        # Location name for dungeons (second line) — nearest-grace lookup
+        # Location name for dungeons (second line) - nearest-grace lookup
         map_code = f'm{area:02d}_{gx:02d}_{gz:02d}_00'
         loc_id = resolve_location_id_at(map_code, s["x"], s.get("y", 0.0), s["z"])
         if loc_id > 0:

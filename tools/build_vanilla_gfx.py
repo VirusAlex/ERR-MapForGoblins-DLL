@@ -10,14 +10,14 @@ references). This tool rebuilds the icon set on the target game's own base:
 
   vanilla     base: GAME_DIR/menu/02_120_worldmap.gfx (sprite 171 = 348 frames)
               out:  assets/menu/02_120_worldmap_vanilla.gfx
-  convergence base: CONVERGENCE_MOD_DIR/menu/02_120_worldmap.gfx (756 frames —
+  convergence base: CONVERGENCE_MOD_DIR/menu/02_120_worldmap.gfx (756 frames -
               the mod adds 408 icon frames of its own, so OUR frames land at
               757+ and the bake shifts iconIds by config.ICON_FRAME_OFFSET;
               this tool verifies that constant against the actual base)
               out:  assets/menu/02_120_worldmap_convergence.gfx
 
   1. decompile the base gfx and our _new.gfx (FFDEC swf2xml),
-  2. copy our added DefineExternalImage2 defs (charIds 1000-1024 — all
+  2. copy our added DefineExternalImage2 defs (charIds 1000-1024 - all
      vanilla texture names: MENU_Tab_*, MENU_ItemIcon_*, ...) into the
      base XML before sprite 171 (verifying the base doesn't already use
      those charIds),
@@ -50,7 +50,7 @@ OURS_GFX = PROJECT / "assets" / "menu" / "02_120_worldmap_new.gfx"
 VANILLA_SPRITE_FRAMES = 348          # frames in vanilla sprite 171
 OURS_FIRST_FRAME = 349               # our frames start here in OUR gfx
 OUR_IMAGE_IDS = set(range(1000, 1025))   # DefineExternalImage2 we added
-ERR_IMAGE_IDS = set(range(13500, 13507))  # ERR-only textures — must NOT leak
+ERR_IMAGE_IDS = set(range(13500, 13507))  # ERR-only textures - must NOT leak
 
 # Per-profile expected base frame count. Must satisfy:
 #   base_frames == VANILLA_SPRITE_FRAMES + config-side ICON_FRAME_OFFSET
@@ -66,13 +66,13 @@ PROFILE_BASE_FRAMES = {"vanilla": 348, "convergence": 756, "erte": 348}
 # twips). For our non-ERR builds we (a) replace shape 172 with our own badge
 # and (b) move the badge to the ERR placement so it overlaps the icon.
 #
-# IMPORTANT — the badge is an EMBEDDED RASTER, not a vector. FFDEC can't import
+# IMPORTANT - the badge is an EMBEDDED RASTER, not a vector. FFDEC can't import
 # detailed SVGs as Scaleform shapes (clip-paths/gradients garble; and a shape
 # crashes the map once it exceeds ~30-45 filled figures). So make_cleared_badge.py
 # produces a small PNG (assets/badges/cleared_badge.png) from the source art
 # (assets/badges/mark2.png) and `ffdec -replace ... 172 <png>` embeds it as a
 # DefineBitsLossless2 bitmap-fill shape (1 figure, centred ±257 = 26px, renders
-# fine in-game — verified). Vanilla-only for now (Convergence ships its own
+# fine in-game - verified). Vanilla-only for now (Convergence ships its own
 # MENU_MAP_Boss_Dead badge via sprite 173 -> char 902, left untouched).
 BADGE_PROFILES = {"vanilla", "erte"}
 BADGE_IMG = PROJECT / "assets" / "badges" / "cleared_badge.png"
@@ -85,7 +85,7 @@ BADGE_IMG = PROJECT / "assets" / "badges" / "cleared_badge.png"
 # ANON_FRAME_INDEX below is the 0-INDEXED position the frame lands at (= frameCount
 # before append). The DLL's ANON_ICON_ID is the GAME iconId, which is the 1-BASED
 # sprite frame number = this 0-indexed position + 1 (so generate_data uses 441,
-# not 440). Don't conflate the two — pointing the DLL at 440 hits our last real
+# not 440). Don't conflate the two - pointing the DLL at 440 hits our last real
 # icon, not the "?".
 ANON_PROFILES = {"vanilla", "erte", "convergence", "err"}
 ANON_IMG = PROJECT / "assets" / "badges" / "anon_qmark.png"
@@ -98,7 +98,7 @@ BADGE_SPRITE_PARENT = 174     # marker container that places the badge sprite
 # Sprite 246 places MENU_FL_Map (char 10), a decorative plaque on the map UI, at
 # scale 0.5. char 10 is ALSO a real icon in sprite 171, so we can't replace it
 # directly; instead clone the square bitmap-fill shape 181 (256px, bounds
-# 0,0-5120,5120 — identical in all 4 profiles), embed our logo, and re-point ONLY
+# 0,0-5120,5120 - identical in all 4 profiles), embed our logo, and re-point ONLY
 # sprite 246 to the clone. scale/translate render the 256px square at ~1.33x
 # char 10's footprint (142*0.5) while keeping the same centre. Skipped if the
 # logo source is missing.
@@ -352,7 +352,7 @@ def main():
             sys.exit(f"expected {len(OUR_IMAGE_IDS)} image defs, found {len(our_images)}")
 
         # ── our sprite-171 frames after the vanilla range (in OUR gfx our
-        # frames always start at 349 — the ERR base adds no frames) ──
+        # frames always start at 349 - the ERR base adds no frames) ──
         osub = sprite171(oroot).find("subTags")
         frame = 0
         added = []
@@ -377,7 +377,7 @@ def main():
         vsub = vsprite.find("subTags")
         if int(vsprite.get("frameCount")) != base_frames:
             sys.exit(f"base sprite 171 has {vsprite.get('frameCount')} frames, "
-                     f"expected {base_frames} — base mod/game updated? Update "
+                     f"expected {base_frames} - base mod/game updated? Update "
                      f"PROFILE_BASE_FRAMES here AND ICON_FRAME_OFFSET in config.py")
 
         # the base must not already define our charId range (we'd collide)
@@ -386,7 +386,7 @@ def main():
                 cid = int(it.get("characterID") or 0)
                 if cid in OUR_IMAGE_IDS:
                     sys.exit(f"base gfx already uses charId {cid} (our range "
-                             f"1000-1024) — pick a new range before merging")
+                             f"1000-1024) - pick a new range before merging")
 
         # insert image defs right before the sprite 171 definition (top level)
         # find the top-level container holding the sprite
@@ -437,7 +437,7 @@ def main():
             expected = ANON_FRAME_INDEX + (base_frames - 348)
             if idx != expected:
                 sys.exit(f"anon icon: frame landed at {idx}, expected {expected} "
-                         f"(= 440 + offset {base_frames - 348}) — our frame count "
+                         f"(= 440 + offset {base_frames - 348}) - our frame count "
                          f"changed? keep generate_data ANON_ICON_ID in sync")
             print(f"anon icon: appended '?' frame at index {idx} "
                   f"(shape {ANON_QMARK_SHAPE} from clone of 172)")

@@ -109,7 +109,7 @@ def main():
             continue
 
         # Spirit Springs: launch points only (MountJumps / LockedMountJumps).
-        # MountJumpFalls / LockedMountJumpFalls are LANDING points — they
+        # MountJumpFalls / LockedMountJumpFalls are LANDING points - they
         # mirror every launch and produce duplicate icons (every launch has
         # a matching fall within 50u; verified 0 orphans across all maps).
         # We only want one icon per spring at the interaction point.
@@ -202,7 +202,7 @@ def main():
                        icon_id=404, text_id=900301620, start_row=8600000)
     print(f"Written {n} springs to World - Spirit Springs.MASSEDIT")
 
-    # Write Hawks (icon 439 — custom image MENU_ItemIcon_03273; textId
+    # Write Hawks (icon 439 - custom image MENU_ItemIcon_03273; textId
     # 904210304 = "167. Spiritspring Stormhawk")
     # clearedEventFlagId = hawk EntityID (set when hawk killed = spring unlocked)
     n = write_massedit(hawks, 'World - Spiritspring Hawks.MASSEDIT',

@@ -24,7 +24,7 @@ using Category = goblin::generated::Category;
 static constexpr uint16_t GEOM_IDX_MIN = 0x1194;
 
 // ─── data-driven model tracking ─────────────────────────────────────
-// Built from MAP_ENTRIES at init time — no hardcoded model lists.
+// Built from MAP_ENTRIES at init time - no hardcoded model lists.
 
 static std::set<std::string> g_tracked_prefixes;   // "AEG099_821", "AEG099_651", etc.
 static std::set<uint32_t>    g_tracked_model_ids;   // 10099821, 10099651, etc.
@@ -70,14 +70,14 @@ static std::map<uint64_t, ParamRef> g_param_ptrs;
 
 static std::map<uint32_t, std::vector<uint64_t>> g_tile_to_rows;                // tile → ordered row_ids
 // tile → object_name → row_ids. A VECTOR because ERR duplicates part names when it
-// copy-pastes assets (two AEG099_931_9006 in m12_02) — duplicate-named rows need
+// copy-pastes assets (two AEG099_931_9006 in m12_02) - duplicate-named rows need
 // per-position classification instead of the name-keyed fast path.
 static std::map<uint32_t, std::map<std::string, std::vector<uint64_t>>> g_tile_name_to_row;
 // 3D slot map: tile → prefix → geom_slot → row_ids (duplicate-named parts share the
 // suffix-derived slot: the game writes one GEOF entry PER instance with the SAME slot
-// value — verified live: two collected AEG099_931_9006 produced GEOF slots [6, 6]).
+// value - verified live: two collected AEG099_931_9006 produced GEOF slots [6, 6]).
 static std::map<uint32_t, std::map<std::string, std::map<int, std::vector<uint64_t>>>> g_tile_slot_to_row;
-// MSB-local (posX, posY, posZ) per tracked row — used to detect ERR-style
+// MSB-local (posX, posY, posZ) per tracked row - used to detect ERR-style
 // "replacement" where a different AEG099_* spawns at the same coords.
 static std::map<uint64_t, std::tuple<float, float, float>> g_entry_positions;
 static bool g_initialized = false;
@@ -104,7 +104,7 @@ static int aeg099_index_from_geof(uint16_t geom_idx, uint8_t flags)
 // surrounding-code signature. relative_offsets {{3,7}} extracts the slot address
 // from the `mov reg,[rip+slot]` xref; the AOB wildcards the rip-disp and branch
 // targets so it survives patches. Resolved once, cached. (GeomNonActiveBlock-
-// Manager is deliberately NOT read — see read_geof_from_memory and
+// Manager is deliberately NOT read - see read_geof_from_memory and
 // docs/geom_nonactive_block_manager.md.)
 static uintptr_t resolve_slot(const char *aob)
 {
@@ -241,7 +241,7 @@ static void read_singleton_entries(uintptr_t slot,
 // Returns per-tile:
 //   alive_names: set of ALIVE tracked-model names (for direct-name match)
 //   occupied_positions: all AEG099_* instances at MSB-local coords, regardless
-//     of name. Used to detect ERR-style "replacement" — e.g. a collected
+//     of name. Used to detect ERR-style "replacement" - e.g. a collected
 //     AEG099_860 slot gets replaced by a respawning AEG099_780 at the same
 //     position, so the original slot is effectively gone/collected.
 //
@@ -252,7 +252,7 @@ struct WGMSnapshot
 {
     std::set<std::string> alive_names;
     std::vector<std::tuple<float, float, float, std::string>> occupied;  // (x, y, z, name)
-    // alive instances WITH positions — needed for duplicate-named parts (ERR copy-pastes
+    // alive instances WITH positions - needed for duplicate-named parts (ERR copy-pastes
     // keep the part name, e.g. two AEG099_931_9006 in m12_02), where per-name state is
     // ambiguous and rows must be classified by the instance at THEIR coordinates.
     std::vector<std::tuple<float, float, std::string>> alive_occupied;  // (x, z, name)
@@ -365,7 +365,7 @@ static std::map<uint32_t, WGMSnapshot> read_wgm_snapshot()
                     // Keep only tracked AEG families. ERR uses both AEG099_*
                     // (base-game gathering assets) and AEG463_* (DLC flowers/
                     // bodies). Everything else (AEG001 decorations, colliders,
-                    // signs, …) is noise — drop it early.
+                    // signs, …) is noise - drop it early.
                     std::string narrow_str(narrow);
                     bool is_tracked_family =
                         narrow_str.compare(0, 7, "AEG099_") == 0 ||
@@ -442,7 +442,7 @@ static std::vector<GEOFEntry> read_geof_from_memory()
 
     // NOTE: GeomNonActiveBlockManager (RVA_GEOM_NONACTIVE) is intentionally NOT
     // scanned. Despite the name, its layout is nothing like GeomFlagSaveData-
-    // Manager — it is a 0x820-byte object holding a fixed inline array of 0x20-
+    // Manager - it is a 0x820-byte object holding a fixed inline array of 0x20-
     // byte block records (count at +0x818, active flag at +0x08), not a
     // (tile_id, ptr) table at +0x08. read_singleton_entries assumes the GeomFlag
     // layout, so applied here it walked ~126 KB past the object end into
@@ -480,7 +480,7 @@ void goblin::collected::initialize()
     g_tracked_model_ids.clear();
     g_entry_positions.clear();
 
-    // Build tracking tables from MAP_ENTRIES — any entry with object_name is tracked.
+    // Build tracking tables from MAP_ENTRIES - any entry with object_name is tracked.
     // Adding a new model type only requires adding entries + _slots.json.
     for (size_t i = 0; i < generated::MAP_ENTRY_COUNT; i++)
     {
@@ -675,7 +675,7 @@ int goblin::collected::refresh()
     //       alive_names).
     //
     // We CANNOT simply say "name not in alive_names → collected" because the
-    // game spawns alive gathering-node CSWorldGeomIns lazily — an absent name
+    // game spawns alive gathering-node CSWorldGeomIns lazily - an absent name
     // may just mean "not yet spawned near the player".
     auto wgm = read_wgm_snapshot();
     std::set<uint32_t> wgm_tiles;
@@ -686,7 +686,7 @@ int goblin::collected::refresh()
     std::set<uint64_t> demonstrably_alive_rows;
 
     // Position key uses X/Z only (rounded to int). posY in MAP_ENTRIES is sometimes
-    // not set (defaults to 0) while WGM's posY is the real MSB height — matching on
+    // not set (defaults to 0) while WGM's posY is the real MSB height - matching on
     // Y would cause false negatives. Same-XZ collisions are extremely rare in
     // practice (gathering nodes don't stack vertically).
     auto pos_key = [](float x, float z) {
@@ -727,13 +727,13 @@ int goblin::collected::refresh()
 
                 // Check a 3x3 integer-bucket neighborhood. Strict single-key lookup
                 // misses cases where an adjacent asset sits on the border of the
-                // rounding boundary — e.g. AEG463_600 at X=-60.48 rounds to -60
+                // rounding boundary - e.g. AEG463_600 at X=-60.48 rounds to -60
                 // while the gathered AEG463_840 at X=-60.96 probes key -61.
                 int cx = (int)std::lround(ex);
                 int cz = (int)std::lround(ez);
 
                 // Duplicate-named parts (ERR copy-pastes keep the part name): the
-                // name-level alive check is ambiguous — classify THIS row by the
+                // name-level alive check is ambiguous - classify THIS row by the
                 // instance standing at the row's own coordinates.
                 if (row_ids.size() > 1)
                 {
@@ -782,7 +782,7 @@ int goblin::collected::refresh()
             if (prefix_it == tile_it->second.end()) continue;
 
             // Single-instance fallback. If this tile has exactly one row for
-            // this prefix, any GEOF entry means that row was collected — no
+            // this prefix, any GEOF entry means that row was collected - no
             // need to match a slot. aeg099_index_from_geof() is calibrated
             // for AEG099_*; AEG463_* uses a different encoding (verified via
             // memory dump: m60_48_36 AEG463_840 has geom_slot=5 in MAP_ENTRY
@@ -796,11 +796,11 @@ int goblin::collected::refresh()
             }
 
             // Per-slot match. Duplicate-named parts (ERR copy-pastes that keep the
-            // part Name) collapse to the SAME (model_id, geom_idx) key in the engine —
+            // part Name) collapse to the SAME (model_id, geom_idx) key in the engine -
             // their GEOF records are byte-identical and the slot is shared. The save/
             // load path (eldenring.exe 0x6b2b80, RE'd 2026-06) keys collected state
             // ONLY on (model_id, geom_idx): on tile reload the engine marks EVERY
-            // instance with a matching key collected — all-or-nothing per slot, twins
+            // instance with a matching key collected - all-or-nothing per slot, twins
             // are fused and one becomes un-collectable as a separate object. So any
             // GEOF entry for a slot ⇒ hide ALL rows mapped to that slot (matches the
             // engine; the loaded-tile WGM path above still distinguishes twins live).
@@ -819,7 +819,7 @@ int goblin::collected::refresh()
     // For models that don't leave a replacement asset and aren't tracked by
     // GeomFlagSaveDataManager (notably AEG463_840 "Dragon's Calorbloom" with
     // isBreakOnPickUp=True), both WGM-replacement and GEOF detection lose
-    // track after the player walks far from the tile — WGM goes empty and
+    // track after the player walks far from the tile - WGM goes empty and
     // GEOF has no entry. Without carry-forward the row drops back to
     // "uncollected" and the icon reappears on the map.
     //
@@ -884,7 +884,7 @@ int goblin::collected::refresh()
 
     if (!stale.empty())
     {
-        // Dedup and evict — these pointers are no longer writable.
+        // Dedup and evict - these pointers are no longer writable.
         std::sort(stale.begin(), stale.end());
         stale.erase(std::unique(stale.begin(), stale.end()), stale.end());
         for (auto id : stale)

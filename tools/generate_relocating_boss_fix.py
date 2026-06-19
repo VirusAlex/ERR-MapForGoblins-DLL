@@ -5,7 +5,7 @@ A few vanilla bosses flee their first arena and become killable at a SECOND
 location (Lansseax: flies off at ~20% HP, then fought elsewhere). The drop is
 only obtainable at the kill-spawn, but the boss's lot/rune is also referenced at
 the flee-spawn MSB entity, so we generate DUPLICATE, un-collectable loot markers
-there — and the flee-spawn shows loot instead of "the boss was here, it left".
+there - and the flee-spawn shows loot instead of "the boss was here, it left".
 
 This post-pass (runs after the marker generators, before generate_data) edits the
 per-profile MASSEDIT to, for each detected flee-spawn:
@@ -129,9 +129,9 @@ def _scan_game_for_flee_spawns():
     def flee_flag(tile, gx, gz, death_flag):
         """The 'flew away' flag, NOT the death flag. A relocating boss never
         dies at its first arena (it flees at low HP), so 90005860/70/80's death
-        flag is never set there — the marker must clear on the FLEE flag instead.
+        flag is never set there - the marker must clear on the FLEE flag instead.
         Signature: a flag Set ON (2003:66) directly in this tile AND read back
-        as a condition (bank 1003) that gates the boss's appearance — i.e. the
+        as a condition (bank 1003) that gates the boss's appearance - i.e. the
         local 'I've fled, stop spawning me here' flag. Confined to the tile's
         own flag range (1e9 + gx*1e6 + gz*1e4 + local), distinct from the death
         flag (which is set via a common-event template, never a direct 2003:66).

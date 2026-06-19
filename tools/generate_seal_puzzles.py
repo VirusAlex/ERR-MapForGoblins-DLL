@@ -24,7 +24,7 @@ def get_disp(area):
 def main():
     puzzles_path = config.DATA_DIR / 'seal_puzzles.json'
     if not puzzles_path.exists():
-        print(f"  {puzzles_path} missing — skip"); return
+        print(f"  {puzzles_path} missing - skip"); return
     puzzles = json.load(open(puzzles_path, encoding='utf-8'))
 
     lines = []
@@ -36,8 +36,8 @@ def main():
     # per (area, rounded_x, rounded_z, flag) tuple.
     seen = set()
     # Label per puzzle type, via ActionButtonText FMG (offset +800M):
-    #   9503 = "Examine seal"  — base seal puzzles (template 90006050/51)
-    #   9520 = "Light flame"   — chalices/lanterns/seal-release statues
+    #   9503 = "Examine seal"  - base seal puzzles (template 90006050/51)
+    #   9520 = "Light flame"   - chalices/lanterns/seal-release statues
     # Puzzles in seal_puzzles.json are tagged with a "label" field iff they
     # were added by the extra-puzzle extractor (Sellia chalices, Snow Town
     # statues, Siofra lanterns). Real seals don't have that field.
@@ -73,7 +73,7 @@ def main():
                 lines.append(f'param WorldMapPointParam: id {row_id}: posY: = {y:.3f};')
             lines.append(f'param WorldMapPointParam: id {row_id}: posZ: = {z:.3f};')
             # Label resolved at runtime via goblin_messages.cpp from
-            # ActionButtonText FMG (+800M offset) — keeps localization.
+            # ActionButtonText FMG (+800M offset) - keeps localization.
             lines.append(f'param WorldMapPointParam: id {row_id}: textId1: = {text_id};')
             if flag > 0:
                 lines.append(f'param WorldMapPointParam: id {row_id}: textDisableFlagId1: = {flag};')

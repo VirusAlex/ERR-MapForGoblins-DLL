@@ -38,7 +38,7 @@ DATA.mkdir(parents=True, exist_ok=True)
 CACHE_FILE = DATA / '.build_cache.json'
 
 # The convergence source is a STAGED dir (built by the prepare_merged_src
-# stage below) — create it up front so require_err_mod_dir passes on the
+# stage below) - create it up front so require_err_mod_dir passes on the
 # very first run; the stage then populates it before anything reads it.
 if PROFILE in ('convergence', 'erte'):
     config.DATA_SRC_DIR.mkdir(parents=True, exist_ok=True)
@@ -390,7 +390,7 @@ STAGES = [
 
     # Per-row ACTUAL gather-asset models (ERR substitutes some assets with DLC-era models
     # in the MSB: part NAME stays vanilla, ModelName differs; GEOF save entries carry the
-    # actual model's hash) — used by collected-tracking. Runs AFTER generate_data.
+    # actual model's hash) - used by collected-tracking. Runs AFTER generate_data.
     Stage('generate_geof_models',
           inputs=[GENERATED_CPP / 'goblin_map_data.cpp',
                   DATA / 'all_gathering_nodes_final.json'],
@@ -413,7 +413,7 @@ STAGES = [
 
 
 # Convergence-only: stage the merged overlay-over-vanilla source dir FIRST
-# (everything else reads from it). Defined lazily — CONVERGENCE_MOD_DIR is
+# (everything else reads from it). Defined lazily - CONVERGENCE_MOD_DIR is
 # None in the other profiles.
 def _overlay_prepare_stage():
     """Merged-source staging for an overlay-mod profile (convergence / erte):

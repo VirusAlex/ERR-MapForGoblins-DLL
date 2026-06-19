@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
 """
-Generate World - Hostile NPC.MASSEDIT — fully auto-discovered.
+Generate World - Hostile NPC.MASSEDIT - fully auto-discovered.
 
 Strategy:
   1. From NpcParam (regulation.bin), collect NPC IDs with teamType in
-     {24, 27} — both are hostile-invader variants used in vanilla and ERR.
+     {24, 27} - both are hostile-invader variants used in vanilla and ERR.
   2. Scan all MSBs for Enemies whose NPCParamID is in that set AND
      whose EntityID > 0 (placed, not script-spawned dummies).
   3. Cross-reference items_database (built by extract_all_items.py) by
@@ -116,7 +116,7 @@ def main():
     # Index items_database by (map, partName) → list of records (for drops + defeat flag)
     items_db_path = DATA_DIR / 'items_database.json'
     db_by_part = defaultdict(list)
-    db_by_npc = defaultdict(list)   # (map, npcParamId) — quest invaders' drop
+    db_by_npc = defaultdict(list)   # (map, npcParamId) - quest invaders' drop
                                     # records often sit under a different part
     if items_db_path.exists():
         with open(items_db_path, encoding='utf-8') as f:
@@ -131,7 +131,7 @@ def main():
 
     # Curated quest-invader overrides (committed repo data, profile-independent;
     # decompile-verified flags/positions for invaders outside the 90005792
-    # template — e.g. the Knight of the Great Jar trio).
+    # template - e.g. the Knight of the Great Jar trio).
     overrides_path = config.PROJECT_DIR / 'data' / 'quest_invader_overrides.json'
     quest_overrides = {}
     if overrides_path.exists():
@@ -192,7 +192,7 @@ def main():
             # Filter out mob enemies that happen to share teamType 24/27
             # (Bloodfiends c4280, dungeon Battlemages c4300_*_28 variants,
             # scarabs c4190/91/92, etc). Real NPC invaders all have a
-            # named NpcName entry — `nameId > 0` is the canonical signal.
+            # named NpcName entry - `nameId > 0` is the canonical signal.
             _team, name_id = npc_info.get(npc, (None, None))
             if not name_id or name_id <= 0:
                 continue
@@ -202,7 +202,7 @@ def main():
 
             # Lookup drops + defeat flag from items_database. Preferred: the
             # explicit invader-defeat flag (ERR template 90005792). Fallback:
-            # the drop lot's acquisition flag (eventFlag) — the lot is awarded
+            # the drop lot's acquisition flag (eventFlag) - the lot is awarded
             # the moment the invader dies, so its flag doubles as a kill flag.
             # This is the only per-invader flag available in vanilla, and it
             # also covers the ERR invaders the template scan misses.
@@ -221,7 +221,7 @@ def main():
                         break
             if defeat_flag <= 0:
                 # Quest invaders: drop record may sit under a different part
-                # name — match by (map, npcParamId) and use the drop's
+                # name - match by (map, npcParamId) and use the drop's
                 # acquisition flag (set when the kill awards the lot).
                 for db_e in db_by_npc.get((map_name, npc), []):
                     ef = int(db_e.get('defeatFlag', 0) or 0) or int(db_e.get('eventFlag', 0) or 0)
@@ -247,7 +247,7 @@ def main():
                 'defeatFlag': defeat_flag, 'partName': part_name,
             })
 
-    # Dedup per (map, rounded_coords) — multiple invader variants stacked
+    # Dedup per (map, rounded_coords) - multiple invader variants stacked
     # at the same EMEVD trigger spot would otherwise produce overlapping
     # markers. Keep the first (which is usually the canonical placement).
     seen = set()

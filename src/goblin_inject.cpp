@@ -8,6 +8,7 @@
 #include "goblin_map_data.hpp"
 #include "goblin_item_icons.hpp"
 #include "goblin_location_alt.hpp"
+#include "goblin/goblin_map_flags.hpp"
 #include "from/params.hpp"
 #include "from/paramdef/WORLD_MAP_POINT_PARAM_ST.hpp"
 
@@ -51,18 +52,36 @@ static bool g_param_injection_active = false;
 // textIds that don't resolve to a real string.
 static std::vector<uint8_t *> g_injected_row_ptrs;
 
-// Per-injected-row category-visibility control. Every category is injected; a
-// marker shows only if its category is enabled (dispMask00). Flipped live by
-// apply_category_visibility() when the in-game overlay toggles a category.
+// Per-injected-row visibility control. Every category is injected; a marker's
+// primary line (and thus its icon) shows only when its category is enabled AND
+// the row is not collected. Gated LIVE via textEnableFlagId1 - the engine
+// re-evaluates the text enable/disable flags every frame (ce390), so overlay
+// category toggles AND collection both take effect on the OPEN map with no
+// reopen. dispMask00 is left baked (the engine reads it only at map build, so
+// it can't drive a live toggle); the live lever is the enable flag.
 struct CategoryRow
 {
     from::paramdef::WORLD_MAP_POINT_PARAM_ST *p;
     Category cat;
-    bool baked_disp;        // dispMask00 as baked; restored when the category is on
-    unsigned baked_cleared; // clearedEventFlagId as baked (for live hide_killed_bosses)
-    unsigned baked_dis1;    // textDisableFlagId1 as baked
-    unsigned baked_dis2;    // textDisableFlagId2 as baked
+    uint64_t row_id;         // dynamic row id (matches collected/kindling is_row_collected)
+    unsigned baked_enable[8]; // textEnableFlagId1..8 as baked; restored when shown. ALL
+                              // lines are gated, since the engine hides the icon only when
+                              // EVERY text line (item / enemy / location) is hidden.
+    unsigned baked_cleared;  // clearedEventFlagId as baked (for live hide_killed_bosses)
+    unsigned baked_dis1;     // textDisableFlagId1 as baked
+    unsigned baked_dis2;     // textDisableFlagId2 as baked
 };
+
+// textEnableFlagId1..8 of a row, as a pointer array (the paramdef has them as
+// separate fields). Used to gate/restore every text line for live visibility.
+static inline void enable_flag_ptrs(from::paramdef::WORLD_MAP_POINT_PARAM_ST *p,
+                                    unsigned *out[8])
+{
+    out[0] = &p->textEnableFlagId1; out[1] = &p->textEnableFlagId2;
+    out[2] = &p->textEnableFlagId3; out[3] = &p->textEnableFlagId4;
+    out[4] = &p->textEnableFlagId5; out[5] = &p->textEnableFlagId6;
+    out[6] = &p->textEnableFlagId7; out[7] = &p->textEnableFlagId8;
+}
 static std::vector<CategoryRow> g_category_rows;
 
 // Live-loot: lot-backed injected rows. refresh_loot_from_itemlot() reads the
@@ -130,7 +149,7 @@ inline int32_t encode_live_item(int32_t item_id, int32_t cat)
 // into PlaceName by setup_messages). The icon is our gray "?" frame added to
 // sprite 171 of the worldmap gfx (next free frame after the tinted variants).
 constexpr int32_t ANON_LABEL_TEXTID = 950000000 + 32004;  // "something"
-// gray "?" frame — generated per profile (goblin::generated::ANON_ICON_ID),
+// gray "?" frame - generated per profile (goblin::generated::ANON_ICON_ID),
 // 440 on a vanilla-base gfx, shifted by the icon-frame offset on Convergence.
 
 // Binary-search the baked item-icon table (sorted by key).
@@ -149,23 +168,6 @@ const goblin::generated::ItemIcon *lookup_item_icon(int32_t key)
 // even while the world map is open. Shared between the hotkey and watcher
 // threads; a lone bool flag is fine, but use atomic for correctness.
 static std::atomic<bool> g_icons_user_disabled{false};
-
-// EXPERIMENT: toast-method cycler. F10 fires a toast with the current method;
-// F11 cycles the method. Lets us A/B every text-injectable notification path
-// in-game. Remove once the final style is chosen.
-// Default = method 1 (trampoline). User confirmed this is the codex-style
-// upper-left plaque we want. Methods 0/2/3 retained for A/B testing via F11.
-static std::atomic<int> g_toast_method{1};
-static const char *const TOAST_METHOD_NAMES[] = {
-    "0 Summon p=1 fp=1 u=1 (narrow plaque just below center, ~5s)",
-    "1 ShowTutorialPopup trampoline (AOB-resolved; codex upper-left, default)",
-};
-// TutorialParam row ids exposed in goblin_inject.hpp. These are NEW rows
-// injected by inject_tutorial_popup_rows() with textId pointing at
-// TutorialBody.fmg entries injected by goblin_messages — so the upper-left
-// codex toast renders our text without modifying any vanilla/ERR data.
-static constexpr int TOAST_METHOD_COUNT =
-    (int)(sizeof(TOAST_METHOD_NAMES) / sizeof(TOAST_METHOD_NAMES[0]));
 
 struct WrapperRowLocator
 {
@@ -264,7 +266,7 @@ void goblin::inject_map_entries()
     // (The CSFreeListMemorySystem int3-assert NOP patch that used to run here
     // was removed 2026-05-29: it was an artifact of the old hosting-crash
     // theory. The real cause was the 16-align bug in the wrapper_row_locator
-    // layout; with that fixed, hosting works with no assert patching —
+    // layout; with that fixed, hosting works with no assert patching -
     // verified live. See docs/ersc_hosting_and_map_autohide.md.)
 
     struct InjectedEntry
@@ -411,7 +413,7 @@ void goblin::inject_map_entries()
     // Align wrapper_row_loc to 16: the param lookup-by-id engine reads this
     // offset from the wrapper header and rounds it UP to 16 (`(x+0xf)&~0xf`)
     // before using it as the binary-search base. 4-align worked for WMP only
-    // because it's iterated, never id-looked-up — but keep it correct so an
+    // because it's iterated, never id-looked-up - but keep it correct so an
     // id lookup (or a future engine path) can't read past the array. (This
     // exact bug crashed TutorialParam save-load; see inject_tutorial_popup_rows.)
     size_t wrapper_row_loc_start = (after_type_str + 0xf) & ~(size_t)0xf;
@@ -498,11 +500,24 @@ void goblin::inject_map_entries()
                 new_param_file + data_offset);
             // Capture baked fields BEFORE the kill-display mutation below, so
             // live re-apply (apply_kill_display) can restore either mode.
-            g_category_rows.push_back({wp, all_rows[i].category, wp->dispMask00 != 0,
-                                       wp->clearedEventFlagId, wp->textDisableFlagId1,
-                                       wp->textDisableFlagId2});
+            CategoryRow cr{};
+            cr.p = wp;
+            cr.cat = all_rows[i].category;
+            cr.row_id = static_cast<uint64_t>(all_rows[i].row_id);
+            cr.baked_cleared = wp->clearedEventFlagId;
+            cr.baked_dis1 = wp->textDisableFlagId1;
+            cr.baked_dis2 = wp->textDisableFlagId2;
+            unsigned *en[8];
+            enable_flag_ptrs(wp, en);
+            for (int k = 0; k < 8; ++k) cr.baked_enable[k] = *en[k];
+            g_category_rows.push_back(cr);
             if (!is_category_enabled(all_rows[i].category))
-                wp->dispMask00 = false; // category off -> hidden until toggled on
+                // Gate EVERY text line behind a never-set flag -> icon hidden
+                // (the engine hides the icon only once all text lines - item,
+                // enemy, location - are hidden). Unlike dispMask00 this is
+                // re-evaluated live, so the overlay can toggle it on the open map.
+                for (int k = 0; k < 8; ++k)
+                    *en[k] = static_cast<unsigned>(goblin::flag::AlwaysOff);
         }
 
         // Live-loot: remember lot-backed rows for refresh_loot_from_itemlot().
@@ -541,7 +556,7 @@ void goblin::inject_map_entries()
         // rows absent from it keep their baked textId2 = the FALLBACK (tile/nearest-grace
         // via resolve_location_id_at) for overworld / no-volume / no-anchor spots.
         // The value may be a synthetic compose id (generated::LOCATION_COMPOSE) for
-        // duplicate-named sub-zones — goblin_messages builds its FMG string.
+        // duplicate-named sub-zones - goblin_messages builds its FMG string.
         if (all_rows[i].original_row_id)
         {
             auto *alt_end = generated::LOCATION_ALT + generated::LOCATION_ALT_COUNT;
@@ -657,7 +672,7 @@ void goblin::inject_map_entries()
 //
 // Adds two new rows for the F10 banner: one displays "Map icons: ON", the
 // other "Map icons: OFF". Each row is copied from an existing codex row
-// (4167000 — guaranteed to exist with menuType=0 / triggerType=0 / repeatType=1
+// (4167000 - guaranteed to exist with menuType=0 / triggerType=0 / repeatType=1
 // from ERR's codex data) and then patched so its textId points at our newly
 // injected TutorialBody.fmg entries.
 //
@@ -670,8 +685,7 @@ void goblin::inject_map_entries()
 //   offset 20 (0x14) f32 dispMinTime
 //   offset 24 (0x18) f32 dispTime
 
-// (Kept for reference but unused now — see hijack_tutorial_param_textids()
-// below for the simpler in-place approach we ship.)
+// TutorialParam template row we clone + the new row ids we inject.
 static constexpr int TUTORIAL_TEMPLATE_ROW_ID = 4167000;
 static constexpr int TUTORIAL_NEW_ROW_ID_ON        = goblin::TUTORIAL_FMG_ID_ON;
 static constexpr int TUTORIAL_NEW_ROW_ID_OFF       = goblin::TUTORIAL_FMG_ID_OFF;
@@ -697,7 +711,7 @@ bool goblin::inject_tutorial_popup_rows()
     auto prc = find_param_res_cap_by_name(L"TutorialParam");
     if (!prc)
     {
-        spdlog::warn("[TOAST] TutorialParam not found — F10 banner falls back to Summon");
+        spdlog::warn("[TOAST] TutorialParam not found - F10 banner falls back to Summon");
         return false;
     }
     auto *rescap = reinterpret_cast<uint8_t *>(prc->param_header);
@@ -724,13 +738,13 @@ bool goblin::inject_tutorial_popup_rows()
                              (int64_t)old_table->rows[0].param_offset;
     if (derived_stride != row_data_size)
     {
-        spdlog::warn("[TOAST] TutorialParam stride {} != paramdef {} — re-laying contiguously",
+        spdlog::warn("[TOAST] TutorialParam stride {} != paramdef {} - re-laying contiguously",
                      derived_stride, row_data_size);
     }
 
     // Find a template row. Preferred: ERR codex row 4167000 (menuType=0,
     // repeatType=1). Vanilla has no such row, so fall back to any row with
-    // menuType==0 (vanilla ships 13 of those — the toast widget is a vanilla
+    // menuType==0 (vanilla ships 13 of those - the toast widget is a vanilla
     // mechanism), and as a last resort synthesize the 32-byte row locally.
     // Every field we depend on is patched explicitly below anyway.
     uint8_t synth_row[TUTORIAL_ROW_DATA_SIZE] = {};
@@ -751,7 +765,7 @@ bool goblin::inject_tutorial_popup_rows()
             if (row[4] == 0)  // menuType == 0 (toast)
             {
                 template_data = row;
-                spdlog::info("[TOAST] template row {} absent (vanilla?) — using row {} (menuType=0)",
+                spdlog::info("[TOAST] template row {} absent (vanilla?) - using row {} (menuType=0)",
                              TUTORIAL_TEMPLATE_ROW_ID, (int)old_table->rows[i].row_id);
                 break;
             }
@@ -764,7 +778,7 @@ bool goblin::inject_tutorial_popup_rows()
         *reinterpret_cast<float *>(synth_row + 0x14) = 1.0f;
         *reinterpret_cast<float *>(synth_row + 0x18) = 3.0f;
         template_data = synth_row;
-        spdlog::info("[TOAST] no menuType=0 row found — synthesizing toast template");
+        spdlog::info("[TOAST] no menuType=0 row found - synthesizing toast template");
     }
 
     constexpr size_t WRAPPER_HEADER = 0x10;
@@ -858,7 +872,7 @@ bool goblin::inject_tutorial_popup_rows()
         // side resolves to the entries we injected separately), clear
         // unlockEventFlagId so no gate prevents display. repeatType is set
         // to 1 explicitly: ERR's template carries 1, but vanilla menuType=0
-        // rows ship repeatType=0 (show-once) — the toast must repeat.
+        // rows ship repeatType=0 (show-once) - the toast must repeat.
         int32_t rid = all_rows[i].row_id;
         if (rid == TUTORIAL_NEW_ROW_ID_ON || rid == TUTORIAL_NEW_ROW_ID_OFF ||
             rid == TUTORIAL_NEW_ROW_ID_DUMP_OK || rid == TUTORIAL_NEW_ROW_ID_DUMP_FAIL)
@@ -887,7 +901,7 @@ void goblin::set_param_injection_active(bool active)
 {
     if (!g_file_ptr_ref)
     {
-        spdlog::warn("[TOGGLE] Param swap state not initialized — inject_map_entries() didn't run");
+        spdlog::warn("[TOGGLE] Param swap state not initialized - inject_map_entries() didn't run");
         return;
     }
     if (active == g_param_injection_active)
@@ -928,10 +942,25 @@ static bool gamepad_combo_held()
     return false;
 }
 
+// Single source of truth for live marker visibility. A row's primary line (and
+// thus its icon) is shown only when its category is enabled AND it is not
+// collected (pieces/nodes via collected::, kindling spirits via kindling::).
+// Writes textEnableFlagId1, which the engine re-evaluates every frame, so the
+// effect is instant on the open map. Called from the overlay on a toggle and
+// from the refresh thread when the collected set changes. Idempotent.
 void goblin::apply_category_visibility()
 {
     for (auto &cr : g_category_rows)
-        cr.p->dispMask00 = is_category_enabled(cr.cat) ? cr.baked_disp : false;
+    {
+        bool show = is_category_enabled(cr.cat) &&
+                    !collected::is_row_collected(cr.row_id) &&
+                    !kindling::is_row_collected(cr.row_id);
+        unsigned *en[8];
+        enable_flag_ptrs(cr.p, en);
+        for (int k = 0; k < 8; ++k)
+            *en[k] = show ? cr.baked_enable[k]
+                          : static_cast<unsigned>(goblin::flag::AlwaysOff);
+    }
 }
 
 // Live re-apply of hide_killed_bosses (boss / spiritspring-hawk / hostile-NPC
@@ -965,7 +994,7 @@ void goblin::apply_kill_display()
 // Live re-apply of the loot icon/label/flag options (anonymous_loot,
 // live_loot_icons/labels/flags) across every lot-backed marker. Re-reads the
 // live ItemLotParam and re-derives each marker's icon, item-name label, and
-// hide-on-pickup flag — reverting to the baked values when an option is off.
+// hide-on-pickup flag - reverting to the baked values when an option is off.
 static void apply_loot_settings()
 {
     if (g_lot_backed_rows.empty())
@@ -1093,11 +1122,11 @@ void goblin::toggle_hotkey_loop()
 // update invalidates, and the codex trampoline below is the toast style we
 // actually ship. The F10/F9 banner uses the AOB-resolved trampoline only.)
 
-// ShowTutorialPopup callers — codex/medal upper-left toast.
+// ShowTutorialPopup callers - codex/medal upper-left toast.
 // Three entries pinned by static analysis (agent run, May 2026):
 //   - inner   0x7EF5B0  `void(CSPopupMenu*, int id, bool, bool)` (286-byte fn)
 //   - outer   0x7EE630  `void(CSPopupMenu*, int id, bool)` (4 direct call sites)
-//   - tramp   0x80DA50  `void(int id)` — resolves singleton internally
+//   - tramp   0x80DA50  `void(int id)` - resolves singleton internally
 // CSPopupMenu singleton ptr lives in .data at `CSFeMan_slot + 0x80`.
 // AOB anchor for outer (24 bytes, unique across image):
 //   48 8B C4 44 88 40 18 89 50 10 55 56 57 41 56 41 57 48 8D 68 A1 48 81 EC
@@ -1106,7 +1135,7 @@ void goblin::toggle_hotkey_loop()
 //
 // Note: eldenring.exe has TWO `.text` sections (VMProtect adds one). When
 // pinning via pefile, scan the original MSVC `.text` at RVA 0x1000..0x29A3000,
-// NOT the VMP-added one at 0x4C0E000+ — different content, will miss real fns.
+// NOT the VMP-added one at 0x4C0E000+ - different content, will miss real fns.
 // Resolve the trampoline by AOB (NOT a hardcoded RVA): a game update shifts
 // every function's RVA (the May-2026 patch moved this one from 0x80DA50 to
 // 0x80D960), so we pin it by a stable surrounding-byte signature that survives
@@ -1127,16 +1156,12 @@ static void show_tutorial_popup_trampoline(uintptr_t /*er*/, int tutorial_id)
     if (fn) fn(tutorial_id);
 }
 
-// SEH-guarded dispatch of one toast method. POD-only locals (no C++ unwinding).
-static void seh_dispatch_toast(int method, uintptr_t er, void * /*mm*/, void *fe,
-                               void ** /*csfeman_slot*/, bool icons_on,
-                               const wchar_t *text)
+// SEH-guarded codex-toast fire (POD-only locals, no C++ unwinding).
+static void seh_dispatch_toast(uintptr_t er, bool icons_on)
 {
-    (void)method; (void)fe; (void)text;
     int tutorial_id = icons_on ? goblin::TUTORIAL_FMG_ID_ON : goblin::TUTORIAL_FMG_ID_OFF;
     __try
     {
-        // Only the AOB-resolved codex trampoline remains (Summon path removed).
         show_tutorial_popup_trampoline(er, tutorial_id);
     }
     __except (EXCEPTION_EXECUTE_HANDLER)
@@ -1144,42 +1169,18 @@ static void seh_dispatch_toast(int method, uintptr_t er, void * /*mm*/, void *fe
     }
 }
 
-// Fire a toast using the currently-selected method (cycled by F11). Resolves
-// the module base + singleton slots once.
+// Fire the upper-left codex toast for the icons ON/OFF toggle. Resolves the
+// module base once.
 static void show_toggle_banner(bool icons_on)
 {
-    static bool resolved = false;
     static uintptr_t er = 0;
-    static void **menu_man_slot = nullptr;
-    static void **fe_man_slot = nullptr;
-    if (!resolved)
-    {
-        resolved = true;
-        er = reinterpret_cast<uintptr_t>(GetModuleHandleA("eldenring.exe"));
-        menu_man_slot = reinterpret_cast<void **>(modutils::scan<void *>({
-            .aob = "48 8B 05 ?? ?? ?? ?? 33 DB 48 89 74 24",
-            .relative_offsets = {{3, 7}},
-        }));
-        fe_man_slot = reinterpret_cast<void **>(modutils::scan<void *>({
-            .aob = "48 8B 05 ?? ?? ?? ?? 48 85 C0 74 11 8B 80 3C 65 00 00",
-            .relative_offsets = {{3, 7}},
-        }));
-        spdlog::info("[TOAST] resolve er=0x{:X} CSMenuMan_slot={:p} CSFeMan_slot={:p}",
-                     er, (void *)menu_man_slot, (void *)fe_man_slot);
-    }
-    if (!er || !menu_man_slot || !fe_man_slot) return;
-    void *mm = *menu_man_slot, *fe = *fe_man_slot;
-    if (!mm || !fe) return;
-
-    int method = g_toast_method.load();
-    if (method < 0 || method >= TOAST_METHOD_COUNT) method = 0;
-    const wchar_t *text = icons_on ? L"Map icons: ON" : L"Map icons: OFF";
-    spdlog::info("[TOAST] fire method [{}] (icons {})", TOAST_METHOD_NAMES[method],
-                 icons_on ? "ON" : "OFF");
-    seh_dispatch_toast(method, er, mm, fe, fe_man_slot, icons_on, text);
+    if (!er) er = reinterpret_cast<uintptr_t>(GetModuleHandleA("eldenring.exe"));
+    if (!er) return;
+    spdlog::info("[TOAST] fire (icons {})", icons_on ? "ON" : "OFF");
+    seh_dispatch_toast(er, icons_on);
 }
 
-// SEH-guarded trampoline fire (POD-only locals — no C++ unwinding).
+// SEH-guarded trampoline fire (POD-only locals - no C++ unwinding).
 static void seh_fire_trampoline(uintptr_t er, int tutorial_id)
 {
     __try { show_tutorial_popup_trampoline(er, tutorial_id); }
@@ -1188,7 +1189,7 @@ static void seh_fire_trampoline(uintptr_t er, int tutorial_id)
 
 // Fire an upper-left codex toast for one of the injected TutorialParam rows
 // (a TUTORIAL_FMG_ID_* id). Static text via the same trampoline path as the
-// F10 banner — no FMG rewrite. Used by the F9 marker-dump banner.
+// F10 banner - no FMG rewrite. Used by the F9 marker-dump banner.
 void goblin::show_codex_toast(int tutorial_id)
 {
     static uintptr_t er = 0;
@@ -1200,7 +1201,7 @@ void goblin::show_codex_toast(int tutorial_id)
 
 // WorldMapPointParam state owner. Since the 16-align fix in inject_map_entries
 // (see docs/ersc_hosting_and_map_autohide.md), the expanded table is safe during
-// ERSC hosting — the old "expand only while the map is open" auto-hide is no
+// ERSC hosting - the old "expand only while the map is open" auto-hide is no
 // longer needed and has been removed. The table now stays EXPANDED always; the
 // hotkey is a pure personal show/hide toggle.
 //
@@ -1219,14 +1220,14 @@ const std::vector<uint8_t *> &goblin::injected_row_ptrs()
 // ── Either-flag (OR) kill indicators ─────────────────────────────────
 // Some quest fights have two mutually-exclusive completion flags (one per
 // story branch) and no single "battle over" flag. Example: the academy
-// battle — 7608 = Sellen's battle body defeated (sided with Jerren),
+// battle - 7608 = Sellen's battle body defeated (sided with Jerren),
 // 7609 = Jerren defeated (sided with Sellen); after either one, BOTH NPCs
 // stop being attackable, so both markers should show the checkmark.
 // Such rows are baked with the PRIMARY flag; once the ALT flag turns on
 // this rewrites the matching fields so the checkmark/hide reacts within
 // the running session. Pairs mirror data/quest_invader_overrides.json.
 //
-// Event-flag query — same AOBs as goblin_markers.cpp / goblin_kindling.cpp
+// Event-flag query - same AOBs as goblin_markers.cpp / goblin_kindling.cpp
 // (each keeps its own local copy by established convention there).
 using OrPairIsFlagFn = bool (*)(void *, uint32_t *);
 static OrPairIsFlagFn g_orp_is_flag = nullptr;
@@ -1269,7 +1270,7 @@ void goblin::apply_flag_or_pairs()
         for (uint8_t *ptr : g_injected_row_ptrs)
         {
             // Skip live-loot rows: their textDisableFlagId1 holds a lot pickup
-            // flag (set by refresh_loot_from_itemlot), not a boss/quest flag —
+            // flag (set by refresh_loot_from_itemlot), not a boss/quest flag -
             // don't let a value-collision rewrite it.
             if (g_lot_backed_set.count(ptr)) continue;
             auto *p = reinterpret_cast<from::paramdef::WORLD_MAP_POINT_PARAM_ST *>(ptr);
@@ -1300,7 +1301,7 @@ void goblin::refresh_loot_from_itemlot()
     lots.init();
     if (!lots.ok())
     {
-        spdlog::warn("[LIVE-LOOT] ItemLotParam not available — skipped");
+        spdlog::warn("[LIVE-LOOT] ItemLotParam not available - skipped");
         return;
     }
     auto read_row = [&](uint32_t lot_id, uint8_t lot_type) { return lots.row(lot_id, lot_type); };
@@ -1329,7 +1330,7 @@ void goblin::refresh_loot_from_itemlot()
                 // Hide the WHOLE marker on the live pickup flag. A loot marker
                 // carries the same disable flag on every populated text line
                 // (item line + location line; verified uniform across all
-                // lot-backed rows) — the engine only drops the icon once ALL
+                // lot-backed rows) - the engine only drops the icon once ALL
                 // its lines are disabled. Rewriting just slot 1 left the
                 // location line (slot 2) pinned to the stale baked flag, which
                 // never fires under a regulation that reassigns flags (the
@@ -1352,7 +1353,7 @@ void goblin::refresh_loot_from_itemlot()
         if (do_anon)
         {
             // Spoiler-free mode: replace the item name with the generic
-            // localized label. Same slot guard as the live relabel below — only
+            // localized label. Same slot guard as the live relabel below - only
             // overwrite an actual item-name slot, never a location/enemy slot.
             int32_t cur = p->textId1;
             if (cur >= 50000000 && cur < 600000000 && cur != ANON_LABEL_TEXTID)
@@ -1365,7 +1366,7 @@ void goblin::refresh_loot_from_itemlot()
         {
             // Relabel the item-name slot (textId1) to whatever the lot now
             // gives. Guard: only touch textId1 if it already holds an
-            // item-name encoded id (50M..600M item bands) — never clobber a
+            // item-name encoded id (50M..600M item bands) - never clobber a
             // location (<50M) or enemy/npc (>=700M) slot. The encoded id maps
             // into the full item-name space copied into PlaceName at init.
             int32_t cur = p->textId1;

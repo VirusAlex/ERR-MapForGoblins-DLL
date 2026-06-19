@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 Generate Loot MASSEDIT files from items_database.json.
-Fully automatic — no dependency on existing MASSEDIT files.
+Fully automatic - no dependency on existing MASSEDIT files.
 Uses goodsId as textId1 for localized names via GoodsName FMG.
 
 Output: data/massedit_generated/Loot - <category>.MASSEDIT
@@ -32,7 +32,7 @@ if _sort_groups_path.exists():
 #   80 = utility (rainbow stone, glowstone, soap, soft cotton)
 CONSUMABLE_SORT_GROUPS = {20, 50, 70, 80}
 
-# Prattling Pate IDs — excluded from Consumables/Utilities to avoid
+# Prattling Pate IDs - excluded from Consumables/Utilities to avoid
 # double-markers (they have their own dedicated category).
 PATE_IDS = {2200, 2201, 2202, 2203, 2204, 2205, 2206, 2207, 2002150}
 
@@ -69,6 +69,17 @@ INCANTATION_IDS = set()
 if _incan_path.exists():
     with open(_incan_path) as _f:
         INCANTATION_IDS = set(json.load(_f))
+
+# True if a lot contains a "<X> Merchant Bell Bearing" - the bell bearings tied to
+# killable merchants. Name-based, because some of these come from a treasure/map
+# lot rather than the enemy drop (e.g. Convergence's Nomadic Merchant's Bell
+# Bearing [8]) - source alone misroutes those into the plain Bell-Bearings
+# category, so disabling Merchant Bell-Bearings wouldn't hide them.
+def _is_merchant_bell(rec):
+    return any('bell bearing' in i.get('name', '').lower() and
+               'merchant' in i.get('name', '').lower()
+               for i in rec.get('items', []))
+
 
 # Which item names go into which file, with iconId and start row ID
 # Filter by item goodsId or item name
@@ -268,7 +279,7 @@ LOOT_CATEGORIES = {
     },
     'Equipment - Spirits': {
         # Spirit Ashes. ERR renumbers spirit-ash goods into 300000-399999;
-        # vanilla keeps them at their stock ids (200000+, goodsType==8 —
+        # vanilla keeps them at their stock ids (200000+, goodsType==8 -
         # see goods_spirit_ash_ids.json from extract_goods_categories).
         # (The Lhutel id=358000 exclusion that previously lived here was a
         # workaround for phantom emevd records produced by templates
@@ -324,18 +335,21 @@ LOOT_CATEGORIES = {
         'startId': 5000000,
     },
     'Loot - Bell-Bearings': {
-        # Bell bearings from treasures / EMEVD awards (chests, quest rewards).
+        # Bell bearings from treasures / EMEVD awards (chests, quest rewards),
+        # EXCLUDING the merchant-named ones (those are Merchant Bell-Bearings even
+        # when a profile sources them from a treasure/map lot, not the enemy drop).
         'filter': lambda items: any('bell bearing' in i.get('name', '').lower() for i in items),
-        'source_filter': lambda rec: rec.get('source') != 'enemy',
+        'source_filter': lambda rec: rec.get('source') != 'enemy' and not _is_merchant_bell(rec),
         'iconId': 426,
         'startId': 5100000,
     },
     'Loot - Merchant Bell-Bearings': {
-        # Bell bearings dropped by killed merchant NPCs (Kalé, Patches, Gostoc,
-        # nomadic/hermit/isolated merchants, etc.). Separated so players can
-        # toggle merchant-killing rewards independently of chest pickups.
+        # Bell bearings tied to killable merchants: dropped by the merchant NPC
+        # (source == enemy: Kalé, Patches, Gostoc, nomadic/hermit/isolated, etc.)
+        # OR named "<X> Merchant Bell Bearing" however the lot is sourced. Separated
+        # so players can toggle merchant rewards independently of chest pickups.
         'filter': lambda items: any('bell bearing' in i.get('name', '').lower() for i in items),
-        'source_filter': lambda rec: rec.get('source') == 'enemy',
+        'source_filter': lambda rec: rec.get('source') == 'enemy' or _is_merchant_bell(rec),
         'iconId': 426,
         'startId': 5150000,
     },
@@ -426,7 +440,7 @@ LOOT_CATEGORIES = {
     },
     'Loot - Consumables': {
         # Healing/buff consumables: boluses, cured meats, dried livers (sortGroup=20),
-        # plus ERR-specific consumables (sortGroup=61 — Lamp Oil etc).
+        # plus ERR-specific consumables (sortGroup=61 - Lamp Oil etc).
         # Prattling Pates are excluded (they have their own category).
         'filter': lambda items: any(
             i['category'] == 1
@@ -461,7 +475,7 @@ LOOT_CATEGORIES = {
     'Loot - Stat Boosts': {
         # Permanent/session stat-up: Starlight Shards, Sacrificial Twig,
         # Blessing of Marika, Sign of the All-Knowing (sortGroup=10).
-        # Excludes Rune Arc (id 150, also sg=10) — it belongs to Unique Drops.
+        # Excludes Rune Arc (id 150, also sg=10) - it belongs to Unique Drops.
         'filter': lambda items: any(
             i['category'] == 1
             and GOODS_SORT_GROUPS.get(i['id'], -1) == 10
@@ -755,7 +769,7 @@ def write_massedit(records, filepath, icon_id, start_id, lot_linkage=None):
         npc_name_id = NPC_NAME_IDS.get(npc_param, 0)
         next_text_slot = 2
 
-        # Slot 2 — named-NPC name if available, else dungeon location.
+        # Slot 2 - named-NPC name if available, else dungeon location.
         if npc_name_id > 0:
             npc_text_id = npc_name_id + 700000000  # NpcName FMG offset
             lines.append(f'param WorldMapPointParam: id {row_id}: textId{next_text_slot}: = {npc_text_id};')
@@ -778,7 +792,7 @@ def write_massedit(records, filepath, icon_id, start_id, lot_linkage=None):
                     lines.append(f'param WorldMapPointParam: id {row_id}: textDisableFlagId{next_text_slot}: = {flag};')
                 next_text_slot += 1
 
-        # Generic enemy name — only when we don't have a specific named-NPC
+        # Generic enemy name - only when we don't have a specific named-NPC
         # label. ERR: the ERR codex (TutorialTitle, +900M). Vanilla: vanilla
         # has no per-type enemy names in any FMG, so we use the closest word
         # from the blood-message vocabulary (BloodMsg FMG, +950M; localized
@@ -942,11 +956,11 @@ def main():
         cleared_flag = kill_flag if kill_flag > 0 else rec.get('clearedEventFlagId', 0)
         if cleared_flag > 0:
             lines.append(f'param WorldMapPointParam: id {row_id}: clearedEventFlagId: = {cleared_flag};')
-            # Also set textDisableFlagId1 — C++ config chooses which to use:
+            # Also set textDisableFlagId1 - C++ config chooses which to use:
             # green checkmark (clearedEventFlagId) or hide killed (textDisableFlagId1)
             lines.append(f'param WorldMapPointParam: id {row_id}: textDisableFlagId1: = {cleared_flag};')
 
-        # textId2: location name for dungeons — nearest-grace lookup
+        # textId2: location name for dungeons - nearest-grace lookup
         loc_id = resolve_location_id_at(
             rec.get('map', ''),
             float(rec.get('x', 0.0)),
@@ -1021,12 +1035,12 @@ def main():
         lines.append(f'param WorldMapPointParam: id {row_id}: posY: = {boss["y"]:.3f};')
         lines.append(f'param WorldMapPointParam: id {row_id}: posZ: = {boss["z"]:.3f};')
 
-        # Text: Great Rune name — hide when boss killed (rune obtained)
+        # Text: Great Rune name - hide when boss killed (rune obtained)
         lines.append(f'param WorldMapPointParam: id {row_id}: textId1: = {500000000 + rune_id};')
         if kill_flag > 0:
             lines.append(f'param WorldMapPointParam: id {row_id}: textDisableFlagId1: = {kill_flag};')
 
-        # Dungeon location text — nearest-grace lookup
+        # Dungeon location text - nearest-grace lookup
         loc_id = resolve_location_id_at(
             boss.get('map', ''),
             float(boss.get('x', 0.0)),

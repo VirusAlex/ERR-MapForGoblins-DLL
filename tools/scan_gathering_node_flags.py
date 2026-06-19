@@ -55,7 +55,7 @@ def extract_gathering_mapping(emevd, tile_name):
     ERR's gathering-node handler calls have a recognisable shape: the RunEvent
     ArgData starts with [index, event_id_called, passed_flag, <small animation
     params>, ..., entity_id, ..., passed_flag_again]. The passed_flag and
-    entity_id share the high u32 bytes (area identifier) — that's the strongest
+    entity_id share the high u32 bytes (area identifier) - that's the strongest
     signal we rely on.
     """
     result = {}
@@ -85,7 +85,7 @@ def extract_gathering_mapping(emevd, tile_name):
             # Pattern detection: find any pair where one value looks like an entity ID
             # (matches area*10**6 + ... range) and another looks like a passed_flag
             # that the same handler uses. We cross-check by requiring that the
-            # SAME flag appears twice in the ArgData (start and end) — that's a
+            # SAME flag appears twice in the ArgData (start and end) - that's a
             # distinctive fingerprint of the ERR gathering-node handler layout.
             from collections import Counter
             c = Counter(vals)
@@ -96,7 +96,7 @@ def extract_gathering_mapping(emevd, tile_name):
             # Also find exactly one entity-ID-shaped value (sharing area with flag)
             for passed_flag in dup_flags:
                 # Entity_id usually sits alongside the flag, sharing the high u32
-                # bytes. Exclude the called event id (vals[1]) up-front — it also
+                # bytes. Exclude the called event id (vals[1]) up-front - it also
                 # lives in the same area group.
                 high = passed_flag // 1_000_000
                 event_called = vals[1]
@@ -122,7 +122,7 @@ def extract_scene_mapping(emevd):
     1043613110 / 1043603110 via RunEvent(bank=2000, id=0). Each call
     carries the completion flag as X5 (vals[5]) and the MSB name_suffix
     of the scene asset as X7 (vals[9]). The dispatcher short-circuits
-    the RunEvent if CheckEventFlag(X5) is already set — meaning X5 is
+    the RunEvent if CheckEventFlag(X5) is already set - meaning X5 is
     the "scene already played / item already looted" flag we want.
 
     Same (suffix, X5) pair is effectively global, so we return a
@@ -142,8 +142,8 @@ def extract_scene_mapping(emevd):
             if len(vals) < 10: continue
             called = vals[1]
             if called not in SCENE_HANDLERS: continue
-            flag = vals[5]   # X5 — completion gate checked by dispatcher
-            suffix = vals[9] # X7 — MSB name_suffix
+            flag = vals[5]   # X5 - completion gate checked by dispatcher
+            suffix = vals[9] # X7 - MSB name_suffix
             if flag < 1_000_000 or flag >= 0x80000000: continue
             if not (9000 <= suffix <= 9999): continue
             by_suffix[suffix] = flag
@@ -188,7 +188,7 @@ def main():
         try:
             ce = load_emevd(common_path)
             scene_mapping = extract_scene_mapping(ce)
-            # Key by MSB name pattern — only AEG463_840 (flower) and AEG463_600 (body)
+            # Key by MSB name pattern - only AEG463_840 (flower) and AEG463_600 (body)
             # participate in these scenes. Applied globally across tiles.
             for suffix, flag in scene_mapping.items():
                 for model in ('AEG463_840', 'AEG463_600'):

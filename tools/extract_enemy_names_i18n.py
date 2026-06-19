@@ -2,8 +2,8 @@
 """Extract localized enemy NAMES (FromSoft / community-wiki data) for every
 language, to embed as the non-ERR builds' enemy-label source.
 
-We pull ONLY enemy-name entries — ids following the model-name convention
-`model*1000 + variant*100 + 4` (model 1000-9999, variant 0-9) — and strip the
+We pull ONLY enemy-name entries - ids following the model-name convention
+`model*1000 + variant*100 + 4` (model 1000-9999, variant 0-9) - and strip the
 leading list-number prefix ("118. Margit, the Fell Omen" -> "Margit, the Fell
 Omen"). Tutorial tips and any category-header entries are NOT extracted. The
 output is a plain enemy-name table; consumers never reference where the source

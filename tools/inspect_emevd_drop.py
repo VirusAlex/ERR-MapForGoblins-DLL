@@ -59,7 +59,7 @@ def main():
                 match_instrs.append(i)
 
         if match_instrs:
-            print(f'\n=== Event {event.ID} ({len(event.Instructions)} instructions) — match at idx {match_instrs} ===')
+            print(f'\n=== Event {event.ID} ({len(event.Instructions)} instructions) - match at idx {match_instrs} ===')
             for line in all_instrs:
                 print(line)
             # Also list event parameters (initializer arg bindings)

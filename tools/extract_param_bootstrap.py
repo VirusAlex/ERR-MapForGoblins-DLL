@@ -101,7 +101,7 @@ else:
 place_ids = set()
 msg_path = SRC / 'msg' / 'engus' / 'item_dlc02.msgbnd.dcx'
 if not msg_path.exists():
-    # vanilla without DLC layout — fall back to the base item msgbnd
+    # vanilla without DLC layout - fall back to the base item msgbnd
     alt = SRC / 'msg' / 'engus' / 'item.msgbnd.dcx'
     if alt.exists():
         msg_path = alt

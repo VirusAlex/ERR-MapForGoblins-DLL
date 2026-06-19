@@ -51,7 +51,7 @@ def main():
         aeg099_models = set(e["model"] for e in json.load(f))
     aeg463_prefix = "AEG463_"
 
-    # Scan ERR's MODDED MapStudio — vanilla has a different layout for some
+    # Scan ERR's MODDED MapStudio - vanilla has a different layout for some
     # tiles (e.g. m32_00 where ERR replaces several AEG099_860 smithing stones
     # with respawning AEG099_780 cracked crystals in-place). We must reflect
     # the actually-played layout, not vanilla.

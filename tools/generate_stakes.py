@@ -108,7 +108,7 @@ def main():
         lines.append(f'param WorldMapPointParam: id {row_id}: posZ: = {s["z"]:.3f};')
         # Tutorial text 301540 = "Stakes of Marika"
         lines.append(f'param WorldMapPointParam: id {row_id}: textId1: = 900301540;')
-        # Location name for dungeons — nearest-grace lookup
+        # Location name for dungeons - nearest-grace lookup
         map_code = f'm{area:02d}_{gx:02d}_{gz:02d}_00'
         loc_id = resolve_location_id_at(map_code, s["x"], s.get("y", 0.0), s["z"])
         if loc_id > 0:

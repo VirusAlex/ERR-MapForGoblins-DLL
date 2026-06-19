@@ -1,5 +1,5 @@
 """
-Elden Ring Reforged — Rune Piece Tracker
+Elden Ring Reforged - Rune Piece Tracker
 Reads .err save files and extracts information about picked-up Rune Pieces
 from the GEOM (WorldGeomMan) section of each character slot.
 
@@ -18,7 +18,7 @@ SLOT_SIZE = 0x280010       # Each character slot size (includes 16-byte checksum
 SLOT_DATA_SIZE = 0x280000  # Actual slot data after checksum
 HEADER_SIZE = 0x300        # BND4 header size
 NUM_SLOTS = 10
-RUNE_PIECE_GEOM_IDX_MIN = 0x1194  # 4500 — geometry index range for AEG099_821
+RUNE_PIECE_GEOM_IDX_MIN = 0x1194  # 4500 - geometry index range for AEG099_821
 RUNE_PIECE_GEOM_IDX_MAX = 0x11B0  # upper bound of the range
 
 # WorldArea CHR magic followed by 0x21042700
@@ -306,7 +306,7 @@ def scan_mod_for_rune_pieces(mod_path):
 def main():
     import argparse
 
-    parser = argparse.ArgumentParser(description="Elden Ring Reforged — Rune Piece Tracker")
+    parser = argparse.ArgumentParser(description="Elden Ring Reforged - Rune Piece Tracker")
     parser.add_argument("save_file", help="Path to .err or .sl2 save file")
     parser.add_argument("--slot", type=int, default=None, help="Character slot index (0-9), default: first active")
     parser.add_argument("--mod", type=str, default=None, help="Path to ERR mod root directory (for total counts)")

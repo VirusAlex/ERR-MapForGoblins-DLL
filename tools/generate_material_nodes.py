@@ -36,7 +36,7 @@ def main():
     # EMEVD instructions that wire a tile+EntityID pair to a specific
     # collection flag. The old `by_name_suffix` fallback was a naive
     # heuristic that reused any tile's flag for every node with a matching
-    # name suffix — producing phantom flags pointing at the wrong tile.
+    # name suffix - producing phantom flags pointing at the wrong tile.
     # Nodes with entity_id=0 (no EMEVD binding) fall back to runtime-only
     # hiding via collected::refresh(), same as Rune/Ember Pieces.
     gn_flags_path = data_dir / "gathering_node_flags.json"
@@ -49,7 +49,7 @@ def main():
 
     # One-time models: isEnableRepick=True AND isHiddenOnRepick=True.
     # AEG099_821 (Rune Piece) and AEG099_822 (Ember Piece) also match but are
-    # handled by generate_pieces_massedit.py — don't double-generate markers.
+    # handled by generate_pieces_massedit.py - don't double-generate markers.
     PIECES_MODELS = {"AEG099_821", "AEG099_822"}
     onetime_models = {}
     for e in aeg099 + aeg463:
@@ -81,7 +81,7 @@ def main():
 
     START_ID = 6000000
     entries = []
-    emitted_nodes = []  # node behind entries[i] — same-loop capture for slots.json
+    emitted_nodes = []  # node behind entries[i] - same-loop capture for slots.json
     excluded_unreachable = 0
     for n in onetime_nodes:
         # Skip nodes that sit out of reach in ERR (see unreachable.py).
@@ -104,7 +104,7 @@ def main():
             "textId1": goods_id + 500000000,  # offset-encoded to avoid PlaceName collision
             "selectMinZoomStep": 1,
         }
-        # Location subtitle for non-overworld maps — nearest-grace lookup
+        # Location subtitle for non-overworld maps - nearest-grace lookup
         # (disambiguates stacked dungeon regions like Nokron / Siofra)
         if area not in OVERWORLD_AREAS:
             loc_id = resolve_location_id_at(
@@ -112,7 +112,7 @@ def main():
             if loc_id > 0:
                 entry["textId2"] = loc_id
 
-        # ERR per-instance collection flag — hides the marker once the node
+        # ERR per-instance collection flag - hides the marker once the node
         # has been picked even on tiles that are currently unloaded. Only
         # emit the flag when we have a genuine EMEVD-derived mapping for
         # this specific (tile, entity_id); no heuristic fallback. Nodes
@@ -149,7 +149,7 @@ def main():
           f"({excluded_unreachable} skipped as unreachable)")
 
     # Write slots.json for geom tracking. Pair each entry with the node captured in
-    # the SAME loop iteration — never reconstruct the list by re-filtering: the loop
+    # the SAME loop iteration - never reconstruct the list by re-filtering: the loop
     # also skips unreachable nodes, and a re-filter that misses one condition shifts
     # every name/geom_slot after the first exclusion (mislabeled markers + collected-
     # tracking hiding the wrong icon).
@@ -157,7 +157,7 @@ def main():
     for entry, node in zip(entries, emitted_nodes):
         # Strip the SoulsFormats duplicate-name decoration: ERR copy-pastes parts keeping
         # the name, the reader disambiguates as "AEG099_931_9006 {2}". In-game the part is
-        # plain "AEG099_931_9006" — bake THAT (decorated names parse to no slot/no name and
+        # plain "AEG099_931_9006" - bake THAT (decorated names parse to no slot/no name and
         # the row becomes invisible to collected-tracking).
         name = node["name"].split(" {")[0]  # e.g. "AEG099_651_9000"
         parts = name.rsplit("_", 1)

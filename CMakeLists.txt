@@ -6,10 +6,6 @@ project( MapForGoblins
   VERSION   "1.0.18"
   LANGUAGES CXX RC)
 
-if(NOT DEFINED VERSION_PRE)
-  set(VERSION_PRE "pre")  # default for dev/snapshot; build.bat release passes -DVERSION_PRE=""
-endif()
-
 # Which baked-data dir to compile. Default = ERR (src/generated). The vanilla
 # build passes -DGENERATED_SUBDIR=generated_vanilla so the two bakes never
 # clobber each other. Sources include the generated headers by bare name and
@@ -64,7 +60,7 @@ set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
 FetchContent_MakeAvailable(minhook pattern16 mini spdlog imgui)
 
 # imgui core + DX12/Win32 backends are compiled directly INTO the MapForGoblins
-# target (see target_sources below), not as a separate static lib — a separate
+# target (see target_sources below), not as a separate static lib - a separate
 # lib built as a single-target msbuild dependency lands in the wrong config
 # (Debug vs the DLL's Release). Compiling them in keeps one config + one ABI.
 
@@ -173,16 +169,15 @@ if(GENERATED_SUBDIR STREQUAL "generated_vanilla")
   target_compile_definitions(mfg_inigen PRIVATE MFG_PROFILE_VANILLA=1)
 endif()
 
-if(VERSION_PRE)
-  set(FULL_VERSION "${VERSION_PRE}-${CMAKE_PROJECT_VERSION}")
-else()
-  set(FULL_VERSION "${CMAKE_PROJECT_VERSION}")
-endif()
+# Build-once-promote: snapshots and releases bake the SAME version string, so a
+# tested snapshot DLL is byte-identical to the release (with /Brepro + same data).
+# The snapshot-vs-release distinction lives in the output folder, not the binary.
+set(FULL_VERSION "${CMAKE_PROJECT_VERSION}")
 configure_file(${CMAKE_SOURCE_DIR}/src/version.h.in
                ${CMAKE_BINARY_DIR}/generated/version.h @ONLY)
 target_include_directories(MapForGoblins PRIVATE ${CMAKE_BINARY_DIR}/generated)
 # Win32 VERSIONINFO resource (CompanyName/FileDescription/versions) so the DLL
-# carries proper metadata — better for AV reputation than a blank unsigned DLL.
+# carries proper metadata - better for AV reputation than a blank unsigned DLL.
 configure_file(${CMAKE_SOURCE_DIR}/src/version.rc.in
                ${CMAKE_BINARY_DIR}/generated/version.rc @ONLY)
 target_sources(MapForGoblins PRIVATE ${CMAKE_BINARY_DIR}/generated/version.rc)

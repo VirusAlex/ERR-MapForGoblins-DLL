@@ -2,7 +2,7 @@
 
 This documents (1) the real root cause of the Seamless Co-op (ERSC) hosting
 crash and how it was fixed, and (2) the **map-state auto-hide mechanism** that
-was built as a workaround *before* the root cause was found — preserved here so
+was built as a workaround *before* the root cause was found - preserved here so
 the technique isn't lost even though the code is being removed.
 
 ## 1. Root cause of the hosting crash (found 2026-05-28)
@@ -20,19 +20,19 @@ crash we hit when injecting `TutorialParam` rows for the codex toast:
 - We placed the trailing `wrapper_row_locator` array at a **4-byte-aligned**
   offset: `wrapper_row_loc_start = (after_type_str + 3) & ~3`.
 - The game's **param lookup-by-id** engine
-  (`LookupTutorialParam` @ `eldenring.exe+0xD51BA0` — *pre-2026-05-29 build;
-  .text shifted on that update — re-resolve before trusting*; the same code
+  (`LookupTutorialParam` @ `eldenring.exe+0xD51BA0` - *pre-2026-05-29 build;
+  .text shifted on that update - re-resolve before trusting*; the same code
   shape applies to any param) reads `wrapper_row_loc_start` out of the wrapper
   header and
   **rounds it UP to 16** (`(x + 0xF) & ~0xF`) before using it as the base of
   its binary search over `wrapper_row_locators`.
-- If the array isn't actually 16-aligned, the engine starts reading 4–12 bytes
+- If the array isn't actually 16-aligned, the engine starts reading 4-12 bytes
   *past* it → garbage row ids → out-of-range index → OOB read of row data →
   `ACCESS_VIOLATION`.
 
 **Why it only bit certain params:**
 - `WorldMapPointParam` is only ever **iterated** (to render map icons), never
-  looked up by id during normal play — so 4-align was harmless in solo.
+  looked up by id during normal play - so 4-align was harmless in solo.
 - **But ERSC's host-start validation performs an id lookup on
   `WorldMapPointParam`.** That lookup hit the misaligned array → crash. That's
   why it only crashed when hosting.
@@ -41,7 +41,7 @@ crash we hit when injecting `TutorialParam` rows for the codex toast:
 
 **The fix (one line, applied in both injectors):**
 ```cpp
-// was: (after_type_str + 3) & ~3   // 4-align — WRONG for id-looked-up params
+// was: (after_type_str + 3) & ~3   // 4-align - WRONG for id-looked-up params
 size_t wrapper_row_loc_start = (after_type_str + 0xf) & ~(size_t)0xf;  // 16-align
 ```
 Locations: `inject_map_entries` (WorldMapPointParam) and
@@ -49,8 +49,8 @@ Locations: `inject_map_entries` (WorldMapPointParam) and
 
 **How it was diagnosed:**
 1. `tools/_parse_minidump.py` on the crash dump → faulting RVA `0xD51CC5`
-   (an `ACCESS_VIOLATION read`) — *pre-2026-05-29 build; .text shifted on that
-   update — re-resolve before trusting*.
+   (an `ACCESS_VIOLATION read`) - *pre-2026-05-29 build; .text shifted on that
+   update - re-resolve before trusting*.
 2. An ad-hoc disassembly of `LookupTutorialParam` revealed the
    `mov eax,[rdx-0x10]; add eax,0xf; and ...,~0xf` align-up of the wrapper
    offset, followed by `mov rbx,[rdx + (index+3)*24]` (the faulting row-locator
@@ -61,11 +61,11 @@ the pre-2026-05-29 build. The 2026-05-29 game+ERR update shifted .text RVAs
 (e.g. the `ShowTutorialPopup` trampoline moved `0x80DA50` -> `0x80D960`), so
 re-resolve them before trusting. They appear only in this descriptive comment,
 not in runtime code, so this is doc drift, not a bug. The align-up mechanism
-itself — `(x + 0xf) & ~0xf` of the wrapper offset before the binary search —
+itself - `(x + 0xf) & ~0xf` of the wrapper offset before the binary search -
 remains correct regardless of the RVA.
 
 **Consequence:** with 16-align, the expanded `WorldMapPointParam` can stay live
-**during hosting** — ERSC's id lookup now lands on the correct array. The map
+**during hosting** - ERSC's id lookup now lands on the correct array. The map
 auto-hide workaround (section 2) is therefore **no longer required**.
 
 ### HeapAlloc vs VirtualAlloc (unchanged)
@@ -76,11 +76,11 @@ separate crash when hosting. This is independent of the alignment bug and is
 kept. (Buffers are a few hundred KB to a few MB; HeapAlloc is also a better fit
 than VirtualAlloc's 64 KB granularity.)
 
-## 2. Map-state auto-hide mechanism (workaround — now removed)
+## 2. Map-state auto-hide mechanism (workaround - now removed)
 
 Before the root cause was found, the crash was dodged with an **inverse,
 crash-proof design**: keep `WorldMapPointParam` **vanilla by default** and
-expand it **only while the world map is open** — the only time the icons render.
+expand it **only while the world map is open** - the only time the icons render.
 ERSC's host-start validation always runs while the map is closed, so it always
 saw the vanilla table and could never trip the (then-unknown) bug.
 
@@ -93,7 +93,7 @@ saw the vanilla table and could never trip the (then-unknown) bug.
   not sticky (returns to 0 on close). Other menus write their "active" marker to
   their own index (e.g. ESC/inventory use `+0xAF`).
 - `0xCD` is an undocumented offset for this build (inside `CSMenuManImp`'s
-  `unk90` array) — **re-verify after a game/ERR patch**.
+  `unk90` array) - **re-verify after a game/ERR patch**.
 - CSMenuMan singleton via AOB `48 8B 05 ?? ?? ?? ?? 33 DB 48 89 74 24`
   (`{{3,7}}` RIP-relative), slot RVA `0x3D6B7B0`.
 
@@ -122,7 +122,7 @@ table stays expanded everywhere with no hosting risk, so this is strictly better
   `CSFeMan.hud_state==0`): the world map itself is byte-identical to the ERSC
   dialog through these → reverts exactly when you open the map. Unfixable there.
 - Invented "vtable/visible" bytes on CSPopupMenu, string-scans for session
-  strings (matched recycled heap slabs) — all false fires.
+  strings (matched recycled heap slabs) - all false fires.
 
 ## 3. What replaced it
 

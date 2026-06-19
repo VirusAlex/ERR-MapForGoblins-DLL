@@ -24,7 +24,7 @@
 
 static std::thread mod_thread;
 
-// SEH wrapper — catches access violations from refresh() during multiplayer transitions
+// SEH wrapper - catches access violations from refresh() during multiplayer transitions
 static int safe_refresh_seh()
 {
     __try
@@ -60,11 +60,22 @@ static void safe_flag_or_pairs_seh()
     }
 }
 
+static void safe_apply_category_visibility_seh()
+{
+    __try
+    {
+        goblin::apply_category_visibility();
+    }
+    __except (EXCEPTION_EXECUTE_HANDLER)
+    {
+    }
+}
+
 // ── SEH-guarded init-phase wrappers ──
 // MSVC's /EHsc disallows __try in functions that contain C++ objects with
 // destructors, so each init step goes through a plain C-style adapter +
 // a shared invoker. If any step access-violates (e.g. another mod shifted
-// the game's memory map mid-init), we log and continue — losing that
+// the game's memory map mid-init), we log and continue - losing that
 // feature is better than the DLL crashing the entire game.
 
 using InitFn = void (*)();
@@ -90,7 +101,7 @@ static void init_map_timing()       { goblin::map_timing::setup(); }
 static void safe_init_step(InitFn fn, const char *name)
 {
     if (!seh_invoke_void(fn))
-        spdlog::error("SEH exception in init step '{}' — feature may be degraded", name);
+        spdlog::error("SEH exception in init step '{}' - feature may be degraded", name);
 }
 
 static void setup_logger(std::filesystem::path log_file)
@@ -158,7 +169,7 @@ static void setup_mod()
         spdlog::info("Injection toggle hotkey: VK 0x{:X}", goblin::config::toggleInjectionKey);
     }
 
-    // The watcher is the single owner of the WorldMapPointParam state — it
+    // The watcher is the single owner of the WorldMapPointParam state - it
     // applies the master-off flag (set by the toggle hotkey OR the overlay's
     // "Show map icons" checkbox). Run it whenever EITHER path can set that flag,
     // so the overlay's master switch works even if the toggle hotkey is disabled.
@@ -169,6 +180,7 @@ static void setup_mod()
     }
 
     bool first_read = true;
+    int prev_collected = -1, prev_kindling = -1;
     auto start = std::chrono::steady_clock::now();
     while (true)
     {
@@ -206,6 +218,19 @@ static void setup_mod()
         }
         catch (...)
         {
+        }
+
+        // When the collected set changes, refresh the live visibility gate so
+        // collected pieces/nodes/kindling hide (and revealed ones reappear) on
+        // the OPEN map without a reopen. Category-toggle changes come in via the
+        // overlay (reapply_live_settings); this covers in-world collection.
+        int cc = goblin::collected::collected_count();
+        int kc = goblin::kindling::collected_count();
+        if (cc != prev_collected || kc != prev_kindling)
+        {
+            prev_collected = cc;
+            prev_kindling = kc;
+            safe_apply_category_visibility_seh();
         }
     }
 }

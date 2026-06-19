@@ -45,7 +45,7 @@ DLL-мод для Elden Ring Reforged (ERR). Добавляет ~9000 иконо
 1. Дождаться загрузки params (`from::params::initialize()`)
 2. Найти `ParamResCap` для "WorldMapPointParam" в ParamList
 3. Получить указатель на param_file через `rescap + 0x80`
-4. `HeapAlloc (GetProcessHeap, HEAP_ZERO_MEMORY)` новый буфер: header (0x40) + row locators + данные + type string + wrapper locators (заменено с `VirtualAlloc` для совместимости с Seamless Co-op — `game_memory_unlimiter` из ERSC крашится на выделенном `VirtualAlloc`'нутом page-регионе)
+4. `HeapAlloc (GetProcessHeap, HEAP_ZERO_MEMORY)` новый буфер: header (0x40) + row locators + данные + type string + wrapper locators (заменено с `VirtualAlloc` для совместимости с Seamless Co-op - `game_memory_unlimiter` из ERSC крашится на выделенном `VirtualAlloc`'нутом page-регионе)
 5. Скопировать оригинальные строки + добавить наши, отсортировать по row_id
 6. Атомарно подменить указатель: `file_ptr_ref = new_param_file`
 
@@ -63,7 +63,7 @@ ParamTable (param_file):
 ### Как работает текст (goblin_messages.cpp)
 
 Хук на `MsgRepositoryImp::LookupEntry` (AOB: `48 8B 3D ?? ?? ?? ?? 44 0F B6 30 48 85 FF 75`).
-Все наши PlaceName ID используют **offset-encoding** — никакого кастомного скомпилированного текста.
+Все наши PlaceName ID используют **offset-encoding** - никакого кастомного скомпилированного текста.
 Старшие разряды ID кодируют, из какой существующей FMG-категории брать строку:
 
 | Диапазон offset | Редирект в FMG-категорию |
@@ -92,7 +92,7 @@ ParamTable (param_file):
 ### Экранные баннеры (F10 / F9)
 
 Подтверждающий баннер F10/F9 использует `CSPopupMenu::ShowTutorialPopup` (тост EMEVD `2007[15]`).
-Он **резолвится через AOB в рантайме — это НЕ хардкоженный RVA** — потому что обновления игры
+Он **резолвится через AOB в рантайме - это НЕ хардкоженный RVA** - потому что обновления игры
 сдвигают RVA в `.text` (`0x80DA50 -> 0x80D960` в мае 2026). При этом слоты синглтонов в `.data` и
 vtable в `.rdata` остаются на месте.
 
@@ -133,7 +133,7 @@ MSB файлы + regulation.bin + EMEVD
 ```
 
 Парсинг MSB через Andre.SoulsFormats.dll (из Smithbox, копия в `tools/lib/`).
-`MSBE.Read(string path)` через reflection — поддерживает и base game, и DLC карты.
+`MSBE.Read(string path)` через reflection - поддерживает и base game, и DLC карты.
 
 ---
 
@@ -218,7 +218,7 @@ for asset in msb.Parts.Assets:
 
 ### DCX / BND4 / BHD5
 
-- **DCX** -- контейнер сжатия (magic `DCX\0`; ER/ERR используют Oodle Kraken — тег `KRAK` по смещению 0x28, НЕ zstd)
+- **DCX** -- контейнер сжатия (magic `DCX\0`; ER/ERR используют Oodle Kraken - тег `KRAK` по смещению 0x28, НЕ zstd)
 - **BND4** -- архив файлов (MSB, FMG и др.)
 - **BHD5** -- зашифрованный индекс архивов vanilla (Data0-3.bdt), ключ для EldenRing = Game enum value 3
 
@@ -330,15 +330,15 @@ Event 1045630910 (обработчик одного куска):
 
 `src/goblin_kindling.cpp` запускает `Category::WorldKindlingSpirits`.
 
-- `textDisableFlagId1` = `PERMANENT_FLAG 1045377500` — движок ставит его автоматически, когда собраны все 5 духов.
+- `textDisableFlagId1` = `PERMANENT_FLAG 1045377500` - движок ставит его автоматически, когда собраны все 5 духов.
 - Живость каждого духа определяется сканом кучи на объекты-условия `CS::EcTestDistance` (vftable RVA `0x2A5BB90`). Каждый объект само-идентифицируется через `cond+0x30 == entity_id`, eid'ы `1045373501..505`. Эти объекты появляются только примерно через минуту после входа в Misty Forest.
-- **НЕТ статического якоря** и **НЕТ event flag на каждого духа** — скан кучи единственный источник по отдельным духам.
+- **НЕТ статического якоря** и **НЕТ event flag на каждого духа** - скан кучи единственный источник по отдельным духам.
 
 ---
 
 ## Оставшиеся задачи
 
-### ~~1. Seamless Co-op хостинг~~ — РЕШЕНО (2026-05-29)
+### ~~1. Seamless Co-op хостинг~~ - РЕШЕНО (2026-05-29)
 Хостинг теперь работает. Буфер ParamTable переключён с `VirtualAlloc` на `HeapAlloc (GetProcessHeap, HEAP_ZERO_MEMORY)`, а массив `wrapper_row_locator` 16-выровнен (реальной причиной был баг 16-выравнивания в этом layout). Старый воркэраунд с авто-скрытием при открытии карты удалён; хостинг проверен вживую. См. `docs/ersc_hosting_and_map_autohide.md`.
 
 ### 1. Справочные оффсеты

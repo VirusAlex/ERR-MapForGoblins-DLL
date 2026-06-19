@@ -163,7 +163,7 @@ void goblin::apply_map_logic()
             row.eventFlagId = GetIconFlag(rowId, row);
             modified_goblin++;
         }
-        // Camp markers (textId2=5000) — ERR-placed, opt-in patching
+        // Camp markers (textId2=5000) - ERR-placed, opt-in patching
         else if (row.textId2 == 5000)
         {
             if (config::patchCampIcons)
@@ -172,7 +172,7 @@ void goblin::apply_map_logic()
                 modified_camp++;
             }
         }
-        // Merchant markers (textId4=8800) — ERR-placed, opt-in patching
+        // Merchant markers (textId4=8800) - ERR-placed, opt-in patching
         else if (row.textId4 == 8800)
         {
             if (config::patchMerchantIcons)
@@ -181,7 +181,7 @@ void goblin::apply_map_logic()
                 modified_merchant++;
             }
         }
-        // Boss markers — overworld (textId2=5100) or dungeon (textId3=5100/5300)
+        // Boss markers - overworld (textId2=5100) or dungeon (textId3=5100/5300)
         else if (row.textId2 == 5100 || row.textId3 == 5100 || row.textId3 == 5300)
         {
             if (row.textId2 == 5100)

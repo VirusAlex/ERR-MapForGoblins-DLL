@@ -1,7 +1,7 @@
-"""Generate src/generated/goblin_geof_models.{hpp,cpp} — per-row ACTUAL gather-asset models.
+"""Generate src/generated/goblin_geof_models.{hpp,cpp} - per-row ACTUAL gather-asset models.
 
 In ERR's MSBs some gather parts keep their vanilla NAME but reference a different MODEL
-(e.g. part AEG099_753_9000 with ModelName AEG463_860 — the DLC-era Sacramental Burgeon).
+(e.g. part AEG099_753_9000 with ModelName AEG463_860 - the DLC-era Sacramental Burgeon).
 The game instantiates by model, so GeomFlagSaveDataManager records picks under the ACTUAL
 model's hash. Collected-tracking that buckets GEOF slots by the part-NAME prefix misses
 those entries and the icon stays visible while the tile is unloaded (visible-after-restart
@@ -59,7 +59,7 @@ namespace goblin::generated
 
 // Rows whose gather part NAME differs from its ACTUAL model (ERR substituted the asset,
 // e.g. part AEG099_753_9000 instantiates DLC model AEG463_860). GEOF save entries carry
-// the ACTUAL model's hash — collected-tracking must bucket these rows by it.
+// the ACTUAL model's hash - collected-tracking must bucket these rows by it.
 struct GeofModelOverride
 {
     uint64_t row_id;    // ORIGINAL (pre-remap) row id, matches MAP_ENTRIES[].row_id

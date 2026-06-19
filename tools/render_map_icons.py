@@ -61,7 +61,7 @@ def ffdec_cmd():
         if java.exists() and jar.exists():
             return [str(java), "-jar", str(jar)]
     sys.exit("ERROR: set FFDEC_CLI env var (e.g. 'java -jar /path/to/ffdec-cli.jar'); "
-             "note it is split on spaces — use 8.3 short paths if java/jar paths contain spaces.")
+             "note it is split on spaces - use 8.3 short paths if java/jar paths contain spaces.")
 
 
 def run_ffdec(args):
@@ -303,7 +303,7 @@ def render_icons(xml_path, tex_dirs, out_dir, frame_range=None,
 
     if objects:
         # Render every NON-icon sprite (overlays like the cleared badge, cursors,
-        # state markers) to <out-dir>/objects/obj_<id>.png — composited with nested
+        # state markers) to <out-dir>/objects/obj_<id>.png - composited with nested
         # sprites, auto-cropped to content so internal offsets don't hide them.
         odir = os.path.join(out_dir, "objects")
         os.makedirs(odir, exist_ok=True)

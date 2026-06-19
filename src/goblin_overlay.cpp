@@ -112,7 +112,7 @@ bool g_atlas_ready = false;
 
 // GPU sync: a fence we signal+wait after each submit so we never reuse the
 // command list/allocator (or free RTVs on resize) while the GPU is still using
-// them — the AMD/Steam-Deck "device removed" failure mode if omitted.
+// them - the AMD/Steam-Deck "device removed" failure mode if omitted.
 ID3D12Fence *g_fence = nullptr;
 UINT64 g_fence_val = 0;
 HANDLE g_fence_event = nullptr;
@@ -254,7 +254,7 @@ void process_rebind()
         g_captured_up.store(false);
         return;
     }
-    if (mode == 1) // keyboard key — commit on RELEASE so the bind press doesn't
+    if (mode == 1) // keyboard key - commit on RELEASE so the bind press doesn't
     {              // also fire the action it was just bound to
         const uint32_t vk = g_captured_vk.load();
         if (vk != 0 && g_captured_up.load())
@@ -265,7 +265,7 @@ void process_rebind()
             g_captured_up.store(false);
         }
     }
-    else // mode 2: gamepad combo — accumulate held buttons, commit on release
+    else // mode 2: gamepad combo - accumulate held buttons, commit on release
     {
         const uint16_t held = g_pad_ok ? g_pad.wButtons : 0;
         if (held)
@@ -279,58 +279,43 @@ void process_rebind()
 }
 
 // ── Settings tab: live-applied category toggles ──
-void draw_settings_tab()
+// Render one schema section: collapsing header + per-section "all on/off" + each
+// entry (checkbox / slider / hotkey rebind). Sets `changed` on any edit.
+void draw_section(const goblin::IniSection &sec, bool &changed)
 {
-    // Blink yellow <-> red every 0.5s so it's hard to miss.
-    const bool blink_red = (static_cast<int>(ImGui::GetTime() * 2.0) & 1) != 0;
-    ImGui::PushStyleColor(ImGuiCol_Text, blink_red ? ImVec4(1.0f, 0.27f, 0.22f, 1.0f)
-                                                   : ImVec4(1.0f, 0.84f, 0.38f, 1.0f));
-    ImGui::TextWrapped("You MUST re-open the world map to see changes!");
-    ImGui::PopStyleColor();
-    ImGui::Separator();
-
-    bool changed = false;
-    // NavFlattened: keyboard/gamepad nav flows through this scroll region as if it
-    // were part of the window, so you don't have to "enter" it and can't get stuck.
-    // NavFlattened must be a ChildFlag in ImGui 1.90.9 (the old WindowFlag is
-    // obsoleted/no-op). Without it, gamepad directional nav can't cross from the
-    // window into this child (you'd have to "activate" the section and couldn't
-    // leave); keyboard hid the bug because Tab traverses regardless.
-    ImGui::BeginChild("##scroll", ImVec2(0, 0), ImGuiChildFlags_NavFlattened,
-                      ImGuiWindowFlags_None);
-    for (const auto &sec : goblin::ini_schema())
+    ImGui::PushID(sec.name);
+    // Group toggles: flip every Bool in this section at once.
+    auto set_section = [&](bool v) {
+        for (const auto &e : sec.entries)
+            if (e.type == goblin::IniType::Bool &&
+                !(goblin::profile_is_vanilla() && e.err_only))
+                *static_cast<bool *>(e.target) = v;
+        changed = true;
+    };
+    // AllowOverlap so the "all on"/"all off" buttons drawn on top of the
+    // header row capture the click instead of the header toggling the fold.
+    const bool open = ImGui::CollapsingHeader(
+        sec.name, ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_AllowOverlap);
+    // "all on"/"all off" right-aligned on the header row (work even when collapsed).
+    const ImGuiStyle &st = ImGui::GetStyle();
+    const float w_on  = ImGui::CalcTextSize("all on").x + st.FramePadding.x * 2;
+    const float w_off = ImGui::CalcTextSize("all off").x + st.FramePadding.x * 2;
+    ImGui::SameLine(ImGui::GetContentRegionMax().x - w_on - w_off - st.ItemSpacing.x);
+    if (ImGui::SmallButton("all on")) set_section(true);
+    ImGui::SameLine();
+    if (ImGui::SmallButton("all off")) set_section(false);
+    ImGui::PopID();
+    if (!open)
+        return;
+    if (std::strcmp(sec.name, "Compatibility") == 0)
     {
-        if (goblin::profile_is_vanilla() && sec.err_only)
-            continue;
-        ImGui::PushID(sec.name);
-        // Group toggles: flip every Bool in this section at once.
-        auto set_section = [&](bool v) {
-            for (const auto &e : sec.entries)
-                if (e.type == goblin::IniType::Bool &&
-                    !(goblin::profile_is_vanilla() && e.err_only))
-                    *static_cast<bool *>(e.target) = v;
-            changed = true;
-        };
-        const bool open = ImGui::CollapsingHeader(sec.name, ImGuiTreeNodeFlags_DefaultOpen);
-        // "all on"/"all off" right-aligned on the header row (work even when collapsed).
-        const ImGuiStyle &st = ImGui::GetStyle();
-        const float w_on  = ImGui::CalcTextSize("all on").x + st.FramePadding.x * 2;
-        const float w_off = ImGui::CalcTextSize("all off").x + st.FramePadding.x * 2;
-        ImGui::SameLine(ImGui::GetContentRegionMax().x - w_on - w_off - st.ItemSpacing.x);
-        if (ImGui::SmallButton("all on")) set_section(true);
-        ImGui::SameLine();
-        if (ImGui::SmallButton("all off")) set_section(false);
-        ImGui::PopID();
-        if (!open)
-            continue;
-        if (std::strcmp(sec.name, "Compatibility") == 0)
-        {
-            ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(0.62f, 0.82f, 1.0f, 1.0f));
-            ImGui::TextWrapped("Using a Randomizer? Enable live_loot_flags + "
-                               "live_loot_labels + live_loot_icons so markers match "
-                               "the shuffled item placements.");
-            ImGui::PopStyleColor();
-        }
+        ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(0.62f, 0.82f, 1.0f, 1.0f));
+        ImGui::TextWrapped("Using a Randomizer? Enable live_loot_flags + "
+                           "live_loot_labels + live_loot_icons so markers match "
+                           "the shuffled item placements.");
+        ImGui::PopStyleColor();
+    }
+    {
         for (const auto &e : sec.entries)
         {
             if (goblin::profile_is_vanilla() && e.err_only)
@@ -407,15 +392,66 @@ void draw_settings_tab()
             ImGui::PopID();
         }
     }
+}
+
+void draw_settings_tab()
+{
+    // Blink yellow <-> red every 0.5s so it's hard to miss.
+    const bool blink_red = (static_cast<int>(ImGui::GetTime() * 2.0) & 1) != 0;
+    ImGui::PushStyleColor(ImGuiCol_Text, blink_red ? ImVec4(1.0f, 0.27f, 0.22f, 1.0f)
+                                                   : ImVec4(1.0f, 0.84f, 0.38f, 1.0f));
+    ImGui::TextWrapped("You MUST re-open the world map to see changes!");
+    ImGui::PopStyleColor();
+    ImGui::Separator();
+
+    bool changed = false;
+    // Global show_* toggles: flip EVERY icon category at once (across all sections).
+    auto set_all_show = [&](bool v) {
+        for (const auto &sec : goblin::ini_schema())
+            for (const auto &e : sec.entries)
+                if (e.type == goblin::IniType::Bool &&
+                    std::strncmp(e.key, "show_", 5) == 0 &&
+                    !(goblin::profile_is_vanilla() && e.err_only))
+                    *static_cast<bool *>(e.target) = v;
+        changed = true;
+    };
+    ImGui::TextUnformatted("All icon categories:");
+    ImGui::SameLine();
+    if (ImGui::SmallButton("show all")) set_all_show(true);
+    ImGui::SameLine();
+    if (ImGui::SmallButton("hide all")) set_all_show(false);
+    ImGui::Separator();
+
+    // NavFlattened: keyboard/gamepad nav flows through this scroll region as if it
+    // were part of the window, so you don't have to "enter" it and can't get stuck.
+    // (1.90.9: NavFlattened is a ChildFlag; the old WindowFlag is a no-op.)
+    ImGui::BeginChild("##scroll", ImVec2(0, 0), ImGuiChildFlags_NavFlattened,
+                      ImGuiWindowFlags_None);
+    for (const auto &sec : goblin::ini_schema())
+    {
+        if (goblin::profile_is_vanilla() && sec.err_only)
+            continue;
+        if (std::strcmp(sec.name, "Debug") == 0)
+            continue; // rendered on the Debug tab instead
+        draw_section(sec, changed);
+    }
     ImGui::EndChild();
 
     if (changed)
-        goblin::reapply_live_settings(); // live-apply the show_* change
+        goblin::reapply_live_settings(); // live-apply the change
 }
 
-// ── Tools tab: marker dump into a copyable text box ──
-void draw_tools_tab()
+// ── Debug tab: diagnostics (debug_logging + marker-dump settings) + dump tool ──
+void draw_debug_tab()
 {
+    bool changed = false;
+    for (const auto &sec : goblin::ini_schema())
+        if (std::strcmp(sec.name, "Debug") == 0)
+            draw_section(sec, changed);
+    if (changed)
+        goblin::reapply_live_settings();
+    ImGui::Separator();
+
     ImGui::TextWrapped("Dumps the map beacons (your 1-5 placed markers) and stamps "
                        "to text. Works whether the map is open or closed. Press Copy "
                        "to put it on the clipboard.");
@@ -541,7 +577,7 @@ void draw_settings_window()
     if (ImGui::BeginTabBar("##tabs"))
     {
         if (ImGui::BeginTabItem("Settings", nullptr, tab_flag(0))) { draw_settings_tab(); ImGui::EndTabItem(); }
-        if (ImGui::BeginTabItem("Tools",    nullptr, tab_flag(1))) { draw_tools_tab();    ImGui::EndTabItem(); }
+        if (ImGui::BeginTabItem("Debug",    nullptr, tab_flag(1))) { draw_debug_tab();    ImGui::EndTabItem(); }
         if (ImGui::BeginTabItem("About",    nullptr, tab_flag(2))) { draw_about_tab();    ImGui::EndTabItem(); }
         ImGui::EndTabBar();
     }
@@ -659,7 +695,7 @@ UINT WINAPI hkGetRawInputData(HRAWINPUT hri, UINT cmd, LPVOID data, PUINT size, 
         const bool down = (kb.Flags & RI_KEY_BREAK) == 0;
         if (g_rebind_mode.load() != 0)
         {
-            // Capture the FIRST key pressed (ignore Space/Enter — they activate the
+            // Capture the FIRST key pressed (ignore Space/Enter - they activate the
             // rebind button via nav), then commit when it's RELEASED (process_rebind),
             // so the binding press doesn't also trigger the freshly-bound action.
             if (down && kb.VKey != 0 && g_captured_vk.load() == 0 &&
@@ -715,7 +751,7 @@ void feed_input()
 {
     ImGuiIO &io = ImGui::GetIO();
     // If the OS hardware cursor is visible (e.g. the in-game world map is open),
-    // track ITS position and suppress our software cursor — otherwise there are two
+    // track ITS position and suppress our software cursor - otherwise there are two
     // mismatched cursors. In normal gameplay the OS cursor is hidden, so we drive a
     // software cursor from raw-input deltas.
     CURSORINFO ci{};
@@ -1000,7 +1036,7 @@ void submit_frame(IDXGISwapChain3 *sc)
 
 // Upload one RGBA8 image to a DEFAULT texture and create its SRV at heap slot
 // `srv_index`. Fence-waits so it's ready before first draw. Returns false on a
-// hard allocation failure. Plain (no SEH) — the caller wraps it.
+// hard allocation failure. Plain (no SEH) - the caller wraps it.
 static bool upload_rgba(const unsigned char *rgba, int w, int h, UINT srv_index,
                         ID3D12Resource **out_tex, D3D12_GPU_DESCRIPTOR_HANDLE *out_gpu)
 {
@@ -1172,10 +1208,10 @@ HRESULT WINAPI hkPresent(IDXGISwapChain3 *sc, UINT sync, UINT flags)
 
     // Open/close on the toggle key (keyboard) OR the gamepad combo. (When the
     // overlay is DISABLED these same inputs master-toggle icons instead, handled
-    // in goblin_inject's toggle_hotkey_loop — see its master_mode gate.)
+    // in goblin_inject's toggle_hotkey_loop - see its master_mode gate.)
     // While rebinding a hotkey in the overlay, ignore these inputs so binding
     // F10 / Y+R3 / Esc / B doesn't also open/close the menu.
-    // Only react to hotkeys when the game window is foreground — GetAsyncKeyState is
+    // Only react to hotkeys when the game window is foreground - GetAsyncKeyState is
     // global, so without this an Esc/F10 pressed in another app while alt-tabbed
     // would close/toggle our menu.
     const bool focused = game_focused();
@@ -1373,7 +1409,7 @@ void goblin::overlay::setup()
             HMODULE h = GetModuleHandleA(d);
             if (h) { xfn = reinterpret_cast<void *>(GetProcAddress(h, "XInputGetState")); if (xfn) break; }
         }
-        if (!xfn) // none loaded yet — pull one in
+        if (!xfn) // none loaded yet - pull one in
             if (HMODULE h = LoadLibraryA("xinput1_4.dll"))
                 xfn = reinterpret_cast<void *>(GetProcAddress(h, "XInputGetState"));
         if (xfn)

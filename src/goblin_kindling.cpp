@@ -8,11 +8,11 @@
 // In-run per-spirit hiding (this module):
 //   1. Resolve IsEventFlag(EventFlagMan*, uint32_t*) via AOB.
 //   2. Each tick, check flag 1045377500. ON → all 5 collected, hide all.
-//   3. Otherwise consult read_sfx_alive_set() — discovers the 5 per-spirit
+//   3. Otherwise consult read_sfx_alive_set() - discovers the 5 per-spirit
 //      EcTestDistance condition objects by heap-scanning for their vftable
 //      (self-identifying via cond+0x30 == entity_id) and caches them; a
 //      spirit is alive iff its cached cond still validates. (No static
-//      pointer chain to them exists and no per-spirit event flag exists —
+//      pointer chain to them exists and no per-spirit event flag exists -
 //      both confirmed by the 2026-05-29 multi-angle research workflow.)
 //   4. Write `areaNo = 99` on collected rows, restore on respawned rows.
 
@@ -55,7 +55,7 @@ constexpr int      SPIRIT_COUNT = 5;
 constexpr uint8_t  HIDDEN_AREA = 99;
 
 // WorldSfxMan singleton slot + EcTestDistance vtable are resolved by AOB
-// (patch-resilient) instead of hardcoded RVAs — see the resolvers below.
+// (patch-resilient) instead of hardcoded RVAs - see the resolvers below.
 
 struct KindlingSlot
 {
@@ -78,7 +78,7 @@ std::unordered_map<uint64_t, uint64_t> g_original_to_dynamic;
 bool g_initialized = false;
 
 // ── Event-flag query ─────────────────────────────────────────────────
-// Same AOBs as goblin_markers.cpp — could be lifted into a shared header
+// Same AOBs as goblin_markers.cpp - could be lifted into a shared header
 // later, but keeping the resolution local keeps coupling minimal.
 
 using IsEventFlagFn = bool (*)(void *, uint32_t *);
@@ -141,7 +141,7 @@ bool safe_write_byte(uint8_t *addr, uint8_t val)
 // In/Outside Radius`). The instance is freed when the player picks the
 // spirit up. So per-spirit liveness == "does an EcTestDistance with this
 // entity_id currently exist". These conds spawn dynamically as the world
-// warms up after a load — discovery retries every 2 s until they appear
+// warms up after a load - discovery retries every 2 s until they appear
 // (typically within ~1 min of entering Misty Forest).
 //
 // Multi-angle research (2026-05-29 workflow, 3-way confirmed): NO static
@@ -151,10 +151,10 @@ bool safe_write_byte(uint8_t *addr, uint8_t val)
 // kindling-eventflag-chain.
 //
 // Scan target is the EcTestDistance vftable (image+0x2A5BB90): each hit
-// SELF-IDENTIFIES via cond+0x30 == entity_id — no task lookup, no entry
+// SELF-IDENTIFIES via cond+0x30 == entity_id - no task lookup, no entry
 // array walk, no 8192-hit buffer. Only the eid match is used as the
 // discriminator (a radius/threshold gate was tried and over-filtered the
-// real conds — removed). ~75 EcTestDistance objects exist once the area
+// real conds - removed). ~75 EcTestDistance objects exist once the area
 // is loaded; the 5 kindling ones are a subset.
 //
 // Stable across launches: the vftable RVA and cond+0x30 (eid). Heap
@@ -173,7 +173,7 @@ static uintptr_t kindling_resolve(const char *aob)
     return reinterpret_cast<uintptr_t>(modutils::scan<void>({
         .aob = aob, .relative_offsets = {{3, 7}}}));
 }
-// EcTestDistance vftable (was RVA 0x2A5BB90) — the constructor's primary vtable
+// EcTestDistance vftable (was RVA 0x2A5BB90) - the constructor's primary vtable
 // store. Used to validate per-spirit cond objects ([cond+0] == this vtable).
 static uintptr_t distance_vft()
 {
@@ -182,7 +182,7 @@ static uintptr_t distance_vft()
         "BA 40 00 00 00 E8 ?? ?? ?? ?? 90 48 8B C3 48 83 C4 30 5B C3 90 78 ??");
     return s;
 }
-// WorldSfxMan singleton slot (was RVA 0x3D6F5F8) — "game world loaded"
+// WorldSfxMan singleton slot (was RVA 0x3D6F5F8) - "game world loaded"
 // indicator (the pointer there is NULL at the menu / loading screen).
 static uintptr_t world_sfx_man_slot()
 {
@@ -199,7 +199,7 @@ std::map<uint32_t, uintptr_t> g_kindling_conds;  // eid -> EcTestDistance* (cach
 bool g_conds_discovered = false;                 // true once a discovery has succeeded
 
 // Worker thread (one-shot discovery; re-run only when the cached task
-// becomes invalid — e.g. map transition freed the task instance).
+// becomes invalid - e.g. map transition freed the task instance).
 std::thread g_worker_thread;
 std::atomic<bool> g_worker_started{false};
 std::atomic<bool> g_worker_should_stop{false};
@@ -209,7 +209,7 @@ std::mutex g_worker_mutex;
 bool g_discovery_requested = false;
 
 // SEH-guarded primitive reads. Heap addresses we follow are entirely
-// controlled by the game and may be freed/remapped between ticks — a
+// controlled by the game and may be freed/remapped between ticks - a
 // stray page fault during refresh would otherwise tank the whole DLL.
 
 static uintptr_t seh_read_qword(uintptr_t addr)
@@ -298,14 +298,14 @@ static size_t seh_scan_region_for_vft(uintptr_t base, size_t size,
     }
     __except (EXCEPTION_EXECUTE_HANDLER)
     {
-        // unmapped page mid-region — keep what we have, drop the rest
+        // unmapped page mid-region - keep what we have, drop the rest
     }
     return out;
 }
 
 // Cold discovery: heap-scan for the EcTestDistance vftable, then keep the
 // hits whose entity_id (cond+0x30) is one of our 5 kindling spirits. No
-// task lookup, no array walk — each hit self-identifies. Costly only in the
+// task lookup, no array walk - each hit self-identifies. Costly only in the
 // memory-read sense (touches the RW-private heap), runs once per session /
 // map transition on the worker thread behind the loading screen.
 static std::map<uint32_t, uintptr_t> discover_kindling_conds()
@@ -353,7 +353,7 @@ static std::map<uint32_t, uintptr_t> discover_kindling_conds()
     }
 
     // Out of SEH scope. Keep hits whose eid is a kindling spirit. eid match
-    // (cond+0x30) is the only verified discriminator — radius/threshold were
+    // (cond+0x30) is the only verified discriminator - radius/threshold were
     // an unconfirmed assumption and over-filtered, so we don't gate on them.
     // near_count tracks hits whose eid is in the broad m60_45_37 SFX band so
     // the failure log can distinguish "region not covered by scan filter"
@@ -375,7 +375,7 @@ static std::map<uint32_t, uintptr_t> discover_kindling_conds()
         spdlog::info("[KINDLING] discovered {} live spirit cond(s) in {} ms ({} regions, {} EcTestDistance hits)",
                      found.size(), dt, regions_scanned, hits_n);
     else
-        spdlog::info("[KINDLING] no kindling conds found ({} ms, {} regions, {} hits, {} near-band) — "
+        spdlog::info("[KINDLING] no kindling conds found ({} ms, {} regions, {} hits, {} near-band) - "
                      "near==0 => cond region not covered by scan filter; near>0 => eid range/offset off; "
                      "else not in Misty Forest yet",
                      dt, regions_scanned, hits_n, near_count);
@@ -405,7 +405,7 @@ static void worker_loop()
         // an "Ошибка" overlay.
         if (!is_game_world_loaded())
         {
-            spdlog::info("[KINDLING] world not loaded — retrying discovery in 2 s");
+            spdlog::info("[KINDLING] world not loaded - retrying discovery in 2 s");
             std::this_thread::sleep_for(std::chrono::seconds(2));
             {
                 std::lock_guard<std::mutex> lock(g_worker_mutex);
@@ -419,11 +419,11 @@ static void worker_loop()
         g_discovery_in_progress = false;
 
         // Re-check after scan: if world unloaded mid-scan (character
-        // switch happened), discard — the cond pointers are now into
+        // switch happened), discard - the cond pointers are now into
         // freed memory.
         if (!is_game_world_loaded())
         {
-            spdlog::warn("[KINDLING] world unloaded during discovery — discarding result");
+            spdlog::warn("[KINDLING] world unloaded during discovery - discarding result");
             continue;
         }
 
@@ -457,7 +457,7 @@ static void request_discovery()
 // Sub-millisecond synchronous walk from the cached task pointer; if no
 // task is cached or the cached one is stale, kicks off discovery and
 // returns nullopt (refresh treats nullopt as "no info, keep markers
-// visible" — the correct cold-start behavior).
+// visible" - the correct cold-start behavior).
 std::optional<std::set<uint32_t>> read_sfx_alive_set()
 {
     ensure_worker_started();
@@ -480,7 +480,7 @@ std::optional<std::set<uint32_t>> read_sfx_alive_set()
         // (permanent flag is about to fire and the ON branch in refresh()
         // takes over) or the heap got reused after a map transition.
         // Invalidate + kick re-discovery.
-        spdlog::info("[KINDLING] cached conds no longer valid — re-discovering");
+        spdlog::info("[KINDLING] cached conds no longer valid - re-discovering");
         {
             std::lock_guard<std::mutex> lock(g_state_mutex);
             g_kindling_conds.clear();
@@ -490,7 +490,7 @@ std::optional<std::set<uint32_t>> read_sfx_alive_set()
         return std::nullopt;
     }
 
-    // Nothing cached yet — request discovery on the worker thread.
+    // Nothing cached yet - request discovery on the worker thread.
     // Returns nullopt this tick; next tick after discovery completes
     // returns the alive set.
     request_discovery();
@@ -605,7 +605,7 @@ int goblin::kindling::refresh()
 
     if (is_flag_set(PERMANENT_FLAG))
     {
-        // Incantation already acquired — engine hides via textDisableFlagId1
+        // Incantation already acquired - engine hides via textDisableFlagId1
         // already, but we set areaNo = 99 too for defense in depth.
         // No SFX scan: the in-RAM state is irrelevant once the lot is awarded.
         // This branch also handles character-switch correctly: the new
@@ -626,7 +626,7 @@ int goblin::kindling::refresh()
     {
         // Empty alive set: player isn't in m60_45_37_00 (main menu, another
         // map, freshly loaded character who never visited Misty Forest).
-        // Keep all 5 markers VISIBLE — the WorldMapPointParam baseline.
+        // Keep all 5 markers VISIBLE - the WorldMapPointParam baseline.
         // The brief "all 5 collected mid-run, flag not yet set" race resolves
         // within one tick when the engine awards the item lot and flips
         // PERMANENT_FLAG, after which the ON branch above takes over.

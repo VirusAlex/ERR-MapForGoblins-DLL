@@ -1,4 +1,4 @@
-# AEG099 Gathering Nodes — Model to Item Mapping
+# AEG099 Gathering Nodes - Model to Item Mapping
 
 ## Mechanism
 
@@ -33,7 +33,7 @@ they produce **no entry** in `aeg099_item_mapping.json` (rather than a literal
 
 | Model | Purpose |
 |-------|---------|
-| AEG099_510 | Invisible interaction trigger wired into EMEVD (`ChangeAssetEnableState` in common events 1045632900/1045630910 — asset-enable + warp interactions, NOT the piece award) |
+| AEG099_510 | Invisible interaction trigger wired into EMEVD (`ChangeAssetEnableState` in common events 1045632900/1045630910 - asset-enable + warp interactions, NOT the piece award) |
 | AEG099_600, 601 | Breakable decoration |
 | AEG099_610 | Breakable decoration (bushes, pots etc.) |
 | AEG099_620 | Loot corpse / item pickup (linked via MSB Treasure event) |
@@ -45,29 +45,29 @@ they produce **no entry** in `aeg099_item_mapping.json` (rather than a literal
 
 ### Flowers & Plants
 
-Column shows the actual `(isEnableRepick, isHiddenOnRepick)` pair — see the
+Column shows the actual `(isEnableRepick, isHiddenOnRepick)` pair - see the
 Repick/Hidden Flags convention: `(True, True)` = one-time, `(False, False)` =
 respawning.
 
 | Model | Goods ID | Item | (isEnableRepick, isHiddenOnRepick) |
 |-------|----------|------|------------------------------------|
-| AEG099_650 | 20650 | Poisonbloom | (False, False) — respawning |
-| AEG099_651 | 20651 | Trina's Lily | (True, True) — one-time |
-| AEG099_653 | 20653 | Miquella's Lily | (True, True) — one-time |
-| AEG099_654 | 20654 | Grave Blossom | (False, False) — respawning |
-| AEG099_656 | 20651 | Trina's Lily (variant) | (True, True) — one-time |
-| AEG099_657 | 20653 | Miquella's Lily (variant) | (True, True) — one-time |
-| AEG099_660 | 20660 | Faded Erdleaf Flower | (False, False) — respawning |
-| AEG099_680 | 20680 | Erdleaf Flower | (False, False) — respawning |
-| AEG099_681 | 20681 | Altus Bloom | (False, False) — respawning |
-| AEG099_682 | 20682 | Fire Blossom | (False, False) — respawning |
-| AEG099_683 | 20683 | Golden Sunflower | (False, False) — respawning |
-| AEG099_684 | 20652 | Fulgurbloom | (False, False) — respawning |
-| AEG099_685 | 20683 | Golden Sunflower (variant) | (False, False) — respawning |
-| AEG099_687 | 20652 | Fulgurbloom (variant) | (False, False) — respawning |
-| AEG099_690 | 20690 | Herba | (False, False) — respawning |
-| AEG099_691 | 20691 | Arteria Leaf | (True, True) — one-time |
-| AEG099_696 | 20691 | Arteria Leaf (variant) | (True, True) — one-time |
+| AEG099_650 | 20650 | Poisonbloom | (False, False) - respawning |
+| AEG099_651 | 20651 | Trina's Lily | (True, True) - one-time |
+| AEG099_653 | 20653 | Miquella's Lily | (True, True) - one-time |
+| AEG099_654 | 20654 | Grave Blossom | (False, False) - respawning |
+| AEG099_656 | 20651 | Trina's Lily (variant) | (True, True) - one-time |
+| AEG099_657 | 20653 | Miquella's Lily (variant) | (True, True) - one-time |
+| AEG099_660 | 20660 | Faded Erdleaf Flower | (False, False) - respawning |
+| AEG099_680 | 20680 | Erdleaf Flower | (False, False) - respawning |
+| AEG099_681 | 20681 | Altus Bloom | (False, False) - respawning |
+| AEG099_682 | 20682 | Fire Blossom | (False, False) - respawning |
+| AEG099_683 | 20683 | Golden Sunflower | (False, False) - respawning |
+| AEG099_684 | 20652 | Fulgurbloom | (False, False) - respawning |
+| AEG099_685 | 20683 | Golden Sunflower (variant) | (False, False) - respawning |
+| AEG099_687 | 20652 | Fulgurbloom (variant) | (False, False) - respawning |
+| AEG099_690 | 20690 | Herba | (False, False) - respawning |
+| AEG099_691 | 20691 | Arteria Leaf | (True, True) - one-time |
+| AEG099_696 | 20691 | Arteria Leaf (variant) | (True, True) - one-time |
 
 ### Fruits & Berries
 
@@ -202,10 +202,10 @@ respawning.
 | AEG099_822 | 850011 | Ember Trace |
 
 Note: AEG099_821 (Rune Piece) and AEG099_822 (Ember Piece) are asset pickups like the
-other gathering nodes — AEG099_821 has a pickUpItemLotParamId chain (primary goods Runic
+other gathering nodes - AEG099_821 has a pickUpItemLotParamId chain (primary goods Runic
 Trace 800011), AEG099_822 → Ember Trace 850011. EMEVD event 1045630910 is a warp/teleport
 interaction (WarpPlayer) and event 1045632900 toggles asset enable-state
-(ChangeAssetEnableState over 1045631100…) — neither event awards the piece. The mod
+(ChangeAssetEnableState over 1045631100…) - neither event awards the piece. The mod
 generates 821/822 specially in generate_pieces_massedit.py.
 
 ### Runes (currency)
@@ -281,17 +281,17 @@ Naming is counterintuitive:
 
 ## Data Files
 
-- `data/aeg099_item_mapping.json` — AEG099 mapping (285 models)
-- `data/aeg463_item_mapping.json` — AEG463 DLC mapping (36 models)
-- `data/all_gathering_nodes_final.json` — all AEG099+AEG463 positions from MSBs (21824 nodes: 17082 AEG099 + 4742 AEG463; count drifts with each MSB re-extraction)
-- `data/massedit_generated/` — auto-generated MASSEDIT files
+- `data/aeg099_item_mapping.json` - AEG099 mapping (285 models)
+- `data/aeg463_item_mapping.json` - AEG463 DLC mapping (36 models)
+- `data/all_gathering_nodes_final.json` - all AEG099+AEG463 positions from MSBs (21824 nodes: 17082 AEG099 + 4742 AEG463; count drifts with each MSB re-extraction)
+- `data/massedit_generated/` - auto-generated MASSEDIT files
 
 ## How to regenerate
 
 Mapping extraction is split across **two** scripts, one per model family:
 
-- `tools/extract_aeg099_mapping.py` — base game, rows 99NNN → `data/aeg099_item_mapping.json`
-- `tools/extract_aeg463_mapping.py` — DLC, rows 463NNN → `data/aeg463_item_mapping.json`
+- `tools/extract_aeg099_mapping.py` - base game, rows 99NNN → `data/aeg099_item_mapping.json`
+- `tools/extract_aeg463_mapping.py` - DLC, rows 463NNN → `data/aeg463_item_mapping.json`
 
 Each script:
 1. Reads AssetEnvironmentGeometryParam for its row range (99000-99999 / 463000-463999)

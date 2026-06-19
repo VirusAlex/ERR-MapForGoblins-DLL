@@ -20,8 +20,8 @@ PROJECT_DIR = TOOLS_DIR.parent
 #   'err'         -> data source = the ERR mod (default; behaves exactly as before)
 #   'vanilla'     -> data source = the vanilla game files (UXM-unpacked GAME_DIR)
 #   'convergence' -> data source = a MERGED view of The Convergence's mod
-#                    overlay over the vanilla game (the overlay is partial —
-#                    608/1347 MSBs — so tools/prepare_merged_src.py stages
+#                    overlay over the vanilla game (the overlay is partial -
+#                    608/1347 MSBs - so tools/prepare_merged_src.py stages
 #                    overlay-over-vanilla into data/convergence/merged_src,
 #                    reproducing what ModEngine2 serves the game at runtime)
 # Each non-default profile scopes all generated artifacts under its own dirs

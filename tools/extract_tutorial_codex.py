@@ -66,7 +66,7 @@ def main():
 
     ids = sorted(names)
     # Codex naming convention: enemy model cNNNN -> base entry NNNN*1000+4,
-    # variants at +100 each. Map a model when ANY family member exists — some
+    # variants at +100 each. Map a model when ANY family member exists - some
     # entries ship variant-only (e.g. only NNNN104 with no NNNN004 base);
     # consumers do their own variant resolution from the base id, and a
     # missing base simply falls through to the text-match strategy.

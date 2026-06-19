@@ -13,7 +13,7 @@ OUT_DIR = DATA_DIR / 'massedit_generated'
 # rows shipped in regulation.bin):
 #   dispMask00 (bit 0) = base game overworld + small/legacy dungeons
 #                        (m10-19 except m12, m30-39, m60)
-#   dispMask01 (bit 1) = m12 only — the base-game underground map plane
+#   dispMask01 (bit 1) = m12 only - the base-game underground map plane
 #   dispMask02 (bit 2) = base legacy dungeons that share the DLC plane
 #                        (m20-28), DLC legacy dungeons (m40-43), and the
 #                        DLC overworld (m61). In our paramdef this bit
@@ -21,7 +21,7 @@ OUT_DIR = DATA_DIR / 'massedit_generated'
 #
 # IMPORTANT: UNDERGROUND_AREAS must be JUST {12}. Earlier versions lumped
 # m20-43 in here too, which sent every DLC-dungeon marker to dispMask01,
-# i.e. the base-underground plane — exactly where the user reported them
+# i.e. the base-underground plane - exactly where the user reported them
 # wrongly appearing instead of on the DLC map.
 UNDERGROUND_AREAS = {12}
 DLC_AREAS = {20, 21, 22, 25, 28, 40, 41, 42, 43, 61}
@@ -107,19 +107,19 @@ def _load_grace_index():
 
 # Tiles where multiple PlaceName regions are physically stacked in 3D inside
 # the same MSB. For these, the tile-level resolver picks one dominant region
-# for the whole tile and mislabels everything on the other vertical layer —
+# for the whole tile and mislabels everything on the other vertical layer -
 # so we fall back to per-marker nearest-grace lookup. Everywhere else the
 # tile-level scheme is correct AND safer: regular caves have a single
 # canonical PlaceName per tile, and nearest-grace picks up unrelated
 # sub-regions that disagree with the tile's name.
 #
-# Known stacked case: m12_02 and m12_07 — Nokron, Eternal City sits above
+# Known stacked case: m12_02 and m12_07 - Nokron, Eternal City sits above
 # Siofra River in both tiles.
 STACKED_REGION_TILES = {(12, 2), (12, 7)}
 
 
 def resolve_location_id_at(map_name, x, y, z):
-    """Per-marker location resolution — the FALLBACK layer (since 2026-06).
+    """Per-marker location resolution - the FALLBACK layer (since 2026-06).
 
     NO LONGER the primary location name. The primary is the HYBRID sub-area
     resolver in tools/generate_location_overrides.py (MSB MapPoint/MapNameOverride
@@ -130,7 +130,7 @@ def resolve_location_id_at(map_name, x, y, z):
     silent. Keep as the coarse fallback (do not delete).
 
     For tiles in STACKED_REGION_TILES, finds the nearest grace in the SAME
-    MSB tile by 3D Euclidean distance and returns its subCategoryId — a
+    MSB tile by 3D Euclidean distance and returns its subCategoryId - a
     valid PlaceName FMG entry (e.g. 12020 = "Nokron, Eternal City",
     12070 = "Siofra River").
 

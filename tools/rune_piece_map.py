@@ -1,5 +1,5 @@
 """
-Elden Ring Reforged — Rune Piece Map Builder
+Elden Ring Reforged - Rune Piece Map Builder
 Combines save file GEOM/GEOF data with JSON coordinates to produce a full map
 of all Rune Pieces with picked-up status.
 
@@ -210,7 +210,7 @@ def generate_html_map(entries, picked, remaining, filepath, map_b64_path=None):
     html = f"""<!DOCTYPE html>
 <html><head>
 <meta charset="utf-8">
-<title>Rune Piece Map — ERR</title>
+<title>Rune Piece Map - ERR</title>
 <style>
 body {{ font-family: 'Segoe UI', sans-serif; margin: 0; background: #1a1a2e; color: #e0e0e0; }}
 .header {{ padding: 15px 20px; background: #16213e; border-bottom: 1px solid #0f3460; }}
@@ -240,7 +240,7 @@ canvas {{ position: absolute; top: 0; left: 0; }}
 </style>
 </head><body>
 <div class="header">
-  <h1>Elden Ring Reforged — Rune Piece Tracker</h1>
+  <h1>Elden Ring Reforged - Rune Piece Tracker</h1>
   <div class="stats">
     <span class="stat stat-picked">Picked: {picked}</span>
     <span class="stat stat-remaining">Remaining: {remaining}</span>

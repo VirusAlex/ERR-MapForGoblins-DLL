@@ -147,7 +147,7 @@ _EXTRA_PUZZLES = [
     ('m60_48_57_00', 1048572370, 0, 2, 'Snow Town seal-release statue'),
     # Siofra "Lower/Upper Layer Lantern" ignition (16 lanterns, action btn 9524).
     # Event params: (lit_flag, asset1, asset2). Flag at X0_4 (idx 0), assets at X4_4/X8_4.
-    # We use asset1 (idx 1) as the marker anchor — it's the one IFActionButton listens to.
+    # We use asset1 (idx 1) as the marker anchor - it's the one IFActionButton listens to.
     ('m12_02_00_00', 12022601, 1, 0, 'Siofra lower-layer lantern'),
     ('m12_02_00_00', 12022621, 1, 0, 'Siofra upper-layer lantern'),
 ]

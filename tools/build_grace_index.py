@@ -5,7 +5,7 @@ Each grace gives an authoritative `(areaNo, gridX, gridZ, x, y, z, subCategoryId
 subRegion, majorRegion)` anchor for location-name resolution. Used by
 `massedit_common.resolve_location_id_at()` to give per-marker correct subtitles
 in dungeon tiles that physically contain multiple regions (e.g. m12_02 / m12_07
-where Nokron sits stacked above Siofra River — both regions appear in the same
+where Nokron sits stacked above Siofra River - both regions appear in the same
 MSB tile).
 """
 import sys
@@ -55,7 +55,7 @@ for xml in config.PARAMDEF_DIR.glob('*.xml'):
 
 bnd = SoulsFormats.SFUtil.DecryptERRegulation(str(config.ERR_MOD_DIR / 'regulation.bin'))
 
-# PlaceName text lookup — load from FMG (item_dlc02.msgbnd: slots 19/329/429)
+# PlaceName text lookup - load from FMG (item_dlc02.msgbnd: slots 19/329/429)
 DATA_DIR = config.DATA_DIR  # data/ or data/vanilla/ per profile
 _fcls = asm.GetType('SoulsFormats.FMG')
 _fr = _fcls.BaseType.GetMethod('Read', Array[SysType]([_str]))

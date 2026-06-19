@@ -104,7 +104,7 @@ def collect_placenames(root):
 def main():
     paramdefs = load_paramdefs()
 
-    # Full set — pick from the schema dump
+    # Full set - pick from the schema dump
     FIELDS = {
         'disableParam_NT','disableParamReserve1','disableParamReserve2',
         'eventflagId','bonfireEntityId','bonfireSubCategorySortId',

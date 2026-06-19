@@ -1,4 +1,4 @@
-"""Generate src/generated/goblin_model_aliases.{hpp,cpp} — gather-asset model aliases.
+"""Generate src/generated/goblin_model_aliases.{hpp,cpp} - gather-asset model aliases.
 
 ERR substitutes some base-game gather assets with their DLC-era equivalents at runtime
 (e.g. AEG099_753 "Sacramental Burgeon" instantiates as AEG463_860). GeomFlagSaveDataManager

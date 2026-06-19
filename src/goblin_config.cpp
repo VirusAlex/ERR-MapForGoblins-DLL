@@ -114,6 +114,24 @@ void goblin::ensure_ini(const std::filesystem::path &ini_path)
             consumed.insert({lsec, to_lower(e.rename_from)});
             return true;
         }
+        // Cross-section fallback: a key (or its rename_from) that moved to a
+        // different section in a newer schema still keeps its user value. Schema
+        // keys are globally unique, so matching by key name in any section is safe.
+        for (auto const &sp : existing)
+        {
+            if (sp.second.has(e.key))
+            {
+                out = sp.second.get(e.key);
+                consumed.insert({to_lower(sp.first), to_lower(e.key)});
+                return true;
+            }
+            if (e.rename_from && sp.second.has(e.rename_from))
+            {
+                out = sp.second.get(e.rename_from);
+                consumed.insert({to_lower(sp.first), to_lower(e.rename_from)});
+                return true;
+            }
+        }
         return false;
     };
 
