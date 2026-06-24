@@ -22,6 +22,14 @@ asm = Assembly.LoadFrom(str(config.SOULSFORMATS_DLL))
 clr.AddReference(str(config.SOULSFORMATS_DLL))
 import SoulsFormats
 
+
+def _safe_unlink(path):
+    try:
+        os.unlink(path)
+    except PermissionError:
+        pass
+
+
 ERR_MOD_DIR = config.require_err_mod_dir()
 bnd = SoulsFormats.SFUtil.DecryptERRegulation(str(ERR_MOD_DIR / 'regulation.bin'))
 from extract_all_items import load_paramdefs, read_param, param_to_dict
@@ -45,7 +53,7 @@ def rfb(rm, data, suf='.bin'):
     else:
         SysFile.WriteAllBytes(tmp, data)
     r = rm.Invoke(None, Array[Object]([tmp]))
-    os.unlink(tmp)
+    _safe_unlink(tmp)
     return r
 
 

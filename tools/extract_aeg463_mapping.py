@@ -31,6 +31,14 @@ asm = Assembly.LoadFrom(dll_path)
 clr.AddReference(dll_path)
 import SoulsFormats
 
+
+def _safe_unlink(path):
+    try:
+        os.unlink(path)
+    except PermissionError:
+        pass
+
+
 _str_type = SysType.GetType("System.String")
 
 
@@ -50,7 +58,7 @@ def read_param(bnd_file):
     tmp = os.path.join(tempfile.gettempdir(), str(os.getpid()) + "_p.bin")
     SysFile.WriteAllBytes(tmp, bnd_file.Bytes.ToArray())
     p = _param_read.Invoke(None, Array[Object]([tmp]))
-    os.unlink(tmp)
+    _safe_unlink(tmp)
     return p
 
 
@@ -58,7 +66,7 @@ def read_fmg(bnd_file):
     tmp = os.path.join(tempfile.gettempdir(), str(os.getpid()) + "_f.fmg")
     SysFile.WriteAllBytes(tmp, bnd_file.Bytes.ToArray())
     fmg = _fmg_read.Invoke(None, Array[Object]([tmp]))
-    os.unlink(tmp)
+    _safe_unlink(tmp)
     return fmg
 
 

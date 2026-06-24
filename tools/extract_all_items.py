@@ -44,6 +44,14 @@ asm = Assembly.LoadFrom(str(config.SOULSFORMATS_DLL))
 clr.AddReference(str(config.SOULSFORMATS_DLL))
 import SoulsFormats
 
+
+def _safe_unlink(path):
+    try:
+        os.unlink(path)
+    except PermissionError:
+        pass
+
+
 # Andre.SoulsFormats uses Read(string) / Read(Memory<byte>), not Read(byte[])
 # We use temp files + Read(string) via reflection as a bridge.
 _str_type = SysType.GetType('System.String')
@@ -67,7 +75,7 @@ def _read_from_bytes(read_method, data, suffix='.bin'):
     else:
         SysFile.WriteAllBytes(tmp, data)
     result = read_method.Invoke(None, Array[Object]([tmp]))
-    os.unlink(tmp)
+    _safe_unlink(tmp)
     return result
 
 
@@ -681,7 +689,7 @@ def main():
             tmp2 = os.path.join(tempfile.gettempdir(), str(os.getpid()) + '_mfg_emevd.tmp')
             SysFile.WriteAllBytes(tmp2, SoulsFormats.DCX.Decompress(str(emevd_path)).ToArray())
             emevd = _emevd_read.Invoke(None, Array[Object]([tmp2]))
-            os.unlink(tmp2)
+            _safe_unlink(tmp2)
         except:
             continue
 
@@ -790,7 +798,7 @@ def main():
             tmp_c = os.path.join(tempfile.gettempdir(), str(os.getpid()) + '_mfg_common.tmp')
             SysFile.WriteAllBytes(tmp_c, SoulsFormats.DCX.Decompress(str(common_path)).ToArray())
             common_em = _emevd_read.Invoke(None, Array[Object]([tmp_c]))
-            os.unlink(tmp_c)
+            _safe_unlink(tmp_c)
             for event in common_em.Events:
                 if int(event.ID) != 0:
                     continue
@@ -821,7 +829,7 @@ def main():
             tmp2 = os.path.join(tempfile.gettempdir(), str(os.getpid()) + '_mfg_emevd2.tmp')
             SysFile.WriteAllBytes(tmp2, SoulsFormats.DCX.Decompress(str(emevd_path)).ToArray())
             emevd = _emevd_read.Invoke(None, Array[Object]([tmp2]))
-            os.unlink(tmp2)
+            _safe_unlink(tmp2)
         except Exception:
             continue
         for event in emevd.Events:
@@ -891,7 +899,7 @@ def main():
             tmp3 = os.path.join(tempfile.gettempdir(), str(os.getpid()) + '_mfg_emevd3.tmp')
             SysFile.WriteAllBytes(tmp3, SoulsFormats.DCX.Decompress(str(em_path)).ToArray())
             em = _emevd_read.Invoke(None, Array[Object]([tmp3]))
-            os.unlink(tmp3)
+            _safe_unlink(tmp3)
         except Exception:
             continue
         valid_entities = map_to_entities.get(map_name, set())

@@ -1,5 +1,6 @@
 #include "goblin_config.hpp"
 #include "goblin_config_schema.hpp"
+#include "goblin_i18n.hpp"
 
 #include <spdlog/spdlog.h>
 #include <mini/ini.h>
@@ -57,6 +58,9 @@ namespace
             if (m) *static_cast<uint16_t *>(e.target) = m;
             break;
         }
+        case IniType::String:
+            *static_cast<std::string *>(e.target) = goblin::i18n::normalize_language_config(v);
+            break;
         }
     }
 
@@ -135,8 +139,22 @@ void goblin::ensure_ini(const std::filesystem::path &ini_path)
         return false;
     };
 
+    std::string language_value = goblin::config::uiLanguage;
+    if (had)
+    {
+        for (auto const &sp : existing)
+        {
+            if (sp.second.has("ui_language"))
+            {
+                language_value = sp.second.get("ui_language");
+                break;
+            }
+        }
+    }
+    auto emit_language = goblin::i18n::language_from_config(language_value);
+
     std::ostringstream ss;
-    emit_ini(ss, include_err, resolve);
+    emit_ini(ss, include_err, resolve, emit_language);
 
     // Keys in the old file that the schema (for this build) didn't claim:
     // renamed-away, removed, or ERR-only in a vanilla build. Comment them out,
@@ -204,13 +222,16 @@ void goblin::save_config(const std::filesystem::path &ini_path)
         case IniType::GamepadMask:
             out = format_gamepad_combo(*static_cast<uint16_t *>(e.target));
             return true;
+        case IniType::String:
+            out = goblin::i18n::normalize_language_config(*static_cast<std::string *>(e.target));
+            return true;
         default:
             return false;
         }
     };
 
     std::ostringstream ss;
-    emit_ini(ss, include_err, resolve);
+    emit_ini(ss, include_err, resolve, goblin::i18n::current_language());
 
     std::error_code ec;
     if (ini_path.has_parent_path())

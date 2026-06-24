@@ -29,6 +29,14 @@ from System import Array, Type as SysType, Object
 from System.IO import File as SysFile
 import SoulsFormats
 
+
+def _safe_unlink(path):
+    try:
+        os.unlink(path)
+    except PermissionError:
+        pass
+
+
 from massedit_common import (OUT_DIR, DATA_DIR, UNDERGROUND_AREAS, DLC_AREAS,
                              OVERWORLD_AREAS, get_disp_mask, resolve_location_id_at)
 
@@ -60,7 +68,7 @@ def read_param(bnd, name, paramdefs):
             tmp = os.path.join(tempfile.gettempdir(), str(os.getpid()) + '_hnp_p.tmp')
             SysFile.WriteAllBytes(tmp, f.Bytes.ToArray())
             p = _param_read.Invoke(None, Array[Object]([tmp]))
-            os.unlink(tmp)
+            _safe_unlink(tmp)
             pt = str(p.ParamType) if p.ParamType else ''
             if pt in paramdefs:
                 p.ApplyParamdef(paramdefs[pt])
@@ -72,7 +80,7 @@ def read_msb(path):
     tmp = os.path.join(tempfile.gettempdir(), str(os.getpid()) + '_hnp_m.tmp')
     SysFile.WriteAllBytes(tmp, SoulsFormats.DCX.Decompress(str(path)).ToArray())
     m = _msbe_read.Invoke(None, Array[Object]([tmp]))
-    os.unlink(tmp)
+    _safe_unlink(tmp)
     return m
 
 

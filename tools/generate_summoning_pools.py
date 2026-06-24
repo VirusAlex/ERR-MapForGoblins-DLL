@@ -21,6 +21,14 @@ asm = Assembly.LoadFrom(str(config.SOULSFORMATS_DLL))
 clr.AddReference(str(config.SOULSFORMATS_DLL))
 import SoulsFormats
 
+
+def _safe_unlink(path):
+    try:
+        os.unlink(path)
+    except PermissionError:
+        pass
+
+
 from extract_all_items import load_paramdefs, read_param, param_to_dict
 from massedit_common import (OUT_DIR, UNDERGROUND_AREAS, DLC_AREAS, OVERWORLD_AREAS,
                              resolve_location_id, resolve_location_id_at)
@@ -42,7 +50,7 @@ def rfb(rm, data, suf='.bin'):
     else:
         SysFile.WriteAllBytes(tmp, data)
     r = rm.Invoke(None, Array[Object]([tmp]))
-    os.unlink(tmp)
+    _safe_unlink(tmp)
     return r
 
 

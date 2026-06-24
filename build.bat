@@ -96,12 +96,18 @@ if /i "%~1"=="generate" goto :generate
 if /i "%~1"=="snapshot" goto :snapshot
 if /i "%~1"=="release" goto :release
 
-REM Default: configure if needed, then build
+REM Default: generate shared art, configure if needed, then build.
+REM gen_shared MUST run BEFORE configure: it (re)creates the src/generated_shared/*
+REM sources CMake lists (logo, map/overlay icons, baked i18n strings), so a fresh
+REM tree configures cleanly instead of failing on missing generated files.
+call :gen_shared
+if errorlevel 1 exit /b 1
+
 call :ensure_configured
 if errorlevel 1 exit /b 1
 
 REM Incremental data pipeline (hash-cached): ~1s when nothing data-related changed, rebuilds only the
-REM affected stages otherwise. Without this, a plain build refreshed the icon tags (gen_shared, below)
+REM affected stages otherwise. Without this, a plain build refreshed the icon tags (gen_shared, above)
 REM but NOT the pipeline-baked markers/z-order - so reordering map_categories.py left markers stale and
 REM icons appeared mixed between categories. Pass --force-all to rebuild everything.
 echo.
@@ -111,9 +117,6 @@ if errorlevel 1 (
     echo [FAILED] build_pipeline.py
     exit /b 1
 )
-
-call :gen_shared
-if errorlevel 1 exit /b 1
 
 echo.
 echo Building MapForGoblins...
@@ -142,16 +145,20 @@ echo.
 exit /b 0
 
 :gen_shared
-REM Shared icon art (logo + map-icon lossless tags + overlay atlas) -> src/generated_shared.
-REM Profile-INDEPENDENT: derives from tools/map_categories.py (NOT per-profile baked data), so
-REM every build emits the identical complete superset. No gfx involved. (Was a manual step.)
+REM Shared, profile-INDEPENDENT generated sources -> src/generated_shared. Derives from
+REM tools/map_categories.py + i18n/*.json (NOT per-profile baked data), so every build emits
+REM the identical complete superset. No gfx involved. Runs BEFORE configure (these files are
+REM CMake sources). (Was a manual step.)
 echo.
-echo Generating shared icon art (map_categories)...
+echo Generating shared icon art (map_categories) + i18n strings...
 py "%SCRIPT_DIR%tools\generate_logo.py"
 if errorlevel 1 exit /b 1
 py "%SCRIPT_DIR%tools\generate_map_icons.py"
 if errorlevel 1 exit /b 1
 py "%SCRIPT_DIR%tools\generate_overlay_icons.py"
+if errorlevel 1 exit /b 1
+REM Bake + validate the localization bundles (fails the build if a key is missing in any locale).
+py "%SCRIPT_DIR%tools\generate_i18n.py"
 if errorlevel 1 exit /b 1
 exit /b 0
 
@@ -210,10 +217,11 @@ if errorlevel 1 (
     exit /b 1
 )
 
-call :ensure_configured
+REM gen_shared before configure: it creates the generated_shared/* CMake sources.
+call :gen_shared
 if errorlevel 1 exit /b 1
 
-call :gen_shared
+call :ensure_configured
 if errorlevel 1 exit /b 1
 
 echo.

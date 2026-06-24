@@ -164,6 +164,10 @@ This project builds on the work of many people and projects:
 - **ocornut** - [Dear ImGui](https://github.com/ocornut/imgui), the in-game config overlay UI
 - **[Claude Code](https://claude.com/claude-code)** (Anthropic) - heavy lifting on the data-extraction pipeline automation and on reverse-engineering the game's in-memory geom-object state (the collected-piece detection research)
 
+### Contributors
+
+- **[yun-wulian](https://github.com/yun-wulian)** - Chinese (Simplified & Traditional) overlay localization and an in-menu multi-controller gamepad fix.
+
 ### Community
 
 Thanks to the ERR Discord for testing and bug reports, especially **AngryPhilosopher** and **Spiswel** for early testing of the DLL version.

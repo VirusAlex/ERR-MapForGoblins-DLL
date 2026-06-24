@@ -143,6 +143,7 @@ namespace goblin
         // In-game config overlay (Dear ImGui on a DX12 hook). Opens with the
         // toggle key. Set false if a DX-hook conflict (Steam overlay/RTSS/etc.)
         // or a GPU driver issue makes the game unstable.
+        extern std::string uiLanguage; // auto, english, schinese, tchinese
         extern bool enableOverlay;
 
         // Marker dump (hotkey → dump beacon/stamp coords to file)

@@ -9,6 +9,8 @@
 // This translation unit must stay dependency-free (no spdlog/mINI) so the
 // tiny inigen generator can link it without the rest of the mod.
 
+#include "goblin_i18n.hpp"
+
 #include <cstdint>
 #include <functional>
 #include <ostream>
@@ -23,6 +25,7 @@ namespace goblin
         U8,          // -> uint8_t*
         VkKey,       // -> uint32_t*  (parsed via parse_vk_code)
         GamepadMask, // -> uint16_t*  (parsed via parse_gamepad_combo)
+        String,      // -> std::string*
     };
 
     struct IniEntry
@@ -67,5 +70,6 @@ namespace goblin
     // Emit a complete ini. ERR-only sections/entries are written only when
     // include_err_only is true. If `resolve` is set it supplies per-entry
     // values (else the schema default is used).
-    void emit_ini(std::ostream &out, bool include_err_only, const IniValueResolver &resolve = {});
+    void emit_ini(std::ostream &out, bool include_err_only, const IniValueResolver &resolve = {},
+                  i18n::Language language = i18n::Language::English);
 }
