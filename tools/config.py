@@ -19,19 +19,32 @@ PROJECT_DIR = TOOLS_DIR.parent
 # Selected via the MFG_PROFILE env var (set by build_pipeline.py / build.bat).
 #   'err'         -> data source = the ERR mod (default; behaves exactly as before)
 #   'vanilla'     -> data source = the vanilla game files (UXM-unpacked GAME_DIR)
-#   'convergence' -> data source = a MERGED view of The Convergence's mod
+#   'convergence2'-> data source = a MERGED view of The Convergence 2.x mod
 #                    overlay over the vanilla game (the overlay is partial -
 #                    608/1347 MSBs - so tools/prepare_merged_src.py stages
-#                    overlay-over-vanilla into data/convergence/merged_src,
-#                    reproducing what ModEngine2 serves the game at runtime)
+#                    overlay-over-vanilla into data/convergence2/merged_src,
+#                    reproducing what ModEngine2 serves the game at runtime).
+#                    Convergence 2.x ships on ModEngine2 (external_dlls).
+#   'convergence3'-> same staging for The Convergence 3.x. Identical pipeline;
+#                    3.x ships on ModEngine3 (a .me3 profile [[natives]] list),
+#                    which only changes how our DLL is installed, not the data.
 # Each non-default profile scopes all generated artifacts under its own dirs
 # so the builds never clobber each other.
 #   'erte'        -> data source = a MERGED view of the ERTE overhaul's mod
 #                    overlay over the vanilla game (partial overlay, same
 #                    staging as convergence; ERTE ships no worldmap gfx so its
 #                    icon-frame offset is 0, like vanilla)
+#   'goldenage'   -> data source = a MERGED view of the Golden Age overhaul's mod
+#                    overlay over the vanilla game (partial overlay, same staging
+#                    as convergence/erte; ME2 mod, Chinese overhaul w/ engus text)
+#   'vins'        -> data source = a MERGED view of the Elden Vins overhaul's mod
+#                    overlay over the vanilla game (partial overlay - 61 MSBs;
+#                    same staging as convergence/erte/goldenage; ME2 mod, engus text)
+#   'reborn'      -> data source = a MERGED view of the Elden Ring Reborn overhaul's
+#                    mod overlay over vanilla (near-complete overlay - 1471 MSBs;
+#                    same staging as the other overlay profiles; ME2 mod, engus text)
 PROFILE = os.environ.get("MFG_PROFILE", "err").strip().lower()
-if PROFILE not in ("err", "vanilla", "convergence", "erte"):
+if PROFILE not in ("err", "vanilla", "convergence2", "convergence3", "erte", "goldenage", "vins", "reborn"):
     PROFILE = "err"
 
 # Profile-scoped intermediate/generated data dir.
@@ -46,11 +59,10 @@ else:
 # occupy 349-440 on the ERR/vanilla worldmap gfx. The Convergence's own
 # 02_120_worldmap.gfx ALREADY extends sprite 171 to 756 frames (408 icons of
 # its own), so there our frames are appended after theirs and every baked
-# iconId in 349-440 shifts by (756 - 348). tools/build_vanilla_gfx.py
-# verifies this constant against the actual base gfx when building the
-# merged worldmap. Applied centrally in generate_data.py.
-OUR_ICON_RANGE = (349, 440)
-ICON_FRAME_OFFSET = 408 if PROFILE == "convergence" else 0
+# (Removed OUR_ICON_RANGE / ICON_FRAME_OFFSET.) Pure-DLL injects icon frames at
+# runtime (compute_safe_base) and rewrites each marker's iconId to the injected
+# frame, so baked iconIds are value-agnostic lookup keys - no vanilla-frame offset
+# is needed on any profile. Numbering is owned by tools/icon_registry.py.
 
 # Local project resources (no user config needed)
 LIB_DIR = TOOLS_DIR / "lib"
@@ -61,8 +73,12 @@ OO2CORE_DLL = None  # resolved from GAME_DIR below
 # User-configured paths
 ERR_MOD_DIR = None
 GAME_DIR = None
-CONVERGENCE_MOD_DIR = None  # The Convergence's ME2 'mod' overlay dir
+CONVERGENCE2_MOD_DIR = None  # The Convergence 2.x ME2 'mod' overlay dir
+CONVERGENCE3_MOD_DIR = None  # The Convergence 3.x ME3 'mod' overlay dir
 ERTE_MOD_DIR = None         # ERTE overhaul's mod overlay dir
+GOLDENAGE_MOD_DIR = None    # Golden Age overhaul's ME2 'mod' overlay dir
+VINS_MOD_DIR = None         # Elden Vins overhaul's ME2 'mod' overlay dir
+REBORN_MOD_DIR = None       # Elden Ring Reborn overhaul's ME2 'mod' overlay dir
 SMITHBOX_DIR = None
 DARKSCRIPT_RESOURCES = None  # path to <DarkScript3>/Resources/ (optional)
 
@@ -80,13 +96,29 @@ if _config_path.exists():
     if _game:
         GAME_DIR = Path(_game)
 
-    _conv = _cfg.get("paths", "convergence_mod_dir", fallback="").strip()
-    if _conv:
-        CONVERGENCE_MOD_DIR = Path(_conv)
+    _conv2 = _cfg.get("paths", "convergence2_mod_dir", fallback="").strip()
+    if _conv2:
+        CONVERGENCE2_MOD_DIR = Path(_conv2)
+
+    _conv3 = _cfg.get("paths", "convergence3_mod_dir", fallback="").strip()
+    if _conv3:
+        CONVERGENCE3_MOD_DIR = Path(_conv3)
 
     _erte = _cfg.get("paths", "erte_mod_dir", fallback="").strip()
     if _erte:
         ERTE_MOD_DIR = Path(_erte)
+
+    _ga = _cfg.get("paths", "goldenage_mod_dir", fallback="").strip()
+    if _ga:
+        GOLDENAGE_MOD_DIR = Path(_ga)
+
+    _vins = _cfg.get("paths", "vins_mod_dir", fallback="").strip()
+    if _vins:
+        VINS_MOD_DIR = Path(_vins)
+
+    _reborn = _cfg.get("paths", "reborn_mod_dir", fallback="").strip()
+    if _reborn:
+        REBORN_MOD_DIR = Path(_reborn)
 
     _sb = _cfg.get("paths", "smithbox_dir", fallback="").strip()
     if _sb:
@@ -102,11 +134,11 @@ if GAME_DIR:
 # Active game-data source for the selected profile. The pipeline reads
 # regulation.bin / map / event / msg from here. For 'vanilla' this is the
 # UXM-unpacked vanilla game; for 'err' it is the ERR mod overlay; for
-# 'convergence' it is the staged merged dir (overlay-over-vanilla, built by
-# tools/prepare_merged_src.py as the first pipeline stage).
+# the overlay profiles (convergence2/3, erte, ...) it is the staged merged dir
+# (overlay-over-vanilla, built by tools/prepare_merged_src.py as the first stage).
 if PROFILE == "vanilla":
     DATA_SRC_DIR = GAME_DIR
-elif PROFILE in ("convergence", "erte"):
+elif PROFILE in ("convergence2", "convergence3", "erte", "goldenage", "vins", "reborn"):
     DATA_SRC_DIR = DATA_DIR / "merged_src"
 else:
     DATA_SRC_DIR = ERR_MOD_DIR
@@ -129,7 +161,7 @@ def require_data_src_dir():
     if PROFILE == "vanilla":
         print("ERROR: vanilla profile needs a UXM-unpacked game_dir.")
         print(f"  Set game_dir in {_config_path} (must contain loose regulation.bin, map/, event/, msg/).")
-    elif PROFILE in ("convergence", "erte"):
+    elif PROFILE in ("convergence2", "convergence3", "erte", "goldenage", "vins", "reborn"):
         key = PROFILE + "_mod_dir"
         print(f"ERROR: {PROFILE} merged source dir not staged yet.")
         print(f"  Set {key} in {_config_path}, then run tools/prepare_merged_src.py")

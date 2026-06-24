@@ -93,11 +93,11 @@ def collect_plan(overlay: Path, base: Path):
 
 def main():
     base = config.GAME_DIR
-    if config.PROFILE not in ("convergence", "erte"):
+    if config.PROFILE not in ("convergence2", "convergence3", "erte", "goldenage", "vins", "reborn"):
         print(f"NOTE: profile is '{config.PROFILE}' - merged staging only applies "
               f"to overlay profiles; nothing to do.")
         return 0
-    overlay = config.CONVERGENCE_MOD_DIR if config.PROFILE == "convergence" else config.ERTE_MOD_DIR
+    overlay = getattr(config, config.PROFILE.upper() + "_MOD_DIR", None)  # *_MOD_DIR per profile
     if not overlay or not overlay.exists():
         print(f"ERROR: {config.PROFILE}_mod_dir not set in tools/config.ini or not found.")
         return 1

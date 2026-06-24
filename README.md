@@ -8,7 +8,7 @@
   <a href="LICENSE.txt"><img src="https://img.shields.io/badge/license-MIT--style-blue" alt="License"></a>
 </p>
 
-A DLL mod for Elden Ring that adds thousands of icons to the world map: weapons, armor, spells, quest items, bosses, NPCs, gathering nodes, etc. Four builds: one for [ERR](https://www.nexusmods.com/eldenring/mods/541) (~9000 icons, including ERR-specific content like Rune Pieces), one for the vanilla game + Shadow of the Erdtree (~6700 icons), one for [The Convergence](https://www.nexusmods.com/eldenring/mods/3419) (~7200 icons generated from the overhaul's own data), and one for [ERTE](https://www.nexusmods.com/eldenring/mods/2747) (~7600 icons generated from the overhaul's own data).
+A DLL mod for Elden Ring that adds thousands of icons to the world map: weapons, armor, spells, quest items, bosses, NPCs, gathering nodes, etc. Eight builds, each generated from that game/mod's own data: [ERR](https://www.nexusmods.com/eldenring/mods/541) (~9000 icons, including ERR-specific content like Rune Pieces), the vanilla game + Shadow of the Erdtree (~6700 icons), [The Convergence](https://www.nexusmods.com/eldenring/mods/3419) 2.x and 3.x (~7200 each; separate builds because 2.x runs on ModEngine2 and 3.x on ModEngine3), [ERTE](https://www.nexusmods.com/eldenring/mods/2747) (~7600), Elden Ring Golden Age (~6700), ELDEN VINS (~7100), and Elden Ring Reborn (~6900).
 
 **Download:** [Nexus Mods](https://www.nexusmods.com/eldenring/mods/10062) · **Community:** [Elden Ring - DLL Mods Discord](https://discord.gg/JvTMwPCygB)
 
@@ -20,7 +20,7 @@ A DLL mod for Elden Ring that adds thousands of icons to the world map: weapons,
 
 Unlike [Map for Goblins](https://www.nexusmods.com/eldenring/mods/3091), this mod does not modify `regulation.bin`. All map point data is injected into memory at runtime, so it won't conflict with other regulation edits.
 
-> **Note:** OFFLINE only. This is an unofficial mod, not affiliated with the ERR team, the Convergence Team, or the ERTE author.
+> **Note:** OFFLINE only. This is an unofficial mod, not affiliated with the ERR team or any of the overhaul authors (Convergence, ERTE, Golden Age, ELDEN VINS, Reborn).
 
 Collected Rune Pieces, Ember Pieces and gathering nodes are automatically hidden on the map using real-time memory detection of the game's geometry object state.
 
@@ -51,20 +51,22 @@ build.bat clean        # delete build directory
 ```
 
 Every command builds the ERR profile by default. Append `--vanilla`,
-`--convergence`, or `--erte` to build the other profiles (own data/source/build/
-package dirs; see `tools/config.ini.example` for the required paths). The
-Convergence and ERTE profiles stage a merged overlay-over-vanilla source view
-first, since those overhauls ship a partial ModEngine overlay.
+`--convergence2`, `--convergence3`, `--erte`, `--goldenage`, `--vins`, or
+`--reborn` to build the other profiles (own data/source/build/package dirs; see
+`tools/config.ini.example` for the required paths). `convergence2` / `convergence3`
+target The Convergence 2.x (ModEngine2) and 3.x (ModEngine3) respectively - same
+data pipeline, the install method differs. The overhaul profiles (convergence2 /
+convergence3 / erte / goldenage / vins / reborn) stage a merged overlay-over-vanilla
+source view first, since those overhauls ship a partial ModEngine overlay.
 
 Output: `build/Release/MapForGoblins.dll` + `MapForGoblins.ini`
 
 ## Installation
 
-Grab a packaged release from [Nexus Mods](https://www.nexusmods.com/eldenring/mods/10062) - it has step-by-step instructions for all four builds (ERR; vanilla via ModEngine2/me3; The Convergence via its bundled ModEngine2; ERTE via Mod Engine 3).
+Grab a packaged release from [Nexus Mods](https://www.nexusmods.com/eldenring/mods/10062) - it has step-by-step instructions for every build (ERR; vanilla via ModEngine2/me3; the overhauls - Convergence, ERTE, Golden Age, ELDEN VINS, Reborn - via their bundled ModEngine2 / Mod Engine 3).
 
-Manual install of the ERR build:
-1. Copy `MapForGoblins.dll` and `MapForGoblins.ini` to your ERR `dll/offline/` directory
-2. Copy `addons/MapForGoblins/menu/02_120_worldmap.gfx` to ERR `addons/MapForGoblins/menu/`
+The mod is a single DLL (no gfx or extra files) - manual install of the ERR build:
+1. Copy `MapForGoblins.dll` and `MapForGoblins.ini` to your ERR `dll/offline/` directory.
 All map data is compiled into the DLL itself - no external data files needed at runtime.
 
 ## Data Pipeline
@@ -118,7 +120,7 @@ MapForGoblins/
 │   ├── lib/                Andre.SoulsFormats.dll + dependencies
 │   ├── paramdefs/          Elden Ring param field definitions (XML)
 │   └── fmg_patcher/        C++ tool for FMG binary patching
-├── assets/                 Modified game assets (worldmap GFX)
+├── assets/                 Icon PNGs (map_icons/custom/) + logo
 ├── docs/                   Technical documentation
 │   ├── KNOWLEDGE_EN.md     Knowledge base (English)
 │   ├── KNOWLEDGE_RU.md     Knowledge base (Russian)
@@ -145,8 +147,9 @@ This project builds on the work of many people and projects:
 - **Elden Ring Reforged** team - the overhaul mod that inspired this project. Thanks to [**ividyon**](https://github.com/ividyon) and the ERR Discord
 - **Gacsam** - [Goblin-ERR](https://github.com/Gacsam/Goblin-ERR), the original map icons mod for ERR. MapForGoblins started as a fork of this project and reuses its map fragment logic
 - **Harmonixer** - [Map for Goblins](https://www.nexusmods.com/eldenring/mods/3091), the original Elden Ring map icons mod that started it all
-- **Convergence Team** - [The Convergence](https://www.nexusmods.com/eldenring/mods/3419), the overhaul the Convergence build targets
+- **Convergence Team** - [The Convergence](https://www.nexusmods.com/eldenring/mods/3419), the overhaul the Convergence 2.x and 3.x builds target
 - **ERTE author** - [ERTE](https://www.nexusmods.com/eldenring/mods/2747), the overhaul the ERTE build targets
+- **The Golden Age, ELDEN VINS, and Elden Ring Reborn authors** - the overhauls those builds target
 
 ### Libraries & Tools
 

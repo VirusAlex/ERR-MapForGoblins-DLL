@@ -45,7 +45,6 @@ enum class Category : uint8_t
     LootDragonHearts,
     LootGloveworts,
     LootGreatGloveworts,
-    LootRadaFruit,
     LootGestures,
     LootGreases,
     LootUtilities,

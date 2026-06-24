@@ -33,16 +33,18 @@ KINDLING_GOODS_ID = 6610
 # (Goods 6610). Once ON, all 5 markers must stay hidden forever.
 PERMANENT_FLAG = 1045377500
 
-# Row IDs: keep well clear of other generators (graces use 7M, summoning
-# pools 8.7M, material nodes 6M). Use 8.8M block - close to summoning
-# pools without overlap.
-START_ROW_ID = 8800000
+# Row-ID base = this category's z-order slot (single source: row_id_registry;
+# reorder LAYER_ORDER there to relayer). No more hand-spaced magic numbers.
+import row_id_registry
+START_ROW_ID = row_id_registry.base("World - Kindling Spirits")
 
 # Icon 385 = Incantation (matches Magic - Incantations.MASSEDIT). The
 # award is Goods 6610 "Kindling Spirit" incantation, so this category
 # belongs visually with incantation pickups, not gathering nodes (which
 # use iconId 397).
-ICON_ID = 385
+import icon_registry
+# Kindling Spirits reuse the incantations icon (mapped in map_categories.py).
+ICON_ID = icon_registry.iconid_for_name("World - Kindling Spirits")
 
 
 def main():

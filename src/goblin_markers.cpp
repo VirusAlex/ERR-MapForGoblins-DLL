@@ -262,7 +262,6 @@ static const char *category_name(generated::Category c)
         case C::LootDragonHearts: return "Loot - Dragon Hearts";
         case C::LootGloveworts: return "Loot - Gloveworts";
         case C::LootGreatGloveworts: return "Loot - Great Gloveworts";
-        case C::LootRadaFruit: return "Loot - Rada Fruit";
         case C::LootGestures: return "Loot - Gestures";
         case C::LootGreases: return "Loot - Greases";
         case C::LootUtilities: return "Loot - Utilities";
@@ -442,7 +441,7 @@ static bool seh_copy(const void *src, void *dst, size_t n)
 
 // Returns the number of marker slots written (beacons + stamps), or -1 if the
 // output path isn't set. 0 is a valid result (no beacon arrays live yet).
-static int dump_impl(std::ostream &f)
+static int dump_impl(std::ostream &f, DumpSel sel)
 {
     resolve_flag_api();
     auto arrays = find_beacon_arrays();
@@ -521,7 +520,7 @@ static int dump_impl(std::ostream &f)
           << std::hex << base << std::dec << " ----\n";
 
         const MarkerSlot *beacons = buf;
-        for (int i = 0; i < N_BEACONS_SHOWN; ++i)
+        for (int i = 0; sel != DUMP_STAMPS && i < N_BEACONS_SHOWN; ++i)
         {
             const auto &s = beacons[i];
             if (slot_is_empty(s))
@@ -542,7 +541,7 @@ static int dump_impl(std::ostream &f)
         // Stamps immediately follow. Scan until 0xFFFF type or invalid.
         const MarkerSlot *stamps = buf + N_BEACONS;
         int stamp_count = 0;
-        for (int i = 0; i < N_STAMPS; ++i)
+        for (int i = 0; sel != DUMP_BEACONS && i < N_STAMPS; ++i)
         {
             const auto &s = stamps[i];
             // Terminator: type high-byte 0xFF or all-zero
@@ -563,16 +562,17 @@ static int dump_impl(std::ostream &f)
             ++stamp_count;
             ++total_markers;
         }
-        f << "  -- " << stamp_count << " stamps --\n";
+        if (sel != DUMP_BEACONS)
+            f << "  -- " << stamp_count << " stamps --\n";
     }
 
     return total_markers;
 }
 
 // SEH-guarded body invocation (only an ostream& in this frame, so __try is OK).
-static int seh_dump_impl(std::ostream &f)
+static int seh_dump_impl(std::ostream &f, DumpSel sel)
 {
-    __try { return dump_impl(f); }
+    __try { return dump_impl(f, sel); }
     __except (EXCEPTION_EXECUTE_HANDLER) { return -2; }
 }
 
@@ -590,16 +590,16 @@ static int dump_to_file()
         spdlog::warn("Marker dump: cannot open {}", g_output_path.string());
         return -1;
     }
-    int n = seh_dump_impl(f);
+    int n = seh_dump_impl(f, DUMP_ALL); // log file always has both kinds together
     spdlog::info("Marker dump written to {} ({} markers)", g_output_path.string(), n);
     return n;
 }
 
 // In-memory dump for the in-game overlay's Tools tab (copyable text box).
-std::string dump_to_string()
+std::string dump_to_string(DumpSel sel)
 {
     std::ostringstream ss;
-    int n = seh_dump_impl(ss);
+    int n = seh_dump_impl(ss, sel);
     if (n < 0)
         ss << "\n(no markers found / dump error code " << n
            << " - open the world map first, then dump)\n";

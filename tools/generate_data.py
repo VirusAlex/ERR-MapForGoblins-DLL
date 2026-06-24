@@ -52,7 +52,6 @@ CATEGORY_MAP = {
     "Loot - Merchant Bell-Bearings": "LootMerchantBellBearings",
     "Loot - MP-Fingers": "LootMPFingers",
     "Loot - Prattling Pates": "LootPrattlingPates",
-    "Loot - Rada Fruit": "LootRadaFruit",
     "Loot - Reusables": "LootReusables",
     "Loot - Smithing Stones": "LootSmithingStones",
     "Loot - Smithing Stones (Low)": "LootSmithingStonesLow",
@@ -223,16 +222,6 @@ def parse_massedit_files(massedit_dir):
                         print(f"WARNING: Unknown field '{field}' in {filename}, skipping")
                         continue
 
-                    # Our custom icon frames (sprite-171 349-440) sit at a
-                    # different frame index when the target mod's worldmap gfx
-                    # already extends the sprite (Convergence: +408). Single
-                    # remap chokepoint for every category/MASSEDIT.
-                    if field == "iconId" and config.ICON_FRAME_OFFSET:
-                        icon = int(float(value))
-                        lo, hi = config.OUR_ICON_RANGE
-                        if lo <= icon <= hi:
-                            value = str(icon + config.ICON_FRAME_OFFSET)
-
                     entries[row_id][field] = value
                     entries[row_id]["_category"] = category
 
@@ -382,18 +371,9 @@ def generate_item_icons_cpp(output_path):
             if enum:
                 table[int(k)] = (int(v[0]), enum)
 
-    off = config.ICON_FRAME_OFFSET
-    # Spoiler-free "?" map-icon frame. Our 92 custom icons occupy iconIds
-    # OUR_ICON_RANGE = 349..440 (the game's iconId is the 1-based sprite-171 frame
-    # number; our frames append right after the base's frames). The "?" frame is
-    # appended AFTER our 92 icons, so it is iconId 441 (= 440 + 1), NOT 440 - 440
-    # is our LAST real icon and pointing the anon override there showed that icon
-    # (a statue on Convergence) instead of the "?". On overlay bases that add
-    # their own frames (Convergence) every iconId shifts by ICON_FRAME_OFFSET, so
-    # the "?" is 441 + offset (441 vanilla/erte/err, 849 convergence). build_vanilla_gfx
-    # places the frame at 0-indexed position 440(+offset); that 0-indexed position
-    # is 1-based iconId 441(+offset) in-game - the +1 is this off-by-one.
-    anon_icon_id = 441 + off
+    # Spoiler-free "?" map-icon iconId. Just another registry-assigned icon id; the
+    # DLL injects its frame and remaps markers to it at runtime like every other icon.
+    anon_icon_id = __import__("icon_registry").iconid("anon")
 
     with open(output_path, "w", encoding="utf-8") as f:
         f.write("// AUTO-GENERATED FILE - DO NOT EDIT\n")
@@ -405,7 +385,7 @@ def generate_item_icons_cpp(output_path):
         f.write("const ItemIcon ITEM_ICONS[] = {\n")
         for key in sorted(table.keys()):
             icon, enum = table[key]
-            f.write(f"    {{{key}, {icon + off}u, Category::{enum}}},\n")
+            f.write(f"    {{{key}, {icon}u, Category::{enum}}},\n")
         f.write("};\n\n")
         f.write("} // namespace goblin::generated\n")
 
@@ -472,7 +452,8 @@ def main():
     import argparse
     parser = argparse.ArgumentParser()
     parser.add_argument("--massedit-dir", type=str, default=None,
-                        help="Path to MASSEDIT directory (default: data/massedit)")
+                        help="Path to MASSEDIT directory (default: data/massedit_generated; "
+                             "the pipeline passes the active profile's massedit_generated)")
     args = parser.parse_args()
 
     script_dir = Path(__file__).parent
@@ -481,7 +462,7 @@ def main():
     if args.massedit_dir:
         massedit_dir = Path(args.massedit_dir)
     else:
-        massedit_dir = project_dir / "data" / "massedit"
+        massedit_dir = project_dir / "data" / "massedit_generated"
     import config
     output_dir = config.GENERATED_DIR  # src/generated or src/generated_vanilla
 

@@ -79,7 +79,7 @@ def main():
     print(f"Deduplicated: {dupes} duplicates removed, {len(unique_nodes)} unique nodes")
     onetime_nodes = unique_nodes
 
-    START_ID = 6000000
+    START_ID = __import__("row_id_registry").base("Loot - Material Nodes")  # z-order slot; see row_id_registry
     entries = []
     emitted_nodes = []  # node behind entries[i] - same-loop capture for slots.json
     excluded_unreachable = 0
@@ -96,7 +96,7 @@ def main():
 
         entry = {
             "id": START_ID + len(entries),
-            "iconId": 397,
+            "iconId": __import__("icon_registry").iconid("material_nodes"),
             "areaNo": area,
             "posX": round(n["x"], 3),
             "posY": round(n["y"], 3),

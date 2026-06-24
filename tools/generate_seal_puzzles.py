@@ -11,8 +11,10 @@ import config
 from massedit_common import (OUT_DIR, UNDERGROUND_AREAS, DLC_AREAS,
                              OVERWORLD_AREAS, resolve_location_id_at)
 
-ICON_ID = 438       # seal-puzzle icon (image 162, blue-cyan tint)
-ROW_START = 8900000
+import icon_registry
+import row_id_registry
+ICON_ID = icon_registry.iconid("interactables")  # seal-puzzle icon (image 162, blue-cyan tint)
+ROW_START = row_id_registry.base("World - Seal Puzzles")  # z-order slot; see row_id_registry
 
 
 def get_disp(area):

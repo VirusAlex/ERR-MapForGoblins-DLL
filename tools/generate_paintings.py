@@ -129,7 +129,7 @@ def main():
 
     # Step 3: Resolve positions and generate MASSEDIT
     lines = []
-    row_id = 7600000
+    row_id = __import__("row_id_registry").base("World - Paintings")  # z-order slot; see row_id_registry
     count = 0
     for p in sorted(paintings, key=lambda p: p['flag']):
         eid = p['entity_id']
@@ -146,7 +146,7 @@ def main():
         else:
             disp = 'dispMask00'
 
-        lines.append(f'param WorldMapPointParam: id {row_id}: iconId: = 407;')
+        lines.append(f'param WorldMapPointParam: id {row_id}: iconId: = {__import__("icon_registry").iconid("paintings")};')
         lines.append(f'param WorldMapPointParam: id {row_id}: {disp}: = 1;')
         lines.append(f'param WorldMapPointParam: id {row_id}: areaNo: = {area};')
         if area in OVERWORLD_AREAS or area in DLC_AREAS or gx > 0:

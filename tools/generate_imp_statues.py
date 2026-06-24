@@ -126,7 +126,7 @@ def main():
 
     # Generate MASSEDIT
     lines = []
-    row_id = 7800000
+    row_id = __import__("row_id_registry").base("World - Imp Statues")  # z-order slot; see row_id_registry
     for s in deduped:
         area = s['area']
         gx = s['gx']
@@ -139,7 +139,7 @@ def main():
         else:
             disp = 'dispMask00'
 
-        lines.append(f'param WorldMapPointParam: id {row_id}: iconId: = 369;')
+        lines.append(f'param WorldMapPointParam: id {row_id}: iconId: = {__import__("icon_registry").iconid("imp_statues")};')
         lines.append(f'param WorldMapPointParam: id {row_id}: {disp}: = 1;')
         lines.append(f'param WorldMapPointParam: id {row_id}: areaNo: = {area};')
         if area in OVERWORLD_AREAS or area in DLC_AREAS or gx > 0:

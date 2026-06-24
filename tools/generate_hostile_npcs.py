@@ -261,12 +261,12 @@ def main():
     records.sort(key=lambda r: (r['area'], r['gx'], r['gz'], r['x'], r['z']))
 
     lines = []
-    row_id = 9200000
+    row_id = __import__("row_id_registry").base("World - Hostile NPC")  # z-order slot; see row_id_registry
     named = 0
     flagged = 0
     for r in records:
         disp = get_disp_mask(r['area'])
-        lines.append(f'param WorldMapPointParam: id {row_id}: iconId: = 374;')
+        lines.append(f'param WorldMapPointParam: id {row_id}: iconId: = {__import__("icon_registry").iconid("hostile_npc")};')
         lines.append(f'param WorldMapPointParam: id {row_id}: {disp}: = 1;')
         lines.append(f'param WorldMapPointParam: id {row_id}: areaNo: = {r["area"]};')
         if r['area'] in OVERWORLD_AREAS or r['area'] in DLC_AREAS or r['gx'] > 0:

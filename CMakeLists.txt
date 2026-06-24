@@ -51,6 +51,20 @@ FetchContent_Declare(imgui
   CONFIGURE_COMMAND     ""
   BUILD_COMMAND         "")
 
+# miniz: tiny zlib-compatible inflate, used to decode our embedded DefineBitsLossless2 icon tags into
+# RGBA for the ImGui overlay (so map + menu share ONE embedded icon source - the lossless tags). We only
+# DOWNLOAD it (its own CMake forces CMAKE_BUILD_TYPE and breaks the VS multi-config build) and compile
+# its sources straight into MapForGoblins - see below.
+FetchContent_Declare(miniz
+  GIT_REPOSITORY        https://github.com/richgel999/miniz.git
+  GIT_TAG               3.0.2)
+
+# stb_image: single-header PNG decoder for the dev "Icon Preview" tool (load a png off disk into an
+# RGBA texture). Download only; we #define STB_IMAGE_IMPLEMENTATION in goblin_overlay.cpp.
+FetchContent_Declare(stb
+  GIT_REPOSITORY        https://github.com/nothings/stb.git
+  GIT_TAG               master)
+
 # Set iterator debug level to 0 for ELDEN RING ABI compatibility
 add_definitions(-D_ITERATOR_DEBUG_LEVEL=0)
 
@@ -58,6 +72,14 @@ add_definitions(-D_ITERATOR_DEBUG_LEVEL=0)
 set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
 
 FetchContent_MakeAvailable(minhook pattern16 mini spdlog imgui)
+FetchContent_GetProperties(miniz)
+if(NOT miniz_POPULATED)
+  FetchContent_Populate(miniz)  # download only, no add_subdirectory (avoid its CMake)
+endif()
+FetchContent_GetProperties(stb)
+if(NOT stb_POPULATED)
+  FetchContent_Populate(stb)    # header-only, download only
+endif()
 
 # imgui core + DX12/Win32 backends are compiled directly INTO the MapForGoblins
 # target (see target_sources below), not as a separate static lib - a separate
@@ -94,6 +116,8 @@ add_library( MapForGoblins SHARED
   src/goblin_config_schema.cpp
   src/goblin_config.hpp
   src/goblin_config.cpp
+  src/goblin_diag.hpp
+  src/goblin_diag.cpp
   src/goblin_collected.hpp
   src/goblin_collected.cpp
   src/goblin_inject.hpp
@@ -110,9 +134,23 @@ add_library( MapForGoblins SHARED
   src/goblin_overlay.cpp
   src/goblin_map_timing.hpp
   src/goblin_map_timing.cpp
+  src/goblin_gfx_probe.hpp
+  src/goblin_gfx_probe.cpp
   src/generated_shared/goblin_overlay_icons.hpp
   src/generated_shared/goblin_overlay_icons.cpp
+  src/generated_shared/goblin_map_icons.hpp
+  src/generated_shared/goblin_map_icons.cpp
+  src/generated_shared/goblin_logo.hpp
+  src/generated_shared/goblin_logo.cpp
+  ${miniz_SOURCE_DIR}/miniz.c
+  ${miniz_SOURCE_DIR}/miniz_tinfl.c
+  ${miniz_SOURCE_DIR}/miniz_tdef.c
   src/dllmain.cpp)
+
+# miniz: inflate only (no zip/file/time); include its headers + our stub miniz_export.h (miniz's CMake
+# would generate that, but we don't run it); compiled straight into the DLL.
+target_include_directories(MapForGoblins PRIVATE ${miniz_SOURCE_DIR} ${CMAKE_SOURCE_DIR}/src/vendor_miniz ${stb_SOURCE_DIR})
+target_compile_definitions(MapForGoblins PRIVATE MINIZ_NO_ARCHIVE_APIS MINIZ_NO_STDIO MINIZ_NO_TIME)
 
 set_target_properties(MapForGoblins PROPERTIES OUTPUT_NAME "MapForGoblins")
 
@@ -196,4 +234,5 @@ target_link_libraries( MapForGoblins
   mini
   spdlog
   d3d12
-  dxgi)
+  dxgi
+  comdlg32)

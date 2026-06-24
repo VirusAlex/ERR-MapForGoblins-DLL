@@ -10,6 +10,7 @@ import tempfile
 sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8')
 
 import config
+import icon_registry
 from pythonnet import load
 load('coreclr')
 import clr
@@ -199,14 +200,16 @@ def main():
 
     # Write Spirit Springs (icon 404 = MENU_MAP_Range, tutorialId 301620 = "Spiritspring Jumping")
     n = write_massedit(springs, 'World - Spirit Springs.MASSEDIT',
-                       icon_id=404, text_id=900301620, start_row=8600000)
+                       icon_id=icon_registry.iconid("spirit_springs"), text_id=900301620,
+                       start_row=__import__("row_id_registry").base("World - Spirit Springs"))
     print(f"Written {n} springs to World - Spirit Springs.MASSEDIT")
 
     # Write Hawks (icon 439 - custom image MENU_ItemIcon_03273; textId
     # 904210304 = "167. Spiritspring Stormhawk")
     # clearedEventFlagId = hawk EntityID (set when hawk killed = spring unlocked)
     n = write_massedit(hawks, 'World - Spiritspring Hawks.MASSEDIT',
-                       icon_id=439, text_id=904210304, start_row=8650000)
+                       icon_id=icon_registry.iconid("spiritspring_hawks"), text_id=904210304,
+                       start_row=__import__("row_id_registry").base("World - Spiritspring Hawks"))
     print(f"Written {n} hawks to World - Spiritspring Hawks.MASSEDIT")
 
 

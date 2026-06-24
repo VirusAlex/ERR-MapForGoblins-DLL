@@ -142,11 +142,11 @@ def main():
     print(f'GestureParam itemIds: {len(gesture_items)}')
 
     lines = []
-    row_id = 4900000
+    row_id = __import__("row_id_registry").base("Loot - Gestures")  # z-order slot; see row_id_registry
     unnamed = 0
     for r in uniq:
         disp = get_disp_mask(r['area'])
-        lines.append(f'param WorldMapPointParam: id {row_id}: iconId: = 417;')
+        lines.append(f'param WorldMapPointParam: id {row_id}: iconId: = {__import__("icon_registry").iconid("gestures")};')
         lines.append(f'param WorldMapPointParam: id {row_id}: {disp}: = 1;')
         lines.append(f'param WorldMapPointParam: id {row_id}: areaNo: = {r["area"]};')
         if r['gx'] > 0:

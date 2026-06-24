@@ -274,7 +274,7 @@ def main():
                 rid = max_id + 1 + n
                 a, gx, gz = s["tile"]
                 out += [
-                    f"param WorldMapPointParam: id {rid}: iconId: = 374;",
+                    f"param WorldMapPointParam: id {rid}: iconId: = {__import__('icon_registry').iconid('bosses')};",
                     f"param WorldMapPointParam: id {rid}: dispMask00: = 1;",
                     f"param WorldMapPointParam: id {rid}: areaNo: = {a};",
                     f"param WorldMapPointParam: id {rid}: gridXNo: = {gx};",

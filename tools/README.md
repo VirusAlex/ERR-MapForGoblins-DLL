@@ -115,7 +115,7 @@ icons that share coords via a square spiral. Also emits the legacy dungeon→ove
 conversion table from WorldMapLegacyConvParam. Text rendering is done at runtime
 via an offset-encoded ID that redirects to the game's own FMG entries - no custom
 text file is generated.
-Args: `[--massedit-dir PATH]` (default: `data/massedit`; pipeline uses `data/massedit_generated`).
+Args: `[--massedit-dir PATH]` (default: `data/massedit_generated`; the pipeline passes the active profile's `massedit_generated`).
 Output: `src/generated/goblin_map_data.cpp`, `src/generated/goblin_legacy_conv.hpp`.
 
 ### generate_loot_massedit.py - Generate loot/equipment/magic/etc MASSEDIT
@@ -149,44 +149,28 @@ Output: console report, `data/comparison_report.json`
 
 ---
 
-## Icon GFX Editing
+## Map Icons (pure-DLL, no gfx)
 
-The map-icon GFX (`assets/menu/02_120_worldmap_new.gfx`) is a Scaleform SWF with one
-frame per iconId in DefineSprite 171. Each frame = background (`charId=1000` blue drop)
-+ overlay icon (various charIds for different textures) + optional color tint.
+Icons are NOT baked into a gfx file - the DLL injects them into the live worldmap
+Scaleform movie at runtime, so the mod ships no gfx and modifies no game files.
+Authoring is just PNGs + one table:
 
-See `assets/map_icons/HOW_TO_ADD_ICONS.md` for the full FFDEC workflow.
+- Source art: `assets/map_icons/custom/*.png` - one per category (committed).
+- Registry: `tools/map_categories.py` - the single table `(MASSEDIT file, icon slug,
+  png)` in map z-order. `icon_registry.py` derives reorder-proof iconIds from it (sorted
+  slug) and `row_id_registry.py` derives z-order (table order).
+- Build: `generate_map_icons.py` (+ `generate_overlay_icons.py` / `generate_logo.py`) run
+  in build.bat's `:gen_shared` step and emit `src/generated_shared/`. No gfx, no FFDEC.
 
-### add_gfx_icon.py - Add single icon frame to GFX XML
-Appends one new frame to sprite 171 with given bg/icon char, scale, translate, and
-RGB tint. Operates on decompiled XML.
-Args: many (`--xml`, `--output`, `--frame`, `--bg-char`, `--icon-char`, `--icon-red`,
-etc.). See `--help`.
+Add / relayer / rename a category by editing `map_categories.py` and dropping its PNG in
+`assets/map_icons/custom/`. Preview a PNG at map scale without a rebuild via the overlay's
+Debug tab "Icon Preview...".
 
-### add_gfx_icons_batch.py - Batch-add tinted frames from config
-Reads `tools/icon_tints_config.json` (family templates + per-category color tints)
-and appends all new frames in one XML pass. Used to materialize the tinted-color
-palette for 60+ categories that would otherwise share a few base icons.
-Args: `[--xml in.xml] [--output out.xml] [--config path]`.
-Output: modifies XML in place (new frameCount).
-
-### icon_tints_config.json - Tinted-icon specifications
-Declarative list of `(iconId, family, r, g, b)` plus base-family templates (`consumable`,
-`key`, `stone`, `crafting`, `seed`, `piece`). Edit this to change or add tinted variants.
-
-### render_map_icons.py - Render composed icon previews
-Parses GFX XML frames, loads TGA textures, applies color transforms, and composites
-each iconId as a PNG preview. Used to visually verify new icons before baking into
-the GFX.
-Args: `--xml PATH --frames N[,M,...]`.
-Output: `assets/map_icons/composed/iconId_NNN.png`.
-
-### extract_subtextures.py - Extract icon textures from game DDS
-Reads `01_common.sblytbnd.dcx` (layouts) + `01_common.tpf.dcx` (sprite sheets), crops
-sub-textures into individual TGA files used by `render_map_icons.py`. Reproducible,
-so the TGAs are gitignored.
-No arguments.
-Output: `assets/menu/*.tga`.
+The old FFDEC gfx-authoring tools (add_gfx_icon.py, add_gfx_icons_batch.py,
+render_map_icons.py, build_vanilla_gfx.py, extract_subtextures.py, icon_tints_config.json)
+are no longer part of the build - the mod is pure-DLL - but they're kept in tools/ for
+reference and one-off gfx experiments. make_allon_ini.py is likewise unused now that the
+stock ini ships all-on, but kept around.
 
 ---
 
@@ -210,7 +194,10 @@ Reads player-placed map beacons from save file and finds nearby MASSEDIT entries
 Markers are stored at slot offset `+0x01C9C8` (5 beacons) and `+0x01CA68` (10 secondary).
 Converts map UI coordinates to world coordinates using an empirical formula
 (`worldX = 0.4056 * mapX + 9223`, `worldZ = -0.4989 * mapZ + 12931`, error < 50 units).
-Args: `<save_file.err> [--slot N] [--radius R] [--category CAT]`.
+Args: `<save_file.err> --massedit-dir PATH [--slot N] [--radius R] [--category CAT] [--no-massedit]`.
+`--massedit-dir` is REQUIRED for the lookup (point it at `data/massedit_generated`, or
+`data/<profile>/massedit_generated` for a non-ERR profile); there is no default. Pass
+`--no-massedit` to just dump the markers without the MASSEDIT lookup.
 Output: console list of markers with nearby MASSEDIT entries sorted by distance.
 
 ### _diff_saves_bytes.py - Binary diff of two saves

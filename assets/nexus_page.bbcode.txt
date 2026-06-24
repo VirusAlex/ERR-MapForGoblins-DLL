@@ -1,26 +1,31 @@
 [color=#ff0000][size=6][b]OFFLINE ONLY[/b][/size][/color]
 [size=4][b]This mod is UNOFFICIAL.[/b] It is not affiliated with the ERR team, the Convergence Team, or the ERTE author, and they don't support it.
-Do [b]NOT[/b] ask for help in the official ERR, Convergence or ERTE channels while this mod is installed. Remove it first, then check whether your problem is still there. I am not responsible if you get kicked or banned.
+Do [b]NOT[/b] ask for help in the official ERR, Convergence or ERTE channels while this mod is installed. Remove it first, then check whether your problem is still there. I am not responsible if you get kicked or banned.
 For questions and bug reports - join our Discord: [url=https://discord.gg/JvTMwPCygB][b]Elden Ring - DLL Mods[/b][/url][/size]
 
-[size=5][b]Compatible with [url=https://www.nexusmods.com/eldenring/mods/510]Seamless Co-op[/url][/b][/size]
+[size=5][b]Compatible with [url=https://www.nexusmods.com/eldenring/mods/510]Seamless Co-op[/url][/b][/size]
 
 [size=4][b]Description[/b][/size]
 [color=#D4D4D8]DLL version[/color] of the Map for Goblins mod. Thousands of loot and world icons on the in-game map, and [b]no regulation.bin changes[/b]: all map data gets injected into memory at runtime, so it won't conflict with other mods that edit the regulation.
 
-There are four builds on the Files tab, pick the one for your game:
+There are eight builds on the Files tab, pick the one for your game:
 [list]
 [*][b]ERR version[/b], for [url=https://www.nexusmods.com/eldenring/mods/541]ERR[/url]. ~9000 icons, including the ERR-specific stuff (Rune Pieces, Ember Pieces, Kindling Spirits, unique loot etc).[/*]
 [*][b]Vanilla version[/b], for the base game + Shadow of the Erdtree. ~6700 icons, same mod, just without the ERR-only categories. Also works with the [url=https://www.nexusmods.com/eldenring/mods/428]Item & Enemy Randomizer[/url] - see below.[/*]
-[*][b]Convergence version[/b], for [url=https://www.nexusmods.com/eldenring/mods/3419]The Convergence[/url]. ~7200 icons generated from the overhaul's own data, so it covers its relocated loot, new bosses and reworked zones. Matches the Convergence version it was built against (currently 2.2.3A) - after a Convergence update expect some markers to be off until this build is updated too.[/*]
+[*][b]Convergence 2.x version[/b], for [url=https://www.nexusmods.com/eldenring/mods/3419]The Convergence[/url] 2.x (runs on ModEngine2). ~7200 icons generated from the overhaul's own data, so it covers its relocated loot, new bosses and reworked zones. Matches the Convergence version it was built against (currently 2.2.3.1) - after a Convergence update expect some markers to be off until this build is updated too.[/*]
+[*][b]Convergence 3.x version[/b], for [url=https://www.nexusmods.com/eldenring/mods/3419]The Convergence[/url] 3.x (runs on ModEngine3 / me3). Same ~7200 icons generated from the overhaul's own data; this is a separate file because 3.x moved to ModEngine3, so it installs differently (see below). Pick this one if your Convergence is 3.x.[/*]
 [*][b]ERTE version[/b], for [url=https://www.nexusmods.com/eldenring/mods/2747]ERTE[/url]. ~7600 icons generated from the overhaul's own data. Matches the ERTE version it was built against - after an ERTE update expect some markers to be off until this build is updated too.[/*]
+[*][b]Golden Age version[/b], for the Elden Ring Golden Age overhaul. ~6700 icons generated from the overhaul's own data. Matches the Golden Age version it was built against - after an update expect some markers to be off until this build is updated too.[/*]
+[*][b]ELDEN VINS version[/b], for the ELDEN VINS overhaul. ~7100 icons generated from the overhaul's own data. Matches the version it was built against - after an update expect some markers to be off until this build is updated too.[/*]
+[*][b]Elden Ring Reborn version[/b], for the Elden Ring Reborn overhaul. ~6900 icons generated from the overhaul's own data. Matches the version it was built against - after an update expect some markers to be off until this build is updated too.[/*]
 [/list]
-Based on [url=https://www.nexusmods.com/eldenring/mods/3091]Map for Goblins[/url] by Harmonixer and [url=https://github.com/Gacsam/Goblin-ERR]Goblin-ERR[/url] by Gacsam, rebuilt from scratch as a single DLL + gfx for icons.
+Based on [url=https://www.nexusmods.com/eldenring/mods/3091]Map for Goblins[/url] by Harmonixer and [url=https://github.com/Gacsam/Goblin-ERR]Goblin-ERR[/url] by Gacsam, rebuilt from scratch as a [b]single DLL[/b] - the icons are injected into the map at runtime, so the mod ships no gfx and modifies no game files.
 
-[size=5][color=#ff8c00][b]Most icon categories are OFF by default - turn them on![/b][/color][/size]
-After installing, open [b]MapForGoblins.ini[/b] and set the categories you want to [b]= true[/b] (show_bosses, show_graces, show_smithing_stones, ...). Or just drop in the included [b]"all-on" preset[/b] - it replaces the default ini and switches everything on at once. [b]You can also enable categories in-game: press [color=#ff8c00]F10[/color] (or [color=#ff8c00]Y+R3[/color] on a controller) to open the new config overlay.[/b] [b]Seeing no icons? You almost certainly haven't enabled any in the ini - it is not broken.[/b]
+[size=5][color=#ff8c00][b]Install is just one DLL[/b][/color][/size]
+This is a pure DLL: the only files are [b]MapForGoblins.dll[/b] and [b]MapForGoblins.ini[/b] (kept together). All icon categories are [b]ON by default[/b] - open the ini, or press [b][color=#ff8c00]F10[/color][/b] (or [b][color=#ff8c00]Y+R3[/color][/b] on a controller) in-game, to turn off any you don't want.
+[b]Updating from an older version?[/b] This version no longer uses a gfx file. After replacing the DLL, [color=#ff8c00]delete the old 02_120_worldmap.gfx[/color] (the old "menu" folder, and for ERR the "addons\MapForGoblins" folder) and remove any old "mods"/"packages" entry that pointed at the MapForGoblins asset folder - only the DLL needs to be registered now.
 
-[size=5][color=#ff8c00][b]NEW in 2.0.0: in-game mod menu[/b][/color][/size]
+[size=5][color=#ff8c00][b]In-game mod menu[/b][/color][/size]
 [img]https://staticdelivery.nexusmods.com/mods/4333/images/10062/10062-1781886515-155689242.png[/img]
 Press [b][color=#ff8c00]F10[/color][/b] (keyboard) or [b][color=#ff8c00]Y+R3[/color][/b] (controller) to open a settings panel right inside the game - no more alt-tabbing to edit the ini. From it you can:
 [list]
@@ -32,7 +37,7 @@ Press [b][color=#ff8c00]F10[/color][/b] (keyboard) or [b][color=#ff8c00]Y+R3[/co
 
 [size=4][b]Main features[/b][/size]
 [list]
-[*][b]In-game mod menu[/b] (new, see above): F10 (or Y+R3 on a controller) opens a settings panel to toggle icon categories, the master switch and Show all / Hide all without editing the ini. Category toggles take effect right away on the open map.[/*]
+[*][b]In-game mod menu[/b] (see above): F10 (or Y+R3 on a controller) opens a settings panel to toggle icon categories, the master switch and Show all / Hide all without editing the ini. Category toggles take effect right away on the open map.[/*]
 [*]Icon categories that can be turned on/off individually in [b]MapForGoblins.ini[/b]: weapons, armour, talismans, spells, key items, smithing stones, gloveworts, cookbooks, bell bearings, gathering nodes, bosses, graces, stakes of Marika, spirit springs, imp statues, paintings, summoning pools, map fragments, gestures, NPC invaders, puzzles etc.[/*]
 [*]Icons in a region only show up after you've found that region's map fragment (can be disabled).[/*]
 [*]Things you've already collected disappear from the map: including gathered material nodes (like Arteria Leaf), Rune/Ember Pieces etc. Defeated bosses either hide or get a checkmark (configurable).[/*]
@@ -48,10 +53,10 @@ Press [b][color=#ff8c00]F10[/color][/b] (keyboard) or [b][color=#ff8c00]Y+R3[/co
 [spoiler]
 [list=1]
 [*]Download the ERR file and unpack it[/*]
-[*]Copy [b]dll/[/b] and [b]addons/[/b] into your ERR folder (merge with what's there)[/*]
+[*]Copy [b]MapForGoblins.dll[/b] and [b]MapForGoblins.ini[/b] into your ERR [b]dll\offline\[/b] folder[/*]
 [*]Launch through ERR as usual[/*]
 [/list]
-Settings are in [b]dll/offline/MapForGoblins.ini[/b] [b]Reminder: most categories are OFF by default - enable the ones you want here, or use the included all-on preset.[/b][/spoiler]
+Settings are in [b]dll\offline\MapForGoblins.ini[/b] - all categories are ON by default, turn off what you don't want (or use F10 in-game).[/spoiler]
 
 [size=4][b]Installation - Vanilla version[/b][/size]
 You need a mod loader, either [b]ModEngine3 (me3)[/b] or [b]ModEngine2[/b].
@@ -60,108 +65,146 @@ You need a mod loader, either [b]ModEngine3 (me3)[/b] or [b]ModEngine2[/b].
 [spoiler]
 [list=1]
 [*]Install me3 ([url=https://github.com/garyttierney/me3/releases]me3_installer.exe[/url], docs at [url=https://me3.help/]me3.help[/url])[/*]
-[*]Copy the [b]MapForGoblins[/b] folder from the archive next to your .me3 profile (e.g. eldenring-default.me3)[/*]
+[*]Copy [b]MapForGoblins.dll[/b] and [b]MapForGoblins.ini[/b] next to your .me3 profile (e.g. eldenring-default.me3)[/*]
 [*]Open the .me3 profile in Notepad and make sure it has:
 [code]profileVersion = "v1"
 
 [[supports]]
 game = "eldenring"
 
-[[packages]]
-path = 'MapForGoblins'
-
 [[natives]]
-path = 'MapForGoblins/MapForGoblins.dll'[/code]
+path = 'MapForGoblins.dll'[/code]
 [/*]
 [*]Double-click the .me3 file to play[/*]
 [/list]
 [/spoiler]
-[b]Option B: ModEngine2[/b] [i](see the 2nd image on this page for a visual setup guide)[/i]
+[b]Option B: ModEngine2[/b]
 [spoiler]
 [list=1]
 [*]Get [url=https://github.com/soulsmods/ModEngine2/releases]ModEngine2[/url] and extract it anywhere (NOT into the game folder)[/*]
-[*]Copy the [b]MapForGoblins[/b] folder into the ModEngine2 directory (next to launchmod_eldenring.bat)[/*]
-[*]In [b]config_eldenring.toml[/b] add the DLL and the asset folder:
-[code]external_dlls = [ "MapForGoblins\\MapForGoblins.dll" ]
-
-mods = [
-    { enabled = true, name = "MapForGoblins", path = "MapForGoblins" },
-    { enabled = true, name = "default", path = "mod" }
-][/code]
+[*]Copy [b]MapForGoblins.dll[/b] and [b]MapForGoblins.ini[/b] into the ModEngine2 directory (next to launchmod_eldenring.bat)[/*]
+[*]In [b]config_eldenring.toml[/b], under [modengine], register the DLL:
+[code]external_dlls = [ "MapForGoblins.dll" ][/code]
 [/*]
 [*]Run launchmod_eldenring.bat[/*]
 [/list]
-[color=#ff8c00][b]Mind the slashes:[/b][/color] keep the paths with double backslashes (\\) or forward slashes (/) - a single backslash is a TOML escape, which makes the whole config invalid and stops [i]every[/i] mod from loading.[/spoiler]
+[/spoiler]
 [b]Option C: [url=https://www.nexusmods.com/eldenring/mods/5998]Mod Engine 2 with Lazy Loader[/url][/b] [i](popular on Steam Deck)[/i]
 [spoiler]
 Same as ModEngine2, but its config lives in the [b]base/[/b] folder.
 [list=1]
-[*]Copy the [b]MapForGoblins[/b] folder into the main [b]Game[/b] folder (next to eldenring.exe, mod, mods - [b]not[/b] inside base/)[/*]
-[*]Open [b]base/config.toml[/b] and add the DLL to external_dlls and the asset folder to mods (MapForGoblins listed FIRST so its world-map file wins):
+[*]Copy [b]MapForGoblins.dll[/b] and [b]MapForGoblins.ini[/b] into the main [b]Game[/b] folder (next to eldenring.exe)[/*]
+[*]Open [b]base/config.toml[/b] and add the DLL to external_dlls:
 [code]external_dlls = [
-    "MapForGoblins/MapForGoblins.dll"
-]
-
-mods = [
-    { enabled = true, name = "MapForGoblins", path = "MapForGoblins" },
-    { enabled = true, name = "default", path = "mod" }
+    "MapForGoblins.dll"
 ][/code]
 [/*]
 [*]Launch from eldenring.exe as usual[/*]
 [/list]
-[color=#ff8c00][b]Mind the slashes:[/b][/color] in this config a single backslash is an escape character, so a path like "MapForGoblins\MapForGoblins.dll" makes the WHOLE config.toml invalid and stops [i]every[/i] mod from loading - not just this one. Use forward slashes like above, or double every backslash (\\). The DLL must be in [b]external_dlls[/b]: Lazy Loader only loads ModEngine from base/, it does not auto-inject mod DLLs.[/spoiler]
-Settings are in [b]MapForGoblins/MapForGoblins.ini[/b] [b]Reminder: most categories are OFF by default - enable the ones you want here, or use the included all-on preset.[/b]
+The DLL must be in [b]external_dlls[/b]: Lazy Loader only loads ModEngine from base/, it does not auto-inject mod DLLs.[/spoiler]
+Settings are in [b]MapForGoblins.ini[/b] - all categories are ON by default, turn off what you don't want (or use F10 in-game).
 
 [size=4][b]Using it with the Item & Enemy Randomizer[/b][/size]
 Use the [b]Vanilla version[/b]. Install it the same way (ModEngine3/me3 or ModEngine2), alongside the randomizer's generated [b]regulation.bin[/b] in your load order. Nothing else to set up: the live-loot options are [b]on by default[/b] in the vanilla build, so at startup the markers read your loaded seed and show the real item (name + icon) and hide on the actual light-point pickup. For a blind run, set [b]anonymous_loot = true[/b] in the ini to replace every loot marker with a "?" and a generic label.
 
-[size=4][b]Installation - Convergence version[/b][/size]
+[size=4][b]Installation - Convergence 2.x version (ModEngine2)[/b][/size]
 [spoiler]
 [list=1]
-[*]Download the Convergence file and unpack it[/*]
-[*]Copy the [b]MapForGoblins[/b] folder into your ConvergenceER folder (next to Start_Convergence.bat)[/*]
-[*]In [b]config_eldenring.toml[/b] add the DLL to external_dlls and the asset folder ABOVE the "mod" entry (in ModEngine2 the FIRST entry is highest priority - our world-map file already contains the Convergence map UI):
+[*]Download the Convergence 2.x file and unpack it[/*]
+[*]Copy [b]MapForGoblins.dll[/b] and [b]MapForGoblins.ini[/b] into your ConvergenceER folder (next to Start_Convergence.bat)[/*]
+[*]In [b]config_eldenring.toml[/b] add the DLL to external_dlls:
 [code]external_dlls = [
-    ...existing entries...,
-    "MapForGoblins/MapForGoblins.dll",
-]
-
-mods = [
-    { enabled = true, name = "MapForGoblins", path = "MapForGoblins" },
-    { enabled = true, name = "mod", path = "mod" }
+    ...existing entries...,
+    "MapForGoblins.dll",
 ][/code]
 [/*]
 [*]Launch through Start_Convergence.bat as usual[/*]
 [/list]
-[color=#ff8c00][b]Mind the slashes:[/b][/color] keep the paths with double backslashes (\\) or forward slashes (/) - a single backslash is a TOML escape, which makes the whole config invalid and stops [i]every[/i] mod from loading.
-Settings are in [b]MapForGoblins/MapForGoblins.ini[/b]. Note: the Convergence Launcher may rewrite config_eldenring.toml when it updates the mod - re-check the two edits after updates. [b]Reminder: most categories are OFF by default - enable the ones you want here, or use the included all-on preset.[/b][/spoiler]
+Settings are in [b]MapForGoblins.ini[/b] - all categories ON by default (turn off what you don't want, or use F10). Note: the Convergence Launcher may rewrite config_eldenring.toml when it updates the mod - re-check the external_dlls edit after updates.[/spoiler]
+
+[size=4][b]Installation - Convergence 3.x version (ModEngine3 / me3)[/b][/size]
+[spoiler]
+Convergence 3.x launches through a [b].me3[/b] profile in ConvergenceER\me3 (convergence.me3, and convergence - seamless.me3 if you use Seamless Co-op).
+[list=1]
+[*]Download the Convergence 3.x file and unpack it[/*]
+[*]Copy [b]MapForGoblins.dll[/b] and [b]MapForGoblins.ini[/b] into [b]...\ConvergenceER\mod\dll[/b] (next to ErdTools.dll, erdyes.dll, etc.)[/*]
+[*]Open the [b].me3[/b] profile you launch with in Notepad and add the DLL as a native:
+[code][[natives]]
+path = './../mod/dll/MapForGoblins.dll'[/code]
+[/*]
+[*]Launch through Start_Convergence.bat as usual[/*]
+[/list]
+Settings are in [b]MapForGoblins.ini[/b] - all categories ON by default (turn off what you don't want, or use F10).[/spoiler]
 
 [size=4][b]Installation - ERTE version[/b][/size]
 [spoiler]
 ERTE runs on [b]Mod Engine 3 (me3)[/b] through its .me3 profile (e.g. eldenring-ERTE-SOTE-CoopReady.me3).
 [list=1]
 [*]Download the ERTE file and unpack it[/*]
-[*]Copy the [b]MapForGoblins[/b] folder next to ERTE's mod folder, i.e. into [b]...\me3\config\profiles\eldenring-mods\[/b] (alongside the "ERTE SOTE" folder)[/*]
-[*]Open the ERTE [b].me3[/b] profile in Notepad and add the DLL as a native and the asset folder as a package (listed ABOVE the ERTE package):
+[*]Copy [b]MapForGoblins.dll[/b] and [b]MapForGoblins.ini[/b] into a "MapForGoblins" folder next to ERTE's mod folder, i.e. into [b]...\me3\config\profiles\eldenring-mods\MapForGoblins\[/b] (alongside the "ERTE SOTE" folder)[/*]
+[*]Open the ERTE [b].me3[/b] profile in Notepad and add the DLL as a native:
 [code][[natives]]
-path = 'eldenring-mods\MapForGoblins\MapForGoblins.dll'
-
-[[packages]]
-path = 'eldenring-mods\MapForGoblins'
-
-[[packages]]
-path = 'eldenring-mods\ERTE SOTE'[/code]
-(ERTE has no world-map UI of its own, so there's no conflict - this just makes sure our world-map file loads.)[/*]
+path = 'eldenring-mods\MapForGoblins\MapForGoblins.dll'[/code]
+[/*]
 [*]Launch through the ERTE .me3 profile as usual[/*]
 [/list]
-Settings are in [b]MapForGoblins/MapForGoblins.ini[/b]. [b]Reminder: most categories are OFF by default - enable the ones you want here, or use the included all-on preset.[/b][/spoiler]
+Settings are in [b]MapForGoblins\MapForGoblins.ini[/b] - all categories ON by default (turn off what you don't want, or use F10).[/spoiler]
+
+[size=4][b]Installation - Golden Age version[/b][/size]
+[spoiler]
+Golden Age runs on [b]ModEngine2[/b] (Start_GoldenAge.bat).
+[list=1]
+[*]Download the Golden Age file and unpack it[/*]
+[*]Copy [b]MapForGoblins.dll[/b] and [b]MapForGoblins.ini[/b] into your Golden Age folder (next to Start_GoldenAge.bat and config_eldenring.toml)[/*]
+[*]In [b]config_eldenring.toml[/b] add the DLL to external_dlls:
+[code]external_dlls = [
+    ...existing entries...,
+    "MapForGoblins.dll",
+][/code]
+[/*]
+[*]Launch via Start_GoldenAge.bat as usual[/*]
+[/list]
+Settings are in [b]MapForGoblins.ini[/b] - all categories ON by default (turn off what you don't want, or use F10).[/spoiler]
+
+[size=4][b]Installation - ELDEN VINS version[/b][/size]
+[spoiler]
+ELDEN VINS runs on [b]ModEngine2[/b] (Launch ELDEN VINS.bat).
+[list=1]
+[*]Download the ELDEN VINS file and unpack it[/*]
+[*]Copy [b]MapForGoblins.dll[/b] and [b]MapForGoblins.ini[/b] into your "ELDEN VINS" folder (next to config_eldenring.toml and Launch ELDEN VINS.bat)[/*]
+[*]In [b]config_eldenring.toml[/b] add the DLL to external_dlls:
+[code]external_dlls = [
+    ...existing entries...,
+    "MapForGoblins.dll",
+][/code]
+[/*]
+[*]Launch via Launch ELDEN VINS.bat as usual[/*]
+[/list]
+Settings are in [b]MapForGoblins.ini[/b] - all categories ON by default (turn off what you don't want, or use F10).[/spoiler]
+
+[size=4][b]Installation - Elden Ring Reborn version[/b][/size]
+[spoiler]
+Elden Ring Reborn runs on [b]ModEngine2[/b] (Click To Play Reborn!.bat).
+[list=1]
+[*]Download the Elden Ring Reborn file and unpack it[/*]
+[*]Copy [b]MapForGoblins.dll[/b] and [b]MapForGoblins.ini[/b] into your "Elden Ring Reborn" folder (next to config_eldenring.toml and Click To Play Reborn!.bat)[/*]
+[*]In [b]config_eldenring.toml[/b] add the DLL to external_dlls:
+[code]external_dlls = [
+    ...existing entries...,
+    "MapForGoblins.dll",
+][/code]
+[/*]
+[*]Launch via Click To Play Reborn!.bat as usual[/*]
+[/list]
+Settings are in [b]MapForGoblins.ini[/b] - all categories ON by default (turn off what you don't want, or use F10).[/spoiler]
 
 [size=4][b]Requirements[/b][/size]
 [list]
 [*]ERR version: [url=https://www.nexusmods.com/eldenring/mods/541]ERR[/url] itself, nothing else. The mod loads through ERR's own loader.[/*]
 [*]Vanilla version: [url=https://github.com/garyttierney/me3/releases]ModEngine3[/url] or [url=https://github.com/soulsmods/ModEngine2/releases]ModEngine2[/url][/*]
-[*]Convergence version: an installed [url=https://www.nexusmods.com/eldenring/mods/3419]The Convergence[/url] (it ships its own ModEngine2). Shadow of the Erdtree is required by the overhaul itself.[/*]
+[*]Convergence 2.x / 3.x versions: an installed [url=https://www.nexusmods.com/eldenring/mods/3419]The Convergence[/url] (2.x ships ModEngine2, 3.x ships ModEngine3 / me3 - use the matching MapForGoblins file). Shadow of the Erdtree is required by the overhaul itself.[/*]
 [*]ERTE version: an installed [url=https://www.nexusmods.com/eldenring/mods/2747]ERTE[/url] (it runs on Mod Engine 3). Shadow of the Erdtree is required by the overhaul itself.[/*]
+[*]Golden Age / ELDEN VINS / Elden Ring Reborn versions: the matching overhaul installed (each ships its own ModEngine2). Shadow of the Erdtree is required by the overhauls themselves.[/*]
 [*][color=#ff0000][b]OFFLINE ONLY.[/b][/color] Mod loaders disable EAC, so the "Inappropriate activity detected" message at launch is normal. Don't try to play online with mods. If you host Seamless Co-op sessions and something goes wrong, you may temporarily toggle off icons by pressing F10.[/*]
 [/list]
 
@@ -176,7 +219,7 @@ The mod is open source: [url=https://github.com/VirusAlex/ERR-MapForGoblins-DLL]
 [*][b]Harmonixer[/b] for [url=https://www.nexusmods.com/eldenring/mods/3091]Map for Goblins[/url], the original mod that started it all[/*]
 [*][b]Gacsam[/b] for [url=https://github.com/Gacsam/Goblin-ERR]Goblin-ERR[/url], which this project began as a fork of[/*]
 [*][b]Kirnifr, ividyon[/b] and the whole [url=https://www.nexusmods.com/eldenring/mods/541]ERR[/url] team for the overhaul itself. Special thanks to [b]AngryPhilosopher[/b] and [b]Spiswel[/b] for early testing[/*]
-[*]The [b]Convergence Team[/b] for [url=https://www.nexusmods.com/eldenring/mods/3419]The Convergence[/url], which the Convergence build targets[/*]
+[*]The [b]Convergence Team[/b] for [url=https://www.nexusmods.com/eldenring/mods/3419]The Convergence[/url], which the Convergence 2.x and 3.x builds target[/*]
 [*]The [b]ERTE author[/b] for [url=https://www.nexusmods.com/eldenring/mods/2747]ERTE[/url], which the ERTE build targets[/*]
 [*][b]vawser[/b] for [url=https://github.com/vawser/Smithbox]Smithbox[/url] / SoulsFormats, used for all the data extraction[/*]
 [*][b]ThomasJClark[/b] for [url=https://github.com/ThomasJClark/elden-ring-glorious-merchant]glorious-merchant[/url], a great reference for DLL param injection[/*]

@@ -12,6 +12,11 @@ namespace goblin
     // sanitize_injected_textids() after the FMG bank is built.
     const std::vector<uint8_t *> &injected_row_ptrs();
 
+    // Remap every marker whose iconId is a custom icon we injected to that icon's runtime-injected frame
+    // (gfx_probe::injected_iconid). Called from the worldmap-load hook after the icon frames are appended,
+    // before pins are built. Lets our embedded bitmaps render without shipping a custom gfx, on any base.
+    void remap_injected_icons();
+
     // Rewrites rows baked with a primary completion flag to its alternative
     // once the alternative flag turns on (quest fights with two mutually-
     // exclusive outcome flags, e.g. the Sellen/Jerren academy battle).

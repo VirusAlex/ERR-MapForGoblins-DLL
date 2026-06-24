@@ -7,19 +7,44 @@ err_mod_dir =
 # Example: C:\Steam\steamapps\common\ELDEN RING\Game
 game_dir =
 
-# Optional: path to The Convergence's ModEngine2 'mod' overlay directory
-# (contains regulation.bin, map/, event/, msg/ etc.). Only needed for the
-# convergence build profile (build.bat ... --convergence). game_dir must also
-# be set and UXM-unpacked: the overlay is partial, so the pipeline stages a
-# merged overlay-over-vanilla view first (tools/prepare_merged_src.py).
-# Example: C:\Games\ConvergenceER\mod
-convergence_mod_dir =
+# Optional: path to The Convergence's 'mod' overlay directory (contains
+# regulation.bin, map/, event/, msg/ etc.). game_dir must also be set and
+# UXM-unpacked: the overlay is partial, so the pipeline stages a merged
+# overlay-over-vanilla view first (tools/prepare_merged_src.py).
+# Two separate Convergence builds (same pipeline, different install):
+#   convergence2_mod_dir -> Convergence 2.x (ships on ModEngine2 / external_dlls)
+#   convergence3_mod_dir -> Convergence 3.x (ships on ModEngine3 / .me3 natives)
+# Build with build.bat ... --convergence2  /  --convergence3.
+# Example: C:\Games\Convergence_2.x\ConvergenceER\mod
+convergence2_mod_dir =
+# Example: C:\Games\Convergence_3.x\ConvergenceER\mod
+convergence3_mod_dir =
 
 # Optional: path to the ERTE overhaul's mod overlay dir, for the erte build
 # profile (build.bat ... --erte). game_dir must also be set and UXM-unpacked
 # (partial overlay -> staged merged-over-vanilla view, same as convergence).
 # Example: C:\...\me3\config\profiles\eldenring-mods\ERTE SOTE
 erte_mod_dir =
+
+# Optional: path to the Golden Age overhaul's ME2 'mod' overlay dir, for the
+# goldenage build profile (build.bat ... --goldenage). game_dir must also be set
+# and UXM-unpacked (partial overlay -> staged merged-over-vanilla, same as the
+# convergence/erte profiles).
+# Example: C:\Games\GoldenAge\GA_3.6.1_01_patch_merged\GA
+goldenage_mod_dir =
+
+# Optional: path to the Elden Vins overhaul's ME2 'mod' overlay dir, for the
+# vins build profile (build.bat ... --vins). game_dir must also be set and
+# UXM-unpacked (partial overlay -> staged merged-over-vanilla, same as the
+# convergence/erte/goldenage profiles).
+# Example: C:\Games\Vins\ELDEN VINS\mod
+vins_mod_dir =
+
+# Optional: path to the Elden Ring Reborn overhaul's ME2 'mod' overlay dir, for the
+# reborn build profile (build.bat ... --reborn). game_dir must also be set and
+# UXM-unpacked (overlay -> staged merged-over-vanilla, same as the other overlays).
+# Example: C:\Games\Reborn\Elden Ring Reborn\Mod Files
+reborn_mod_dir =
 
 # Optional: path to SmithBox install (only needed by some research scripts
 # under tools/_*.py — not required by the core build pipeline).

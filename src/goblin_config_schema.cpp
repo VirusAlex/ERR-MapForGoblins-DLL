@@ -11,42 +11,43 @@
 // load time; the literals here are just a sane fallback.
 namespace goblin::config
 {
-    uint8_t loadDelay = 5;
     bool requireMapFragments = true;
-    bool debugLogging = false;
+    bool debugLogging = false;        // key debug_logging: verbose diagnostics; also gates the dev-only
+                                      // worldmap SpriteDef/dict dumps + RM2::Execute trace in goblin_gfx_probe.
     bool fastMapOpen = true;          // key fast_map_open: skip redundant relayout on re-open + amortize the first open
+    // (icon/resource injection is unconditional - it IS how icons render without a gfx; no ini toggle.)
 
-    bool showArmaments = false, showArmour = false, showAshesOfWar = false,
-         showSpirits = false, showTalismans = false;
+    bool showArmaments = true, showArmour = true, showAshesOfWar = true,
+         showSpirits = true, showTalismans = true;
 
-    bool showCelestialDew = false, showCookbooks = false, showCrystalTears = false,
-         showGreatRunes = false, showImbuedSwordKeys = false, showLarvalTears = false,
-         showLostAshes = false, showPotsNPerfumes = false, showScadutreeFragments = false,
-         showSeedsTears = false, showWhetblades = false;
+    bool showCelestialDew = true, showCookbooks = true, showCrystalTears = true,
+         showGreatRunes = true, showImbuedSwordKeys = true, showLarvalTears = true,
+         showLostAshes = true, showPotsNPerfumes = true, showScadutreeFragments = true,
+         showSeedsTears = true, showWhetblades = true;
 
-    bool showAmmo = false, showBellBearings = false, showMerchantBellBearings = false,
-         showConsumables = false, showGreases = false, showUtilities = false,
-         showStatBoosts = false, showCraftingMaterials = false, showGloveworts = false,
-         showGoldenRunes = false, showGoldenRunesLow = false, showGreatGloveworts = false,
-         showMaterialNodes = false, showMPFingers = false, showPrattlingPates = false,
-         showRadaFruit = false, showGestures = false, showReusables = false,
-         showSmithingStones = false, showSmithingStonesLow = false,
-         showSmithingStonesRare = false, showStoneswordKeys = false,
-         showThrowables = false, showRuneArcs = false, showDragonHearts = false;
+    bool showAmmo = true, showBellBearings = true, showMerchantBellBearings = true,
+         showConsumables = true, showGreases = true, showUtilities = true,
+         showStatBoosts = true, showCraftingMaterials = true, showGloveworts = true,
+         showGoldenRunes = true, showGoldenRunesLow = true, showGreatGloveworts = true,
+         showMaterialNodes = true, showMPFingers = true, showPrattlingPates = true,
+         showGestures = true, showReusables = true,
+         showSmithingStones = true, showSmithingStonesLow = true,
+         showSmithingStonesRare = true, showStoneswordKeys = true,
+         showThrowables = true, showRuneArcs = true, showDragonHearts = true;
 
-    bool showIncantations = false, showMemoryStones = false, showPrayerbooks = false,
-         showSorceries = false;
+    bool showIncantations = true, showMemoryStones = true, showPrayerbooks = true,
+         showSorceries = true;
 
-    bool showDeathroot = false, showProgression = false, showSeedbedCurses = false;
+    bool showDeathroot = true, showProgression = true, showSeedbedCurses = true;
 
-    bool showEmberPieces = true, showItemsAndChanges = false, showFortunes = false,
+    bool showEmberPieces = true, showItemsAndChanges = true, showFortunes = true,
          showRunePieces = true;
 
-    bool showBosses = false, showGraces = false, showHostileNPC = false,
-         showImpStatues = false, showPaintings = false, showSpiritSprings = false,
-         showSpiritspringHawks = false, showStakesOfMarika = false,
-         showSummoningPools = false, showKindlingSpirits = true,
-         showInteractables = false, showWorldMaps = false, hideKilledBosses = false;
+    bool showBosses = true, showGraces = true, showHostileNPC = true,
+         showImpStatues = true, showPaintings = true, showSpiritSprings = true,
+         showSpiritspringHawks = true, showStakesOfMarika = true,
+         showSummoningPools = true, showKindlingSpirits = true,
+         showInteractables = true, showWorldMaps = true, hideKilledBosses = false;
 
     // Live-loot / randomizer-compat options default ON for the plain VANILLA
     // build only (that's what Item/Enemy Randomizer players use) and OFF for ERR
@@ -99,8 +100,6 @@ namespace
     {
         return {
             {"Goblin", nullptr, false, {
-                IniEntry{"load_delay", IniType::U8, &cfg::loadDelay, "5",
-                         "Delay in seconds before loading map icons (wait for game initialization)", false, nullptr},
                 B("require_map_fragments", requireMapFragments, "true",
                   "Require map fragment discovery before showing icons in that area"),
                 IniEntry{"fast_map_open", IniType::Bool, &cfg::fastMapOpen, "true",
@@ -109,93 +108,92 @@ namespace
             }},
 
             {"Equipment", nullptr, false, {
-                B("show_armaments", showArmaments, "false", "Weapons, shields, bows, staves, etc."),
-                B("show_armour", showArmour, "false", "Armor pieces (helms, chest, gauntlets, legs)"),
-                B("show_ashes_of_war", showAshesOfWar, "false", "Ashes of War (weapon skills)"),
-                B("show_spirits", showSpirits, "false", "Spirit Ashes (summons)"),
-                B("show_talismans", showTalismans, "false", "Talismans"),
+                B("show_armaments", showArmaments, "true", "Weapons, shields, bows, staves, etc."),
+                B("show_armour", showArmour, "true", "Armor pieces (helms, chest, gauntlets, legs)"),
+                B("show_ashes_of_war", showAshesOfWar, "true", "Ashes of War (weapon skills)"),
+                B("show_spirits", showSpirits, "true", "Spirit Ashes (summons)"),
+                B("show_talismans", showTalismans, "true", "Talismans"),
             }},
 
             {"Key Items", nullptr, false, {
-                B("show_celestial_dew", showCelestialDew, "false", "Celestial Dew (for reversing Spirit Ashes upgrades)"),
-                B("show_cookbooks", showCookbooks, "false", "Cookbooks (crafting recipes)"),
-                B("show_crystal_tears", showCrystalTears, "false", "Crystal Tears (for Flask of Wondrous Physick)"),
-                B("show_great_runes", showGreatRunes, "false", "Great Runes (dropped by story bosses)"),
-                B("show_imbued_sword_keys", showImbuedSwordKeys, "false", "Imbued Sword Keys (Four Belfries)"),
-                B("show_larval_tears", showLarvalTears, "false", "Larval Tears (respec items)"),
-                B("show_lost_ashes", showLostAshes, "false", "Lost Ashes of War"),
-                B("show_pots_n_perfumes", showPotsNPerfumes, "false", "Cracked Pots, Ritual Pots, Perfume Bottles"),
-                B("show_scadutree_fragments", showScadutreeFragments, "false", "Scadutree Fragments (DLC blessing upgrade)"),
-                B("show_seeds_tears", showSeedsTears, "false", "Golden Seeds, Sacred Tears, Revered Spirit Ashes"),
-                B("show_whetblades", showWhetblades, "false", "Whetblades (weapon infusion types)"),
+                B("show_celestial_dew", showCelestialDew, "true", "Celestial Dew (for reversing Spirit Ashes upgrades)"),
+                B("show_cookbooks", showCookbooks, "true", "Cookbooks (crafting recipes)"),
+                B("show_crystal_tears", showCrystalTears, "true", "Crystal Tears (for Flask of Wondrous Physick)"),
+                B("show_great_runes", showGreatRunes, "true", "Great Runes (dropped by story bosses)"),
+                B("show_imbued_sword_keys", showImbuedSwordKeys, "true", "Imbued Sword Keys (Four Belfries)"),
+                B("show_larval_tears", showLarvalTears, "true", "Larval Tears (respec items)"),
+                B("show_lost_ashes", showLostAshes, "true", "Lost Ashes of War"),
+                B("show_pots_n_perfumes", showPotsNPerfumes, "true", "Cracked Pots, Ritual Pots, Perfume Bottles"),
+                B("show_scadutree_fragments", showScadutreeFragments, "true", "Scadutree Fragments (DLC blessing upgrade)"),
+                B("show_seeds_tears", showSeedsTears, "true", "Golden Seeds, Sacred Tears, Revered Spirit Ashes"),
+                B("show_whetblades", showWhetblades, "true", "Whetblades (weapon infusion types)"),
             }},
 
             {"Loot", nullptr, false, {
-                B("show_ammo", showAmmo, "false", "Arrows, bolts, greatarrows, greatbolts"),
-                B("show_bell_bearings", showBellBearings, "false", "Bell Bearings from treasures/chests/quest rewards"),
-                B("show_merchant_bell_bearings", showMerchantBellBearings, "false",
+                B("show_ammo", showAmmo, "true", "Arrows, bolts, greatarrows, greatbolts"),
+                B("show_bell_bearings", showBellBearings, "true", "Bell Bearings from treasures/chests/quest rewards"),
+                B("show_merchant_bell_bearings", showMerchantBellBearings, "true",
                   "Bell Bearings dropped by killing merchants (Kale, Patches, Gostoc,\nnomadic merchants, etc.)"),
-                B("show_consumables", showConsumables, "false", "Healing/buff consumables (boluses, cured meats, livers)"),
-                B("show_greases", showGreases, "false", "Weapon greases"),
-                B("show_utilities", showUtilities, "false", "Utility items (rainbow stone, glowstone, soap, soft cotton)"),
-                B("show_stat_boosts", showStatBoosts, "false", "Stat-up items (Starlight Shards, Sacrificial Twig, Blessing of Marika)"),
-                B("show_crafting_materials", showCraftingMaterials, "false", "Crafting materials (flowers, bones, bugs, etc.)"),
-                B("show_gloveworts", showGloveworts, "false", "Gloveworts (Grave/Ghost [1-9]) - Spirit Ash upgrade materials"),
-                B("show_golden_runes", showGoldenRunes, "false", "Golden Runes [4000+], Hero's/Numen's/Lord's/Shadow Realm Runes"),
-                B("show_golden_runes_low", showGoldenRunesLow, "false", "Golden Runes [200-3000], Broken Runes"),
-                B("show_great_gloveworts", showGreatGloveworts, "false", "Great Gloveworts (Great Grave, Great Ghost)"),
-                B("show_material_nodes", showMaterialNodes, "false", "One-time gathering nodes (Erdleaf Flower, Trina's Lily, etc.)"),
-                B("show_mp_fingers", showMPFingers, "false", "Multiplayer items (Furlcalling/Wizened Fingers, Recusant/Bloody Finger)"),
-                B("show_prattling_pates", showPrattlingPates, "false", "Prattling Pates"),
-                B("show_rada_fruit", showRadaFruit, "false", "Rada Fruit (DLC stat-up consumable)"),
-                B("show_gestures", showGestures, "false", "Gestures"),
-                B("show_reusables", showReusables, "false", "Reusable tools (Mimic Veil, Margit's Shackle, etc.)"),
-                B("show_smithing_stones", showSmithingStones, "false", "Smithing Stones [7-8], Somber [7-9], Scadushards"),
-                B("show_smithing_stones_low", showSmithingStonesLow, "false", "Smithing Stones [1-6], Somber [1-6]"),
-                B("show_smithing_stones_rare", showSmithingStonesRare, "false", "Ancient Dragon Smithing Stones (rare, endgame)"),
-                B("show_stonesword_keys", showStoneswordKeys, "false", "Stonesword Keys"),
-                B("show_throwables", showThrowables, "false", "Throwable items (darts, daggers, stones, chakrams, warming stones)"),
-                B("show_rune_arcs", showRuneArcs, "false", "Rune Arcs (buffs for active Great Rune)"),
-                B("show_dragon_hearts", showDragonHearts, "false", "Dragon Hearts (for Dragon Communion incantations)"),
+                B("show_consumables", showConsumables, "true", "Healing/buff consumables (boluses, cured meats, livers)"),
+                B("show_greases", showGreases, "true", "Weapon greases"),
+                B("show_utilities", showUtilities, "true", "Utility items (rainbow stone, glowstone, soap, soft cotton)"),
+                B("show_stat_boosts", showStatBoosts, "true", "Stat-up items (Starlight Shards, Sacrificial Twig, Blessing of Marika)"),
+                B("show_crafting_materials", showCraftingMaterials, "true", "Crafting materials (flowers, bones, bugs, etc.)"),
+                B("show_gloveworts", showGloveworts, "true", "Gloveworts (Grave/Ghost [1-9]) - Spirit Ash upgrade materials"),
+                B("show_golden_runes", showGoldenRunes, "true", "Golden Runes [4000+], Hero's/Numen's/Lord's/Shadow Realm Runes"),
+                B("show_golden_runes_low", showGoldenRunesLow, "true", "Golden Runes [200-3000], Broken Runes"),
+                B("show_great_gloveworts", showGreatGloveworts, "true", "Great Gloveworts (Great Grave, Great Ghost)"),
+                B("show_material_nodes", showMaterialNodes, "true", "One-time gathering nodes (Erdleaf Flower, Trina's Lily, etc.)"),
+                B("show_mp_fingers", showMPFingers, "true", "Multiplayer items (Furlcalling/Wizened Fingers, Recusant/Bloody Finger)"),
+                B("show_prattling_pates", showPrattlingPates, "true", "Prattling Pates"),
+                B("show_gestures", showGestures, "true", "Gestures"),
+                B("show_reusables", showReusables, "true", "Reusable tools (Mimic Veil, Margit's Shackle, etc.)"),
+                B("show_smithing_stones", showSmithingStones, "true", "Smithing Stones [7-8], Somber [7-9], Scadushards"),
+                B("show_smithing_stones_low", showSmithingStonesLow, "true", "Smithing Stones [1-6], Somber [1-6]"),
+                B("show_smithing_stones_rare", showSmithingStonesRare, "true", "Ancient Dragon Smithing Stones (rare, endgame)"),
+                B("show_stonesword_keys", showStoneswordKeys, "true", "Stonesword Keys"),
+                B("show_throwables", showThrowables, "true", "Throwable items (darts, daggers, stones, chakrams, warming stones)"),
+                B("show_rune_arcs", showRuneArcs, "true", "Rune Arcs (buffs for active Great Rune)"),
+                B("show_dragon_hearts", showDragonHearts, "true", "Dragon Hearts (for Dragon Communion incantations)"),
             }},
 
             {"Magic", nullptr, false, {
-                B("show_incantations", showIncantations, "false", "Incantation locations"),
-                B("show_memory_stones", showMemoryStones, "false", "Memory Stone locations (extra spell slots)"),
-                B("show_prayerbooks", showPrayerbooks, "false", "Prayerbooks and Scrolls (unlock spells at vendors)"),
-                B("show_sorceries", showSorceries, "false", "Sorcery locations"),
+                B("show_incantations", showIncantations, "true", "Incantation locations"),
+                B("show_memory_stones", showMemoryStones, "true", "Memory Stone locations (extra spell slots)"),
+                B("show_prayerbooks", showPrayerbooks, "true", "Prayerbooks and Scrolls (unlock spells at vendors)"),
+                B("show_sorceries", showSorceries, "true", "Sorcery locations"),
             }},
 
             {"Quest", nullptr, false, {
-                B("show_deathroot", showDeathroot, "false", "Deathroot locations (for Gurranq)"),
-                B("show_progression", showProgression, "false", "Quest progression items (medallions, keys, Needles, quest-specific goods)"),
-                B("show_seedbed_curses", showSeedbedCurses, "false", "Seedbed Curse locations (for Dung Eater quest)"),
+                B("show_deathroot", showDeathroot, "true", "Deathroot locations (for Gurranq)"),
+                B("show_progression", showProgression, "true", "Quest progression items (medallions, keys, Needles, quest-specific goods)"),
+                B("show_seedbed_curses", showSeedbedCurses, "true", "Seedbed Curse locations (for Dung Eater quest)"),
             }},
 
             {"Reforged",
              "Elden Ring Reforged-only content. Absent from the vanilla build.",
              ERR, {
                 BE("show_ember_pieces", showEmberPieces, "true", "ERR Ember Piece locations"),
-                BE("show_items_and_changes", showItemsAndChanges, "false", "ERR-added items: Oracle Effigy/Remedy, Starlight Tokens, Sealed Curios"),
-                BE("show_fortunes", showFortunes, "false", "ERR Fortune trinkets (12 types)"),
+                BE("show_items_and_changes", showItemsAndChanges, "true", "ERR-added items: Oracle Effigy/Remedy, Starlight Tokens, Sealed Curios"),
+                BE("show_fortunes", showFortunes, "true", "ERR Fortune trinkets (12 types)"),
                 BE("show_rune_pieces", showRunePieces, "true", "ERR Rune Piece locations"),
             }},
 
             {"World", nullptr, false, {
-                B("show_bosses", showBosses, "false", "Boss markers (field bosses, dungeon bosses)"),
-                B("show_graces", showGraces, "false", "Sites of Grace"),
-                B("show_hostile_npc", showHostileNPC, "false", "Hostile NPC invader locations"),
-                B("show_imp_statues", showImpStatues, "false", "Imp Statue (Stonesword Key fog gate) locations"),
-                B("show_paintings", showPaintings, "false", "Painting locations"),
-                B("show_spirit_springs", showSpiritSprings, "false", "Spirit Spring (horse jump) locations"),
-                BE("show_spiritspring_hawks", showSpiritspringHawks, "false", "Spiritspring Hawk locations"),
-                B("show_stakes_of_marika", showStakesOfMarika, "false", "Stakes of Marika (respawn points)"),
-                B("show_summoning_pools", showSummoningPools, "false", "Summoning Pool (Martyr Effigy) locations"),
+                B("show_bosses", showBosses, "true", "Boss markers (field bosses, dungeon bosses)"),
+                B("show_graces", showGraces, "true", "Sites of Grace"),
+                B("show_hostile_npc", showHostileNPC, "true", "Hostile NPC invader locations"),
+                B("show_imp_statues", showImpStatues, "true", "Imp Statue (Stonesword Key fog gate) locations"),
+                B("show_paintings", showPaintings, "true", "Painting locations"),
+                B("show_spirit_springs", showSpiritSprings, "true", "Spirit Spring (horse jump) locations"),
+                BE("show_spiritspring_hawks", showSpiritspringHawks, "true", "Spiritspring Hawk locations"),
+                B("show_stakes_of_marika", showStakesOfMarika, "true", "Stakes of Marika (respawn points)"),
+                B("show_summoning_pools", showSummoningPools, "true", "Summoning Pool (Martyr Effigy) locations"),
                 BE("show_kindling_spirits", showKindlingSpirits, "true",
                    "ERR Kindling Spirits in Misty Forest - collect all 5 between rests for\nthe Kindling Spirit incantation. Markers hide once you have the incantation."),
-                B("show_interactables", showInteractables, "false",
+                B("show_interactables", showInteractables, "true",
                   "Interactive world objects & puzzles: blue seal puzzles (unlock hidden\ncellars), light-flame interacts (Sellia chalices, Snow Town statues, Siofra\nRiver lanterns), and Hero's Tomb direction statues."),
-                B("show_world_maps", showWorldMaps, "false", "World Map fragment locations"),
+                B("show_world_maps", showWorldMaps, "true", "World Map fragment locations"),
                 B("hide_killed_bosses", hideKilledBosses, "false", "Hide boss/invader/hawk markers after defeat (false = show green checkmark instead)"),
             }},
 

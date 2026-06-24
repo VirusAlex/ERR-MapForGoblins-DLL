@@ -410,16 +410,16 @@ def main():
 
     generate_massedit(
         rune_items, "Rune Pieces",
-        text_id=800010, icon_id=371,   # goodsId for "Rune Piece" / "Осколок Руны" - localized via GoodsName FMG
-        start_row_id=2000000,
+        text_id=800010, icon_id=__import__("icon_registry").iconid("rune_pieces"),   # "Rune Piece" - localized via GoodsName FMG
+        start_row_id=__import__("row_id_registry").base("Reforged - Rune Pieces"),
         output_file=OUTPUT_DIR / "Reforged - Rune Pieces.MASSEDIT",
         event_flags=rune_flags
     )
 
     generate_massedit(
         ember_items, "Ember Pieces",
-        text_id=850010, icon_id=371,   # goodsId for "Ember Piece" - same star as Rune Pieces (distinguished by map location)
-        start_row_id=3000000,
+        text_id=850010, icon_id=__import__("icon_registry").iconid("ember_pieces"),   # "Ember Piece" - same star as Rune Pieces
+        start_row_id=__import__("row_id_registry").base("Reforged - Ember Pieces"),
         output_file=OUTPUT_DIR / "Reforged - Ember Pieces.MASSEDIT",
         event_flags=ember_flags
     )

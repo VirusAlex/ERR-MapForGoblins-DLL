@@ -19,6 +19,7 @@
 #include "goblin_messages.hpp"
 #include "goblin_overlay.hpp"
 #include "goblin_map_timing.hpp"
+#include "goblin_gfx_probe.hpp"
 
 #include "version.h"
 
@@ -71,6 +72,17 @@ static void safe_apply_category_visibility_seh()
     }
 }
 
+static void safe_gfx_tick_seh()
+{
+    __try
+    {
+        goblin::gfx_probe::tick(); // charId collision self-heal + (debug_logging) diagnostics
+    }
+    __except (EXCEPTION_EXECUTE_HANDLER)
+    {
+    }
+}
+
 // ── SEH-guarded init-phase wrappers ──
 // MSVC's /EHsc disallows __try in functions that contain C++ objects with
 // destructors, so each init step goes through a plain C-style adapter +
@@ -97,6 +109,7 @@ static void init_setup_messages()   { goblin::setup_messages(); }
 static void init_live_loot()        { goblin::refresh_loot_from_itemlot(); }
 static void init_overlay()          { goblin::overlay::setup(); }
 static void init_map_timing()       { goblin::map_timing::setup(); }
+static void init_gfx_probe()        { goblin::gfx_probe::setup(); }
 
 static void safe_init_step(InitFn fn, const char *name)
 {
@@ -130,10 +143,22 @@ static std::filesystem::path g_mod_folder;
 static void setup_mod()
 {
     safe_init_step(&init_modutils,    "modutils::initialize");
-    safe_init_step(&init_from_params, "from::params::initialize");
 
-    spdlog::info("Waiting {}s for game init...", goblin::config::loadDelay);
-    std::this_thread::sleep_for(std::chrono::seconds(goblin::config::loadDelay));
+    // Arm + ENABLE the icon-injection hooks FIRST - before the params wait and before any other work. They
+    // are passive (they fire when the worldmap movie loads its DefineSprite-171) and depend only on the
+    // loaded exe, not on the game's params/world. The worldmap movie CANNOT be re-injected after it loads
+    // (its bitmap-register load-context is transient), so these hooks must be live before the player first
+    // opens the world map. Arming them at the earliest possible moment - not behind from::params or any
+    // delay - makes icon injection robust to WHEN the DLL itself gets injected, as long as that is before
+    // the first map open (always true for a process-start loader).
+    safe_init_step(&init_gfx_probe, "gfx_probe::setup");
+    try { modutils::enable_hooks(); }  // apply just the gfx_probe hooks queued so far (MH_ApplyQueued)
+    catch (const std::exception &e) { spdlog::error("enable_hooks() (gfx) FAILED: {}", e.what()); }
+
+    // Blocks (polls internally) until the game's param tables are fully loaded. THIS is the real
+    // "wait for game init" - no fixed startup sleep is used (a sleep would also push the hook-arming
+    // above past the worldmap movie load on fast Proton boots, which breaks icons).
+    safe_init_step(&init_from_params, "from::params::initialize");
 
     safe_init_step(&init_collected,       "collected::initialize");
     safe_init_step(&init_kindling,        "kindling::initialize");
@@ -147,7 +172,7 @@ static void setup_mod()
 
     try
     {
-        modutils::enable_hooks();
+        modutils::enable_hooks();  // apply the remaining hooks
     }
     catch (const std::exception &e)
     {
@@ -207,6 +232,14 @@ static void setup_mod()
         try
         {
             safe_kindling_refresh_seh();
+        }
+        catch (...)
+        {
+        }
+
+        try
+        {
+            safe_gfx_tick_seh(); // icon collision self-heal + diagnostics (overlay-independent)
         }
         catch (...)
         {

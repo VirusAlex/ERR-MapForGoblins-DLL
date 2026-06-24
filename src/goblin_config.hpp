@@ -23,10 +23,11 @@ namespace goblin
 
     namespace config
     {
-        extern uint8_t loadDelay;
         extern bool requireMapFragments;
         extern bool debugLogging;
         extern bool fastMapOpen; // ini key: fast_map_open (skip relayout on reopen + amortize first open)
+        // NOTE: icon/resource injection is unconditional now (no ini toggle) - it's how icons render without
+        // a gfx. The dev-only SpriteDef/dict dumps + RM2 trace in goblin_gfx_probe are gated by debugLogging.
 
         // Equipment
         extern bool showArmaments;
@@ -69,7 +70,6 @@ namespace goblin
         extern bool showDragonHearts;
         extern bool showGloveworts;
         extern bool showGreatGloveworts;
-        extern bool showRadaFruit;
         extern bool showGestures;
         extern bool showGreases;
         extern bool showUtilities;

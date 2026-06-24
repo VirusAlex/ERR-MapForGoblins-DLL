@@ -44,7 +44,9 @@ def main():
     data = param_to_dict(bwp, fields)
 
     lines = []
-    row_id = 8800000
+    # Row-ID base = this category's z-order slot (lower base -> drawn on top).
+    # Single source: tools/row_id_registry.py (reorder LAYER_ORDER to relayer).
+    row_id = __import__("row_id_registry").base("World - Graces")
     count = 0
     for rid, row in sorted(data.items()):
         area = row.get('areaNo', 0)
@@ -94,7 +96,7 @@ def main():
         else:
             disp = 'dispMask00'
 
-        lines.append(f'param WorldMapPointParam: id {row_id}: iconId: = 370;')
+        lines.append(f'param WorldMapPointParam: id {row_id}: iconId: = {__import__("icon_registry").iconid("graces")};')
         lines.append(f'param WorldMapPointParam: id {row_id}: {disp}: = 1;')
         lines.append(f'param WorldMapPointParam: id {row_id}: areaNo: = {area};')
         if area in OVERWORLD_AREAS or area in DLC_AREAS or gx > 0:

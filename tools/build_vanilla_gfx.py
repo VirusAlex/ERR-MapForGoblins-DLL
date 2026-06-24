@@ -56,7 +56,7 @@ ERR_IMAGE_IDS = set(range(13500, 13507))  # ERR-only textures - must NOT leak
 #   base_frames == VANILLA_SPRITE_FRAMES + config-side ICON_FRAME_OFFSET
 # (the bake shifts our iconIds by that offset; see config.py). If a target
 # mod update changes its frame count, update BOTH places.
-PROFILE_BASE_FRAMES = {"vanilla": 348, "convergence": 756, "erte": 348}
+PROFILE_BASE_FRAMES = {"vanilla": 348, "convergence2": 756, "erte": 348}
 
 # ── Cleared-marker badge (boss/invader defeated overlay) ──
 # The worldmap marker (sprite 174) draws the icon (sprite 171) + a "cleared"
@@ -87,7 +87,7 @@ BADGE_IMG = PROJECT / "assets" / "badges" / "cleared_badge.png"
 # sprite frame number = this 0-indexed position + 1 (so generate_data uses 441,
 # not 440). Don't conflate the two - pointing the DLL at 440 hits our last real
 # icon, not the "?".
-ANON_PROFILES = {"vanilla", "erte", "convergence", "err"}
+ANON_PROFILES = {"vanilla", "erte", "convergence2", "err"}
 ANON_IMG = PROJECT / "assets" / "badges" / "anon_qmark.png"
 ANON_FRAME_INDEX = 440        # 0-indexed gfx landing position; DLL iconId = this + 1
 ANON_QMARK_SHAPE = 1099       # free charId; cloned from badge shape 172
@@ -102,7 +102,7 @@ BADGE_SPRITE_PARENT = 174     # marker container that places the badge sprite
 # sprite 246 to the clone. scale/translate render the 256px square at ~1.33x
 # char 10's footprint (142*0.5) while keeping the same centre. Skipped if the
 # logo source is missing.
-LOGO_PROFILES = {"vanilla", "erte", "convergence", "err"}
+LOGO_PROFILES = {"vanilla", "erte", "convergence2", "err"}
 LOGO_SRC = PROJECT / "assets" / "map_icons" / "MapForGoblins_new.png"
 LOGO_SHAPE = 1097             # free charId; cloned from rect shape 181
 LOGO_CLONE_SRC = "181"
@@ -318,10 +318,10 @@ def main():
     if profile not in PROFILE_BASE_FRAMES:
         sys.exit(f"unknown profile '{profile}' (expected: {sorted(PROFILE_BASE_FRAMES)})")
 
-    if profile == "convergence":
-        if not config.CONVERGENCE_MOD_DIR:
-            sys.exit("set convergence_mod_dir in tools/config.ini")
-        base_gfx = config.CONVERGENCE_MOD_DIR / "menu" / "02_120_worldmap.gfx"
+    if profile == "convergence2":
+        if not config.CONVERGENCE2_MOD_DIR:
+            sys.exit("set convergence2_mod_dir in tools/config.ini")
+        base_gfx = config.CONVERGENCE2_MOD_DIR / "menu" / "02_120_worldmap.gfx"
     else:
         base_gfx = config.require_game_dir() / "menu" / "02_120_worldmap.gfx"
     if not base_gfx.exists():

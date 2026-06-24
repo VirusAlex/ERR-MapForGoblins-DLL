@@ -214,14 +214,8 @@ LOOT_CATEGORIES = {
         'iconId': 376,
         'startId': 2200000,
     },
-    'Loot - Rada Fruit': {
-        # DLC stat-up consumable (ERR-tracked)
-        'filter': lambda items: any(
-            i['id'] == 2020001 and i['category'] == 1 for i in items
-        ),
-        'iconId': 437,
-        'startId': 3850000,
-    },
+    # (Rada Fruit folded into Loot - Crafting Materials: it's a vanilla DLC crafting
+    # ingredient, goodsType==2, so it matches the crafting filter like every other.)
     'Reforged - Items': {
         # ERR-added items: Oracle Effigy/Remedy, Starlight Tokens
         'filter': lambda items: any(i['id'] in (
@@ -479,8 +473,8 @@ LOOT_CATEGORIES = {
         'startId': 5620000,
     },
     'Loot - Stat Boosts': {
-        # Permanent/session stat-up: Starlight Shards, Sacrificial Twig,
-        # Blessing of Marika, Sign of the All-Knowing (sortGroup=10).
+        # goodsType=0 items in sortGroup=10 (Starlight Shards, etc). World-placed
+        # loot only, so in practice mostly Starlight Shards.
         # Excludes Rune Arc (RUNE_ARC_ID, also sg=10) - it belongs to Unique Drops.
         'filter': lambda items: any(
             i['category'] == 1
@@ -547,6 +541,19 @@ LOOT_CATEGORIES = {
         'startId': 5700000,
     },
 }
+
+# Single source of truth for iconIds: resolve each category's icon from icon_registry (keyed by its human
+# name). The 'iconId' numbers in the dict above are no longer the source - they are overwritten here, so
+# the registry is the one place that owns icon numbering (and can auto-assign).
+import icon_registry as _icon_registry
+import row_id_registry as _row_id_registry
+for _name, _cfg in LOOT_CATEGORIES.items():
+    _cfg['iconId'] = _icon_registry.iconid_for_name(_name)
+    # Row-ID base = this category's map z-order slot. The 'startId' numbers in the
+    # dict above are no longer the source - row_id_registry owns ordering (reorder
+    # its LAYER_ORDER to relayer; lower base draws on top). base() raises if the
+    # category name isn't in LAYER_ORDER, catching renames at build time.
+    _cfg['startId'] = _row_id_registry.base(_name)
 
 
 def deduplicate(records):
@@ -906,7 +913,7 @@ def main():
         print('  WARNING: boss_list.json not found')
 
     lines = []
-    row_id = 9000000
+    row_id = _row_id_registry.base("World - Bosses")  # z-order slot; see row_id_registry
     boss_count = 0
     text_matched = 0
     for rec in sorted(boss_list, key=lambda r: (r['areaNo'], r.get('gridX', 0), r.get('gridZ', 0))):
@@ -921,7 +928,7 @@ def main():
         else:
             disp = 'dispMask00'
 
-        lines.append(f'param WorldMapPointParam: id {row_id}: iconId: = 374;')
+        lines.append(f'param WorldMapPointParam: id {row_id}: iconId: = {__import__("icon_registry").iconid("bosses")};')
         lines.append(f'param WorldMapPointParam: id {row_id}: {disp}: = 1;')
         lines.append(f'param WorldMapPointParam: id {row_id}: areaNo: = {area};')
 
@@ -1006,7 +1013,7 @@ def main():
         boss_by_name[b['vanillaPlaceName']] = b
 
     lines = []
-    row_id = 9100000
+    row_id = _row_id_registry.base("Key - Great Runes")  # z-order slot; see row_id_registry
     gr_count = 0
     for rune_id, boss_name in sorted(GREAT_RUNE_BOSSES.items()):
         # Find boss
@@ -1031,7 +1038,7 @@ def main():
         else:
             disp = 'dispMask00'
 
-        lines.append(f'param WorldMapPointParam: id {row_id}: iconId: = 420;')
+        lines.append(f'param WorldMapPointParam: id {row_id}: iconId: = {_icon_registry.iconid_for_name("Key - Great Runes")};')
         lines.append(f'param WorldMapPointParam: id {row_id}: {disp}: = 1;')
         lines.append(f'param WorldMapPointParam: id {row_id}: areaNo: = {area};')
         if area in OVERWORLD_AREAS or area in DLC_AREAS or gx > 0:

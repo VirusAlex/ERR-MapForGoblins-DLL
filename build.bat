@@ -6,7 +6,13 @@ REM Build Script for MapForGoblins DLL Mod
 REM ============================================
 
 set "SCRIPT_DIR=%~dp0"
-set "BUILD_DIR=%SCRIPT_DIR%build"
+REM All build trees live under builds\, all release/snapshot packages under releases\.
+set "BUILD_DIR=%SCRIPT_DIR%builds\build"
+
+REM Force Python UTF-8 mode for the whole pipeline so open()/json default to UTF-8.
+REM Without it, non-ASCII game data (e.g. the Golden Age Chinese overhaul) trips a
+REM cp1252 'charmap' decode error. No-op for ASCII data and for binary reads.
+set "PYTHONUTF8=1"
 
 REM Find Visual Studio 2022 using vswhere
 set "VSWHERE=%ProgramFiles(x86)%\Microsoft Visual Studio\Installer\vswhere.exe"
@@ -21,41 +27,67 @@ if not defined VS_INSTALL (
 )
 set "VS_PATH=%VS_INSTALL%\Common7\Tools\VsDevCmd.bat"
 
-REM Build profile: default = ERR; pass "--vanilla" or "--convergence" (any position).
-REM   ERR:         data/, src/generated, build/, pre-release/
-REM   vanilla:     data/vanilla, src/generated_vanilla, build-vanilla/, pre-release-vanilla/
-REM   convergence: data/convergence, src/generated_convergence, build-convergence/, pre-release-convergence/
+REM Build profile: default = ERR; pass "--vanilla", "--convergence2", "--convergence3",
+REM "--erte", "--goldenage", "--vins" or "--reborn" (any position).
+REM   ERR:          data/, src/generated, build/, pre-release/
+REM   vanilla:      data/vanilla, src/generated_vanilla, build-vanilla/, pre-release-vanilla/
+REM   convergence2: data/convergence2, src/generated_convergence2, build-convergence2/, ... (Convergence 2.x, ME2)
+REM   convergence3: data/convergence3, src/generated_convergence3, build-convergence3/, ... (Convergence 3.x, ME3)
 REM MFG_PROFILE is exported so build_pipeline.py + config.py pick the data source.
 set "GEN_SUBDIR=generated"
 set "PKG_PREFIX=ERR"
-set "SNAP_DIR=%SCRIPT_DIR%pre-release"
+set "SNAP_DIR=%SCRIPT_DIR%releases\pre-release-err"
 set "DISP_PROFILE=err"
 set "README_SRC=%SCRIPT_DIR%assets\README.txt"
-set "GFX_SRC=%SCRIPT_DIR%assets\menu\02_120_worldmap_err.gfx"
 echo %*| findstr /i /c:"--vanilla" >nul && set "MFG_PROFILE=vanilla"
-echo %*| findstr /i /c:"--convergence" >nul && set "MFG_PROFILE=convergence"
+echo %*| findstr /i /c:"--convergence2" >nul && set "MFG_PROFILE=convergence2"
+echo %*| findstr /i /c:"--convergence3" >nul && set "MFG_PROFILE=convergence3"
 echo %*| findstr /i /c:"--erte" >nul && set "MFG_PROFILE=erte"
-if "%MFG_PROFILE%"=="vanilla" set "BUILD_DIR=%SCRIPT_DIR%build-vanilla"
+echo %*| findstr /i /c:"--goldenage" >nul && set "MFG_PROFILE=goldenage"
+echo %*| findstr /i /c:"--vins" >nul && set "MFG_PROFILE=vins"
+echo %*| findstr /i /c:"--reborn" >nul && set "MFG_PROFILE=reborn"
+if "%MFG_PROFILE%"=="vanilla" set "BUILD_DIR=%SCRIPT_DIR%builds\build-vanilla"
 if "%MFG_PROFILE%"=="vanilla" set "GEN_SUBDIR=generated_vanilla"
 if "%MFG_PROFILE%"=="vanilla" set "PKG_PREFIX=Vanilla"
-if "%MFG_PROFILE%"=="vanilla" set "SNAP_DIR=%SCRIPT_DIR%pre-release-vanilla"
+if "%MFG_PROFILE%"=="vanilla" set "SNAP_DIR=%SCRIPT_DIR%releases\pre-release-vanilla"
 if "%MFG_PROFILE%"=="vanilla" set "DISP_PROFILE=vanilla"
 if "%MFG_PROFILE%"=="vanilla" set "README_SRC=%SCRIPT_DIR%assets\README_vanilla.txt"
-if "%MFG_PROFILE%"=="vanilla" set "GFX_SRC=%SCRIPT_DIR%assets\menu\02_120_worldmap_vanilla.gfx"
-if "%MFG_PROFILE%"=="convergence" set "BUILD_DIR=%SCRIPT_DIR%build-convergence"
-if "%MFG_PROFILE%"=="convergence" set "GEN_SUBDIR=generated_convergence"
-if "%MFG_PROFILE%"=="convergence" set "PKG_PREFIX=Convergence"
-if "%MFG_PROFILE%"=="convergence" set "SNAP_DIR=%SCRIPT_DIR%pre-release-convergence"
-if "%MFG_PROFILE%"=="convergence" set "DISP_PROFILE=convergence"
-if "%MFG_PROFILE%"=="convergence" set "README_SRC=%SCRIPT_DIR%assets\README_convergence.txt"
-if "%MFG_PROFILE%"=="convergence" set "GFX_SRC=%SCRIPT_DIR%assets\menu\02_120_worldmap_convergence.gfx"
-if "%MFG_PROFILE%"=="erte" set "BUILD_DIR=%SCRIPT_DIR%build-erte"
+if "%MFG_PROFILE%"=="convergence2" set "BUILD_DIR=%SCRIPT_DIR%builds\build-convergence2"
+if "%MFG_PROFILE%"=="convergence2" set "GEN_SUBDIR=generated_convergence2"
+if "%MFG_PROFILE%"=="convergence2" set "PKG_PREFIX=Convergence 2.x"
+if "%MFG_PROFILE%"=="convergence2" set "SNAP_DIR=%SCRIPT_DIR%releases\pre-release-convergence2"
+if "%MFG_PROFILE%"=="convergence2" set "DISP_PROFILE=convergence2"
+if "%MFG_PROFILE%"=="convergence2" set "README_SRC=%SCRIPT_DIR%assets\README_convergence2.txt"
+if "%MFG_PROFILE%"=="convergence3" set "BUILD_DIR=%SCRIPT_DIR%builds\build-convergence3"
+if "%MFG_PROFILE%"=="convergence3" set "GEN_SUBDIR=generated_convergence3"
+if "%MFG_PROFILE%"=="convergence3" set "PKG_PREFIX=Convergence 3.x"
+if "%MFG_PROFILE%"=="convergence3" set "SNAP_DIR=%SCRIPT_DIR%releases\pre-release-convergence3"
+if "%MFG_PROFILE%"=="convergence3" set "DISP_PROFILE=convergence3"
+if "%MFG_PROFILE%"=="convergence3" set "README_SRC=%SCRIPT_DIR%assets\README_convergence3.txt"
+if "%MFG_PROFILE%"=="erte" set "BUILD_DIR=%SCRIPT_DIR%builds\build-erte"
 if "%MFG_PROFILE%"=="erte" set "GEN_SUBDIR=generated_erte"
 if "%MFG_PROFILE%"=="erte" set "PKG_PREFIX=ERTE"
-if "%MFG_PROFILE%"=="erte" set "SNAP_DIR=%SCRIPT_DIR%pre-release-erte"
+if "%MFG_PROFILE%"=="erte" set "SNAP_DIR=%SCRIPT_DIR%releases\pre-release-erte"
 if "%MFG_PROFILE%"=="erte" set "DISP_PROFILE=erte"
 if "%MFG_PROFILE%"=="erte" set "README_SRC=%SCRIPT_DIR%assets\README_erte.txt"
-if "%MFG_PROFILE%"=="erte" set "GFX_SRC=%SCRIPT_DIR%assets\menu\02_120_worldmap_erte.gfx"
+if "%MFG_PROFILE%"=="goldenage" set "BUILD_DIR=%SCRIPT_DIR%builds\build-goldenage"
+if "%MFG_PROFILE%"=="goldenage" set "GEN_SUBDIR=generated_goldenage"
+if "%MFG_PROFILE%"=="goldenage" set "PKG_PREFIX=GoldenAge"
+if "%MFG_PROFILE%"=="goldenage" set "SNAP_DIR=%SCRIPT_DIR%releases\pre-release-goldenage"
+if "%MFG_PROFILE%"=="goldenage" set "DISP_PROFILE=goldenage"
+if "%MFG_PROFILE%"=="goldenage" set "README_SRC=%SCRIPT_DIR%assets\README_goldenage.txt"
+if "%MFG_PROFILE%"=="vins" set "BUILD_DIR=%SCRIPT_DIR%builds\build-vins"
+if "%MFG_PROFILE%"=="vins" set "GEN_SUBDIR=generated_vins"
+if "%MFG_PROFILE%"=="vins" set "PKG_PREFIX=Vins"
+if "%MFG_PROFILE%"=="vins" set "SNAP_DIR=%SCRIPT_DIR%releases\pre-release-vins"
+if "%MFG_PROFILE%"=="vins" set "DISP_PROFILE=vins"
+if "%MFG_PROFILE%"=="vins" set "README_SRC=%SCRIPT_DIR%assets\README_vins.txt"
+if "%MFG_PROFILE%"=="reborn" set "BUILD_DIR=%SCRIPT_DIR%builds\build-reborn"
+if "%MFG_PROFILE%"=="reborn" set "GEN_SUBDIR=generated_reborn"
+if "%MFG_PROFILE%"=="reborn" set "PKG_PREFIX=Reborn"
+if "%MFG_PROFILE%"=="reborn" set "SNAP_DIR=%SCRIPT_DIR%releases\pre-release-reborn"
+if "%MFG_PROFILE%"=="reborn" set "DISP_PROFILE=reborn"
+if "%MFG_PROFILE%"=="reborn" set "README_SRC=%SCRIPT_DIR%assets\README_reborn.txt"
 echo [PROFILE] %DISP_PROFILE%  build=%BUILD_DIR%  gen=%GEN_SUBDIR%
 
 if /i "%~1"=="clean" goto :clean
@@ -66,6 +98,21 @@ if /i "%~1"=="release" goto :release
 
 REM Default: configure if needed, then build
 call :ensure_configured
+if errorlevel 1 exit /b 1
+
+REM Incremental data pipeline (hash-cached): ~1s when nothing data-related changed, rebuilds only the
+REM affected stages otherwise. Without this, a plain build refreshed the icon tags (gen_shared, below)
+REM but NOT the pipeline-baked markers/z-order - so reordering map_categories.py left markers stale and
+REM icons appeared mixed between categories. Pass --force-all to rebuild everything.
+echo.
+echo Running data pipeline (incremental, hash-cached)...
+py "%SCRIPT_DIR%tools\build_pipeline.py" %*
+if errorlevel 1 (
+    echo [FAILED] build_pipeline.py
+    exit /b 1
+)
+
+call :gen_shared
 if errorlevel 1 exit /b 1
 
 echo.
@@ -94,9 +141,34 @@ py "%SCRIPT_DIR%tools\build_pipeline.py" %*
 echo.
 exit /b 0
 
+:gen_shared
+REM Shared icon art (logo + map-icon lossless tags + overlay atlas) -> src/generated_shared.
+REM Profile-INDEPENDENT: derives from tools/map_categories.py (NOT per-profile baked data), so
+REM every build emits the identical complete superset. No gfx involved. (Was a manual step.)
+echo.
+echo Generating shared icon art (map_categories)...
+py "%SCRIPT_DIR%tools\generate_logo.py"
+if errorlevel 1 exit /b 1
+py "%SCRIPT_DIR%tools\generate_map_icons.py"
+if errorlevel 1 exit /b 1
+py "%SCRIPT_DIR%tools\generate_overlay_icons.py"
+if errorlevel 1 exit /b 1
+exit /b 0
+
 :ensure_configured
 if not exist "%BUILD_DIR%\MapForGoblins.sln" (
     echo Build not configured. Running configure...
+    call :configure
+    if errorlevel 1 exit /b 1
+    exit /b 0
+)
+REM Self-heal a RELOCATED build tree: if the cache's recorded binary dir no longer
+REM matches BUILD_DIR (e.g. after moving build* under builds\), CMake would abort
+REM with a "cache directory is different" error. Detect the mismatch and reconfigure.
+set "FS_BUILD=%BUILD_DIR:\=/%"
+findstr /C:"CMAKE_CACHEFILE_DIR:INTERNAL=%FS_BUILD%" "%BUILD_DIR%\CMakeCache.txt" >nul 2>&1
+if errorlevel 1 (
+    echo Build cache is stale or relocated - reconfiguring...
     call :configure
     if errorlevel 1 exit /b 1
 )
@@ -139,6 +211,9 @@ if errorlevel 1 (
 )
 
 call :ensure_configured
+if errorlevel 1 exit /b 1
+
+call :gen_shared
 if errorlevel 1 exit /b 1
 
 echo.
@@ -186,6 +261,13 @@ if errorlevel 1 (
     exit /b 1
 )
 
+call :gen_shared
+if errorlevel 1 exit /b 1
+
+REM Self-heal a relocated build tree before the explicit reconfigure below.
+call :ensure_configured
+if errorlevel 1 exit /b 1
+
 REM Build the release DLL. Same version string as snapshots, so with /Brepro +
 REM the same data this is byte-identical to the snapshot you already tested/scanned.
 call "%VS_PATH%" -arch=amd64 >nul 2>&1
@@ -207,7 +289,7 @@ if errorlevel 1 (
 cd /d "%SCRIPT_DIR%"
 
 REM Package into release folder (PKG_PREFIX = ERR or Vanilla per profile)
-set "REL_DIR=%SCRIPT_DIR%%PKG_PREFIX% - MapForGoblins - DLL - v%VER%"
+set "REL_DIR=%SCRIPT_DIR%releases\%PKG_PREFIX% - MapForGoblins - DLL - v%VER%"
 call :package "%REL_DIR%"
 powershell -NoProfile -Command "(Get-Content '%README_SRC%') -replace '%%VERSION%%','%VER%' | Set-Content '%REL_DIR%\README.txt'"
 
@@ -241,11 +323,13 @@ echo.
 exit /b 0
 
 :package
-REM %1 = target root dir. Lays out the package per profile.
-REM   ERR              : <root>\dll\offline\{dll,ini} + <root>\addons\MapForGoblins\menu\gfx
-REM   vanilla/convergence : <root>\MapForGoblins\{dll,ini} + <root>\MapForGoblins\menu\gfx
-REM The ini is GENERATED from the in-code schema via mfg_inigen (non-ERR builds
-REM pass --vanilla to omit ERR-only sections), not copied.
+REM %1 = target root dir. PURE-DLL, FLAT layout (no nesting, same for every profile): the package is just
+REM the DLL + generated ini + LICENSE at the root (README is added by the snapshot/release step). The mod
+REM is a single DLL with no extra files, so there is nothing to nest.
+REM   <root>\MapForGoblins.dll
+REM   <root>\MapForGoblins.ini   (GENERATED from the in-code schema via mfg_inigen; non-ERR builds pass
+REM                               --vanilla to omit ERR-only sections. show_* default ON in the schema.)
+REM   <root>\LICENSE.txt
 set "PKG_ROOT=%~1"
 set "INIGEN=%BUILD_DIR%\Release\mfg_inigen.exe"
 if not exist "%INIGEN%" set "INIGEN=%BUILD_DIR%\Debug\mfg_inigen.exe"
@@ -254,23 +338,13 @@ if not exist "%INIGEN%" (
     exit /b 1
 )
 if exist "%PKG_ROOT%" rmdir /s /q "%PKG_ROOT%"
+mkdir "%PKG_ROOT%" 2>nul
+copy /Y "%BUILD_DIR%\Release\MapForGoblins.dll" "%PKG_ROOT%\" >nul
+copy /Y "%SCRIPT_DIR%LICENSE.txt" "%PKG_ROOT%\" >nul
 if defined MFG_PROFILE (
-    REM non-ERR gfx = that game's own worldmap base + our icon frames
-    REM (tools/build_vanilla_gfx.py), NOT the ERR-based _new.gfx (that one
-    REM carries re-iconed markers + references to textures absent elsewhere).
-    REM GFX_SRC is set per profile at the top of this script.
-    mkdir "%PKG_ROOT%\MapForGoblins\menu" 2>nul
-    copy /Y "%BUILD_DIR%\Release\MapForGoblins.dll" "%PKG_ROOT%\MapForGoblins\" >nul
-    "%INIGEN%" "%PKG_ROOT%\MapForGoblins\MapForGoblins.ini" --vanilla
-    copy /Y "%GFX_SRC%" "%PKG_ROOT%\MapForGoblins\menu\02_120_worldmap.gfx" >nul
-    copy /Y "%SCRIPT_DIR%LICENSE.txt" "%PKG_ROOT%\" >nul
+    "%INIGEN%" "%PKG_ROOT%\MapForGoblins.ini" --vanilla
 ) else (
-    mkdir "%PKG_ROOT%\dll\offline" 2>nul
-    mkdir "%PKG_ROOT%\addons\MapForGoblins\menu" 2>nul
-    copy /Y "%BUILD_DIR%\Release\MapForGoblins.dll" "%PKG_ROOT%\dll\offline\" >nul
-    "%INIGEN%" "%PKG_ROOT%\dll\offline\MapForGoblins.ini"
-    copy /Y "%GFX_SRC%" "%PKG_ROOT%\addons\MapForGoblins\menu\02_120_worldmap.gfx" >nul
-    copy /Y "%SCRIPT_DIR%LICENSE.txt" "%PKG_ROOT%\" >nul
+    "%INIGEN%" "%PKG_ROOT%\MapForGoblins.ini"
 )
 exit /b 0
 

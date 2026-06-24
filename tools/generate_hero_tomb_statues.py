@@ -46,8 +46,10 @@ _emevd = asm.GetType('SoulsFormats.EMEVD').GetMethod('Read',
 
 
 HERO_TOMB_TEMPLATE = 90005683
-ICON_ID = 440  # added in 02_120_worldmap.gfx - single-layer MENU_MAP_85 (char 109)
-ROW_START = 9300000
+import icon_registry
+import row_id_registry
+ICON_ID = icon_registry.iconid("hero_tomb_statues")  # single-layer MENU_MAP_85 (char 109)
+ROW_START = row_id_registry.base("World - Hero's Tomb Statues")  # z-order slot; see row_id_registry
 
 
 def _read(reader, path, suf='.tmp'):

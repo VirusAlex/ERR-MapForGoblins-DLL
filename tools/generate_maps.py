@@ -45,7 +45,7 @@ def main():
     print(f"  {len(maps)} unique maps")
 
     lines = []
-    row_id = 7500000
+    row_id = __import__("row_id_registry").base("World - Maps")  # z-order slot; see row_id_registry
     for m in maps:
         area = m['area']
         gx = m['gx']
@@ -58,7 +58,7 @@ def main():
         else:
             disp = 'dispMask00'
 
-        lines.append(f'param WorldMapPointParam: id {row_id}: iconId: = 406;')
+        lines.append(f'param WorldMapPointParam: id {row_id}: iconId: = {__import__("icon_registry").iconid("world_maps")};')
         lines.append(f'param WorldMapPointParam: id {row_id}: {disp}: = 1;')
         lines.append(f'param WorldMapPointParam: id {row_id}: areaNo: = {area};')
         if area in OVERWORLD_AREAS or area in DLC_AREAS or gx > 0:

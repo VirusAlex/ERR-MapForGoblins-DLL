@@ -399,3 +399,173 @@ Tried and REMOVED (kept here as the record, not in code):
 Residual cost (the hard floor, accepted): per-marker pin construction (typed-find +
 refcount, ~600ms with ~7000 markers) runs once per open and could not be cut safely. The
 small black flash on open is the game's own native map transition, not ours.
+
+## World->screen projection: transform fields (STATIC RE, 2026-06-20)
+
+Pure static disasm (capstone) of the WorldMapDialog code cluster [0x1409B0000,0x1409E8000].
+Resolves the live-RE "which field is zoom" ambiguity. All file VAs. Evidence = exact
+instruction sites. Scripts: scratch/scripts/_proj_0*.py (_proj_05_scoped.py is the
+authoritative scan; byte-window scans over-/under-match SSE and are unreliable).
+
+### Field roles on WorldMapDialog (CONFIRMED by instruction width + dataflow)
+- +0x0A38 / +0x0A3C = view CENTER (map-space Vec2, float). Read as float in Update
+  (0x1409C337B movss xmm0,[rbx+0xa38]; 0x1409C3397 [rbx+0xa3c]); written as a qword pair
+  (0x1409C33F6 mov [rbx+0xa38],rax) from the eased target. CONFIRMED view center.
+- +0x0A40 = CURRENT (eased) zoom, float. Written 32-bit from target (0x1409C361F
+  mov [rbx+0xa40],eax  <- eax = [rbx+0x2b58]); read as float (0x1409C365A movss
+  xmm0,[rbx+0xa40]; compared to target at 0x1409C3662 ucomiss xmm0,[rbx+0x2b58]).
+- +0x2B58 = TARGET zoom, float. The value +0xA40 eases toward. The per-frame broadcast
+  (fn 0x1409C38D0) uses +0x2B58 DIRECTLY to derive per-layer scale: 0x1409C3B4A
+  movss xmm2,[rdi+0x2b58]; 0x1409C3B56 divss xmm0(=1.0),xmm2  => layer_scale = 1.0/zoom.
+  0x1409C3BC9 divss xmm1, [const 2.25]  => one layer slot (+0x32c8) = zoom/2.25.
+  THE LIVE ZOOM SCALAR IS +0x2B58 (target) / +0x0A40 (eased current). For drawing in
+  lockstep with the game's rendered frame use +0x0A40 (what the layers were built from);
+  +0x2B58 is the value they converge to.
+- +0x0A44/+0x0A45/+0x0A46 = dirty/changed flags (byte/word stores 0/1/0x101), NOT data.
+- +0x2EAC..+0x2EB8 = center pan-ease triple (tgt0 +0x2EAC, tgt1 +0x2EB4), qword Vec2 each;
+  tracks the center (this is the "+0x2EAC stored 3x" the live RE saw).
+- +0x2F24 ease_t, +0x2F28 ease_dur, +0x2F2C ease_a, +0x2F30 ease_b: smoothstep/ease params
+  fed to helper 0x1409E6650 (a clamp+interp, returns eased scalar). +0x2F28 is the ease
+  DURATION denominator (divss [2f24]/[2f28] = progress fraction), NOT zoom. This is why the
+  live read of "+0x2F28 = 0.5" did not change on zoom. The 2.25 the live RE saw at +0x2F2C
+  was an ease source value, coincidental.
+- +0x0D88..+0x0D94 = LOGICAL viewport rect, written wholesale from a const block
+  (0x1409BFE04 movups [rsi+0xd88], xmmword [rip] -> const @0x142B2BFB0 = {0,0,1920,768}).
+  So the UI logical canvas is 1920x768 (FromSoft menu space), NOT 1920x1080. +0x0D94 holds
+  a runtime aspect/scale (clamped with a NaN guard at 0x1409BFE38/0x1409BFE94). The
+  on-screen pixel size = logical(1920x768) * device render-scale; the "2.25" question is a
+  UI render scale (real_res/logical), and 768 is the logical letterbox height. CONFIRMED.
+
+### The 2.25 constant: it is a CONSTANT, not a field
+.rdata float 2.25 @0x142B2BFA0, used at 0x1409C3BC9 as a fixed divisor (zoom/2.25 for the
+icon/text layer). The 1.0 @0x14329E678 is the 1/zoom numerator. The 0.5 @0x14329E660 is the
+rect-center factor in the pan-clamp (0x1409CD2EE). None of these are live dialog state.
+
+### Projection architecture (why there is no single closed-form line in the dialog)
+The dialog does NOT itself map each pin map-coord to a pixel. Per frame it:
+1. eases center (+0xA38) and zoom (+0xA40) toward targets (+0x2EB4 / +0x2B58) [Update
+   0x1409C32F0],
+2. broadcasts scale = 1.0/zoom (and zoom/2.25 for icons) to ~10 child layer widgets
+   (+0x30D8,+0x31D0,+0x32C8,+0x33C0,+0x34B8,+0x35B0,+0x36A8,+0x3898 ...) via
+   vtable call [layer+0x38] [broadcast fn 0x1409C38D0],
+3. pushes center+scale into a MapView camera sub-object with a view-rect at +0x340/+0x344
+   (min) and +0x348/+0x34c (max) and a scale at +0x380; pan stored at +0x378
+   [apply fn 0x1409CD1C0; rect-transform leaf 0x1409CE190].
+The per-pin pixel is then produced inside the generic Scaleform/UI widget layout from
+(map_coord, layer_scale, layer_origin) - distributed, not a single instruction.
+
+### Practical world->screen formula for the overlay (to verify live, HIGH-conf on fields)
+Read from the live WorldMapDialog:
+  cx,cz   = float[dialog+0x0A38], float[dialog+0x0A3C]   // view center (map-space)
+  zoom    = float[dialog+0x0A40]                          // eased current zoom (use this)
+  vp      = float4[dialog+0x0D88] = {0,0,1920,768}        // logical viewport
+  scale_dev = device_pixels / 768.0  (UI render scale; or read +0x0D94 family at runtime)
+Then, matching the camera's (map-center)*scale form (scale = 1.0/zoom in the broadcast):
+  logical_x = (pin_mapX - cx) / zoom + 1920/2
+  logical_z = (pin_mapZ - cz) / zoom +  768/2
+  screen_px_x = logical_x * scale_dev
+  screen_px_y = logical_z * scale_dev
+Axis order is X then Z (the +0x10 pin pair is (X,Z)); no Z flip is applied at the dialog
+level (the camera rect min/max already encode orientation). The exact unit of "zoom" (world
+units per logical px vs its reciprocal) and any Y/Z sign MUST be confirmed with ONE live
+pin: dump dialog +0xA38/+0xA40, a known pin +0x10, and that pin's on-screen pixel, then fit
+divide-vs-multiply and the sign. The fields and the 1/zoom relationship are static-confirmed;
+the single scalar calibration (and +0x0D94 device-scale read) is the only live step left.
+
+### Key function RVAs
+- WorldMapDialog::Update (ease cur->tgt)            0x1409C32F0
+- Per-frame transform broadcast (scale=1/zoom)      0x1409C38D0   (uses +0x2B58)
+- Transform apply / pan-clamp (camera +0x340..0x380) 0x1409CD1C0
+- Rect-transform leaf (NaN-guarded)                 0x1409CE190
+- Ease/smoothstep helper                            0x1409E6650
+- Sibling per-frame apply (same divss [2f24]/[2f28]) 0x1409BFC.. (site 0x1409BFC9B)
+- Setter "snap center+zoom+flags" (init)            site 0x1409BE677-0x1409BE68E
+- Logical viewport const {0,0,1920,768}             .rdata 0x142B2BFB0 (written @0x1409BFE04)
+
+### Open / needs-live
+- The mouse-WHEEL handler that writes target zoom +0x2B58 is NOT in the dialog code range
+  (no disp32 write to +0x2B58 anywhere; it is set through a pointer). Target zoom flows from
+  a config/state object at [dialog+0x0A48] (e.g. [cfg+0x34] -> dialog+0xA94 at 0x1409C39E4).
+  The wheel itself mutates that input/config subsystem. Not required to READ live zoom.
+- Device render-scale exact source (+0x0D94 vs a global UI-scale) - read live.
+
+## Path-A GFX live-icon injection: 3-task RE verdict (2026-06-20)
+
+Live target PID 28508, eldenring base 0x7FF6FFB90000 (file VA = base + (liveVA -
+0x140000000)). Game was running our MODIFIED worldmap gfx via the mod loader (loose
+.tga + modified 02_120_worldmap served from the mod dir; on-disk game menu/ is stock
+vanilla 348-frame). READ-ONLY (OpenProcess VM_READ). Scripts scratch/re_gfx_live11..24.
+
+### Resolving the live worldmap MovieDataDef (handle array moves; def persists)
+Prior session's CSMD handle array (0x7ff2e7ea0700) had shifted; the GFx MovieDataDef
+itself persists (cached/refcounted) across map close. Re-resolve EACH session:
+1. scan committed RW for CSScaleformMovieDef vtable (file 0x142bbb310).
+2. for each instance, payload = [handle+0x10]; pick the one whose OWN url buffer
+   (hop<=1, not deep BFS) contains '02_120_worldmap' - deep BFS gives false hits
+   because all menu movies cross-link a shared atlas/context (8 candidates resolved
+   the url at hop 3; only the true def at hop 1).
+This session: handle 0x7ff2e7f8bca0, payload (MovieDataDef) 0x7ff2dffd60a0,
+vtable exe+0x2CC0B80. Its url buffer @ 0x7ff2dffeb0ab = "02_120_worldmap.gfx".
+
+### TASK 3 (the blocker) - VERDICT: must REGISTER new resources; mechanism = the
+### engine already does it for us via DefineExternalImage2-by-path. CONFIDENCE HIGH.
+- The stock 02_120_worldmap.gfx (348 frames) imports NONE of the textures our frames
+  need: MENU_MAP_MemoCursor, MENU_Tab_* , MENU_ItemIcon_* are ALL absent from stock
+  (verified by parsing the on-disk stock gfx: 302 MENU_ names, none of ours). They
+  belong to the inventory/menu movies, not the map. So "reuse existing charIds" is
+  FALSE for the overlay/background layer.
+- HOWEVER all 24 needed texture NAMES are present + RESOLVABLE process-wide. In the
+  live (our-gfx) movie the worldmap def's OWN DefineExternalImage2 records are fully
+  resolved: each record holds the virtual path
+  "...\Game\menu\MENU_Tab_00.tga", a creator vtable ptr (exe+0x2C85288 family),
+  flag 0xd, and the loaded texture size a0 00 a0 00 = 160x160 (cluster dumps at
+  0x7ff2e00acc00 / 0x7ff2e00af100). The textures are loose .tga the mod loader serves;
+  the engine resolves DefineExternalImage2 BY NAME/PATH at load and builds a real
+  CSTextureImage (RTTI .?AVCSTextureImage@CS@@ x72, ImageResource@GFx x23 reachable
+  from the def).
+- Net: the only thing Path A must add that the stock movie lacks is the
+  DefineExternalImage2 RESOURCE ENTRIES (name-refs) for the ~17 distinct textures our
+  appended frames reference (the 9 vanilla charIds 10/21/53/57/105/109/112/113/162 the
+  frames also use ARE already in the stock map dict - reuse those). The texture bits
+  themselves never need shipping: the loader already serves the .tga, and the engine's
+  own DefineExternalImage2 path loads+registers them. So "inject frames" reduces to
+  "inject DefineExternalImage2 defs + frames", with NO manual texture upload and NO
+  ScaleformTexRepository poke.
+
+### TASK 2 - PO tag object model (byte map). CONFIDENCE MEDIUM-HIGH on layout, the
+### exact present-flag-dependent field offsets need a clone (not hand-encode).
+- This build does NOT use the assumed flat Array<ExecuteTag*> {ptr,count,cap} per
+  frame. Tags are heap objects ~0x20 stride, intrusively linked. Real tag vtables live:
+  PO2 = exe+0x2C65CC0 (the "alt"; the 0x142cc9360 variant count=0 - ignore),
+  PO3 = exe+0x2C65D20. 165941 PO2 + 5304 PO3 objects in the movie arena.
+- The Execute method (PO2 vtable slot6 = 0x1411bcce0) decodes the body:
+    flags = byte[tag+8]; base = (flags signed <0) ? 9 : 1
+    depth = u16 at [tag + 8 + base]   (so depth at tag+0x10/0x11 for base=1)
+    flags bit0 (cl) and bit1 (al) select action: place-new vs modify-existing
+  It binary-searches the live display list ([rbp+0x28]=data,[rbp+0x30]=count) by depth
+  ([dispobj+0x14]) and, for place-new, copies the tag (rbx) into [dispobj+0x18..0x68]
+  and sets [dispobj+0x10]=charDef base frame index; for modify it calls 0x1411bfd50
+  (apply matrix/cxform). Observed live bodies show the depth/flag bytes exactly:
+  e.g. tag @0x7ff2de6232a8 body "...0601000100..." = flags 0x06, depth 1;
+  next "...0601000200..." depth 1 alt; "...2601000300004661" flags 0x26 + name "Fa".
+- Implication: clone-append is far safer than hand-encoding. To add a frame, deep-copy
+  existing tag OBJECTS (allocate via the movie heap, memcpy 0x20-ish, fix depth/charId/
+  matrix/cxform in place, relink), rather than synthesize the variable body.
+
+### TASK 1 - SpriteDef cid=171 this. CONFIDENCE LOW (not pinned this pass).
+- The frame count is NOT stored as a literal u32 441/440 reachable from the def in the
+  movie arena (0 hits in 0x7ff2d0..0x7ff2e1; the prior pass's 441 hits were the GFx JIT
+  arena 0x7fff0... = false). So the sprite cannot be found by a frameCount value scan.
+- The resource dictionary (charId->resource) was not cleanly walked: payload+0x20
+  (0x7ff2dffeb010, vtable exe+0x2CBF030) is the GFx context resource-binding (file
+  opener/image creator singletons), NOT the per-movie charId table; payload+0x108
+  region is a name->id export table (held an export "font"->13). The per-movie
+  charId->SpriteDef map node was not located. NEXT: trace it from the AddDisplayObject
+  path (0x140f01b10) or PlaceObject loader (0x1411e23b0) which resolve charId->resource
+  at runtime, capturing rcx/rdx live; or read charDef+0x3b8 (base frame index) on a
+  display object to back into the sprite. This is the one genuine remaining live poke.
+
+### Build-state note
+Running game = our modified gfx (440-frame _new variant) via mod loader. Stock=348,
+_new=440, _vanilla/_err=441 (extra anon "?" frame). For a STOCK-gfx Path-A target the
+inject is 348 -> 440 (92 frames) + the DefineExternalImage2 defs above.

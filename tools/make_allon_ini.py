@@ -2,7 +2,7 @@
 
 Takes the shipped (stock) MapForGoblins.ini and produces a copy with every
 `show_* = false` flipped to `show_* = true`, leaving all non-icon settings
-(load_delay, require_map_fragments, ERR Markers patches, Debug hotkeys, etc.)
+(require_map_fragments, ERR Markers patches, Debug hotkeys, etc.)
 exactly as shipped. A short header explaining the preset is prepended.
 
 This is the file that ships next to the release README; users drop it into
@@ -23,7 +23,7 @@ HEADER = """; All-on preset for Map For Goblins v{version}.
 ; (replacing the default MapForGoblins.ini) to render every icon
 ; category at once.
 ;
-; The non-icon settings (load_delay, hotkeys, etc.)
+; The non-icon settings (hotkeys, fast_map_open, etc.)
 ; are kept at the same defaults as the shipped MapForGoblins.ini.
 
 """

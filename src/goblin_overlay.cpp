@@ -25,9 +25,13 @@
 #include "goblin_config.hpp"
 #include "goblin_config_schema.hpp"
 #include "goblin_overlay_icons.hpp"
+#include "goblin_map_icons.hpp" // shared DefineBitsLossless2 icon tags (decoded here for the atlas)
+#include "miniz.h"              // zlib inflate to decode the tags
 #include "goblin_inject.hpp"
 #include "goblin_markers.hpp"
 #include "goblin_map_timing.hpp"
+#include "goblin_gfx_probe.hpp"
+#include "goblin_diag.hpp"
 #include "modutils.hpp"
 
 #include <spdlog/spdlog.h>
@@ -41,12 +45,22 @@
 #include <cstring>
 #include <mutex>
 #include <string>
+#include <thread>
 #include <vector>
+#include <commdlg.h> // GetOpenFileNameW (WIN32_LEAN_AND_MEAN excludes it from windows.h)
+
+#define STB_IMAGE_IMPLEMENTATION
+#define STBI_NO_STDIO
+#define STBI_ONLY_PNG
+#include "stb_image.h" // dev Icon Preview: decode a picked PNG to RGBA
+#define STB_IMAGE_RESIZE_IMPLEMENTATION
+#include "stb_image_resize2.h" // quality downscale to mirror the build pipeline's 96px normalize
 
 #include "version.h" // PROJECT_VERSION (generated)
 
 #pragma comment(lib, "d3d12.lib")
 #pragma comment(lib, "dxgi.lib")
+#pragma comment(lib, "comdlg32.lib")
 
 // From imgui_impl_win32.cpp
 extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg,
@@ -109,6 +123,20 @@ D3D12_GPU_DESCRIPTOR_HANDLE g_atlas_gpu{};    // its SRV (g_srv_heap index 1)
 ID3D12Resource *g_logo_tex = nullptr;         // mod logo texture
 D3D12_GPU_DESCRIPTOR_HANDLE g_logo_gpu{};     // its SRV (g_srv_heap index 2)
 bool g_atlas_ready = false;
+
+// Dev "Icon Preview" (Debug tab): pick a PNG off disk, show it floating + centered with a transparent
+// background at a chosen on-map size, so icon art can be eyeballed against the live map without a rebuild.
+ID3D12Resource *g_preview_tex = nullptr;       // picked-png texture (g_srv_heap index 3)
+D3D12_GPU_DESCRIPTOR_HANDLE g_preview_gpu{};
+int g_preview_w = 0, g_preview_h = 0;          // source png dimensions
+int g_preview_iw = 0, g_preview_ih = 0;        // normalized (fit-to-96 then cropped) dims, for proportional draw
+std::atomic<bool> g_preview_show{false};       // floating preview window visible
+float g_preview_px = 65.0f;                    // on-screen height in px (slider; ~map-icon default)
+std::mutex g_preview_mx;
+std::wstring g_preview_path;                    // picked path (set by the dialog thread)
+std::atomic<bool> g_preview_dirty{false};      // a new path is waiting to be decoded (render thread)
+std::atomic<bool> g_preview_dialog_open{false}; // a file dialog is already up (avoid stacking)
+static void open_preview_dialog(); // defined below (opens the file dialog on a worker thread)
 
 // GPU sync: a fence we signal+wait after each submit so we never reuse the
 // command list/allocator (or free RTVs on resize) while the GPU is still using
@@ -444,6 +472,22 @@ void draw_settings_tab()
 // ── Debug tab: diagnostics (debug_logging + marker-dump settings) + dump tool ──
 void draw_debug_tab()
 {
+    // ── Injection status (top of the tab) ──────────────────────────────────
+    // A live readout of every inject (hooks, world-map icons, bitmaps, remap,
+    // logo, overlay) with a reason for anything that failed. Players can
+    // screenshot or Copy this for a bug report so we can pinpoint the fault.
+    ImGui::TextColored(ImVec4(0.80f, 0.68f, 0.40f, 1.0f), "Injection status");
+    ImGui::TextDisabled("If icons are missing, screenshot or copy this for a bug report.");
+    {
+        std::string rep = goblin::diag::report();
+        ImGui::BeginChild("##injstatus", ImVec2(-1, 150), true, ImGuiWindowFlags_HorizontalScrollbar);
+        ImGui::TextUnformatted(rep.c_str());
+        ImGui::EndChild();
+        if (ImGui::Button("Copy status"))
+            ImGui::SetClipboardText(rep.c_str());
+    }
+    ImGui::Separator();
+
     bool changed = false;
     for (const auto &sec : goblin::ini_schema())
         if (std::strcmp(sec.name, "Debug") == 0)
@@ -452,18 +496,23 @@ void draw_debug_tab()
         goblin::reapply_live_settings();
     ImGui::Separator();
 
-    ImGui::TextWrapped("Dumps the map beacons (your 1-5 placed markers) and stamps "
-                       "to text. Works whether the map is open or closed. Press Copy "
-                       "to put it on the clipboard.");
-    if (ImGui::Button("Dump markers now"))
-    {
-        std::string s = goblin::markers::dump_to_string();
+    ImGui::TextWrapped("Dump the map beacons (your 1-5 placed markers) or the stamps "
+                       "to text - separately, to keep this box readable. Works whether "
+                       "the map is open or closed; press Copy for the clipboard. The "
+                       "hotkey-dumped log file always contains both together.");
+    auto fill_dump = [&](goblin::markers::DumpSel sel) {
+        std::string s = goblin::markers::dump_to_string(sel);
         g_dump_buf.assign(s.begin(), s.end());
         g_dump_buf.push_back('\0');
-    }
+    };
+    if (ImGui::Button("Dump beacons"))
+        fill_dump(goblin::markers::DUMP_BEACONS);
+    ImGui::SameLine();
+    if (ImGui::Button("Dump stamps"))
+        fill_dump(goblin::markers::DUMP_STAMPS);
     ImGui::SameLine();
     if (ImGui::Button("Copy") && !g_dump_buf.empty())
-        ImGui::SetClipboardText(g_dump_buf.data()); // copies the whole dump
+        ImGui::SetClipboardText(g_dump_buf.data()); // copies the current dump
     ImGui::SameLine();
     ImGui::TextDisabled("%d chars", g_dump_buf.empty() ? 0 : static_cast<int>(g_dump_buf.size() - 1));
     ImGui::Separator();
@@ -476,6 +525,24 @@ void draw_debug_tab()
     }
     else
         ImGui::TextDisabled("(no dump yet - press the button above)");
+
+    ImGui::Separator();
+    ImGui::TextWrapped("Icon Preview: pick a PNG and see it floating + centered with a transparent "
+                       "background, at a chosen on-map size. Open the in-game map first, then open this "
+                       "overlay over it to compare your art against the live icons.");
+    if (ImGui::Button("Icon Preview..."))
+        open_preview_dialog();
+    if (g_preview_tex)
+    {
+        ImGui::SameLine();
+        if (ImGui::Button("Close preview"))
+            g_preview_show.store(false);
+        ImGui::SameLine();
+        if (!g_preview_show.load() && ImGui::Button("Show preview"))
+            g_preview_show.store(true);
+        ImGui::SliderFloat("Preview size (px)", &g_preview_px, 8.0f, 256.0f, "%.0f");
+        ImGui::TextDisabled("source: %d x %d px", g_preview_w, g_preview_h);
+    }
 }
 
 // ── About tab: version + links ──
@@ -854,6 +921,7 @@ void teardown_dx12()
     if (g_fence) { g_fence->Release(); g_fence = nullptr; }
     if (g_atlas_tex) { g_atlas_tex->Release(); g_atlas_tex = nullptr; }
     if (g_logo_tex) { g_logo_tex->Release(); g_logo_tex = nullptr; }
+    if (g_preview_tex) { g_preview_tex->Release(); g_preview_tex = nullptr; }
     g_atlas_ready = false;
     g_atlas_gpu = D3D12_GPU_DESCRIPTOR_HANDLE{};
     g_logo_gpu = D3D12_GPU_DESCRIPTOR_HANDLE{};
@@ -886,7 +954,7 @@ bool init_dx12(IDXGISwapChain3 *sc)
 
     D3D12_DESCRIPTOR_HEAP_DESC srv{};
     srv.Type = D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;
-    srv.NumDescriptors = 3; // [0] imgui font, [1] category-icon atlas, [2] mod logo
+    srv.NumDescriptors = 4; // [0] imgui font, [1] category-icon atlas, [2] mod logo, [3] icon-preview
     srv.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
     if (FAILED(g_device->CreateDescriptorHeap(&srv, IID_PPV_ARGS(&g_srv_heap))))
         return false;
@@ -971,9 +1039,19 @@ bool init_dx12(IDXGISwapChain3 *sc)
                         g_srv_heap->GetCPUDescriptorHandleForHeapStart(),
                         g_srv_heap->GetGPUDescriptorHandleForHeapStart());
     g_dx12_inited = true;
+    goblin::diag::set_overlay(goblin::diag::OverlayState::Active, "");
     spdlog::info("[OVERLAY] DX12 backend ready ({} buffers, {}x{})", g_buffer_count,
                  desc.BufferDesc.Width, desc.BufferDesc.Height);
     return true;
+}
+
+// SEH wrapper: the swapchain/device queries + D3D object creation can AV on a torn swapchain state
+// (e.g. a G-Sync / fullscreen-flip transition mid-init). A failed init must never crash the game - we
+// just stay uninited and retry on the next Present. (POD-only locals so __try is legal.)
+static bool seh_init_dx12(IDXGISwapChain3 *sc)
+{
+    __try { return init_dx12(sc); }
+    __except (EXCEPTION_EXECUTE_HANDLER) { return false; }
 }
 
 // Block until the GPU finishes our submitted work, so we never reuse the
@@ -1143,26 +1221,236 @@ static bool upload_rgba(const unsigned char *rgba, int w, int h, UINT srv_index,
     return true;
 }
 
-// One-time GPU upload of the category-icon atlas (SRV index 1) + the mod logo
-// (index 2). Fence-waited. On failure we set g_atlas_ready anyway so we don't
-// retry every frame (just no icons/logo).
-void try_upload_atlas()
+// ── Dev Icon Preview helpers ──────────────────────────────────────────────
+// Open the native file dialog on a WORKER thread so the modal dialog never blocks the render/present
+// thread. On success, stash the path and flag the render thread to decode it next frame.
+static void open_preview_dialog()
 {
-    if (g_atlas_ready || !g_dx12_inited || !g_command_queue || !g_device || !g_srv_heap)
+    if (g_preview_dialog_open.exchange(true))
+        return; // a dialog is already up
+    std::thread([] {
+        wchar_t buf[MAX_PATH] = {0};
+        OPENFILENAMEW ofn{};
+        ofn.lStructSize = sizeof(ofn);
+        ofn.lpstrFilter = L"PNG images\0*.png\0All files\0*.*\0";
+        ofn.lpstrFile = buf;
+        ofn.nMaxFile = MAX_PATH;
+        ofn.lpstrTitle = L"Map for Goblins - pick a PNG to preview";
+        ofn.Flags = OFN_FILEMUSTEXIST | OFN_PATHMUSTEXIST | OFN_NOCHANGEDIR | OFN_EXPLORER;
+        if (GetOpenFileNameW(&ofn))
+        {
+            std::lock_guard<std::mutex> lk(g_preview_mx);
+            g_preview_path.assign(buf);
+            g_preview_dirty.store(true);
+        }
+        g_preview_dialog_open.store(false);
+    }).detach();
+}
+
+// Mirror the build pipeline's generate_map_icons.normalize(): crop to the alpha bbox, fit to SIZE px
+// preserving aspect, center on a transparent SIZE x SIZE canvas. The on-map icon IS this 96px image
+// (not the raw png), so previewing the normalized version is what makes preview == map.
+static std::vector<unsigned char> to_map_icon(const unsigned char *src, int w, int h, int SIZE,
+                                              int *out_w, int *out_h)
+{
+    // 1) Scale the WHOLE source to fit SIZE px (longest side) FIRST - alpha-aware (STBIR_RGBA is
+    //    premult-aware), so the drawn size within the source canvas is preserved (matches the map).
+    float s = (w >= h) ? (float)SIZE / w : (float)SIZE / h;
+    int fw = (int)(w * s + 0.5f), fh = (int)(h * s + 0.5f);
+    if (fw < 1) fw = 1; if (fw > SIZE) fw = SIZE;
+    if (fh < 1) fh = 1; if (fh > SIZE) fh = SIZE;
+    std::vector<unsigned char> fit((size_t)fw * fh * 4);
+    stbir_resize_uint8_srgb(src, w, h, 0, fit.data(), fw, fh, 0, STBIR_RGBA);
+    // 2) Crop to the alpha bbox AFTER scaling (tight, variable W x H) - mirrors generate_map_icons.normalize.
+    int x0 = fw, y0 = fh, x1 = -1, y1 = -1;
+    for (int y = 0; y < fh; ++y)
+        for (int x = 0; x < fw; ++x)
+            if (fit[((size_t)y * fw + x) * 4 + 3] > 8)
+            {
+                if (x < x0) x0 = x; if (x > x1) x1 = x;
+                if (y < y0) y0 = y; if (y > y1) y1 = y;
+            }
+    if (x1 < x0) { x0 = 0; y0 = 0; x1 = fw - 1; y1 = fh - 1; } // fully transparent -> whole image
+    int cw = x1 - x0 + 1, ch = y1 - y0 + 1;
+    std::vector<unsigned char> out((size_t)cw * ch * 4);
+    for (int y = 0; y < ch; ++y)
+        memcpy(&out[(size_t)y * cw * 4], &fit[(((size_t)(y0 + y)) * fw + x0) * 4], (size_t)cw * 4);
+    *out_w = cw; *out_h = ch;
+    return out;
+}
+
+// Render-thread: if a path was picked, read (wide path) + decode the PNG and (re)upload it to SRV slot 3.
+static void maybe_load_preview()
+{
+    if (!g_preview_dirty.exchange(false))
         return;
+    std::wstring path;
+    { std::lock_guard<std::mutex> lk(g_preview_mx); path = g_preview_path; }
+    if (path.empty())
+        return;
+    // stb has no wide fopen and STBI_NO_STDIO is set, so read the bytes with a wide-path Win32 call.
+    HANDLE hf = CreateFileW(path.c_str(), GENERIC_READ, FILE_SHARE_READ, nullptr,
+                            OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, nullptr);
+    if (hf == INVALID_HANDLE_VALUE)
+    {
+        spdlog::warn("[preview] cannot open picked file");
+        return;
+    }
+    LARGE_INTEGER sz{};
+    std::vector<unsigned char> file;
+    if (GetFileSizeEx(hf, &sz) && sz.QuadPart > 0 && sz.QuadPart < (64 << 20))
+    {
+        file.resize(static_cast<size_t>(sz.QuadPart));
+        DWORD got = 0;
+        if (!ReadFile(hf, file.data(), static_cast<DWORD>(file.size()), &got, nullptr) || got != file.size())
+            file.clear();
+    }
+    CloseHandle(hf);
+    if (file.empty())
+        return;
+    int w = 0, h = 0, n = 0;
+    unsigned char *px = stbi_load_from_memory(file.data(), static_cast<int>(file.size()), &w, &h, &n, 4);
+    if (!px)
+    {
+        const char *why = stbi_failure_reason();
+        spdlog::warn("[preview] PNG decode failed: {}", why ? why : "?");
+        return;
+    }
+    constexpr int SIZE = 96; // must match generate_map_icons.SIZE (the on-map icon canvas-fit size)
+    int iw = 0, ih = 0;
+    std::vector<unsigned char> icon = to_map_icon(px, w, h, SIZE, &iw, &ih); // tight, variable iw x ih
+    if (g_preview_tex) { g_preview_tex->Release(); g_preview_tex = nullptr; }
+    if (upload_rgba(icon.data(), iw, ih, 3, &g_preview_tex, &g_preview_gpu))
+    {
+        g_preview_w = w; g_preview_h = h;     // SOURCE dims (info line)
+        g_preview_iw = iw; g_preview_ih = ih; // normalized dims (proportional draw)
+        g_preview_show.store(true);
+        spdlog::info("[preview] loaded source {}x{} -> normalized {}x{} icon", w, h, iw, ih);
+    }
+    stbi_image_free(px);
+}
+
+// Floating, transparent, DRAGGABLE window showing the normalized icon (square 96px texture) at
+// g_preview_px. Centered on first show; drag the icon itself to move it (an invisible button over the
+// image captures the drag, since the image is otherwise an inert item).
+static void draw_preview_window()
+{
+    if (!g_preview_show.load() || !g_preview_tex || !g_preview_gpu.ptr)
+        return;
+    const ImGuiIO &io = ImGui::GetIO();
+    ImGui::SetNextWindowPos(ImVec2(io.DisplaySize.x * 0.5f, io.DisplaySize.y * 0.5f),
+                            ImGuiCond_FirstUseEver, ImVec2(0.5f, 0.5f)); // FirstUseEver: keep where dragged
+    ImGui::SetNextWindowBgAlpha(0.0f);
+    const ImGuiWindowFlags fl = ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize |
+                                ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoSavedSettings |
+                                ImGuiWindowFlags_NoFocusOnAppearing | ImGuiWindowFlags_NoNav |
+                                ImGuiWindowFlags_NoBackground | ImGuiWindowFlags_AlwaysAutoResize;
+    if (ImGui::Begin("##goblin_icon_preview", nullptr, fl))
+    {
+        // Texture is the TIGHT crop (variable iw x ih). g_preview_px = on-screen size of a FULL-canvas
+        // (96px) glyph; draw this glyph at iw/96 x ih/96 of that, so the preview reflects the drawn size +
+        // aspect exactly like the map (a glyph drawn smaller in the canvas shows smaller here too).
+        const float sc = g_preview_px / 96.0f;
+        const float dw = g_preview_iw * sc, dh = g_preview_ih * sc;
+        const ImVec2 at = ImGui::GetCursorScreenPos();
+        ImGui::Image(reinterpret_cast<ImTextureID>(static_cast<uintptr_t>(g_preview_gpu.ptr)), ImVec2(dw, dh));
+        ImGui::SetCursorScreenPos(at);
+        ImGui::InvisibleButton("##pv_drag", ImVec2(dw, dh)); // catch drags over the image to move the window
+        if (ImGui::IsItemActive())
+            ImGui::SetWindowPos(ImVec2(ImGui::GetWindowPos().x + io.MouseDelta.x,
+                                       ImGui::GetWindowPos().y + io.MouseDelta.y));
+    }
+    ImGui::End();
+}
+
+// Build the overlay's category-icon atlas RGBA AT RUNTIME by decoding the SHARED DefineBitsLossless2
+// icon tags (goblin::generated::MAP_ICON_TAGS - the same source the map injects) into each cell. This
+// is why no ATLAS_RGBA is embedded: map and menu draw from one icon source. Each tag is premultiplied
+// ARGB [A,R',G',B'] (fmt5, zlib); we inflate, box-downscale into the cell (in premult space), then
+// un-premultiply to the straight RGBA ImGui wants. Returns the atlas buffer (empty on failure).
+static std::vector<unsigned char> build_atlas_rgba()
+{
+    using namespace goblin::overlay_icons;
+    namespace gen = goblin::generated;
+    const int AW = ATLAS_W, AH = ATLAS_H, C = CELL, COLS = (C > 0 ? AW / C : 1);
+    std::vector<unsigned char> atlas((size_t)AW * AH * 4, 0); // transparent
+    for (int ci = 0; ci < ATLAS_CELL_COUNT; ++ci)
+    {
+        int srcIcon = CELL_SRC_ICON[ci];
+        const gen::MapIconTag *tag = nullptr;
+        for (int k = 0; k < gen::MAP_ICON_TAG_COUNT; ++k)
+            if (gen::MAP_ICON_TAGS[k].srcIconId == srcIcon) { tag = &gen::MAP_ICON_TAGS[k]; break; }
+        if (!tag || tag->tagLen < 8) continue;
+        const unsigned char *b = tag->tag;
+        int w = b[3] | (b[4] << 8), h = b[5] | (b[6] << 8);
+        if (w <= 0 || h <= 0 || w > 1024 || h > 1024) continue;
+        std::vector<unsigned char> px((size_t)w * h * 4);
+        mz_ulong destlen = (mz_ulong)px.size();
+        if (mz_uncompress(px.data(), &destlen, b + 7, (mz_ulong)(tag->tagLen - 7)) != MZ_OK ||
+            destlen != px.size())
+            continue;
+        const int cx = (ci % COLS) * C, cy = (ci / COLS) * C;
+        // Tags are now cropped TIGHT (variable, often non-square). LETTERBOX into the square cell so the
+        // aspect is preserved (a square stretch would distort): fit W x H into C x C, center the result.
+        double fit = ((double)C / w < (double)C / h) ? (double)C / w : (double)C / h;
+        int dw = (int)(w * fit + 0.5); if (dw < 1) dw = 1; if (dw > C) dw = C;
+        int dh = (int)(h * fit + 0.5); if (dh < 1) dh = 1; if (dh > C) dh = C;
+        const int ox = (C - dw) / 2, oy = (C - dh) / 2;
+        for (int dy = 0; dy < dh; ++dy)
+            for (int dx = 0; dx < dw; ++dx)
+            {
+                int sx0 = dx * w / dw, sx1 = (dx + 1) * w / dw; if (sx1 <= sx0) sx1 = sx0 + 1;
+                int sy0 = dy * h / dh, sy1 = (dy + 1) * h / dh; if (sy1 <= sy0) sy1 = sy0 + 1;
+                unsigned long sA = 0, sR = 0, sG = 0, sB = 0, n = 0;
+                for (int sy = sy0; sy < sy1 && sy < h; ++sy)
+                    for (int sx = sx0; sx < sx1 && sx < w; ++sx)
+                    {
+                        const unsigned char *s = &px[((size_t)sy * w + sx) * 4];
+                        sA += s[0]; sR += s[1]; sG += s[2]; sB += s[3]; ++n;
+                    }
+                if (!n) continue;
+                unsigned A = (unsigned)(sA / n), Rp = (unsigned)(sR / n),
+                         Gp = (unsigned)(sG / n), Bp = (unsigned)(sB / n);
+                unsigned R = A ? (Rp * 255 + A / 2) / A : 0; if (R > 255) R = 255;
+                unsigned G = A ? (Gp * 255 + A / 2) / A : 0; if (G > 255) G = 255;
+                unsigned Bb = A ? (Bp * 255 + A / 2) / A : 0; if (Bb > 255) Bb = 255;
+                unsigned char *d = &atlas[((size_t)(cy + oy + dy) * AW + (cx + ox + dx)) * 4];
+                d[0] = (unsigned char)R; d[1] = (unsigned char)G; d[2] = (unsigned char)Bb; d[3] = (unsigned char)A;
+            }
+    }
+    return atlas;
+}
+
+// SEH-isolated D3D12 uploads (NO C++ objects here - __try forbids object unwinding). `atlas` may be
+// null (then only the logo is uploaded).
+static void upload_atlas_and_logo(const unsigned char *atlas)
+{
     using namespace goblin::overlay_icons;
     __try
     {
-        upload_rgba(ATLAS_RGBA, ATLAS_W, ATLAS_H, 1, &g_atlas_tex, &g_atlas_gpu);
+        if (atlas)
+            upload_rgba(atlas, ATLAS_W, ATLAS_H, 1, &g_atlas_tex, &g_atlas_gpu);
         upload_rgba(LOGO_RGBA, LOGO_W, LOGO_H, 2, &g_logo_tex, &g_logo_gpu);
         g_atlas_ready = true;
-        spdlog::info("[OVERLAY] atlas {}x{} + logo {}x{} uploaded",
-                     ATLAS_W, ATLAS_H, LOGO_W, LOGO_H);
     }
     __except (EXCEPTION_EXECUTE_HANDLER)
     {
         g_atlas_ready = true; // give up rather than crash/retry
     }
+}
+
+// One-time upload of the category-icon atlas (SRV index 1) + the mod logo (index 2). The atlas is built
+// at runtime from the shared lossless tags (build_atlas_rgba), so map + menu share one embedded source.
+void try_upload_atlas()
+{
+    if (g_atlas_ready || !g_dx12_inited || !g_command_queue || !g_device || !g_srv_heap)
+        return;
+    std::vector<unsigned char> atlas = build_atlas_rgba(); // pure memory; no SEH needed
+    upload_atlas_and_logo(atlas.empty() ? nullptr : atlas.data());
+    spdlog::info("[OVERLAY] atlas {}x{} built from {} shared tags + logo {}x{}",
+                 goblin::overlay_icons::ATLAS_W, goblin::overlay_icons::ATLAS_H,
+                 goblin::overlay_icons::ATLAS_CELL_COUNT,
+                 goblin::overlay_icons::LOGO_W, goblin::overlay_icons::LOGO_H);
 }
 
 const goblin::overlay_icons::IconCell *find_icon_cell(const char *key)
@@ -1178,6 +1466,7 @@ void render(IDXGISwapChain3 *sc)
 {
     const bool focused = game_focused();
     try_upload_atlas();
+    maybe_load_preview(); // dev: decode + upload a freshly-picked preview PNG (before NewFrame)
     ImGui_ImplDX12_NewFrame();
     ImGui_ImplWin32_NewFrame();
     if (focused)
@@ -1197,6 +1486,7 @@ void render(IDXGISwapChain3 *sc)
     // showing (the in-game map shows the OS cursor -> avoid a double cursor).
     ImGui::GetIO().MouseDrawCursor = focused && !g_os_cursor;
     draw_settings_window();
+    draw_preview_window(); // dev: floating centered icon preview (transparent, passive)
     ImGui::Render();
     submit_frame(sc);
 }
@@ -1204,7 +1494,9 @@ void render(IDXGISwapChain3 *sc)
 // ── Hooks ──
 HRESULT WINAPI hkPresent(IDXGISwapChain3 *sc, UINT sync, UINT flags)
 {
-    goblin::map_timing::on_present(); // diagnostic: render-thread sampling profiler
+    goblin::map_timing::on_present(); // diagnostic: render-thread sampling profiler (needs the present thread)
+    // (gfx_probe's self-heal + diagnostics moved to the background watcher thread - see gfx_probe::tick -
+    //  so they run regardless of enable_overlay; injection itself is load-hook driven, also independent.)
 
     // Open/close on the toggle key (keyboard) OR the gamepad combo. (When the
     // overlay is DISABLED these same inputs master-toggle icons instead, handled
@@ -1256,20 +1548,35 @@ HRESULT WINAPI hkPresent(IDXGISwapChain3 *sc, UINT sync, UINT flags)
 
     if (!g_dx12_inited)
     {
-        if (!init_dx12(sc))
+        if (!seh_init_dx12(sc))
             return oPresent(sc, sync, flags);
     }
     if (g_menu_open.load() && g_command_queue)
-        render(sc);
+        render(sc); // its GPU submit (submit_frame) is SEH-guarded; ImGui CPU draw runs on a consistent
+                    // inited state (init/teardown are serial on this same thread)
 
     return oPresent(sc, sync, flags);
+}
+
+// SEH-isolated teardown (POD-only; releasing D3D objects can AV if the swapchain/device is mid-transition,
+// e.g. G-Sync / fullscreen-flip). Must never crash the game - on fault we just drop our state.
+static void seh_resize_teardown()
+{
+    __try
+    {
+        wait_gpu();      // flush our in-flight work so freeing the RTVs is safe (AMD/Deck)
+        teardown_dx12(); // drop our RTV refs so the resize can free the buffers
+    }
+    __except (EXCEPTION_EXECUTE_HANDLER)
+    {
+        g_dx12_inited = false; // force a clean re-init on the next Present
+    }
 }
 
 HRESULT WINAPI hkResizeBuffers(IDXGISwapChain3 *sc, UINT bc, UINT w, UINT h,
                                DXGI_FORMAT fmt, UINT flags)
 {
-    wait_gpu();      // flush our in-flight work so freeing the RTVs is safe (AMD/Deck)
-    teardown_dx12(); // drop our RTV refs so the resize can free the buffers
+    seh_resize_teardown();
     HRESULT hr = oResizeBuffers(sc, bc, w, h, fmt, flags);
     // next Present re-inits the DX12 objects against the resized swapchain
     return hr;
@@ -1365,12 +1672,14 @@ void goblin::overlay::setup()
     if (!goblin::config::enableOverlay)
     {
         spdlog::info("[OVERLAY] disabled via ini (enable_overlay = false)");
+        goblin::diag::set_overlay(goblin::diag::OverlayState::OffByConfig, "");
         return;
     }
     void *present = nullptr, *resize = nullptr, *execcl = nullptr;
     if (!capture_vtables(present, resize, execcl))
     {
         spdlog::error("[OVERLAY] failed to capture DX12 vtables; overlay disabled");
+        goblin::diag::set_overlay(goblin::diag::OverlayState::Failed, "DX12 vtable capture failed");
         return;
     }
     spdlog::info("[OVERLAY] vtables: Present={:p} ResizeBuffers={:p} ExecuteCommandLists={:p}",

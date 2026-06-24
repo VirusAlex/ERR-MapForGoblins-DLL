@@ -8,6 +8,8 @@
 #include "goblin_map_data.hpp"
 #include "goblin_item_icons.hpp"
 #include "goblin_location_alt.hpp"
+#include "goblin_gfx_probe.hpp"
+#include "goblin_diag.hpp"
 #include "goblin/goblin_map_flags.hpp"
 #include "from/params.hpp"
 #include "from/paramdef/WORLD_MAP_POINT_PARAM_ST.hpp"
@@ -229,7 +231,6 @@ static bool is_category_enabled(Category cat)
     case Category::LootDragonHearts:     return goblin::config::showDragonHearts;
     case Category::LootGloveworts:       return goblin::config::showGloveworts;
     case Category::LootGreatGloveworts:  return goblin::config::showGreatGloveworts;
-    case Category::LootRadaFruit:        return goblin::config::showRadaFruit;
     case Category::LootGestures:         return goblin::config::showGestures;
     case Category::LootGreases:          return goblin::config::showGreases;
     case Category::LootUtilities:        return goblin::config::showUtilities;
@@ -1019,13 +1020,27 @@ static void apply_loot_settings()
             cat = *reinterpret_cast<int32_t *>(row->b + 0x20);  // lotItemCategory01
         }
 
-        // Icon
-        int icon = lr.baked_icon;
+        // Icon. The result MUST be an INJECTED iconId (a runtime-appended frame), not a baked one:
+        // without our gfx the baked iconIds are our gfx's frame numbers, which are out of range in the
+        // stock sprite and clamp to garbage/"?". The anon path already yields an injected frame
+        // (anon_dynamic_iconid); the live-loot / baked paths give a baked srcIconId that we convert via
+        // injected_iconid(). This also fixes "anon stays stuck after disabling it": the revert now lands
+        // on the real injected icon instead of an out-of-range baked one.
+        int icon;
         if (anon)
-            icon = goblin::generated::ANON_ICON_ID;
-        else if (do_icons && item > 0)
-            if (const auto *ic = lookup_item_icon(encode_live_item(item, cat)))
-                icon = ic->iconId;
+        {
+            uint32_t dyn = goblin::gfx_probe::anon_dynamic_iconid(); // already an injected frame
+            icon = dyn ? static_cast<int>(dyn) : goblin::generated::ANON_ICON_ID;
+        }
+        else
+        {
+            int baked = lr.baked_icon;
+            if (do_icons && item > 0)
+                if (const auto *ic = lookup_item_icon(encode_live_item(item, cat)))
+                    baked = ic->iconId;
+            uint32_t inj = goblin::gfx_probe::injected_iconid(baked); // baked srcIconId -> injected frame
+            icon = inj ? static_cast<int>(inj) : baked;
+        }
         p->iconId = static_cast<decltype(p->iconId)>(icon);
 
         // Item-name label (only touch an item-name slot)
@@ -1286,6 +1301,28 @@ void goblin::apply_flag_or_pairs()
 // textDisableFlagId1 to the lot's current getItemFlagId. Because we read the
 // LOADED regulation (vanilla, Randomizer, any file mod), the marker hides on
 // the actual light-point pickup regardless of which item the lot now gives.
+// Point every marker whose (baked/live) iconId is a custom icon we injected at the runtime-injected
+// frame for it. Called from the worldmap-load hook after the icon frames are appended, before pins are
+// built. gfx_probe::injected_iconid(src) returns the appended frame's iconId for source icon `src`, or
+// 0 if that icon wasn't injected (e.g. vanilla icons 1-348 - left as-is, the base gfx provides them).
+void goblin::remap_injected_icons()
+{
+    int n = 0;
+    for (auto &cr : g_category_rows)
+    {
+        if (!cr.p)
+            continue;
+        uint32_t inj = goblin::gfx_probe::injected_iconid(static_cast<int>(cr.p->iconId));
+        if (inj)
+        {
+            cr.p->iconId = static_cast<decltype(cr.p->iconId)>(inj);
+            ++n;
+        }
+    }
+    spdlog::info("[icons] remapped {} markers to injected iconIds.", n);
+    goblin::diag::set_remap(n);
+}
+
 // One-shot at init: the flag VALUE in a row is static post-load; the engine
 // then evaluates textDisableFlagId1 live every frame. See reference_cleared_badge
 // / the randomizer-compat research. Gated by config::liveLootFlags/Labels.

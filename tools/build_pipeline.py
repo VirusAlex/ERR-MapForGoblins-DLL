@@ -25,9 +25,11 @@ def _parse_profile(argv):
 
 
 PROFILE = _parse_profile(sys.argv[1:])
-if PROFILE not in ('err', 'vanilla', 'convergence', 'erte'):
+if PROFILE not in ('err', 'vanilla', 'convergence2', 'convergence3', 'erte', 'goldenage', 'vins', 'reborn'):
     PROFILE = 'err'
 os.environ['MFG_PROFILE'] = PROFILE  # propagate to every child subprocess
+os.environ['PYTHONUTF8'] = '1'       # child stages read/write text as UTF-8 (non-ASCII game data,
+                                     # e.g. the Golden Age Chinese overhaul, else trips cp1252 decode)
 
 import config
 
@@ -40,7 +42,7 @@ CACHE_FILE = DATA / '.build_cache.json'
 # The convergence source is a STAGED dir (built by the prepare_merged_src
 # stage below) - create it up front so require_err_mod_dir passes on the
 # very first run; the stage then populates it before anything reads it.
-if PROFILE in ('convergence', 'erte'):
+if PROFILE in ('convergence2', 'convergence3', 'erte', 'goldenage', 'vins', 'reborn'):
     config.DATA_SRC_DIR.mkdir(parents=True, exist_ok=True)
 
 ERR_MOD = config.require_err_mod_dir()  # profile-aware: mod overlay / vanilla game / merged dir
@@ -137,7 +139,7 @@ class Stage:
 
 
 # ── Pipeline ──
-COMMON = ['config.py', 'massedit_common.py']
+COMMON = ['config.py', 'massedit_common.py', 'row_id_registry.py', 'icon_registry.py', 'map_categories.py']
 
 STAGES = [
     # Source-table extractors: regenerate the category/codex/placename tables
@@ -250,7 +252,7 @@ STAGES = [
                    DATA / 'loot_lot_linkage.json',
                    DATA / 'item_icon_table.json'],
           script='generate_loot_massedit.py',
-          also_scripts=['massedit_common.py']),
+          also_scripts=['massedit_common.py', 'row_id_registry.py', 'icon_registry.py', 'map_categories.py', 'icon_registry.py', 'map_categories.py']),
 
     Stage('generate_pieces_massedit',
           inputs=[DATA / 'ItemLotParam_map.csv',
@@ -260,7 +262,7 @@ STAGES = [
                    MASSEDIT_OUT / 'Reforged - Rune Pieces_slots.json',
                    MASSEDIT_OUT / 'Reforged - Ember Pieces_slots.json'],
           script='generate_pieces_massedit.py',
-          also_scripts=['massedit_common.py']),
+          also_scripts=['massedit_common.py', 'row_id_registry.py', 'icon_registry.py', 'map_categories.py', 'icon_registry.py', 'map_categories.py']),
 
     Stage('scan_gathering_nodes',
           inputs=[MSB_DIR, DATA / 'aeg099_item_mapping.json'],
@@ -282,7 +284,7 @@ STAGES = [
           outputs=[MASSEDIT_OUT / 'Loot - Material Nodes.MASSEDIT',
                    MASSEDIT_OUT / 'Loot - Material Nodes_slots.json'],
           script='generate_material_nodes.py',
-          also_scripts=['massedit_common.py', 'unreachable.py']),
+          also_scripts=['massedit_common.py', 'row_id_registry.py', 'icon_registry.py', 'map_categories.py', 'unreachable.py']),
 
     Stage('generate_graces',
           inputs=[REGULATION],
@@ -301,7 +303,7 @@ STAGES = [
           outputs=[MASSEDIT_OUT / 'World - Kindling Spirits.MASSEDIT',
                    MASSEDIT_OUT / 'World - Kindling Spirits_slots.json'],
           script='generate_kindling_spirits_massedit.py',
-          also_scripts=['massedit_common.py']),
+          also_scripts=['massedit_common.py', 'row_id_registry.py', 'icon_registry.py', 'map_categories.py']),
 
     Stage('generate_spirit_springs',
           inputs=[MSB_DIR],
@@ -332,13 +334,13 @@ STAGES = [
           inputs=[DATA / 'seal_puzzles.json'],
           outputs=[MASSEDIT_OUT / 'World - Seal Puzzles.MASSEDIT'],
           script='generate_seal_puzzles.py',
-          also_scripts=['massedit_common.py']),
+          also_scripts=['massedit_common.py', 'row_id_registry.py', 'icon_registry.py', 'map_categories.py']),
 
     Stage('generate_hero_tomb_statues',
           inputs=[MSB_DIR, EVENT_DIR],
           outputs=[MASSEDIT_OUT / "World - Hero's Tomb Statues.MASSEDIT"],
           script='generate_hero_tomb_statues.py',
-          also_scripts=['massedit_common.py']),
+          also_scripts=['massedit_common.py', 'row_id_registry.py', 'icon_registry.py', 'map_categories.py']),
 
     Stage('generate_paintings',
           inputs=[MSB_DIR, EVENT_DIR],
@@ -350,13 +352,13 @@ STAGES = [
           inputs=[DATA / 'items_database.json'],
           outputs=[MASSEDIT_OUT / 'World - Maps.MASSEDIT'],
           script='generate_maps.py',
-          also_scripts=['massedit_common.py']),
+          also_scripts=['massedit_common.py', 'row_id_registry.py', 'icon_registry.py', 'map_categories.py']),
 
     Stage('generate_gestures',
           inputs=[DATA / 'msb_entity_index.json', EVENT_DIR, REGULATION],
           outputs=[MASSEDIT_OUT / 'Loot - Gestures.MASSEDIT'],
           script='generate_gestures.py',
-          also_scripts=['massedit_common.py', 'config.py']),
+          also_scripts=['massedit_common.py', 'row_id_registry.py', 'icon_registry.py', 'map_categories.py', 'config.py']),
 
     Stage('generate_hostile_npcs',
           inputs=[REGULATION, MSB_DIR, config.PARAMDEF_DIR, EVENT_DIR,
@@ -364,7 +366,7 @@ STAGES = [
                   REPO / 'data' / 'quest_invader_overrides.json'],
           outputs=[MASSEDIT_OUT / 'World - Hostile NPC.MASSEDIT'],
           script='generate_hostile_npcs.py',
-          also_scripts=['massedit_common.py', 'config.py']),
+          also_scripts=['massedit_common.py', 'row_id_registry.py', 'icon_registry.py', 'map_categories.py', 'config.py', 'icon_registry.py', 'map_categories.py']),
 
     # Relocating-boss fix (Lansseax): after all marker generators, before bake.
     # Removes the un-collectable duplicate loot at the boss's flee-spawn and
@@ -386,6 +388,7 @@ STAGES = [
                    GENERATED_CPP / 'goblin_item_icons.cpp',
                    GENERATED_CPP / 'goblin_enemy_names.cpp'],
           script='generate_data.py',
+          also_scripts=['icon_registry.py', 'map_categories.py'],  # ANON_ICON_ID = iconid("anon")
           args=['--massedit-dir', str(MASSEDIT_OUT)]),
 
     # Per-row ACTUAL gather-asset models (ERR substitutes some assets with DLC-era models
@@ -408,17 +411,17 @@ STAGES = [
           outputs=[GENERATED_CPP / 'goblin_location_alt.cpp',
                    GENERATED_CPP / 'goblin_location_alt.hpp'],
           script='generate_location_overrides.py',
-          also_scripts=['massedit_common.py', 'config.py']),
+          also_scripts=['massedit_common.py', 'row_id_registry.py', 'icon_registry.py', 'map_categories.py', 'config.py']),
 ]
 
 
 # Convergence-only: stage the merged overlay-over-vanilla source dir FIRST
-# (everything else reads from it). Defined lazily - CONVERGENCE_MOD_DIR is
-# None in the other profiles.
+# (everything else reads from it). Defined lazily - the per-profile *_MOD_DIR
+# is None in the other profiles.
 def _overlay_prepare_stage():
-    """Merged-source staging for an overlay-mod profile (convergence / erte):
-    the mod's partial file overlay laid over the vanilla game."""
-    overlay = config.CONVERGENCE_MOD_DIR if PROFILE == 'convergence' else config.ERTE_MOD_DIR
+    """Merged-source staging for an overlay-mod profile (convergence / erte /
+    goldenage): the mod's partial file overlay laid over the vanilla game."""
+    overlay = getattr(config, PROFILE.upper() + '_MOD_DIR', None)  # *_MOD_DIR per profile
     if not overlay or not overlay.exists():
         print(f'ERROR: {PROFILE} profile needs {PROFILE}_mod_dir in tools/config.ini')
         sys.exit(1)
@@ -480,7 +483,7 @@ def active_stages():
     """
     if PROFILE == 'vanilla':
         return VANILLA_BOOTSTRAP + [s for s in STAGES if s.name not in ERR_ONLY_STAGES]
-    if PROFILE in ('convergence', 'erte'):
+    if PROFILE in ('convergence2', 'convergence3', 'erte', 'goldenage', 'vins', 'reborn'):
         return ([_overlay_prepare_stage()] + VANILLA_BOOTSTRAP
                 + [s for s in STAGES if s.name not in ERR_ONLY_STAGES])
     return STAGES

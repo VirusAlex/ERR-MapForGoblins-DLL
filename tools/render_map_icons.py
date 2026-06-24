@@ -100,11 +100,11 @@ def resolve_source_menu_dirs(source):
     if source == "err":
         d = config.ERR_MOD_DIR
         return [p / "menu" for p in (d, g) if p]
-    if source == "convergence":
-        return [p / "menu" for p in (config.CONVERGENCE_MOD_DIR, g) if p]
+    if source == "convergence2":
+        return [p / "menu" for p in (config.CONVERGENCE2_MOD_DIR, g) if p]
     if source == "erte":
         return [p / "menu" for p in (config.ERTE_MOD_DIR, g) if p]
-    sys.exit(f"unknown --source '{source}' (game|err|convergence|erte)")
+    sys.exit(f"unknown --source '{source}' (game|err|convergence2|erte)")
 
 
 def build_texture_dirs(menu_dirs, cache_root):

@@ -372,7 +372,9 @@ def main():
         "--category", type=str, default=None, help="Filter MASSEDIT by category name"
     )
     parser.add_argument(
-        "--massedit-dir", type=str, default=None, help="Path to MASSEDIT directory"
+        "--massedit-dir", type=str, default=None,
+        help="Path to a MASSEDIT directory (REQUIRED unless --no-massedit), "
+             "e.g. data/massedit_generated"
     )
     parser.add_argument(
         "--no-massedit", action="store_true", help="Skip MASSEDIT lookup, just show markers"
@@ -404,13 +406,15 @@ def main():
             )
         return
 
-    # Find MASSEDIT directory
+    # MASSEDIT directory must be given explicitly (no default - the build's
+    # markers live in the active profile's data/<profile>/massedit_generated/,
+    # so there is no single sensible default to assume).
     massedit_dir = args.massedit_dir
     if not massedit_dir:
-        script_dir = Path(__file__).parent.parent
-        massedit_dir = script_dir / "data" / "massedit"
-        if not massedit_dir.exists():
-            massedit_dir = Path(__file__).parent / "data" / "massedit"
+        print("ERROR: --massedit-dir is required. Point it at a MASSEDIT directory, "
+              "e.g. data/massedit_generated (or data/<profile>/massedit_generated for a "
+              "non-ERR profile). Use --no-massedit to skip the lookup entirely.")
+        sys.exit(1)
     if not Path(massedit_dir).exists():
         print(f"ERROR: MASSEDIT directory not found: {massedit_dir}")
         sys.exit(1)

@@ -1,5 +1,11 @@
 # How to Add New Map Icons
 
+> **OUTDATED as of v2.0.1 - kept for history.** The mod no longer ships or edits a
+> gfx file: icons are injected into the worldmap at runtime by the DLL. To add an
+> icon now, drop a PNG in `assets/map_icons/custom/` and add a row in
+> `tools/map_categories.py` (see `tools/README.md` -> "Map Icons"). The FFDEC
+> gfx-authoring workflow below is no longer part of the build.
+
 ## Prerequisites
 
 - **[FFDEC](https://github.com/jindrapetrik/jpexs-decompiler)** (JPEXS Free Flash Decompiler) - any recent build. You need the CLI jar (`ffdec-cli.jar`) and a Java 8+ runtime to run it.
