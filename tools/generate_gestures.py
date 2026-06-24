@@ -27,6 +27,14 @@ from System import Array, Type as SysType, Object
 from System.IO import File as SysFile
 import SoulsFormats
 
+
+def _safe_unlink(path):
+    try:
+        os.unlink(path)
+    except PermissionError:
+        pass
+
+
 from massedit_common import OUT_DIR, UNDERGROUND_AREAS, DLC_AREAS
 
 asm = Assembly.LoadFrom(str(config.SOULSFORMATS_DLL))
@@ -59,7 +67,7 @@ def load_gesture_items():
     tmp = os.path.join(tempfile.gettempdir(), str(os.getpid()) + '_gstp.param')
     SysFile.WriteAllBytes(tmp, pf.Bytes.ToArray() if hasattr(pf.Bytes, 'ToArray') else pf.Bytes)
     param = _param_read.Invoke(None, Array[Object]([tmp]))
-    os.unlink(tmp)
+    _safe_unlink(tmp)
     pdef = SoulsFormats.PARAMDEF.XmlDeserialize(str(config.PARAMDEF_DIR / 'GestureParam.xml'), False)
     param.ApplyParamdef(pdef)
     out = {}
@@ -77,7 +85,7 @@ def load_emevd(path):
     tmp = os.path.join(tempfile.gettempdir(), str(os.getpid()) + '_gst.tmp')
     SysFile.WriteAllBytes(tmp, SoulsFormats.DCX.Decompress(str(path)).ToArray())
     e = _emevd_read.Invoke(None, Array[Object]([tmp]))
-    os.unlink(tmp)
+    _safe_unlink(tmp)
     return e
 
 

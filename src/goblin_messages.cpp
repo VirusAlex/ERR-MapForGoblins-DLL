@@ -3,6 +3,7 @@
 #include "goblin_enemy_names.hpp"
 #include "goblin_location_alt.hpp"
 #include "goblin_config.hpp"
+#include "goblin_i18n.hpp"
 #include "goblin_inject.hpp"
 #include "from/paramdef/WORLD_MAP_POINT_PARAM_ST.hpp"
 #include "modutils.hpp"
@@ -936,11 +937,16 @@ void goblin::setup_messages()
     // STATIC strings written below - there is no runtime text rewriting.
     if (count2 > 208 && sub[208])
     {
+        const auto toast_lang = goblin::i18n::current_language();
         std::vector<NewEntry> tb_entries = {
-            {goblin::TUTORIAL_FMG_ID_ON,        L"Map icons: ON"},
-            {goblin::TUTORIAL_FMG_ID_OFF,       L"Map icons: OFF"},
-            {goblin::TUTORIAL_FMG_ID_DUMP_OK,   L"Markers dumped"},
-            {goblin::TUTORIAL_FMG_ID_DUMP_FAIL, L"Marker dump failed - press again"},
+            {goblin::TUTORIAL_FMG_ID_ON,
+             goblin::i18n::wtr(goblin::i18n::ToastId::MapIconsOn, toast_lang)},
+            {goblin::TUTORIAL_FMG_ID_OFF,
+             goblin::i18n::wtr(goblin::i18n::ToastId::MapIconsOff, toast_lang)},
+            {goblin::TUTORIAL_FMG_ID_DUMP_OK,
+             goblin::i18n::wtr(goblin::i18n::ToastId::MarkersDumped, toast_lang)},
+            {goblin::TUTORIAL_FMG_ID_DUMP_FAIL,
+             goblin::i18n::wtr(goblin::i18n::ToastId::MarkerDumpFailed, toast_lang)},
         };
         if (patch_fmg_in_memory(sub[208], &sub[208], tb_entries))
             spdlog::info("[TOAST] TutorialBody.fmg expanded (ON={}, OFF={}, DUMP_OK={}, DUMP_FAIL={})",

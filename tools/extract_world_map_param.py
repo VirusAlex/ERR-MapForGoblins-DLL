@@ -27,6 +27,14 @@ clr.AddReference(dll_path)
 import SoulsFormats
 from System import Array, Type as SysType, Object
 
+
+def _safe_unlink(path):
+    try:
+        os.unlink(path)
+    except PermissionError:
+        pass
+
+
 GAME_DIR = config.require_game_dir()
 ERR_MOD_DIR = config.require_err_mod_dir()
 OUTPUT_DIR = config.DATA_DIR
@@ -49,7 +57,7 @@ def _read_from_bytes(read_method, data, suffix='.bin'):
     else:
         SysFile.WriteAllBytes(tmp, data)
     result = read_method.Invoke(None, Array[Object]([tmp]))
-    os.unlink(tmp)
+    _safe_unlink(tmp)
     return result
 
 FIELDS_OF_INTEREST = [

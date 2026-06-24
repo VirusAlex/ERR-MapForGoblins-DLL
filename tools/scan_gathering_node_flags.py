@@ -33,6 +33,14 @@ from System import Array, Type as SysType, Object
 from System.IO import File as SysFile
 import SoulsFormats
 
+
+def _safe_unlink(path):
+    try:
+        os.unlink(path)
+    except PermissionError:
+        pass
+
+
 asm = Assembly.LoadFrom(str(config.SOULSFORMATS_DLL))
 _str_type = SysType.GetType('System.String')
 _emevd_read = asm.GetType('SoulsFormats.EMEVD').GetMethod('Read',
@@ -45,7 +53,7 @@ def load_emevd(path):
     tmp = os.path.join(tempfile.gettempdir(), str(os.getpid()) + '_mfg_emevd_gn.tmp')
     SysFile.WriteAllBytes(tmp, data)
     e = _emevd_read.Invoke(None, Array[Object]([tmp]))
-    os.unlink(tmp)
+    _safe_unlink(tmp)
     return e
 
 

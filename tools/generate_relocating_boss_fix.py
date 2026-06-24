@@ -25,6 +25,14 @@ import sys, os, re, struct, tempfile, shutil, json, collections
 sys.path.insert(0, os.path.dirname(__file__))
 import config
 
+
+def _safe_unlink(path):
+    try:
+        os.unlink(path)
+    except PermissionError:
+        pass
+
+
 MASSEDIT_DIR = config.DATA_DIR / "massedit_generated"
 RADIUS = 50.0   # loot within this of the flee-spawn boss = its duplicate drop
 
@@ -58,7 +66,7 @@ def _emevd_flag_refs(asm, SoulsFormats, event_dir, tile):
         return set()
     tmp = os.path.join(tempfile.gettempdir(), f"{os.getpid()}_rbf.tmp")
     SysFile.WriteAllBytes(tmp, SoulsFormats.DCX.Decompress(str(p)).ToArray())
-    em = read.Invoke(None, Array[Object]([tmp])); os.unlink(tmp)
+    em = read.Invoke(None, Array[Object]([tmp])); _safe_unlink(tmp)
     refs = set()
     for ev in em.Events:
         for ins in ev.Instructions:
@@ -101,7 +109,7 @@ def _scan_game_for_flee_spawns():
         try:
             tmp = os.path.join(tempfile.gettempdir(), f"{os.getpid()}_rbf.tmp")
             SysFile.WriteAllBytes(tmp, SoulsFormats.DCX.Decompress(ep).ToArray())
-            em = em_read.Invoke(None, Array[Object]([tmp])); os.unlink(tmp)
+            em = em_read.Invoke(None, Array[Object]([tmp])); _safe_unlink(tmp)
         except Exception:
             continue
         for ev in em.Events:
@@ -141,7 +149,7 @@ def _scan_game_for_flee_spawns():
             return None
         tmp = os.path.join(tempfile.gettempdir(), f"{os.getpid()}_rbf.tmp")
         SysFile.WriteAllBytes(tmp, SoulsFormats.DCX.Decompress(str(p)).ToArray())
-        em = em_read.Invoke(None, Array[Object]([tmp])); os.unlink(tmp)
+        em = em_read.Invoke(None, Array[Object]([tmp])); _safe_unlink(tmp)
         lo = 1_000_000_000 + gx * 1_000_000 + gz * 10_000
         hi = lo + 10_000
         set_on, cond = set(), set()

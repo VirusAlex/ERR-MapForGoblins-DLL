@@ -17,6 +17,14 @@ from System import Array, Type as SysType, Object
 from System.IO import File as SysFile
 import SoulsFormats
 
+
+def _safe_unlink(path):
+    try:
+        os.unlink(path)
+    except PermissionError:
+        pass
+
+
 asm = Assembly.LoadFrom(str(config.SOULSFORMATS_DLL))
 _str_type = SysType.GetType('System.String')
 _msbe_read = asm.GetType('SoulsFormats.MSBE').GetMethod('Read',
@@ -28,7 +36,7 @@ def load_msb(path):
     tmp = os.path.join(tempfile.gettempdir(), str(os.getpid()) + '_mfg_msb.msb')
     SysFile.WriteAllBytes(tmp, data)
     m = _msbe_read.Invoke(None, Array[Object]([tmp]))
-    os.unlink(tmp)
+    _safe_unlink(tmp)
     return m
 
 MSB_DIR = config.require_err_mod_dir() / 'map' / 'MapStudio'

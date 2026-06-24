@@ -35,6 +35,14 @@ asm = Assembly.LoadFrom(dll_path)
 clr.AddReference(dll_path)
 import SoulsFormats
 
+
+def _safe_unlink(path):
+    try:
+        os.unlink(path)
+    except PermissionError:
+        pass
+
+
 _str_type = SysType.GetType("System.String")
 
 
@@ -63,7 +71,7 @@ def _read_param_from_bnd_file(bnd_file):
     tmp = os.path.join(tempfile.gettempdir(), str(os.getpid()) + "_aeg_param.bin")
     SysFile.WriteAllBytes(tmp, bnd_file.Bytes.ToArray())
     param = _param_read.Invoke(None, Array[Object]([tmp]))
-    os.unlink(tmp)
+    _safe_unlink(tmp)
     return param
 
 
@@ -71,7 +79,7 @@ def _read_fmg_from_bnd_file(bnd_file):
     tmp = os.path.join(tempfile.gettempdir(), str(os.getpid()) + "_aeg_fmg.fmg")
     SysFile.WriteAllBytes(tmp, bnd_file.Bytes.ToArray())
     fmg = _fmg_read.Invoke(None, Array[Object]([tmp]))
-    os.unlink(tmp)
+    _safe_unlink(tmp)
     return fmg
 
 
@@ -171,7 +179,7 @@ def main():
     tmp = os.path.join(tempfile.gettempdir(), str(os.getpid()) + "_aeg_msg.msgbnd.dcx")
     shutil.copy2(str(msg_path), tmp)
     msg_bnd = _bnd4_read.Invoke(None, Array[Object]([tmp]))
-    os.unlink(tmp)
+    _safe_unlink(tmp)
     for f in msg_bnd.Files:
         name = os.path.basename(str(f.Name))
         if "GoodsName" in name and "dlc" not in name.lower():

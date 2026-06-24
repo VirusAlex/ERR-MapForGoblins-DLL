@@ -65,6 +65,7 @@ namespace goblin::config
          patchCampIcons = true, patchMerchantIcons = true,
          hideDungeonIconsOnClear = false;
 
+    std::string uiLanguage = "auto";
     bool enableOverlay = true;
     bool enableMarkerDump = false;
     uint32_t markerDumpKey = 0x78; // VK_F9
@@ -233,6 +234,8 @@ namespace
             {"Overlay & Hotkeys",
              "The in-game config overlay and the key/button that opens it. toggle_key\n(keyboard) / toggle_gamepad_combo (gamepad) OPEN the overlay when enable_overlay\nis on, or toggle ALL map icons on/off when it's off. Key names: F1-F24, A-Z,\n0-9, Space, Escape, Tab, Enter, Backspace, Home, End, PageUp, PageDown, Insert,\nDelete, arrows.",
              false, {
+                IniEntry{"ui_language", IniType::String, &cfg::uiLanguage, "auto",
+                         "Overlay language. auto follows the Steam game language; unrecognized languages\nfall back to English.", false, nullptr},
                 B("enable_overlay", enableOverlay, "true",
                   "In-game config overlay (Dear ImGui) opened with the toggle key below.\nSet false if a DX-hook conflict (Steam overlay/RTSS/GeForce Experience) or a\nGPU driver issue makes the game unstable."),
                 B("enable_toggle_hotkey", enableToggleHotkey, "true",
@@ -287,20 +290,20 @@ static void emit_comment(std::ostream &out, const char *c)
     }
 }
 
-void goblin::emit_ini(std::ostream &out, bool include_err_only, const IniValueResolver &resolve)
+void goblin::emit_ini(std::ostream &out, bool include_err_only, const IniValueResolver &resolve,
+                      i18n::Language language)
 {
-    out << "; MapForGoblins configuration. Auto-generated from the in-code schema;\n"
-        << "; the DLL re-syncs this file on launch (adds new keys, comments out removed ones).\n";
+    emit_comment(out, i18n::tr(i18n::TextId::IniHeader, language));
     for (auto const &sec : ini_schema())
     {
         if (sec.err_only && !include_err_only) continue;
         out << "\n";
-        emit_comment(out, sec.comment);
+        emit_comment(out, i18n::section_comment(sec.name, sec.comment, language));
         out << "[" << sec.name << "]\n";
         for (auto const &e : sec.entries)
         {
             if (e.err_only && !include_err_only) continue;
-            emit_comment(out, e.comment);
+            emit_comment(out, i18n::entry_comment(e.key, e.comment, language));
             std::string val;
             if (!(resolve && resolve(sec.name, e, val))) val = e.def;
             out << e.key << " = " << val << "\n";

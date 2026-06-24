@@ -30,6 +30,15 @@ from System.IO import File as SysFile
 from System.Reflection import Assembly, BindingFlags
 asm = Assembly.LoadFrom(str(config.SOULSFORMATS_DLL)); clr.AddReference(str(config.SOULSFORMATS_DLL))
 import SoulsFormats
+
+
+def _safe_unlink(path):
+    try:
+        os.unlink(path)
+    except PermissionError:
+        pass
+
+
 _str = SysType.GetType("System.String")
 _read = asm.GetType("SoulsFormats.MSBE").GetMethod("Read", BindingFlags.Public|BindingFlags.Static|BindingFlags.FlattenHierarchy, None, Array[SysType]([_str]), None)
 D = os.path.join(HERE, "..", "data")          # repo data root (ERR-only artifacts)
@@ -74,7 +83,7 @@ def load_vols(mapname):
         try:
             data=SoulsFormats.DCX.Decompress(str(path))
             t=os.path.join(tempfile.gettempdir(),str(os.getpid()) + "_lo.msb"); SysFile.WriteAllBytes(t,data.ToArray())
-            msb=_read.Invoke(None,Array[Object]([t])); os.unlink(t)
+            msb=_read.Invoke(None,Array[Object]([t])); _safe_unlink(t)
             byname={}
             for r in list(msb.Regions.GetEntries()):
                 byname[str(_prop(r,"Name"))]={"kind":type(r).__name__,"pos":_vec3(_prop(r,"Position")),
