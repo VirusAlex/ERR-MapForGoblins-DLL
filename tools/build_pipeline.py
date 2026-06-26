@@ -386,7 +386,8 @@ STAGES = [
                   DATA / '_relocating_boss_fix.done'],
           outputs=[GENERATED_CPP / 'goblin_map_data.cpp',
                    GENERATED_CPP / 'goblin_item_icons.cpp',
-                   GENERATED_CPP / 'goblin_enemy_names.cpp'],
+                   GENERATED_CPP / 'goblin_enemy_names.cpp',
+                   GENERATED_CPP / 'goblin_item_fallback.cpp'],
           script='generate_data.py',
           also_scripts=['icon_registry.py', 'map_categories.py'],  # ANON_ICON_ID = iconid("anon")
           args=['--massedit-dir', str(MASSEDIT_OUT)]),

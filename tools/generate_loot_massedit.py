@@ -15,7 +15,7 @@ from collections import defaultdict, Counter
 import config
 from massedit_common import (DATA_DIR, OUT_DIR, UNDERGROUND_AREAS, DLC_AREAS,
                              OVERWORLD_AREAS, VALID_LOCATION_IDS, resolve_location_id,
-                             resolve_location_id_at, get_disp_mask)
+                             resolve_location_id_at, get_disp_mask, is_dlc_plane)
 DB_PATH = DATA_DIR / 'items_database.json'
 
 # Goods sortGroupId lookup (goodsType=0 items only) for consumable filtering
@@ -273,7 +273,26 @@ LOOT_CATEGORIES = {
         'startId': 4100000,
     },
     'Equipment - Talismans': {
-        'filter': lambda items: any(i['category'] == 4 for i in items),
+        # cat=4 = real talismans. The Convergence overhauls no longer scatter talismans;
+        # they are crafted at a site of grace from "Remnants" looted from the world/dungeons/
+        # bosses (Combat/Enchanted/Heirloom/Warding/Relic AND the Physick remnants - ALL of
+        # them craft talismans, e.g. "Combat Remnants are tools used for crafting Talismans
+        # which raise combat prowess"). Those remnants are goods (cat=1, classified as
+        # key_item) so they fell through every filter and showed NO marker - the player's
+        # entire talisman source was invisible on the map. Catch every "* Remnant" good here
+        # so they share the talisman icon + show_talismans toggle.
+        # Match a remnant by name AND broad_category=key_item (its goodsType bucket): there is no
+        # remnant-exclusive param field (goodsType=key_item is shared with map fragments, whetstones,
+        # bell-bearings, etc.), and an id range would mis-hit other profiles since LOOT_CATEGORIES is
+        # shared - so name is the most specific signal. Names are read from the engus msgbnd at build
+        # time (language-independent), and base/non-Convergence profiles ship zero "Remnant" goods,
+        # so this never mis-fires there. The key_item guard keeps a stray non-key "...Remnant"
+        # consumable, if one ever appears, out of the talisman bucket.
+        'filter': lambda items: any(
+            i['category'] == 4
+            or (i['category'] == 1 and i.get('broad_category') == 'key_item'
+                and 'remnant' in (i.get('name') or '').lower())
+            for i in items),
         'iconId': 382,
         'startId': 4200000,
     },
@@ -742,7 +761,7 @@ def write_massedit(records, filepath, icon_id, start_id, lot_linkage=None):
         # Determine display mask
         if area in UNDERGROUND_AREAS:
             disp = 'dispMask01'
-        elif area in DLC_AREAS:
+        elif is_dlc_plane(area, gx):
             disp = 'pad2_0'
         else:
             disp = 'dispMask00'
@@ -938,7 +957,7 @@ def main():
 
         if area in UNDERGROUND_AREAS:
             disp = 'dispMask01'
-        elif area in DLC_AREAS:
+        elif is_dlc_plane(area, gx):
             disp = 'pad2_0'
         else:
             disp = 'dispMask00'
@@ -1048,7 +1067,7 @@ def main():
 
         if area in UNDERGROUND_AREAS:
             disp = 'dispMask01'
-        elif area in DLC_AREAS:
+        elif is_dlc_plane(area, gx):
             disp = 'pad2_0'
         else:
             disp = 'dispMask00'
@@ -1113,7 +1132,7 @@ def main():
 
     with open(DB_PATH, encoding='utf-8') as f:
         _raw_db = json.load(f)
-    icon_table = {}  # encoded_key -> [iconId, category_name]
+    icon_table = {}  # encoded_key -> [iconId, category_name, english_name]
     for rec in _raw_db:
         for it in rec.get('items', []):
             cat = it.get('category', 0)
@@ -1127,7 +1146,12 @@ def main():
                     continue
                 try:
                     if cc['filter'](single):
-                        icon_table[key] = [cc['iconId'], cn]
+                        # 3rd field = English item name (items_database is read from the
+                        # engus msgbnd). Baked into goblin_item_fallback.cpp and injected as
+                        # the lowest-priority PlaceName layer, so a marker whose item has no
+                        # string in the player's language falls back to English instead of
+                        # showing "?PlaceName?". Localized strings (added earlier) win the dedup.
+                        icon_table[key] = [cc['iconId'], cn, it.get('name', '')]
                         break
                 except Exception:
                     continue

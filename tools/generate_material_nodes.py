@@ -15,7 +15,7 @@ import sys
 from pathlib import Path
 import config
 from massedit_common import (UNDERGROUND_AREAS, DLC_AREAS, OVERWORLD_AREAS,
-                             resolve_location_id, resolve_location_id_at)
+                             resolve_location_id, resolve_location_id_at, is_dlc_plane)
 from unreachable import is_unreachable_in_err
 
 def main():
@@ -135,7 +135,7 @@ def main():
         elif area in UNDERGROUND_AREAS:
             entry["gridXNo"] = n["p1"]
             entry["dispMask01"] = 1
-        elif area in DLC_AREAS:
+        elif is_dlc_plane(area, n["p1"]):
             entry["gridXNo"] = n["p1"]
             entry["pad2_0"] = 1
         else:

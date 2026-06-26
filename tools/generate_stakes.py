@@ -29,7 +29,8 @@ def _safe_unlink(path):
 
 
 from massedit_common import (OUT_DIR, UNDERGROUND_AREAS, DLC_AREAS, OVERWORLD_AREAS,
-                             resolve_location_id, resolve_location_id_at, convert_legacy_coords)
+                             resolve_location_id, resolve_location_id_at, convert_legacy_coords,
+                             is_dlc_plane)
 
 ERR_MOD_DIR = config.require_err_mod_dir()
 _str_type = SysType.GetType('System.String')
@@ -99,7 +100,7 @@ def main():
 
         if area in UNDERGROUND_AREAS:
             disp = 'dispMask01'
-        elif area in DLC_AREAS:
+        elif is_dlc_plane(area, gx):
             disp = 'pad2_0'
         else:
             disp = 'dispMask00'

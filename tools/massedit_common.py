@@ -24,9 +24,11 @@ OUT_DIR = DATA_DIR / 'massedit_generated'
 # i.e. the base-underground plane - exactly where the user reported them
 # wrongly appearing instead of on the DLC map.
 UNDERGROUND_AREAS = {12}
-DLC_AREAS = {20, 21, 22, 25, 28, 40, 41, 42, 43, 61}
 DLC_OVERWORLD_AREAS = {61}
 OVERWORLD_AREAS = {60, 61}
+# DLC_AREAS (legacy areas whose markers belong on the DLC map plane) is NOT hardcoded - it is
+# derived below from THIS mod's WorldMapLegacyConvParam at build time, so it adapts to whatever
+# legacy areas the loaded overhaul defines/relocates. See is_dlc_plane().
 
 # Valid PlaceName location IDs (for dungeon name fallback)
 _loc_path = DATA_DIR / 'valid_location_ids.json'
@@ -52,6 +54,39 @@ if _conv_path.exists():
             _ox = float(_e.get('dstPosX', 0)) - float(_e.get('srcPosX', 0))
             _oz = float(_e.get('dstPosZ', 0)) - float(_e.get('srcPosZ', 0))
             _LEGACY_CONV[(_sa, _sg)] = (_da, _dg, _dz, _ox, _oz)
+
+# (area, gridX) pairs this profile's WorldMapLegacyConvParam projects onto the DLC overworld
+# (dstAreaNo=61). Keyed by (area, gridX) - NOT area alone - because an area can be mixed:
+# e.g. The Convergence 3.x maps m17 wholly to the DLC overworld, but m31 has most sub-grids
+# on the base overworld (60) and only a couple (gx 81/83) on the DLC overworld (61), with
+# real markers on BOTH. A per-area DLC flag would wrongly send the base m31 caves to the
+# DLC plane. is_dlc_plane() below decides each marker's map plane from this set.
+_DLC_CONV_KEYS = {(_k[0], _k[1]) for _k, _v in _LEGACY_CONV.items() if _v[0] == 61}
+
+# Data-driven replacement for the old hardcoded DLC dungeon list: the DLC overworld (61) plus
+# every legacy area whose conv sub-grids ALL project onto the DLC overworld. Built from the
+# loaded mod's WorldMapLegacyConvParam, so an overhaul that adds a wholly-DLC area (e.g. The
+# Convergence 3.x's m17) is picked up automatically. MIXED areas (some sub-grids base, some DLC
+# - e.g. Convergence m31) are deliberately EXCLUDED so the coarse `area in DLC_AREAS` test (used
+# by some generators and by grid-emission) never sends a base sub-grid to the DLC plane; those
+# areas are resolved per-sub-grid by is_dlc_plane(). For vanilla/SOTE this reproduces the former
+# hardcode exactly ({20,21,22,25,28,40,41,42,43,61}).
+_conv_dst_by_area = {}
+for (_a, _g), _v in _LEGACY_CONV.items():
+    _conv_dst_by_area.setdefault(_a, set()).add(_v[0])
+DLC_AREAS = DLC_OVERWORLD_AREAS | {_a for _a, _dsts in _conv_dst_by_area.items() if _dsts == {61}}
+
+
+def is_dlc_plane(area, gx=0):
+    """True if a marker at (area, gridX) belongs on the DLC map plane (dispMask02 / pad2_0).
+
+    Precise, per sub-grid: the DLC overworld (61), a wholly-DLC area (DLC_AREAS), or any legacy
+    (area, gridX) this mod's conv param projects onto the DLC overworld. The loot/stake/node
+    generators call this so a mixed area (Convergence m31: base caves + a couple DLC sub-grids)
+    routes each marker correctly. (Graces read dispMask02 straight from the source
+    WorldMapPointParam, so they were already correct; generators that derive the plane from area
+    membership are why overhaul-added DLC areas like m17 leaked onto the base map.)"""
+    return area in DLC_AREAS or (area, gx) in _DLC_CONV_KEYS
 
 
 def convert_legacy_coords(area, gx, gz, x, z):
@@ -172,15 +207,16 @@ def resolve_location_id_at(map_name, x, y, z):
     return resolve_location_id(map_name)
 
 
-def get_disp_mask(area):
-    """Get display mask field name for a given area.
+def get_disp_mask(area, gx=0):
+    """Get display mask field name for a marker at (area, gridX).
 
     Returns the paramdef field that, when set to 1, makes the marker show
     on the matching map plane. Mirrors the vanilla WorldMapPointParam
-    convention (see comments above the *_AREAS sets)."""
+    convention (see comments above the *_AREAS sets). gridX matters for
+    mixed legacy areas (see is_dlc_plane); pass it when known."""
     if area in UNDERGROUND_AREAS:
         return 'dispMask01'      # base-game underground (m12)
-    if area in DLC_AREAS:
+    if is_dlc_plane(area, gx):
         return 'pad2_0'           # bit 2 = dispMask02 in updated paramdefs
                                   # (DLC overworld + DLC/base legacy dungeons)
     return 'dispMask00'           # base-game overworld + small dungeons
