@@ -1,6 +1,6 @@
 Map For Goblins - DLL Edition v%VERSION%
 For The Convergence 3.x (https://www.nexusmods.com/eldenring/mods/3419).
-~7200 loot & world-map icons generated from The Convergence's own game data.
+~7600 loot & world-map icons generated from The Convergence's own game data.
 No regulation.bin changes. Pure DLL - no gfx or other extra files.
 Unofficial: not affiliated with the Convergence Team - please don't
 report issues with this add-on to them.

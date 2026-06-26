@@ -65,22 +65,8 @@ static int seh_call(int (*fn)(void *), void *ctx)
 
 static std::string detect_language()
 {
-    HMODULE steam = GetModuleHandleA("steam_api64.dll");
-    if (!steam) return "english";
-    typedef void *(*SteamApps_fn)();
-    typedef const char *(*GetLang_fn)(void *);
-    auto steamApps = (SteamApps_fn)GetProcAddress(steam, "SteamAPI_SteamApps_v008");
-    auto getLang   = (GetLang_fn)GetProcAddress(steam, "SteamAPI_ISteamApps_GetCurrentGameLanguage");
-    if (steamApps && getLang)
-    {
-        void *apps = steamApps();
-        if (apps)
-        {
-            const char *lang = getLang(apps);
-            if (lang && lang[0]) return lang;
-        }
-    }
-    return "english";
+    std::string lang = goblin::i18n::steam_game_language();
+    return lang.empty() ? "english" : lang;
 }
 
 // Map a Steam game-language string (from detect_language) to an index into the
@@ -151,7 +137,7 @@ static bool patch_fmg_in_memory(uint8_t *fmg_ptr, uint8_t **slot_ptr,
             if (seen.insert(ne.id).second)
                 new_entries.push_back(ne);
         if (new_entries.size() != new_entries_in.size())
-            spdlog::info("[PATCH] {} duplicate injected id(s) dropped",
+            spdlog::info("[FMG] {} duplicate added id(s) dropped",
                          new_entries_in.size() - new_entries.size());
     }
     uint32_t orig_file_size  = *reinterpret_cast<uint32_t *>(fmg_ptr + 0x04);
@@ -173,7 +159,7 @@ static bool patch_fmg_in_memory(uint8_t *fmg_ptr, uint8_t **slot_ptr,
         orig_offsets_ptr = fmg_ptr + orig_str_off_rel;
     }
 
-    spdlog::debug("[PATCH] Original: fileSize={}, groups={}, strings={}, strOffRel=0x{:X} (raw=0x{:X})",
+    spdlog::debug("[FMG] Original: fileSize={}, groups={}, strings={}, strOffRel=0x{:X} (raw=0x{:X})",
                   orig_file_size, orig_group_cnt, orig_string_cnt, orig_str_off_rel, raw_str_off);
 
     auto *orig_groups = reinterpret_cast<FmgGroup *>(fmg_ptr + 0x28);
@@ -200,12 +186,12 @@ static bool patch_fmg_in_memory(uint8_t *fmg_ptr, uint8_t **slot_ptr,
         }
     }
 
-    spdlog::debug("[PATCH] Parsed {} existing entries", all_entries.size());
+    spdlog::debug("[FMG] Parsed {} existing entries", all_entries.size());
 
     for (size_t i = 0; i < (std::min)(all_entries.size(), (size_t)5); i++)
     {
         auto &e = all_entries[i];
-        spdlog::debug("[PATCH] Entry[{}]: id={}, strOff=0x{:X}",
+        spdlog::debug("[FMG] Entry[{}]: id={}, strOff=0x{:X}",
                       i, e.id, e.str_offset);
     }
 
@@ -225,7 +211,7 @@ static bool patch_fmg_in_memory(uint8_t *fmg_ptr, uint8_t **slot_ptr,
                                          { return override_ids.count(e.id) != 0; }),
                           all_entries.end());
         if (before != all_entries.size())
-            spdlog::info("[PATCH] {} existing FMG ids overridden by injected entries",
+            spdlog::info("[FMG] {} existing FMG ids overridden by added entries",
                          before - all_entries.size());
     }
 
@@ -296,7 +282,7 @@ static bool patch_fmg_in_memory(uint8_t *fmg_ptr, uint8_t **slot_ptr,
 
     uint32_t total_strings = (uint32_t)merged.size();
 
-    spdlog::debug("[PATCH] Total entries after merge: {}", total_strings);
+    spdlog::debug("[FMG] Total entries after merge: {}", total_strings);
 
     // One group per entry (sparse IDs)
     uint32_t total_groups = total_strings;
@@ -308,14 +294,14 @@ static bool patch_fmg_in_memory(uint8_t *fmg_ptr, uint8_t **slot_ptr,
     size_t new_str_data_start = new_str_off_pos + offsets_size;
     size_t new_file_size = new_str_data_start + new_str_data.size();
 
-    spdlog::debug("[PATCH] New layout: groups={}, strings={}, fileSize={}",
+    spdlog::debug("[FMG] New layout: groups={}, strings={}, fileSize={}",
                   total_groups, total_strings, new_file_size);
 
     // Allocate the expanded FMG buffer from the process heap.
     fmg_allocation = HeapAlloc(GetProcessHeap(), HEAP_ZERO_MEMORY, new_file_size);
     if (!fmg_allocation)
     {
-        spdlog::error("[PATCH] HeapAlloc failed ({} bytes)", new_file_size);
+        spdlog::error("[FMG] HeapAlloc failed ({} bytes)", new_file_size);
         return false;
     }
 
@@ -385,10 +371,10 @@ static bool patch_fmg_in_memory(uint8_t *fmg_ptr, uint8_t **slot_ptr,
 
     memcpy(nfmg + new_str_data_start, new_str_data.data(), new_str_data.size());
 
-    spdlog::debug("[PATCH] Swapping FMG pointer: {:p} -> {:p}", (void *)*slot_ptr, fmg_allocation);
+    spdlog::debug("[FMG] Swapping FMG pointer: {:p} -> {:p}", (void *)*slot_ptr, fmg_allocation);
     *slot_ptr = nfmg;
 
-    spdlog::debug("[PATCH] PlaceName FMG patched: {} entries", total_strings);
+    spdlog::debug("[FMG] PlaceName FMG merged: {} entries", total_strings);
     return true;
 }
 
@@ -789,7 +775,7 @@ void goblin::setup_messages()
                 added++;
             }
         }
-        spdlog::info("Injected {} enemy names into PlaceName (lang index {})", added, li);
+        spdlog::info("Added {} enemy names into PlaceName (lang index {})", added, li);
     }
 
     auto *fmg_ptr = sub[19];
@@ -862,7 +848,7 @@ void goblin::setup_messages()
 
     if (patch_fmg_in_memory(fmg_ptr, &sub[19], new_entries, /*capture_valid_ids=*/true))
     {
-        spdlog::info("PlaceName FMG patched ({} entries)", new_entries.size());
+        spdlog::info("PlaceName FMG merged ({} entries)", new_entries.size());
         // Capture toggle state. fmg_ptr was the original buffer; sub[19] now
         // points at our expanded buffer (set inside patch_fmg_in_memory).
         g_placename_slot_ptr = &sub[19];
@@ -926,7 +912,7 @@ void goblin::setup_messages()
 #endif
     }
     else
-        spdlog::error("PlaceName FMG patching failed");
+        spdlog::error("PlaceName FMG merge failed");
 
     // Inject NEW TutorialBody entries (slot 208 = 0xD0) for the codex toasts.
     // CSPopupMenu::ShowTutorialPopup (trampoline, AOB-resolved at runtime - its
@@ -953,7 +939,7 @@ void goblin::setup_messages()
                          goblin::TUTORIAL_FMG_ID_ON, goblin::TUTORIAL_FMG_ID_OFF,
                          goblin::TUTORIAL_FMG_ID_DUMP_OK, goblin::TUTORIAL_FMG_ID_DUMP_FAIL);
         else
-            spdlog::warn("[TOAST] TutorialBody.fmg patch failed - codex banners unavailable");
+            spdlog::warn("[TOAST] TutorialBody.fmg merge failed - codex banners unavailable");
     }
     else
         spdlog::warn("[TOAST] TutorialBody (slot 208) unavailable - codex banners unavailable");
@@ -972,7 +958,7 @@ void goblin::sanitize_injected_textids()
 {
     if (g_placename_valid_ids.empty())
     {
-        spdlog::warn("[SANITIZE] PlaceName valid-id set empty - skipping (FMG patch ran?)");
+        spdlog::warn("[SANITIZE] PlaceName valid-id set empty - skipping (FMG merge ran?)");
         return;
     }
     auto valid = [](int32_t id) {
@@ -1003,7 +989,7 @@ void goblin::sanitize_injected_textids()
             }
         }
     }
-    spdlog::info("[SANITIZE] Scanned {} injected rows, cleared {} dangling textId(s) "
+    spdlog::info("[SANITIZE] Scanned {} added rows, cleared {} dangling textId(s) "
                  "(missing from PlaceName FMG → would null-deref on load)", scanned, cleared);
 }
 

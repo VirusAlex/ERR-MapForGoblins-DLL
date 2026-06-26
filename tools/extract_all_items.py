@@ -305,7 +305,8 @@ def main():
     ilp = read_param(bnd, 'ItemLotParam_map', paramdefs)
     lot_fields = set()
     for i in range(1, 9):
-        lot_fields.update([f'lotItemId0{i}', f'lotItemCategory0{i}', f'lotItemNum0{i}'])
+        lot_fields.update([f'lotItemId0{i}', f'lotItemCategory0{i}', f'lotItemNum0{i}',
+                           f'lotItemBasePoint0{i}'])
     lot_fields.add('getItemFlagId')
     item_lots = param_to_dict(ilp, lot_fields)
     print(f'  {len(item_lots)} item lots')
@@ -314,7 +315,8 @@ def main():
     ilp_enemy = read_param(bnd, 'ItemLotParam_enemy', paramdefs)
     enemy_lot_fields = set()
     for i in range(1, 9):
-        enemy_lot_fields.update([f'lotItemId0{i}', f'lotItemCategory0{i}', f'lotItemNum0{i}'])
+        enemy_lot_fields.update([f'lotItemId0{i}', f'lotItemCategory0{i}', f'lotItemNum0{i}',
+                                 f'lotItemBasePoint0{i}'])
     enemy_lot_fields.add('getItemFlagId')
     item_lots_enemy = param_to_dict(ilp_enemy, enemy_lot_fields)
     print(f'  {len(item_lots_enemy)} enemy item lots')
@@ -967,6 +969,20 @@ def main():
             })
         return items
 
+    def lot_is_guaranteed(lot):
+        """A lot is GUARANTEED (the item always drops) when it has no "nothing"
+        slot - i.e. no empty slot (lotItemId 0) carrying draw weight. With no
+        empty slot competing, the weighted item slot(s) always win. This is how
+        vanilla wires one-time set drops (e.g. the Battlemage Set lots 703-706:
+        single item at basePoint 1000, no empty slot). Probabilistic/pity drops
+        always have a heavy empty slot (e.g. nothing 985 vs item 15)."""
+        for slot in range(1, 9):
+            iid = lot.get(f'lotItemId0{slot}', 0)
+            bp = lot.get(f'lotItemBasePoint0{slot}', 0)
+            if iid == 0 and bp > 0:
+                return False
+        return True
+
     for tr in treasures:
         lot_id = tr['itemLotId']
 
@@ -1035,6 +1051,7 @@ def main():
                     'items': sub_items,
                     'primary_category': sub_items[0]['broad_category'],
                     'source': tr.get('source', 'treasure'),
+                    'guaranteed': lot_is_guaranteed(sub_lot),
                 }
                 if tr.get('enemyModel'):
                     sub_record['enemyModel'] = tr['enemyModel']
@@ -1067,6 +1084,7 @@ def main():
             'items': items,
             'primary_category': items[0]['broad_category'],
             'source': tr.get('source', 'treasure'),
+            'guaranteed': lot_is_guaranteed(base_lot),
         }
         if tr.get('enemyModel'):
             record['enemyModel'] = tr['enemyModel']

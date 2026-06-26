@@ -64,6 +64,9 @@ namespace goblin::i18n
     Language language_from_config(std::string_view config_value);
     Language current_language();
 
+    // Raw Steam game-language token (e.g. "russian"), or "" if Steam is unavailable.
+    std::string steam_game_language();
+
     std::string normalize_language_config(std::string_view config_value);
     const char *language_code(Language language);
     const char *language_option_label(std::string_view config_value,

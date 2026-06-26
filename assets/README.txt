@@ -1,6 +1,6 @@
 Map For Goblins - DLL Edition v%VERSION%
 For ERR. Unofficial, not affiliated with the ERR team.
-~9000 map icons. No regulation.bin changes.
+~9100 map icons. No regulation.bin changes.
 Pure DLL - no gfx or other extra files.
 
 INSTALL:

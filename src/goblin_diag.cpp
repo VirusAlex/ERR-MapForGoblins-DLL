@@ -28,6 +28,8 @@ namespace
 
     int s_selfheal = 0;
     uint32_t s_selfheal_base = 0;
+
+    uint64_t s_heap_sample = 0;   // a live game-heap pointer (located worldmap sprite)
 }
 
 namespace goblin::diag
@@ -84,22 +86,37 @@ namespace goblin::diag
         s_selfheal_base = newbase;
     }
 
+    void set_heap_sample(uint64_t ptr)
+    {
+        std::lock_guard<std::mutex> lk(g_mx);
+        s_heap_sample = ptr;
+    }
+
     std::string report()
     {
         std::lock_guard<std::mutex> lk(g_mx);
         std::ostringstream o;
 
-        // Load hooks - if these are not armed, nothing else can run.
-        o << "Load hooks: ";
+        // One-line verdict first (the most useful thing for a player / a copied report).
+        if (s_hooks == 1 && s_s171 == 1 && s_remap > 0 && (s_bm_reg < 0 || s_bm_reg == s_bm_total))
+            o << "Map icons: WORKING\n";
+        else if (s_hooks == 0 || s_s171 == 0 || (s_bm_reg >= 0 && s_bm_reg < s_bm_total))
+            o << "Map icons: NOT WORKING - details below; please report on Discord.\n";
+        else
+            o << "Map icons: open the world map once, then re-check.\n";
+        o << "----\n";
+
+        // Load handlers - if these are not ready, nothing else can run.
+        o << "Load handlers: ";
         if (s_hooks == 1)
-            o << "armed (ok)\n";
+            o << "ready (ok)\n";
         else if (s_hooks == 0)
             o << "FAILED - " << (s_hooks_reason.empty() ? "unknown" : s_hooks_reason)
               << "\n  -> no icons can load on this game version; please report this.\n";
         else
-            o << "not armed yet\n";
+            o << "not ready yet\n";
 
-        // World-map icon injection (the main event).
+        // World-map icon load (the main event).
         o << "World map icons: ";
         if (s_s171 == 1)
         {
@@ -109,9 +126,16 @@ namespace goblin::diag
         }
         else if (s_s171 == 0)
             o << "FAILED - " << (s_s171_reason.empty() ? "unknown" : s_s171_reason)
-              << "\n  -> map opened but icons did not inject; please report this.\n";
+              << "\n  -> map opened but icons did not load; please report this.\n";
         else
-            o << "not injected yet - open the world map once, then re-check.\n";
+            o << "not loaded yet - open the world map once, then re-check.\n";
+
+        // Live game-heap pointer (the located worldmap sprite). For us in a copied report: confirms we
+        // reached the game's memory and shows the heap region (e.g. 0x7FF2.. under ME2) - the signal that
+        // caught the 2026-06 looks_heap pointer-range bug.
+        if (s_heap_sample)
+            o << "  live sprite ptr: 0x" << std::hex << std::uppercase << s_heap_sample
+              << std::dec << std::nouppercase << "  (game heap region)\n";
 
         // Icon bitmaps.
         if (s_bm_reg >= 0)

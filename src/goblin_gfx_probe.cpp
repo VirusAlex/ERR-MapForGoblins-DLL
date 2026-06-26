@@ -145,6 +145,9 @@ namespace
         uint32_t b = g_inject_base.load(std::memory_order_relaxed);
         return b ? b : (uint32_t)goblin::generated::MAP_ICON_CHARID_BASE;
     }
+    // Lowest / highest 1-based frame id appended this worldmap load (for the remap overlap diagnostic).
+    std::atomic<uint32_t> g_iid_lo{0};
+    std::atomic<uint32_t> g_iid_hi{0};
 
     // On-map MapForGoblins logo. The gfx baked it into the decorative-plaque sprite 246 (re-pointing its
     // char-10 PlaceObject to a logo bitmap-fill shape, scale 0.38 / translate -243). At runtime we instead
@@ -227,7 +230,12 @@ namespace
         __try { memcpy(dst, src, n); return true; }
         __except (EXCEPTION_EXECUTE_HANDLER) { return false; }
     }
-    bool looks_heap(uint64_t v) { return v > 0x10000ull && v < 0x7FF000000000ull; }
+    // Upper bound is the x64 user-mode max (~128TB). The old 0x7FF000000000 bound REJECTED the game's
+    // heap under ME2/ME3, which sits at 0x7FF2_xxxxxxxx (higher than ERR's heap) - that silently broke
+    // every pointer check (sprite-171 locate, the whole icon injection), so icons rendered default under
+    // ME2/ME3 while ERR (lower heap) worked. Confirmed live: a valid SpriteDef self=0x7FF2D5F8D060 was
+    // rejected; widening this single bound made the existing load-time injection work under ME2. 2026-06-25.
+    bool looks_heap(uint64_t v) { return v > 0x10000ull && v < 0x7FFFFFFFFFFFull; }
     uint64_t rq(uint64_t a) { uint64_t v = 0; return (a && safe_copy(&v, (void *)a, 8)) ? v : 0; }
     uint32_t rd32(uint64_t a) { uint32_t v = 0; return (a && safe_copy(&v, (void *)a, 4)) ? v : 0; }
     bool wr32(uint64_t a, uint32_t v) { return a && safe_copy((void *)a, &v, 4); }
@@ -396,12 +404,28 @@ namespace
         wr32(myMF + 0x20, len);           // size
         wr32(myMF + 0x24, 0);             // pos = 0
 
-        // save native reader state + window CONTENT (our refill dirties the shared window), restore after.
+        // Save native reader state + window CONTENT (our refill overwrites the shared read window),
+        // restore after. The window buffer is at reader+0x60 with capacity reader+0x68 (default 0x200;
+        // when there is no file source the buffer is INLINE at reader+0x6c, still 0x200). The game streams
+        // refills into that buffer IN PLACE and never reallocates it (confirmed in the refill FUN_1411bba10),
+        // so the buffer pointer/capacity stay put - we only have to restore its contents. We MUST copy
+        // exactly `capacity` bytes: a fixed larger size reads/writes PAST the buffer into adjacent memory
+        // (the reader's own tail when the buffer is inline, or neighbor heap), and because our lossless
+        // load allocates in between, the write-back stamps a stale snapshot over live neighbor heap ->
+        // heap corruption (the ME2 startup-parse crashes: ntdll heap fast-fails / null derefs in the SWF
+        // parser after we return). Also save the +0x54 stream counter and +0x58 refill flag the loader moves.
         uint64_t winbuf = rq(reader + 0x60);
-        static unsigned char winsave[0x1000];
-        bool havewin = winbuf && safe_copy(winsave, (void *)winbuf, sizeof(winsave));
+        uint32_t wincap = rd32(reader + 0x68);
+        static unsigned char winsave[0x4000];
+        if (wincap > sizeof(winsave))
+        {
+            spdlog::warn("[icons] reader window cap 0x{:X} exceeds snapshot buffer; clamping.", wincap);
+            wincap = sizeof(winsave);
+        }
+        bool havewin = winbuf && wincap && safe_copy(winsave, (void *)winbuf, wincap);
         uint64_t s20 = rq(reader + 0x20);
         uint32_t s4c = rd32(reader + 0x4c), s50 = rd32(reader + 0x50), s54 = rd32(reader + 0x54);
+        uint8_t s58 = (uint8_t)rd32(reader + 0x58);
 
         wr64(reader + 0x20, myMF);
         wr32(reader + 0x4c, 0); wr32(reader + 0x50, 0); wr32(reader + 0x54, 0);
@@ -413,7 +437,8 @@ namespace
 
         wr64(reader + 0x20, s20);
         wr32(reader + 0x4c, s4c); wr32(reader + 0x50, s50); wr32(reader + 0x54, s54);
-        if (havewin) safe_copy((void *)winbuf, winsave, sizeof(winsave));
+        safe_copy((void *)(reader + 0x58), &s58, 1);
+        if (havewin) safe_copy((void *)winbuf, winsave, wincap);
         return lret != nullptr;
     }
 
@@ -470,6 +495,7 @@ namespace
                          fcnt, goblin::generated::MAP_ICON_TAG_COUNT);
             for (int k = 0; k < ICON_MAP_SIZE; ++k) g_icon_iid[k] = 0;
             int placed = 0;
+            uint32_t iid_lo = 0, iid_hi = 0;
             for (int i = 0; i < goblin::generated::MAP_ICON_TAG_COUNT; ++i)
             {
                 const goblin::generated::MapIconTag e = goblin::generated::MAP_ICON_TAGS[i]; // POD copy
@@ -477,20 +503,42 @@ namespace
                 if (iid && e.srcIconId >= 0 && e.srcIconId < ICON_MAP_SIZE)
                 {
                     g_icon_iid[e.srcIconId] = iid;
+                    if (!iid_lo || iid < iid_lo) iid_lo = iid;
+                    if (iid > iid_hi) iid_hi = iid;
                     ++placed;
                 }
+            }
+            g_iid_lo.store(iid_lo, std::memory_order_relaxed);
+            g_iid_hi.store(iid_hi, std::memory_order_relaxed);
+            if (goblin::config::debugLogging)
+            {
+                // Overlap invariant: if the appended frame-id range intersects the source iconId range,
+                // a second remap pass that re-reads an already-injected iconId as a srcIconId would land
+                // on the wrong frame (categories shuffle). Expected: no overlap (iids appended above the
+                // worldmap's frame count, srcIconIds are 369..433).
+                uint32_t src_lo = 0xFFFFFFFFu, src_hi = 0;
+                for (int i = 0; i < goblin::generated::MAP_ICON_TAG_COUNT; ++i)
+                {
+                    int s = goblin::generated::MAP_ICON_TAGS[i].srcIconId;
+                    if (s >= 0) { if ((uint32_t)s < src_lo) src_lo = (uint32_t)s; if ((uint32_t)s > src_hi) src_hi = (uint32_t)s; }
+                }
+                bool overlap = iid_lo <= src_hi && src_lo <= iid_hi;
+                spdlog::info("[icons] base={} fcnt={} placed={}; frame ids [{},{}]; key range "
+                             "[{},{}]; overlap={}",
+                             inject_base(), fcnt, placed, iid_lo, iid_hi, src_lo, src_hi, overlap ? "YES" : "no");
             }
             dump_frames(sd); // DIAGNOSTIC: live tag layout of key frames
             spdlog::info("[icons] appended {} frames; remapping markers.", placed);
             goblin::diag::set_sprite171(true, base, placed, goblin::generated::MAP_ICON_TAG_COUNT, "");
-            goblin::remap_injected_icons(); // point markers at our injected iconIds (before pins built)
+            goblin::diag::set_heap_sample(sd); // live worldmap sprite ptr -> shows the game heap region
+            goblin::remap_injected_icons(); // point markers at our added iconIds (before pins built)
         }
         __except (EXCEPTION_EXECUTE_HANDLER)
         {
-            spdlog::error("[icons] EXCEPTION during sprite-171 injection - icons may be incomplete this "
+            spdlog::error("[icons] EXCEPTION during sprite-171 icon load - icons may be incomplete this "
                           "load; game kept alive.");
             goblin::diag::set_sprite171(false, inject_base(), 0, goblin::generated::MAP_ICON_TAG_COUNT,
-                                        "exception during injection (icons missing this load)");
+                                        "exception during icon load (icons missing this load)");
         }
     }
 
@@ -505,6 +553,23 @@ namespace
     {
         uint32_t cid = (rcx ? peek_charid((uint64_t)rcx) : 0xFFFFFFFF); // charId before the load consumes it
         void *ret = o_spriteloader(rcx, rdx);
+        // DIAG (debug_logging): log every DISTINCT charId the sprite-loader hook is called with,
+        // so we see whether the worldmap (171) ever loads through this hook and what the full set is.
+        if (goblin::config::debugLogging)
+        {
+            static uint32_t seen_cid[1024];
+            static int n_cid = 0;
+            bool dup = false;
+            for (int j = 0; j < n_cid; ++j) if (seen_cid[j] == cid) { dup = true; break; }
+            if (!dup)
+            {
+                if (n_cid < 1024) seen_cid[n_cid++] = cid;
+                unsigned di = g_idx.load(std::memory_order_relaxed);
+                uint64_t dsd = di ? (uint64_t)g_sprites[(di - 1) % RING] : 0;
+                spdlog::info("[icondiag] spriteloader charId={} (last-ctor fc={})",
+                             cid, dsd ? rd32(dsd + OFF_FRAMECOUNT) : 0);
+            }
+        }
         if (cid == 171 && rcx && !g_qmark_injected.load(std::memory_order_relaxed))
         {
             // gate to the WORLDMAP sprite-171 (hundreds of frames); other movies' 171 have 1 frame.
@@ -566,7 +631,7 @@ namespace
                         break;
                     }
                 }
-            spdlog::info("[rmhook] my RM2 depth={} ctx=0x{:X} listBase=0x{:X} cnt={} -> entry@0x{:X} flag71=0x{:02X}",
+            spdlog::info("[rmtag] my RM2 depth={} ctx=0x{:X} listBase=0x{:X} cnt={} -> entry@0x{:X} flag71=0x{:02X}",
                          dep, cx, lbase, lcnt, foundNode, f71);
         }
         return o_rm2exec(thisTag, ctx, frame);
@@ -816,7 +881,7 @@ namespace
                 g_rm2_vt.store(v0, std::memory_order_relaxed);
                 g_po3_vt.store(v2, std::memory_order_relaxed);
                 uint64_t mod = (uint64_t)GetModuleHandleW(nullptr);
-                spdlog::info("[icons] captured native vtables (frame {}): RM2=0x{:X}(rva 0x{:X}) PO3=0x{:X}(rva 0x{:X})",
+                spdlog::info("[icons] read native vtables (frame {}): RM2=0x{:X}(rva 0x{:X}) PO3=0x{:X}(rva 0x{:X})",
                              f, v0, v0 - mod, v2, v2 - mod);
                 return;
             }
@@ -953,6 +1018,12 @@ uint32_t goblin::gfx_probe::anon_dynamic_iconid()
     return injected_iconid(static_cast<int>(goblin::generated::ANON_ICON_ID));
 }
 
+void goblin::gfx_probe::injected_iid_range(uint32_t &lo, uint32_t &hi)
+{
+    lo = g_iid_lo.load(std::memory_order_relaxed);
+    hi = g_iid_hi.load(std::memory_order_relaxed);
+}
+
 
 void goblin::gfx_probe::tick()
 {
@@ -971,6 +1042,7 @@ void goblin::gfx_probe::tick()
         last_logged = recorded;
         spdlog::info("[gfxprobe] SpriteDef ctor fired {} times so far; scanning...", recorded);
     }
+
 
     uint64_t sd = g_found_sd.load(std::memory_order_relaxed);
     if (!sd)
@@ -999,7 +1071,7 @@ void goblin::gfx_probe::tick()
             {
                 last_ad = ad;
                 last_lk = lk;
-                spdlog::info("[iconinject] hook calls: AddDisplayObject={} lookup={} movieDef=0x{:X}",
+                spdlog::info("[icons] handler calls: AddDisplayObject={} lookup={} movieDef=0x{:X}",
                              ad, lk, g_moviedef.load(std::memory_order_relaxed));
             }
         }
@@ -1045,7 +1117,7 @@ void goblin::gfx_probe::tick()
                     g_dict_dumped.store(false, std::memory_order_relaxed);
                     goblin::diag::note_selfheal(newbase);
                     spdlog::warn("[icons] charId COLLISION: {} native ids in [{}, {}) -> bumped base to {}; "
-                                 "will re-inject on next worldmap open (reopen the map).",
+                                 "will re-add on next worldmap open (reopen the map).",
                                  in_window, base, base + cnt, newbase);
                 }
             }
@@ -1091,7 +1163,7 @@ void goblin::gfx_probe::setup()
             {.aob = "48 89 5C 24 10 48 89 74 24 18 57 48 83 EC 20 48 8B 99 18 04 "
                     "00 00 48 8B F9 48 85 DB"},
             spriteloader_detour, o_spriteloader);
-        spdlog::info("[gfxprobe] icon-injection hooks armed (ctor + movieDef capture + registrar + lossless + "
+        spdlog::info("[gfxprobe] icon handlers ready (ctor + movieDef read + registrar + lossless + "
                      "DefineSprite-loader). Open the world map.");
         goblin::diag::set_hooks(true, "");
 
@@ -1101,7 +1173,7 @@ void goblin::gfx_probe::setup()
             modutils::hook<ExecFn>(
                 {.address = reinterpret_cast<void *>((uint64_t)GetModuleHandleW(nullptr) + RVA_FN_REMOVEOBJECT2_EXEC)},
                 rm2exec_detour, o_rm2exec); // DIAG: real RemoveObject2::Execute (file VA 0x1411bde10)
-            spdlog::info("[gfxprobe] RM2::Execute diagnostic trace armed (debug_logging).");
+            spdlog::info("[gfxprobe] RM2::Execute diagnostic trace enabled (debug_logging).");
         }
     }
     catch (const std::exception &e)

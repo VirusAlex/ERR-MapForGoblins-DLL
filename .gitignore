@@ -155,3 +155,10 @@ assets/menu/*.bak
 # belt-and-suspenders guard in case anything writes one at the repo root.
 releases/CHANGELOG.txt
 CHANGELOG.txt
+
+# Dashboard local state DB (tools/dashboard/app.py) - regenerable from logs/builds.
+tools/dashboard/mfg.sqlite
+tools/dashboard/mfg.sqlite-wal
+tools/dashboard/mfg.sqlite-shm
+# Dashboard VT API key (secret) - never commit.
+tools/dashboard/.vt_key

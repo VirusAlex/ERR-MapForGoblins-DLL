@@ -11,6 +11,8 @@ MapFragments(goblin::flag::AlwaysOff,
 }),
 MapFragments(goblin::flag::WestLimgrave,
 	{
+	MapTile(60, 39, 39), // require_map_fragments: was unmapped (leaked always-visible)
+	MapTile(60, 41, 35), // require_map_fragments: was unmapped (leaked always-visible)
 	MapTile(10), // Stormveil
 	MapTile(10, 1), // Chapel
 	MapTile(30, 11), // Deathtouched Catacombs
@@ -100,6 +102,7 @@ MapFragments(goblin::flag::EastLimgrave,
 	}),
 MapFragments(goblin::flag::Caelid,
 	{
+	MapTile(60, 51, 35), // require_map_fragments: was unmapped (leaked always-visible)
 	MapTile(34,13), // Divine tower of Caelid
 	MapTile(30,15), // Caelid Catacombs
 	MapTile(30,16), // War-Dead Catacombs
@@ -154,6 +157,7 @@ MapFragments(goblin::flag::Dragonbarrow,
 	}),
 MapFragments(goblin::flag::EastLiurnia,
 	{
+	MapTile(60, 38, 39), // require_map_fragments: was unmapped (leaked always-visible)
 	MapTile(31, 4), // Stillwater Cave
 	MapTile(30, 5), // Black Knife Catacombs
 	MapTile(31, 5), // Lakeside Crystal Cave
@@ -343,6 +347,7 @@ MapFragments(goblin::flag::Gelmir,
 	}),
 MapFragments(goblin::flag::MountaintopsWest,
 	{
+	MapTile(60, 50, 56), // require_map_fragments: was unmapped (leaked always-visible)
 	MapTile(34, 14), // Divine Tower of East Altus
 	MapTile(30, 17), // Giant-Conquering Hero's Grave
 	MapTile(30, 18), // Giants' Mountaintop Catacombs
@@ -386,6 +391,8 @@ MapFragments(goblin::flag::MountaintopsEast,
 	}),
 MapFragments(goblin::flag::Snowfields,
 	{
+	MapTile(60, 46, 55), // require_map_fragments: was unmapped (leaked always-visible)
+	MapTile(60, 48, 58), // require_map_fragments: was unmapped (leaked always-visible)
 	MapTile(31, 12), // Cave of Forlorn
 	MapTile(31, 11), // Yelough Anix Ruins
 	MapTile(30, 10), // Consecrated Snowfield Catacombs
@@ -443,6 +450,7 @@ MapFragments(goblin::flag::StoryErdtreeOnFire,
 	}),
 MapFragments(goblin::flag::GravesitePlain,
 	{
+		MapTile(61, 47, 45), // require_map_fragments: was unmapped (leaked always-visible)
 		MapTile(20), // Belurat
 		MapTile(20, 1), // Enir-Ilim
 		MapTile(41), // Belurat Gaol
@@ -483,6 +491,7 @@ MapFragments(goblin::flag::GravesitePlain,
 	}),
 MapFragments(goblin::flag::ScaduAltus,
 	{
+		MapTile(61, 48, 46), // require_map_fragments: was unmapped (leaked always-visible)
 		MapTile(21), // Shadow Keep
 		MapTile(21, 1), // Specimen Storehouse
 		MapTile(21, 2), // Specimen Storehouse (West Rampart)
@@ -530,6 +539,7 @@ MapFragments(goblin::flag::ScaduAltus,
 	}),
 MapFragments(goblin::flag::SouthernShore,
 	{
+		MapTile(61, 48, 40), // require_map_fragments: was unmapped (leaked always-visible)
 		MapTile(22), // Stone Coffin Fissure
 		MapTile(61, 49, 40),
 		MapTile(61, 50, 40),
@@ -564,6 +574,7 @@ MapFragments(goblin::flag::SouthernShore,
 	}),
 MapFragments(goblin::flag::RauhRuins,
 	{
+		MapTile(61, 47, 46), // require_map_fragments: was unmapped (leaked always-visible)
 		MapTile(42, 3), // Taylew's Ruined Forge
 		MapTile(40), // Fog Rift Catacombs
 		MapTile(40, 1), // Scorpion River Catacombs
@@ -604,5 +615,51 @@ MapFragments(goblin::flag::Abyss,
 		MapTile(61, 51, 41),
 		MapTile(61, 52, 41),
 		MapTile(61, 53, 41),
-	})
+	}),
+// --- Stakes of Marika: coarse-LOD tile fragment gating ---
+// AEG099_060 stakes are authored only in coarse LOD MSBs (_02/_12), so their grid
+// numbers use the 4x-coarse grid (gridX 8-14), absent from the fine fragment tiles
+// above. GetMapFlagFromTile returned 0 -> eventFlagId=0 -> always visible regardless
+// of require_map_fragments. Each coarse tile is mapped to the dominant fine fragment
+// it overlaps (4x cell vote). gridXNo/gridZNo of the stake rows are left untouched.
+MapFragments(goblin::flag::WestLiurnia, { MapTile(60,8,10), MapTile(60,8,12) }),
+MapFragments(goblin::flag::NorthLiurnia, { MapTile(60,8,11) }),
+MapFragments(goblin::flag::EastLiurnia, { MapTile(60,9,10), MapTile(60,9,11), MapTile(60,9,12) }),
+MapFragments(goblin::flag::Gelmir, { MapTile(60,8,13), MapTile(60,9,13) }),
+MapFragments(goblin::flag::Altus, { MapTile(60,10,13) }),
+MapFragments(goblin::flag::Leyndell, { MapTile(60,10,12), MapTile(60,11,12), MapTile(60,11,13) }),
+MapFragments(goblin::flag::WeepingPeninsula, { MapTile(60,10,7), MapTile(60,10,8), MapTile(60,11,8) }),
+MapFragments(goblin::flag::WestLimgrave, { MapTile(60,10,9) }),
+MapFragments(goblin::flag::EastLimgrave, { MapTile(60,11,9), MapTile(60,11,10) }),
+MapFragments(goblin::flag::Dragonbarrow, { MapTile(60,12,10), MapTile(60,13,10) }),
+MapFragments(goblin::flag::Caelid, { MapTile(60,12,8), MapTile(60,12,9), MapTile(60,13,9) }),
+MapFragments(goblin::flag::Snowfields, { MapTile(60,11,14), MapTile(60,12,13), MapTile(60,12,14) }),
+MapFragments(goblin::flag::MountaintopsEast, { MapTile(60,13,13), MapTile(60,13,14) }),
+MapFragments(goblin::flag::Snowfields, { MapTile(60,24,28) }), // _01 LOD (2x) marker, same leak class
+MapFragments(goblin::flag::GravesitePlain, { MapTile(61,11,10) }),
+MapFragments(goblin::flag::RauhRuins, { MapTile(61,11,11) }),
+MapFragments(goblin::flag::ScaduAltus, { MapTile(61,12,11), MapTile(61,12,12) }),
+MapFragments(goblin::flag::SouthernShore, { MapTile(61,11,8), MapTile(61,11,9), MapTile(61,12,9), MapTile(61,13,9) }),
+MapFragments(goblin::flag::Abyss, { MapTile(61,12,10), MapTile(61,13,10) }),
+// --- Legacy dungeons: overworld-fragment gating (Bug 1, dungeon class) ---
+// Dungeon markers (catacombs/caves/tunnels/towers) appear on the overworld map at
+// the dungeon's entrance, so they must gate on that overworld region's fragment.
+// These tiles were absent from the table -> GetMapFlagFromTile returned 0 ->
+// always visible regardless of map-fragment discovery. Mapped via
+// WorldMapLegacyConvParam (dungeon area -> overworld tile) -> the overworld tile's
+// fragment (exact, or nearest covered tile for a few). m31_90 has no LegacyConv
+// entry but its loot uses area-11 (Leyndell) flags and is the Subterranean
+// Shunning-Grounds class, so it gates on Leyndell. NOTE: m45_00 is a DLC area with
+// no overworld mapping at all (absent from WorldMapLegacyConvParam) - its 3
+// stakes/summoning-pool markers are left out pending identification.
+MapFragments(goblin::flag::WestLimgrave, { MapTile(11,10), MapTile(33,0) }),
+MapFragments(goblin::flag::Snowfields, { MapTile(30,19), MapTile(32,11) }),
+MapFragments(goblin::flag::WeepingPeninsula, { MapTile(31,2) }),
+MapFragments(goblin::flag::Gelmir, { MapTile(31,8), MapTile(31,19) }),
+MapFragments(goblin::flag::Dragonbarrow, { MapTile(31,10), MapTile(34,15) }),
+MapFragments(goblin::flag::EastLiurnia, { MapTile(32,2) }),
+MapFragments(goblin::flag::MountaintopsEast, { MapTile(32,90) }),
+MapFragments(goblin::flag::EastLimgrave, { MapTile(34,10) }),
+MapFragments(goblin::flag::Leyndell, { MapTile(34,12), MapTile(31,90) }),
+MapFragments(goblin::flag::ScaduAltus, { MapTile(42,1) })
 };
