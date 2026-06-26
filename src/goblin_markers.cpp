@@ -179,7 +179,7 @@ static std::vector<uintptr_t> find_beacon_arrays()
     std::vector<uintptr_t> out;
     uintptr_t chain = marker_chain_slot(), vtable = marker_container_vtable();
     if (!chain || !vtable)
-    { spdlog::warn("Markers: chain/vtable AOB not resolved (game patch?)"); return out; }
+    { spdlog::warn("Markers: chain/container lookup not resolved (game update?)"); return out; }
 
     uintptr_t obj0 = 0, obj1 = 0, vtab = 0;
     if (!seh_copy(reinterpret_cast<const void *>(chain), &obj0, sizeof(obj0)) || !obj0)
@@ -190,8 +190,8 @@ static std::vector<uintptr_t> find_beacon_arrays()
     { spdlog::warn("Markers: container unreadable"); return out; }
     if (vtab != vtable)
     {
-        spdlog::warn("Markers: container vtable 0x{:X} != resolved 0x{:X} - chain stale "
-                     "(game patch?) or not ready; skipping", vtab, vtable);
+        spdlog::warn("Markers: container table 0x{:X} != resolved 0x{:X} - chain stale "
+                     "(game update?) or not ready; skipping", vtab, vtable);
         return out;
     }
     out.push_back(obj1 + MARKER_OFF_BEACONS);

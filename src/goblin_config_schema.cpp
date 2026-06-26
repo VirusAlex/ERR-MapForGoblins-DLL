@@ -66,6 +66,7 @@ namespace goblin::config
          hideDungeonIconsOnClear = false;
 
     std::string uiLanguage = "auto";
+    float fontScale = 1.0f;  // overlay text size multiplier (live io.FontGlobalScale)
     bool enableOverlay = true;
     bool enableMarkerDump = false;
     uint32_t markerDumpKey = 0x78; // VK_F9
@@ -236,6 +237,8 @@ namespace
              false, {
                 IniEntry{"ui_language", IniType::String, &cfg::uiLanguage, "auto",
                          "Overlay language. auto follows the Steam game language; unrecognized languages\nfall back to English.", false, nullptr},
+                IniEntry{"overlay_font_scale", IniType::Float, &cfg::fontScale, "1.0",
+                         "Overlay menu text size multiplier (1.0 = default). Raise on 4K / high-DPI\nscreens if the menu text is too small. Also adjustable live from the slider at\nthe top of the overlay's Settings tab.", false, nullptr},
                 B("enable_overlay", enableOverlay, "true",
                   "In-game config overlay (Dear ImGui) opened with the toggle key below.\nSet false if a DX-hook conflict (Steam overlay/RTSS/GeForce Experience) or a\nGPU driver issue makes the game unstable."),
                 B("enable_toggle_hotkey", enableToggleHotkey, "true",

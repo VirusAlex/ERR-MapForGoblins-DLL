@@ -144,6 +144,7 @@ namespace goblin
         // toggle key. Set false if a DX-hook conflict (Steam overlay/RTSS/etc.)
         // or a GPU driver issue makes the game unstable.
         extern std::string uiLanguage; // auto, english, schinese, tchinese
+        extern float fontScale;        // overlay text size multiplier (live io.FontGlobalScale)
         extern bool enableOverlay;
 
         // Marker dump (hotkey → dump beacon/stamp coords to file)

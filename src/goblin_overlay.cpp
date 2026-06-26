@@ -469,6 +469,8 @@ void draw_section(const goblin::IniSection &sec, bool &changed)
         {
             if (goblin::profile_is_vanilla() && e.err_only)
                 continue;
+            if (std::strcmp(e.key, "overlay_font_scale") == 0)
+                continue; // shown as a prominent slider at the top of the Settings tab
             ImGui::PushID(e.key);
             if (std::strcmp(e.key, "fast_map_open") == 0)
             {
@@ -586,6 +588,17 @@ void draw_settings_tab()
                                                    : ImVec4(1.0f, 0.84f, 0.38f, 1.0f));
     ImGui::TextWrapped("%s", tr::tr(tr::TextId::ReopenMapWarning, lang));
     ImGui::PopStyleColor();
+    ImGui::Separator();
+
+    // Overlay text size (QoL for 4K / high-DPI). Scales all overlay text live via
+    // io.FontGlobalScale (applied each frame in render()); persisted to the
+    // overlay_font_scale ini key by the auto-save on close. Rendered here (not via
+    // draw_section) so it is easy to find; draw_section skips the schema entry.
+    ImGui::SetNextItemWidth(ImGui::GetFontSize() * 9.0f);
+    ImGui::SliderFloat("Overlay text size", &goblin::config::fontScale, 0.8f, 3.0f,
+                       "%.2fx", ImGuiSliderFlags_AlwaysClamp);
+    if (ImGui::IsItemHovered(ImGuiHoveredFlags_ForTooltip))
+        ImGui::SetTooltip("Scales the overlay menu text. Raise it on 4K / high-DPI screens.");
     ImGui::Separator();
 
     bool changed = false;
@@ -1697,6 +1710,10 @@ void render(IDXGISwapChain3 *sc)
     }
     process_rebind(); // commit/cancel an in-progress hotkey rebind
     ImGui::NewFrame();
+    // Live overlay text scaling (QoL for 4K / high-DPI). FontGlobalScale multiplies
+    // the baked font size each frame, so the slider on the Settings tab applies
+    // instantly; the value is persisted via the overlay_font_scale ini key.
+    ImGui::GetIO().FontGlobalScale = goblin::config::fontScale;
     // Draw our software cursor only when focused AND the OS cursor isn't already
     // showing (the in-game map shows the OS cursor -> avoid a double cursor).
     ImGui::GetIO().MouseDrawCursor = focused && !g_os_cursor;

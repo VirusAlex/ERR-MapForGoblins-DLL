@@ -467,7 +467,7 @@ void goblin::setup_messages()
         .aob = "48 8B 3D ?? ?? ?? ?? 44 0F B6 30 48 85 FF 75",
         .relative_offsets = {{3, 7}},
     });
-    if (!msg_repository_address) { spdlog::error("MsgRepositoryImp AOB not found"); return; }
+    if (!msg_repository_address) { spdlog::error("MsgRepositoryImp address not found"); return; }
 
     while (!(msg_repository = *msg_repository_address))
         std::this_thread::sleep_for(std::chrono::milliseconds(100));

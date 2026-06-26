@@ -61,6 +61,16 @@ namespace
         case IniType::String:
             *static_cast<std::string *>(e.target) = goblin::i18n::normalize_language_config(v);
             break;
+        case IniType::Float:
+        {
+            float val;
+            try { val = std::stof(v); }
+            catch (...) { val = 1.0f; }
+            if (val < 0.5f) val = 0.5f;
+            if (val > 3.0f) val = 3.0f;
+            *static_cast<float *>(e.target) = val;
+            break;
+        }
         }
     }
 
@@ -225,6 +235,13 @@ void goblin::save_config(const std::filesystem::path &ini_path)
         case IniType::String:
             out = goblin::i18n::normalize_language_config(*static_cast<std::string *>(e.target));
             return true;
+        case IniType::Float:
+        {
+            char buf[16];
+            std::snprintf(buf, sizeof buf, "%.2f", *static_cast<float *>(e.target));
+            out = buf;
+            return true;
+        }
         default:
             return false;
         }

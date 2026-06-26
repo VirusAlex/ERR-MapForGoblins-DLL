@@ -70,6 +70,47 @@ if _incan_path.exists():
     with open(_incan_path) as _f:
         INCANTATION_IDS = set(json.load(_f))
 
+# Key-item IDs (goodsType 1 = key item, 3 = remembrance, 12 = info/note/message)
+# - the "Quest - Progression" catch-all set, derived per-profile by
+# extract_goods_categories. The catch-all is the LAST loot category, so any
+# more-specific category (cookbooks, stonesword keys, bell bearings, whetblades,
+# crystal tears, prayerbooks, mp-fingers...) claims its items first
+# (first-match-wins in the main loop) and Progression mops up the remaining key
+# items + notes. Map fragments are excluded by name (World - Maps marks them).
+_keyitem_path = DATA_DIR / 'goods_keyitem_ids.json'
+KEYITEM_IDS = set()
+if _keyitem_path.exists():
+    with open(_keyitem_path) as _f:
+        KEYITEM_IDS = set(json.load(_f))
+
+# Crystal Tear IDs (goodsType 10) - param-driven so the category works regardless
+# of item-name language (the old English-name match missed e.g. Golden Age's
+# Chinese-named tears). Wondrous Physick flask (goodsType 9) is added explicitly.
+_tear_path = DATA_DIR / 'goods_crystal_tear_ids.json'
+CRYSTAL_TEAR_IDS = set()
+if _tear_path.exists():
+    with open(_tear_path) as _f:
+        CRYSTAL_TEAR_IDS = set(json.load(_f))
+
+# Ammo IDs - EquipParamWeapon rows with wepType 81/83/85/86 (Arrow/Great Arrow/Bolt/
+# Ballista Bolt), derived per-profile. Splits Ammo from Armaments by weapon class
+# rather than an id range, so overhaul/SOTE weapons at high ids stay weapons.
+_ammo_path = DATA_DIR / 'weapon_ammo_ids.json'
+AMMO_IDS = set()
+if _ammo_path.exists():
+    with open(_ammo_path) as _f:
+        AMMO_IDS = set(json.load(_f))
+
+# Quest items the goodsType signal can't reach: these share goodsType 0 with
+# ordinary consumables (so they are not in KEYITEM_IDS) but are one-off quest
+# items that belong in Progression. 8867 (Three Fingers' Scrawls) exists only on
+# some profiles - harmless where the id is absent. 2170 = Potent Dreambrew (ERR
+# quest item that opens an alternate DLC entrance). 1000000 = Codex of the
+# All-Knowing (ERR unique static item; goods id collides with the Dagger weapon id
+# but category==1 disambiguates). 2920 = Rune of Grace (Reborn unique item; sits in
+# the golden-rune sortGroup 100 but is a one-off, not a stackable rune).
+PROGRESSION_EXTRA = {2002120, 2002130, 2190, 8867, 2170, 1000000, 2920}
+
 # True if a lot contains a "<X> Merchant Bell Bearing" - the bell bearings tied to
 # killable merchants. Name-based, because some of these come from a treasure/map
 # lot rather than the enemy drop (e.g. Convergence's Nomadic Merchant's Bell
@@ -105,14 +146,17 @@ LOOT_CATEGORIES = {
         'startId': 3100000,
     },
     'Key - Crystal Tears': {
-        # Crystal Tears, Cracked Tears, Hardtears, Bubbletears, Hidden Tears
+        # Crystal Tears, Cracked Tears, Hardtears, Bubbletears, Hidden Tears. Plus the
+        # Convergence "Physick Remnant" key_items, which are crafted into Flask of Wondrous
+        # Physick crystal tears (the crystal-tear source on that overhaul, analogous to how
+        # Talisman Remnants are the talisman source) - mutually exclusive with the talisman
+        # remnant match (that one excludes 'physick').
         'filter': lambda items: any(
-            i['category'] == 1 and ('crystal tear' in i.get('name', '').lower()
-                or 'cracked tear' in i.get('name', '').lower()
-                or 'hardtear' in i.get('name', '').lower()
-                or 'bubbletear' in i.get('name', '').lower()
-                or 'hidden tear' in i.get('name', '').lower()
-                or 'oil-soaked tear' in i.get('name', '').lower())
+            i['category'] == 1 and (i['id'] in CRYSTAL_TEAR_IDS   # goodsType 10 (language-independent)
+                or i['id'] in (250, 251, 2011010)  # Flask of Wondrous Physick (goodsType 9), Crimsonburst Dried Tear
+                or (i.get('broad_category') == 'key_item'
+                    and 'remnant' in i.get('name', '').lower()
+                    and 'physick' in i.get('name', '').lower()))
             for i in items
         ),
         'iconId': 392,
@@ -137,8 +181,16 @@ LOOT_CATEGORIES = {
         'startId': 3500000,
     },
     'Key - Pots n Perfumes': {
+        # Reusable crafting vessels by id (Ritual Pot 2009500, Perfume Bottle
+        # 9500/9501/9510) PLUS the throwable pots (sortGroupId 30: Fire/Rancor/Rot/
+        # Poison Pot...) and aromatics/perfumes (sortGroupId 40: Bloodboil/Uplifting
+        # Aromatic, Spraymist). 30/40 are standard goodsType-0 sort groups our filters
+        # never covered - in vanilla these items are crafted-only (not world-placed)
+        # so it never showed; overhauls (Convergence) place them as treasure, exposing
+        # the gap. sortGroup-based so it stays correct per-profile.
         'filter': lambda items: any(
-            i['category'] == 1 and i['id'] in (9500, 9501, 9510, 2009500)
+            i['category'] == 1 and (i['id'] in (9500, 9501, 9510, 2009500)
+                or GOODS_SORT_GROUPS.get(i['id'], -1) in (30, 40))
             for i in items
         ),
         'iconId': 425,
@@ -178,41 +230,6 @@ LOOT_CATEGORIES = {
         'filter': lambda items: any(i['id'] == 8193 and i['category'] == 1 for i in items),
         'iconId': 430,
         'startId': 2100000,
-    },
-    'Quest - Progression': {
-        # Key quest items: medallions, keys, quest-specific goods
-        'filter': lambda items: any(i['id'] in (
-            8174, 8109,  # Academy Glintstone Key (+ variant)
-            8105, 8106,  # Dectus Medallion (Left/Right)
-            8176, 8177,  # Haligtree Secret Medallion (Left/Right)
-            8159,   # Fingerslayer Blade
-            1240,   # Shabriri Grape
-            8121,   # Dark Moon Ring
-            8010,   # Rusty Key
-            8162,   # Gold Sewing Needle
-            8129,   # Serpent's Amnion
-            8191,   # Cursemark of Death
-            8166,   # The Stormhawk King
-            8198,   # Meeting Place Map
-            8171,   # Chrysalids' Memento
-            8142,   # Amber Starlight
-            2008034,  # Message from Leda
-            2002120,  # Iris of Grace
-            2002130,  # Iris of Occultation
-            2190,     # Miquella's Needle
-            8196,     # Unalloyed Gold Needle
-            8714,     # Note: Miquella's Needle
-            8716,     # Note: The Lord of Frenzied Flame
-            8183,     # Mending Rune of the Death-Prince
-            8867,     # Three Fingers' Scrawls
-            2008004,  # Well Depths Key
-            2008005,  # Gaol Upper Level Key
-            2008006,  # Gaol Lower Level Key
-            2008013,  # Storeroom Key
-            2008023,  # Keep Wall Key
-        ) and i['category'] == 1 for i in items),
-        'iconId': 376,
-        'startId': 2200000,
     },
     # (Rada Fruit folded into Loot - Crafting Materials: it's a vanilla DLC crafting
     # ingredient, goodsType==2, so it matches the crafting filter like every other.)
@@ -262,8 +279,13 @@ LOOT_CATEGORIES = {
         'startId': 3950000,
     },
     'Equipment - Armaments': {
-        # Weapons (cat=2), excluding ammo (id>=50M, already in Loot - Ammo)
-        'filter': lambda items: any(i['category'] == 2 and i['id'] < 50000000 for i in items),
+        # Weapons (cat=2) that are not ammo. Ammo is identified by weapon class
+        # (AMMO_IDS = wepType 81/83/85/86) instead of an id range - the old
+        # "id >= 50M = ammo" rule wrongly swept the SOTE/overhaul weapon block
+        # (Smithscript Dagger/Cirque/Rosary, Backhand Blade, Great Katana... wepType
+        # 88-95, ids >= 60M) into Ammo and hid them from the map.
+        'filter': lambda items: any(
+            i['category'] == 2 and i['id'] not in AMMO_IDS for i in items),
         'iconId': 380,
         'startId': 4000000,
     },
@@ -288,10 +310,13 @@ LOOT_CATEGORIES = {
         # time (language-independent), and base/non-Convergence profiles ship zero "Remnant" goods,
         # so this never mis-fires there. The key_item guard keeps a stray non-key "...Remnant"
         # consumable, if one ever appears, out of the talisman bucket.
+        # NOTE: excludes "Physick Remnant"s - those craft Flask of Wondrous Physick crystal tears,
+        # not talismans (per the Convergence docs), so they are routed to Key - Crystal Tears.
         'filter': lambda items: any(
             i['category'] == 4
             or (i['category'] == 1 and i.get('broad_category') == 'key_item'
-                and 'remnant' in (i.get('name') or '').lower())
+                and 'remnant' in (i.get('name') or '').lower()
+                and 'physick' not in (i.get('name') or '').lower())
             for i in items),
         'iconId': 382,
         'startId': 4200000,
@@ -373,8 +398,11 @@ LOOT_CATEGORIES = {
         'startId': 5150000,
     },
     'Loot - Ammo': {
-        # Ammo = weapon category (cat=2) with IDs 50000000+ (arrows/bolts/greatbolts)
-        'filter': lambda items: any(i['category'] == 2 and i['id'] >= 50000000 for i in items),
+        # Ammo = cat-2 weapons of arrow/bolt class (AMMO_IDS = wepType 81/83/85/86,
+        # from extract_goods_categories). Class-based, not an id range, so overhaul
+        # weapons at high ids are not mistaken for ammo.
+        'filter': lambda items: any(
+            i['category'] == 2 and i['id'] in AMMO_IDS for i in items),
         'iconId': 388,
         'startId': 5200000,
     },
@@ -388,20 +416,27 @@ LOOT_CATEGORIES = {
         'startId': 5300000,
     },
     'Loot - Smithing Stones': {
-        # Smithing Stone [7]-[8], Somber [7]-[9], Scadushards
+        # Smithing Stone [7]-[8], Somber [7]-[9], Scadushards, + SOTE Shadow/Somber
+        # stones (goodsType 14; placed as treasure on overhauls like Convergence,
+        # crafted-only/unplaced in vanilla so harmless there). Primordials -> Rare.
         'filter': lambda items: any(i['id'] in (
             10106, 10107,          # Smithing Stone [7]-[8]
             10166, 10167, 10200,   # Somber [7]-[9]
             10150, 10151,          # Smithing Scadushard, Somber Smithing Scadushard
+            10110, 10111,          # Shadow Smithing Stone, Large Shadow Smithing Stone
+            10170, 10171, 10172, 10173,  # Somber Shadow Stone: base/Large/Great/Colossal
         ) and i['category'] == 1 for i in items),
         'iconId': 378,
         'startId': 5350000,
     },
     'Loot - Smithing Stones (Rare)': {
-        # Ancient Dragon Smithing Stone, Somber Ancient Dragon Smithing Stone
+        # Ancient Dragon Smithing Stone, Somber Ancient Dragon Smithing Stone, + the
+        # top-tier SOTE Primordial Shadow/Somber stones (analogous to Ancient Dragon).
         'filter': lambda items: any(i['id'] in (
             10140,  # Ancient Dragon Smithing Stone
             10168,  # Somber Ancient Dragon Smithing Stone
+            10114,  # Primordial Shadow Smithing Stone
+            10174,  # Primordial Somber Shadow Stone
         ) and i['category'] == 1 for i in items),
         'iconId': 434,
         'startId': 5380000,
@@ -460,10 +495,13 @@ LOOT_CATEGORIES = {
     'Loot - Consumables': {
         # Healing/buff consumables: boluses, cured meats, dried livers (sortGroup=20),
         # plus ERR-specific consumables (sortGroup=61 - Lamp Oil etc).
-        # Prattling Pates are excluded (they have their own category).
+        # Prattling Pates are excluded (they have their own category). CONSUMABLE_EXTRA
+        # holds buff consumables an overhaul filed under an off sortGroup (Golden Age's
+        # "Cold Blood" series sits in sortGroup 100 = golden runes, so by-id here).
         'filter': lambda items: any(
             i['category'] == 1
-            and GOODS_SORT_GROUPS.get(i['id'], -1) in (20, 61)
+            and (GOODS_SORT_GROUPS.get(i['id'], -1) in (20, 61)
+                 or i['id'] in (561518, 561519, 561520, 561521))  # Golden Age 冷血 [9]-[12]
             and i['id'] not in PATE_IDS
             for i in items
         ),
@@ -524,10 +562,13 @@ LOOT_CATEGORIES = {
         'startId': 5750000,
     },
     'Loot - Reusables': {
-        # Multi-use tools (sortGroupId=60, goodsType=0, excluding AoW and Great Runes)
+        # Multi-use tools (sortGroupId 60; goodsType=0, excluding AoW and Great Runes).
+        # ERR relocates its reusable tools (Rock Heart, Priestess Heart, Lamenter's
+        # Mask) to sortGroupId 81 - a group vanilla leaves empty - so 81 is included
+        # too (safe: vanilla/other profiles have nothing there).
         'filter': lambda items: any(
             i['category'] == 1
-            and GOODS_SORT_GROUPS.get(i['id'], -1) == 60
+            and GOODS_SORT_GROUPS.get(i['id'], -1) in (60, 81)
             and i['id'] < 4000000  # exclude Ashes of War goods
             and i['id'] not in (2008000,)  # exclude Miquella's Great Rune
             for i in items
@@ -536,18 +577,23 @@ LOOT_CATEGORIES = {
         'startId': 5800000,
     },
     'Loot - MP-Fingers': {
-        # Multiplayer items: Furled Fingers, Recusant Finger, etc.
-        'filter': lambda items: any(i['id'] in (
+        # Multiplayer items: Furled Fingers, Recusant Finger, etc. Furlcalling Finger
+        # Remedy is matched by NAME, not id: its id is 150 in vanilla but 150 = Rune
+        # Arc in ERR (a different item with a different name), so an id match would
+        # misroute. Must be claimed here BEFORE the goodsType-1 Progression catch-all.
+        'filter': lambda items: any((i['id'] in (
             100,   # Tarnished's Furled Finger
             101,   # Duelist's Furled Finger
             103,   # Finger Severer
             104,   # Host's Injured Finger
             105,   # Redeemer's Plated Finger
             106,   # Tarnished's Wizened Finger
+            108,   # Taunter's Tongue
             110,   # Small Red Effigy
             111,   # Festering Bloody Finger
             112,   # Recusant Finger
-        ) and i['category'] == 1 for i in items),
+        ) or 'furlcalling finger remedy' in (i.get('name') or '').lower())
+            and i['category'] == 1 for i in items),
         'iconId': 414,
         'startId': 5850000,
     },
@@ -558,6 +604,26 @@ LOOT_CATEGORIES = {
         ) and i['category'] == 1 for i in items),
         'iconId': 415,
         'startId': 5700000,
+    },
+    # MUST stay LAST: catch-all for key/quest items. Matches every goods row with
+    # goodsType 1 (key item), 3 (remembrance) or 12 (info/note/message) - KEYITEM_IDS,
+    # derived per-profile - that no more-specific category above already claimed
+    # (first-match-wins in main()). Auto-includes medallions, needles, tailoring
+    # tools, letters, prosthetics, eyes, cross-messages, Mirage Riddle, Whetstone
+    # Knife, etc., and adapts to each profile's own key items. Excludes 'Map:'
+    # fragments (the World - Maps generator marks those - skipping them here avoids
+    # a double marker). PROGRESSION_EXTRA adds the goodsType-0 quest items the type
+    # signal can't reach (Iris of Grace / Occultation, Miquella's Needle).
+    'Quest - Progression': {
+        'filter': lambda items: any(
+            i['category'] == 1
+            and not (i.get('name') or '').startswith('Map:')
+            and (i['id'] in KEYITEM_IDS or i['id'] in PROGRESSION_EXTRA
+                 or GOODS_SORT_GROUPS.get(i['id'], -1) == 90)  # sortGroup 90 = quest consumables
+            for i in items
+        ),
+        'iconId': 376,
+        'startId': 2200000,
     },
 }
 
@@ -897,6 +963,14 @@ def main():
     # would only ever produce empty files there. Skip them in the vanilla profile.
     ERR_ONLY_CATS = {'Reforged - Items', 'Reforged - Fortunes', 'Reforged - Sealed Curios'}
 
+    # First-match-wins: each record is claimed by the FIRST category (in dict
+    # order) whose filter matches it, so a later catch-all (Quest - Progression)
+    # only picks up what no specific category above took. The category filters are
+    # otherwise disjoint (verified: 0 records match >1 specific filter), so this
+    # changes nothing for them - it only makes the goodsType-1/12 Progression
+    # catch-all skip the key items already routed to cookbooks/bell-bearings/etc.
+    _assigned = set()  # id(record) of records already claimed by an earlier category
+
     for cat_name, cat_cfg in LOOT_CATEGORIES.items():
         if config.PROFILE != 'err' and cat_name in ERR_ONLY_CATS:
             print(f'\n=== {cat_name} === (skipped: ERR-only)')
@@ -905,9 +979,11 @@ def main():
         icon_id = cat_cfg['iconId']
         start_id = cat_cfg['startId']
 
-        # Filter matching records
+        # Filter matching records (skip ones an earlier category already claimed)
         source_filter = cat_cfg.get('source_filter')
-        matched = [r for r in db if filter_fn(r['items']) and (not source_filter or source_filter(r))]
+        matched = [r for r in db if id(r) not in _assigned
+                   and filter_fn(r['items']) and (not source_filter or source_filter(r))]
+        _assigned.update(id(r) for r in matched)
         print(f'\n=== {cat_name} ===')
         print(f'  Matched: {len(matched)}')
 

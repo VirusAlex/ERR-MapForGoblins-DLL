@@ -376,7 +376,7 @@ static std::map<uint32_t, uintptr_t> discover_kindling_conds()
                      found.size(), dt, regions_scanned, hits_n);
     else
         spdlog::info("[KINDLING] no kindling conds found ({} ms, {} regions, {} hits, {} near-band) - "
-                     "near==0 => cond region not covered by scan filter; near>0 => eid range/offset off; "
+                     "near==0 => cond region not covered by search range; near>0 => eid range/offset off; "
                      "else not in Misty Forest yet",
                      dt, regions_scanned, hits_n, near_count);
     return found;

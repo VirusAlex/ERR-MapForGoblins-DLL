@@ -8,7 +8,7 @@
   <a href="LICENSE.txt"><img src="https://img.shields.io/badge/license-MIT--style-blue" alt="License"></a>
 </p>
 
-A DLL mod for Elden Ring that adds thousands of icons to the world map: weapons, armor, spells, quest items, bosses, NPCs, gathering nodes, etc. Eight builds, each generated from that game/mod's own data: [ERR](https://www.nexusmods.com/eldenring/mods/541) (~9000 icons, including ERR-specific content like Rune Pieces), the vanilla game + Shadow of the Erdtree (~6700 icons), [The Convergence](https://www.nexusmods.com/eldenring/mods/3419) 2.x and 3.x (~7200 each; separate builds because 2.x runs on ModEngine2 and 3.x on ModEngine3), [ERTE](https://www.nexusmods.com/eldenring/mods/2747) (~7600), Elden Ring Golden Age (~6700), ELDEN VINS (~7100), and Elden Ring Reborn (~6900).
+A DLL mod for Elden Ring that adds thousands of icons to the world map: weapons, armor, spells, quest items, bosses, NPCs, gathering nodes, etc. Eight builds, each generated from that game/mod's own data: [ERR](https://www.nexusmods.com/eldenring/mods/541) (~9000 icons, including ERR-specific content like Rune Pieces), the vanilla game + Shadow of the Erdtree (~6700 icons), [The Convergence](https://www.nexusmods.com/eldenring/mods/3419) 2.x and 3.x (~7200 each; separate builds because 2.x runs on ModEngine2 and 3.x on ModEngine3), [ERTE](https://www.nexusmods.com/eldenring/mods/2747) (~7600), [Elden Ring Golden Age](https://soulsmods.com/mods/cmkst0a23000009jlzm0f1jvs/elden-ring-golden-age-overhaul-mod) (~6700), [ELDEN VINS](https://www.nexusmods.com/eldenring/mods/4709) (~7100), and [Elden Ring Reborn](https://www.nexusmods.com/eldenring/mods/2202) (~6900).
 
 **Download:** [Nexus Mods](https://www.nexusmods.com/eldenring/mods/10062) · **Community:** [Elden Ring - DLL Mods Discord](https://discord.gg/JvTMwPCygB)
 
@@ -149,7 +149,9 @@ This project builds on the work of many people and projects:
 - **Harmonixer** - [Map for Goblins](https://www.nexusmods.com/eldenring/mods/3091), the original Elden Ring map icons mod that started it all
 - **Convergence Team** - [The Convergence](https://www.nexusmods.com/eldenring/mods/3419), the overhaul the Convergence 2.x and 3.x builds target
 - **ERTE author** - [ERTE](https://www.nexusmods.com/eldenring/mods/2747), the overhaul the ERTE build targets
-- **The Golden Age, ELDEN VINS, and Elden Ring Reborn authors** - the overhauls those builds target
+- **Elden Ring Golden Age** team - [Elden Ring Golden Age](https://soulsmods.com/mods/cmkst0a23000009jlzm0f1jvs/elden-ring-golden-age-overhaul-mod), the overhaul the Golden Age build targets
+- **mayk** - [ELDEN VINS](https://www.nexusmods.com/eldenring/mods/4709), the overhaul the ELDEN VINS build targets
+- **H A L C Y O N** - [Elden Ring Reborn](https://www.nexusmods.com/eldenring/mods/2202), the overhaul the Reborn build targets
 
 ### Libraries & Tools
 

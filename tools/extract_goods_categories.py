@@ -6,7 +6,16 @@ Outputs (into config.DATA_DIR, profile-aware):
   - goods_crafting_ids.json      [ids] goodsType==2  (crafting materials)
   - goods_sorcery_ids.json       [ids] goodsType in (5, 17)   (sorceries)
   - goods_incantation_ids.json   [ids] goodsType in (16, 18)  (incantations)
-  - goods_spirit_ash_ids.json    [ids] goodsType==8  (spirit ash summons)
+  - goods_spirit_ash_ids.json    [ids] goodsType in (7, 8)  (spirit ash summons - BOTH types;
+                                 vanilla/overhauls keep enemy-type ashes like "Giant Rat Ashes"
+                                 at goodsType 7, which were previously missed. ERR renumbers ashes
+                                 into 300000-399999 and matches them by range instead, unaffected.)
+  - goods_keyitem_ids.json       [ids] goodsType in (1, 12)  (key items + info/notes;
+                                 the "Quest - Progression" catch-all set. goodsType 1 = key item
+                                 (medallions, needles, tools, letters, rings, prosthetics, eyes...),
+                                 12 = info/note/cross-message. The catch-all skips items already
+                                 claimed by a more-specific category (first-match-wins) and the
+                                 'Map:' fragments handled by the World - Maps generator.)
 
 Consumed by generate_loot_massedit.py category filters. Rules were derived by
 matching the previously-committed tables against EquipParamGoods: ash/craft
@@ -62,7 +71,7 @@ def main():
         sys.exit('EquipParamGoods not found in regulation')
 
     sort_groups = {}
-    by_type = {2: [], 5: [], 8: [], 16: [], 17: [], 18: []}
+    by_type = {1: [], 2: [], 3: [], 5: [], 7: [], 8: [], 10: [], 12: [], 16: [], 17: [], 18: []}
     for r in goods.Rows:
         rid = int(r.ID)
         gtype = sortg = None
@@ -77,6 +86,27 @@ def main():
         if gtype in by_type:
             by_type[gtype].append(rid)
 
+    # Ammo ids from EquipParamWeapon.wepType (81=Arrow, 83=Great Arrow, 85=Bolt,
+    # 86=Ballista Bolt). Lets the Ammo-vs-Armaments split be by weapon class instead
+    # of a brittle id range: overhaul/SOTE weapons (Smithscript Dagger/Cirque/Rosary,
+    # Backhand Blade, Great Katana... wepType 88-95) sit at high ids that an id range
+    # would mistake for ammo. NB wepType 87 = Torch, a weapon, so it is NOT ammo.
+    AMMO_WEPTYPES = {81, 83, 85, 86}
+    ammo_ids = []
+    for f in bnd.Files:
+        if 'EquipParamWeapon' in str(f.Name):
+            tmpw = os.path.join(tempfile.gettempdir(), str(os.getpid()) + '_weapon.param')
+            SysFile.WriteAllBytes(tmpw, f.Bytes.ToArray())
+            wp = _pr.Invoke(None, Array[Object]([tmpw]))
+            wp.ApplyParamdef(defs[str(wp.ParamType)])
+            for r in wp.Rows:
+                for c in r.Cells:
+                    if str(c.Def.InternalName) == 'wepType':
+                        if int(c.Value) in AMMO_WEPTYPES:
+                            ammo_ids.append(int(r.ID))
+                        break
+            break
+
     def dump(name, obj):
         with open(out / name, 'w', encoding='utf-8') as f:
             json.dump(obj, f)
@@ -86,7 +116,10 @@ def main():
     dump('goods_crafting_ids.json', sorted(by_type[2]))
     dump('goods_sorcery_ids.json', sorted(by_type[5] + by_type[17]))
     dump('goods_incantation_ids.json', sorted(by_type[16] + by_type[18]))
-    dump('goods_spirit_ash_ids.json', sorted(by_type[8]))
+    dump('goods_spirit_ash_ids.json', sorted(by_type[7] + by_type[8]))
+    dump('goods_keyitem_ids.json', sorted(by_type[1] + by_type[3] + by_type[12]))
+    dump('goods_crystal_tear_ids.json', sorted(by_type[10]))
+    dump('weapon_ammo_ids.json', sorted(set(ammo_ids)))
 
 
 if __name__ == '__main__':
