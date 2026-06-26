@@ -852,11 +852,26 @@ def main():
     print(f'  {len(db)} with event flags (one-time pickups)')
 
     # For enemy drops: exclude shared flags (generic drops from common enemies)
-    # Only keep enemy entries whose flag is unique (used by 1 entry) or from EMEVD/treasure
+    # Only keep enemy entries whose flag is unique (used by 1 entry) or from EMEVD/treasure.
+    # EXCEPTION: a GUARANTEED SET from a UNIQUE enemy. "Guaranteed" = the lot has no
+    # "nothing" slot, so the item always drops (e.g. vanilla Battlemage Set lots
+    # 703-706 sharing getItemFlagId 1040557700). "Unique" = all records on that flag
+    # sit at ONE world position (one enemy) - this keeps unique field enemies like the
+    # Battlemage but drops quest NPCs (Patches, the Twin Maiden brother, Igon...) whose
+    # one set shares a flag across many spawn spots and would otherwise spam duplicate
+    # icons. The shared flag is the lot getItemFlagId, set when the set is obtained, so
+    # all pieces' markers disappear together correctly. Probabilistic drops (with a
+    # nothing slot) have no flag and were already removed by the event-flag filter above.
     from collections import Counter
     flag_counts = Counter(r.get('eventFlag', 0) for r in db)
+    flag_positions = {}
+    for r in db:
+        flag_positions.setdefault(r.get('eventFlag', 0), set()).add(
+            (r.get('map'), round(r.get('x', 0)), round(r.get('z', 0))))
     before = len(db)
-    db = [r for r in db if r.get('source') != 'enemy' or flag_counts[r['eventFlag']] == 1]
+    db = [r for r in db if r.get('source') != 'enemy'
+          or flag_counts[r['eventFlag']] == 1
+          or (r.get('guaranteed') and len(flag_positions[r.get('eventFlag', 0)]) == 1)]
     print(f'  {len(db)} after filtering shared enemy flags (-{before - len(db)})')
 
     # ERR-only loot categories: their item IDs don't exist in vanilla, so they

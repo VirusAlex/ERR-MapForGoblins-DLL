@@ -46,6 +46,11 @@ echo %*| findstr /i /c:"--erte" >nul && set "MFG_PROFILE=erte"
 echo %*| findstr /i /c:"--goldenage" >nul && set "MFG_PROFILE=goldenage"
 echo %*| findstr /i /c:"--vins" >nul && set "MFG_PROFILE=vins"
 echo %*| findstr /i /c:"--reborn" >nul && set "MFG_PROFILE=reborn"
+REM Dashboard progress tracking: profile (err if blank) + mode, used by the :dash calls below.
+set "DASH_PROF=%MFG_PROFILE%"
+if "%DASH_PROF%"=="" set "DASH_PROF=err"
+set "DASH_MODE=%~1"
+if "%DASH_MODE%"=="" set "DASH_MODE=build"
 if "%MFG_PROFILE%"=="vanilla" set "BUILD_DIR=%SCRIPT_DIR%builds\build-vanilla"
 if "%MFG_PROFILE%"=="vanilla" set "GEN_SUBDIR=generated_vanilla"
 if "%MFG_PROFILE%"=="vanilla" set "PKG_PREFIX=Vanilla"
@@ -89,6 +94,9 @@ if "%MFG_PROFILE%"=="reborn" set "SNAP_DIR=%SCRIPT_DIR%releases\pre-release-rebo
 if "%MFG_PROFILE%"=="reborn" set "DISP_PROFILE=reborn"
 if "%MFG_PROFILE%"=="reborn" set "README_SRC=%SCRIPT_DIR%assets\README_reborn.txt"
 echo [PROFILE] %DISP_PROFILE%  build=%BUILD_DIR%  gen=%GEN_SUBDIR%
+REM --skip-shared: caller (tools\build_all.py orchestrator) already ran gen_shared
+REM once; skip it here so parallel per-profile builds don't race on src\generated_shared.
+echo %*| findstr /i /c:"--skip-shared" >nul && set "SKIP_SHARED=1"
 
 if /i "%~1"=="clean" goto :clean
 if /i "%~1"=="configure" goto :configure
@@ -100,8 +108,10 @@ REM Default: generate shared art, configure if needed, then build.
 REM gen_shared MUST run BEFORE configure: it (re)creates the src/generated_shared/*
 REM sources CMake lists (logo, map/overlay icons, baked i18n strings), so a fresh
 REM tree configures cleanly instead of failing on missing generated files.
-call :gen_shared
-if errorlevel 1 exit /b 1
+if not defined SKIP_SHARED (
+    call :gen_shared
+    if errorlevel 1 exit /b 1
+)
 
 call :ensure_configured
 if errorlevel 1 exit /b 1
@@ -209,6 +219,7 @@ call :parse_version
 if errorlevel 1 exit /b 1
 echo Snapshot version: %VER%
 
+call :dash pipeline
 REM Incremental data pipeline (hash-based cache). Pass --force-all to rebuild everything.
 echo Running incremental pipeline...
 py "%SCRIPT_DIR%tools\build_pipeline.py" %*
@@ -218,8 +229,10 @@ if errorlevel 1 (
 )
 
 REM gen_shared before configure: it creates the generated_shared/* CMake sources.
-call :gen_shared
-if errorlevel 1 exit /b 1
+if not defined SKIP_SHARED (
+    call :gen_shared
+    if errorlevel 1 exit /b 1
+)
 
 call :ensure_configured
 if errorlevel 1 exit /b 1
@@ -231,9 +244,11 @@ echo ----------------------------------------
 REM /t:MapForGoblins:Rebuild forces clean rebuild of just the DLL target,
 REM avoiding LTCG "copied from previous compilation" cache quirks that can
 REM embed stale code (e.g. the PROJECT_VERSION macro not propagating).
+call :dash compiling
 cmd /c "call "%VS_PATH%" -arch=amd64 >nul 2>&1 && cd /d "%BUILD_DIR%" && msbuild MapForGoblins.sln /p:Configuration=Release /p:Platform=x64 /t:MapForGoblins:Rebuild /v:minimal /m"
 if errorlevel 1 (
     echo [FAILED] Snapshot build
+    call :dash failed
     exit /b 1
 )
 
@@ -261,6 +276,7 @@ for /f "tokens=1,2,3 delims=." %%a in ("%VER%") do (
 )
 echo Release version: %VER% (%V_MAJOR%.%V_MINOR%.%V_PATCH%)
 
+call :dash pipeline
 REM Incremental data pipeline (hash-based cache). Pass --force-all to rebuild everything.
 echo Running incremental pipeline...
 py "%SCRIPT_DIR%tools\build_pipeline.py" %*
@@ -289,9 +305,11 @@ if errorlevel 1 (
 cd /d "%BUILD_DIR%"
 REM Rebuild forces a clean LTCG pass so the version macro and any recently
 REM changed sources are actually re-emitted into the DLL.
+call :dash compiling
 msbuild MapForGoblins.sln /p:Configuration=Release /p:Platform=x64 /t:MapForGoblins:Rebuild /v:minimal /m
 if errorlevel 1 (
     echo [FAILED] Release build
+    call :dash failed
     exit /b 1
 )
 cd /d "%SCRIPT_DIR%"
@@ -354,6 +372,13 @@ if defined MFG_PROFILE (
 ) else (
     "%INIGEN%" "%PKG_ROOT%\MapForGoblins.ini"
 )
+REM Mark this build DONE in the dashboard (records the final hash/size; best-effort).
+call :dash ok
+exit /b 0
+
+:dash
+REM %1 = build phase (pipeline|compiling|ok|failed). Live dashboard progress; never fails the build.
+py "%SCRIPT_DIR%tools\dashboard\record_build.py" --profile %DASH_PROF% --phase %~1 --mode %DASH_MODE% --version %VER% >nul 2>&1
 exit /b 0
 
 :parse_version

@@ -99,12 +99,12 @@ void modutils::hook(void *function, void *detour, void **trampoline)
     auto mh_status = MH_CreateHook(function, detour, trampoline);
     if (mh_status != MH_OK)
     {
-        throw runtime_error(string("Error creating hook: ") + MH_StatusToString(mh_status));
+        throw runtime_error(string("Error creating handler: ") + MH_StatusToString(mh_status));
     }
     mh_status = MH_QueueEnableHook(function);
     if (mh_status != MH_OK)
     {
-        throw runtime_error(string("Error queueing hook: ") + MH_StatusToString(mh_status));
+        throw runtime_error(string("Error queueing handler: ") + MH_StatusToString(mh_status));
     }
 }
 
@@ -113,6 +113,6 @@ void modutils::enable_hooks()
     auto mh_status = MH_ApplyQueued();
     if (mh_status != MH_OK)
     {
-        throw runtime_error(string("Error enabling hooks: ") + MH_StatusToString(mh_status));
+        throw runtime_error(string("Error enabling handlers: ") + MH_StatusToString(mh_status));
     }
 }

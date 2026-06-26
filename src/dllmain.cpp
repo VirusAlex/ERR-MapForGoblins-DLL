@@ -153,7 +153,7 @@ static void setup_mod()
     // the first map open (always true for a process-start loader).
     safe_init_step(&init_gfx_probe, "gfx_probe::setup");
     try { modutils::enable_hooks(); }  // apply just the gfx_probe hooks queued so far (MH_ApplyQueued)
-    catch (const std::exception &e) { spdlog::error("enable_hooks() (gfx) FAILED: {}", e.what()); }
+    catch (const std::exception &e) { spdlog::error("handler setup (gfx) FAILED: {}", e.what()); }
 
     // Blocks (polls internally) until the game's param tables are fully loaded. THIS is the real
     // "wait for game init" - no fixed startup sleep is used (a sleep would also push the hook-arming
@@ -176,7 +176,7 @@ static void setup_mod()
     }
     catch (const std::exception &e)
     {
-        spdlog::error("enable_hooks() FAILED: {}", e.what());
+        spdlog::error("handler setup FAILED: {}", e.what());
     }
 
     spdlog::info("Initialization complete");
@@ -191,7 +191,7 @@ static void setup_mod()
     if (goblin::config::enableToggleHotkey)
     {
         std::thread(goblin::toggle_hotkey_loop).detach();
-        spdlog::info("Injection toggle hotkey: VK 0x{:X}", goblin::config::toggleInjectionKey);
+        spdlog::info("Icon toggle hotkey: VK 0x{:X}", goblin::config::toggleInjectionKey);
     }
 
     // The watcher is the single owner of the WorldMapPointParam state - it

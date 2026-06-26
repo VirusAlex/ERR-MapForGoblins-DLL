@@ -1,6 +1,6 @@
 Map For Goblins - DLL Edition v%VERSION%
 For VANILLA Elden Ring (base game + Shadow of the Erdtree).
-~6700 loot & world-map icons. No regulation.bin changes.
+~6900 loot & world-map icons. No regulation.bin changes.
 Pure DLL - no gfx or other extra files.
 
 This package contains just two files:
@@ -8,7 +8,8 @@ This package contains just two files:
   MapForGoblins.ini   - settings (all icon categories ON by default;
                         edit to turn ones off)
 
-You need a mod loader - ModEngine3 (me3) OR ModEngine2. Pick ONE.
+You need a DLL loader - ModEngine3 (me3), ModEngine2, or Elden Mod
+Loader. Pick ONE. Since this is a plain DLL, any of them works.
 Keep MapForGoblins.dll and MapForGoblins.ini together in the same folder.
 
 ============================================================
@@ -45,6 +46,19 @@ ModEngine2
    register the DLL:
        external_dlls = [ "MapForGoblins.dll" ]
 4. Run launchmod_eldenring.bat to launch.
+
+============================================================
+Elden Mod Loader (EML)
+============================================================
+Elden Mod Loader (by techiew) is a simple DLL loader. Because this
+mod is a plain DLL, it loads through EML like any other DLL mod.
+1. Install Elden Mod Loader: extract its files into your Game folder
+   (next to eldenring.exe). It adds dinput8.dll, mod_loader_config.ini
+   and a "mods" folder.
+2. Copy MapForGoblins.dll and MapForGoblins.ini into that "mods"
+   folder. EML loads every DLL in there at startup.
+3. Launch the game offline (EML does not bypass EAC, so play offline -
+   e.g. start in offline mode from Steam).
 
 ============================================================
 Updating from an older version

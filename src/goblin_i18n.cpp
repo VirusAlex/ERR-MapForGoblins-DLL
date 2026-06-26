@@ -62,21 +62,6 @@ namespace
         return nullptr;
     }
 
-    std::string detect_steam_language()
-    {
-        HMODULE steam = GetModuleHandleA("steam_api64.dll");
-        if (!steam) return "";
-        typedef void *(*SteamApps_fn)();
-        typedef const char *(*GetLang_fn)(void *);
-        auto steamApps = reinterpret_cast<SteamApps_fn>(GetProcAddress(steam, "SteamAPI_SteamApps_v008"));
-        auto getLang = reinterpret_cast<GetLang_fn>(GetProcAddress(steam, "SteamAPI_ISteamApps_GetCurrentGameLanguage"));
-        if (!steamApps || !getLang) return "";
-        void *apps = steamApps();
-        if (!apps) return "";
-        const char *lang = getLang(apps);
-        return (lang && lang[0]) ? lang : "";
-    }
-
     Language cached_auto_language()
     {
         static std::mutex lock;
@@ -87,7 +72,7 @@ namespace
         if (cached)
             return language;
 
-        std::string steam_language = detect_steam_language();
+        std::string steam_language = goblin::i18n::steam_game_language();
         if (steam_language.empty())
             return Language::English;
 
@@ -95,6 +80,24 @@ namespace
         cached = true;
         return language;
     }
+}
+
+// Reads the game's configured language from the running Steam client (shared by
+// the UI language auto-detect and the enemy-name table lookup). Returns the raw
+// Steam language token (e.g. "russian", "schinese") or "" if unavailable.
+std::string goblin::i18n::steam_game_language()
+{
+    HMODULE steam = GetModuleHandleA("steam_api64.dll");
+    if (!steam) return "";
+    typedef void *(*SteamApps_fn)();
+    typedef const char *(*GetLang_fn)(void *);
+    auto steamApps = reinterpret_cast<SteamApps_fn>(GetProcAddress(steam, "SteamAPI_SteamApps_v008"));
+    auto getLang = reinterpret_cast<GetLang_fn>(GetProcAddress(steam, "SteamAPI_ISteamApps_GetCurrentGameLanguage"));
+    if (!steamApps || !getLang) return "";
+    void *apps = steamApps();
+    if (!apps) return "";
+    const char *lang = getLang(apps);
+    return (lang && lang[0]) ? lang : "";
 }
 
 Language goblin::i18n::language_from_steam(std::string_view steam_language)

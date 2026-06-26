@@ -631,10 +631,11 @@ void draw_debug_tab()
     namespace tr = goblin::i18n;
     const tr::Language lang = tr::current_language();
 
-    // ── Injection status (top of the tab) ──────────────────────────────────
-    // A live readout of every inject (hooks, world-map icons, bitmaps, remap,
-    // logo, overlay) with a reason for anything that failed. Players can
-    // screenshot or Copy this for a bug report so we can pinpoint the fault.
+    // ── Map icon status (top of the tab) ───────────────────────────────────
+    // A live readout of every load step (hooks, world-map icons, bitmaps, remap,
+    // logo, overlay, + a live heap-pointer sample) with a reason for anything that
+    // failed. Players can screenshot or Copy this for a bug report so we can
+    // pinpoint the fault (incl. pointer-range issues like the looks_heap bug).
     ImGui::TextColored(ImVec4(0.80f, 0.68f, 0.40f, 1.0f), "%s", tr::tr(tr::TextId::InjectStatusTitle, lang));
     ImGui::TextDisabled("%s", tr::tr(tr::TextId::InjectStatusHint, lang));
     {
@@ -1912,15 +1913,15 @@ void goblin::overlay::setup()
     modutils::hook(execcl, reinterpret_cast<void *>(&hkExecuteCommandLists),
                    reinterpret_cast<void **>(&oExecuteCommandLists));
 
-    // Raw-input hook: ER reads keyboard/mouse via raw input, so this is how we
-    // both capture the mouse for ImGui and block the game while the menu is open.
+    // Raw-input handler: ER reads keyboard/mouse via raw input, so this is how we
+    // route the mouse to ImGui and pause the game while the menu is open.
     if (HMODULE u32 = GetModuleHandleA("user32.dll"))
     {
         if (void *grid = reinterpret_cast<void *>(GetProcAddress(u32, "GetRawInputData")))
         {
             modutils::hook(grid, reinterpret_cast<void *>(&hkGetRawInputData),
                            reinterpret_cast<void **>(&oGetRawInputData));
-            spdlog::info("[OVERLAY] hooked GetRawInputData (input capture/block)");
+            spdlog::info("[OVERLAY] GetRawInputData handler ready (menu input routing)");
         }
         else
             spdlog::warn("[OVERLAY] GetRawInputData not found; menu input limited");
@@ -1944,10 +1945,10 @@ void goblin::overlay::setup()
         {
             modutils::hook(xfn, reinterpret_cast<void *>(&hkXInputGetState),
                            reinterpret_cast<void **>(&oXInputGetState));
-            spdlog::info("[OVERLAY] hooked XInputGetState (gamepad gate + nav)");
+            spdlog::info("[OVERLAY] XInputGetState handler ready (gamepad menu nav)");
         }
         else
             spdlog::warn("[OVERLAY] XInputGetState not found; gamepad not gated");
     }
-    spdlog::info("[OVERLAY] hooks queued (open/close: configured toggle key, default F10)");
+    spdlog::info("[OVERLAY] handlers queued (open/close: configured toggle key, default F10)");
 }

@@ -125,7 +125,14 @@ struct LotReader
     {
         auto &pref  = (lot_type == 2) ? enemy_lots : map_lots;
         auto &other = (lot_type == 2) ? map_lots : enemy_lots;
-        if (pref)  { try { return &(*pref)[lot_id]; }  catch (...) {} }
+        // Resolve ONLY in the param that matches lotType. Do NOT cross-fall-back
+        // to the other param when a row is missing: ItemLotParam_map and _enemy
+        // share one numeric id space, so a randomizer that renumbers/removes enemy
+        // lots makes a baked enemy id collide with an UNRELATED map lot (and vice
+        // versa) - that returned the wrong item and shuffled the live-loot icons.
+        // On a miss we return nullptr (marker keeps its baked icon). The other
+        // param is consulted only when the intended one failed to load entirely.
+        if (pref) { try { return &(*pref)[lot_id]; } catch (...) { return nullptr; } }
         if (other) { try { return &(*other)[lot_id]; } catch (...) {} }
         return nullptr;
     }
@@ -292,6 +299,8 @@ void goblin::inject_map_entries()
         lot_reader.init();
     std::unordered_map<uint64_t, uint16_t> live_icon_override;
     size_t live_recat = 0;
+    size_t ll_dbg_lot = 0, ll_dbg_rowfound = 0, ll_dbg_item_gt0 = 0, ll_dbg_item_le0 = 0,
+           ll_dbg_hit = 0, ll_dbg_sample = 0;
 
     // Filter: only include enabled categories (disabled ones are simply not injected)
     std::vector<InjectedEntry> entries;
@@ -346,8 +355,10 @@ void goblin::inject_map_entries()
         entries.push_back({0, e.row_id, &e.data, is_piece, is_kindling, e.category, lotId, lotType});
     }
 
-    spdlog::info("Injecting {} map entries ({} skipped by config, {} live-recategorized)",
+    spdlog::info("Adding {} map entries ({} skipped by config, {} live-recategorized)",
                  entries.size(), skipped_by_config, live_recat);
+    spdlog::info("[ll-diag] lot-backed processed={} rowFound={} item>0={} item<=0={} tableHit={} (lot_reader.ok={})",
+                 ll_dbg_lot, ll_dbg_rowfound, ll_dbg_item_gt0, ll_dbg_item_le0, ll_dbg_hit, lot_reader.ok());
 
     auto param_res_cap = find_world_map_point_param_res_cap();
     if (!param_res_cap)
@@ -395,7 +406,7 @@ void goblin::inject_map_entries()
     uint32_t new_entry_count = static_cast<uint32_t>(entries.size());
     uint32_t total_rows = orig_num_rows + new_entry_count;
 
-    spdlog::debug("Injecting {} entries ({} total)", new_entry_count, total_rows);
+    spdlog::debug("Adding {} entries ({} total)", new_entry_count, total_rows);
 
     constexpr size_t WRAPPER_HEADER = 0x10;
     constexpr size_t HEADER_SIZE = 0x40;
@@ -649,7 +660,7 @@ void goblin::inject_map_entries()
         }
     }
 
-    spdlog::info("Registered {} piece + {} kindling pointers ({} + {} hidden at inject)",
+    spdlog::info("Registered {} piece + {} kindling pointers ({} + {} hidden at load)",
                  registered_pieces, registered_kindling, hidden_pieces, hidden_kindling);
 
     spdlog::debug("Swapping param_file pointer: {:p} -> {:p}", (void *)old_param_file, (void *)new_param_file);
@@ -666,7 +677,7 @@ void goblin::inject_map_entries()
     file_size_ref = static_cast<int64_t>(param_file_size);
     g_param_injection_active = true;
 
-    spdlog::debug("Injection complete: {} total rows", total_rows);
+    spdlog::debug("Map entries complete: {} total rows", total_rows);
 }
 
 // ─── TutorialParam row injection ─────────────────────────────────────
@@ -902,7 +913,7 @@ void goblin::set_param_injection_active(bool active)
 {
     if (!g_file_ptr_ref)
     {
-        spdlog::warn("[TOGGLE] Param swap state not initialized - inject_map_entries() didn't run");
+        spdlog::warn("[TOGGLE] Param swap state not initialized - map entries not added yet");
         return;
     }
     if (active == g_param_injection_active)
@@ -1166,7 +1177,7 @@ static void show_tutorial_popup_trampoline(uintptr_t /*er*/, int tutorial_id)
         fn = reinterpret_cast<void (*)(int)>(modutils::scan<void>({
             .aob = "48 8B 05 ?? ?? ?? ?? 8B D1 48 85 C0 74 17 48 8B 88 80 00 00 00 48 85 C9",
         }));
-        spdlog::info("[TOAST] trampoline ShowTutorialPopup @ {:p}", (void *)fn);
+        spdlog::info("[TOAST] resolved ShowTutorialPopup @ {:p}", (void *)fn);
     }
     if (fn) fn(tutorial_id);
 }
@@ -1307,19 +1318,29 @@ void goblin::apply_flag_or_pairs()
 // 0 if that icon wasn't injected (e.g. vanilla icons 1-348 - left as-is, the base gfx provides them).
 void goblin::remap_injected_icons()
 {
-    int n = 0;
+    uint32_t iid_lo = 0, iid_hi = 0;
+    goblin::gfx_probe::injected_iid_range(iid_lo, iid_hi);
+    int n = 0, already = 0;
     for (auto &cr : g_category_rows)
     {
         if (!cr.p)
             continue;
-        uint32_t inj = goblin::gfx_probe::injected_iconid(static_cast<int>(cr.p->iconId));
+        uint32_t cur = static_cast<uint32_t>(cr.p->iconId);
+        // A marker already inside the injected frame-id range is being remapped a SECOND time:
+        // injected_iconid() reads it as a srcIconId and (when the ranges overlap) resolves to the
+        // wrong frame -> categories shuffle. Expected 0; nonzero = two DLL instances injected.
+        if (iid_lo && cur >= iid_lo && cur <= iid_hi) ++already;
+        uint32_t inj = goblin::gfx_probe::injected_iconid(static_cast<int>(cur));
         if (inj)
         {
             cr.p->iconId = static_cast<decltype(cr.p->iconId)>(inj);
             ++n;
         }
     }
-    spdlog::info("[icons] remapped {} markers to injected iconIds.", n);
+    if (already)
+        spdlog::warn("[icons] {} markers already in the new frame range [{},{}] (duplicate pass = "
+                     "possibly two copies active).", already, iid_lo, iid_hi);
+    spdlog::info("[icons] mapped {} markers to new frame ids.", n);
     goblin::diag::set_remap(n);
 }
 
