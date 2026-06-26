@@ -156,9 +156,7 @@ assets/menu/*.bak
 releases/CHANGELOG.txt
 CHANGELOG.txt
 
-# Dashboard local state DB (tools/dashboard/app.py) - regenerable from logs/builds.
-tools/dashboard/mfg.sqlite
-tools/dashboard/mfg.sqlite-wal
-tools/dashboard/mfg.sqlite-shm
-# Dashboard VT API key (secret) - never commit.
-tools/dashboard/.vt_key
+# Build/scan dashboard - kept local until it's finished (WIP tooling). Contains a
+# secret VT API key (.vt_key) and a regenerable local SQLite DB, so the whole dir
+# stays out of git for now. Re-track the source once the dashboard is done.
+tools/dashboard/

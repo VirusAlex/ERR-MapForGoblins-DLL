@@ -108,6 +108,8 @@ add_library( MapForGoblins SHARED
   ${GEN_DIR}/goblin_item_icons.cpp
   ${GEN_DIR}/goblin_enemy_names.hpp
   ${GEN_DIR}/goblin_enemy_names.cpp
+  ${GEN_DIR}/goblin_item_fallback.hpp
+  ${GEN_DIR}/goblin_item_fallback.cpp
   ${GEN_DIR}/goblin_location_alt.hpp
   ${GEN_DIR}/goblin_location_alt.cpp
   ${GEN_DIR}/goblin_geof_models.hpp

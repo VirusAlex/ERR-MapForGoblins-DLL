@@ -1,6 +1,7 @@
 #include "goblin_messages.hpp"
 #include "goblin_map_data.hpp"
 #include "goblin_enemy_names.hpp"
+#include "goblin_item_fallback.hpp"
 #include "goblin_location_alt.hpp"
 #include "goblin_config.hpp"
 #include "goblin_i18n.hpp"
@@ -844,6 +845,25 @@ void goblin::setup_messages()
         }
         if (composed)
             spdlog::info("Composed {} duplicate-zone labels into PlaceName", composed);
+    }
+
+    // English item-name fallback (LOWEST priority). For every loot item a marker can
+    // reference, add its English name at the same offset-encoded id. patch_fmg_in_memory
+    // dedups first-occurrence-wins, and the localized copies above were pushed first, so this
+    // only fills ids the player's language left empty - a marker whose item has no string in
+    // the active language then shows the English name instead of "?PlaceName?". Overhauls
+    // (e.g. The Convergence) ship many items localized only in English; this catches those.
+    {
+        size_t before = new_entries.size();
+        for (size_t i = 0; i < generated::ITEM_NAME_FALLBACK_COUNT; ++i)
+        {
+            const auto &fe = generated::ITEM_NAME_FALLBACK[i];
+            if (fe.name && fe.name[0])
+                new_entries.push_back({fe.id, fe.name});
+        }
+        if (new_entries.size() != before)
+            spdlog::info("Queued {} English item-name fallback entries (fill gaps only)",
+                         new_entries.size() - before);
     }
 
     if (patch_fmg_in_memory(fmg_ptr, &sub[19], new_entries, /*capture_valid_ids=*/true))
