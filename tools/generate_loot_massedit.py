@@ -822,6 +822,16 @@ def write_massedit(records, filepath, icon_id, start_id, lot_linkage=None):
         primary_item = rec['items'][0] if rec['items'] else {}
         item_id = primary_item.get('id', 0)
         item_cat = primary_item.get('category', 1)
+        # Band-width invariant: each family's textId band is 100M wide, so a real id
+        # must stay < 100M or it overflows into the NEXT family's band and the DLL
+        # would read the wrong source FMG (wrong item name). Real ids are far below
+        # this (weapons <=68M, goods <=~3M); fail the build loudly if a profile ever
+        # ships an id that breaks it, instead of mislabelling a marker in-game.
+        if item_id >= 100000000:
+            raise SystemExit(
+                f"[band-overflow] {cat_name}: item id {item_id} (cat {item_cat}) >= 100M "
+                f"overflows its textId band into the next family. The offset encoding "
+                f"requires real ids < 100M per family.")
         text_id1 = item_id + CATEGORY_OFFSETS.get(item_cat, 0) if item_id > 0 else 0
 
         # Determine display mask

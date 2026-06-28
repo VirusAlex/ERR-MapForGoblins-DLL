@@ -38,6 +38,17 @@ static void *fmg_allocation = nullptr;
 // Populated in patch_fmg_in_memory; read by sanitize_injected_textids().
 static std::unordered_set<int32_t> g_placename_valid_ids;
 
+// Collision-proof textId remap (see goblin_messages.hpp). Built in
+// setup_messages(): offset-ENCODED key -> FRESH PlaceName id allocated
+// contiguously above the runtime max. Empty until built -> identity.
+static std::unordered_map<int32_t, int32_t> g_textid_remap;
+
+int32_t goblin::remap_textid(int32_t encoded)
+{
+    auto it = g_textid_remap.find(encoded);
+    return it != g_textid_remap.end() ? it->second : encoded;
+}
+
 // Toggle state for PlaceName FMG (slot 19). Only this slot is a pointer
 // swap - other slots get surgical in-place additions we don't try to undo.
 static uint8_t **g_placename_slot_ptr = nullptr;
@@ -113,6 +124,20 @@ struct FmgGroup
     int32_t last_id;
     int32_t pad;
 };
+
+// Highest entry id in an FMG (walks its group table). -1 if empty/implausible.
+// Used to allocate our injected ids ABOVE the live max so they never collide.
+static int32_t fmg_max_id(uint8_t *fmg)
+{
+    if (!fmg) return -1;
+    uint32_t grp_cnt = *reinterpret_cast<uint32_t *>(fmg + 0x0C);
+    if (grp_cnt == 0 || grp_cnt > 0x100000) return -1;
+    auto *groups = reinterpret_cast<FmgGroup *>(fmg + 0x28);
+    int32_t mx = -1;
+    for (uint32_t g = 0; g < grp_cnt; g++)
+        if (groups[g].last_id > mx) mx = groups[g].last_id;
+    return mx;
+}
 
 struct NewEntry
 {
@@ -748,7 +773,6 @@ void goblin::setup_messages()
     // text injection is init-only - so without this, a live toggle shows
     // "?PlaceName?" (the id has no PlaceName entry). One harmless extra entry.
     bloodmsg_ids_needed.insert(950000000 + 32004);
-
     copy_fmg_layered(bloodmsg_slots, bloodmsg_ids_needed, 950000000, "BloodMsg");
 
     // TutorialTitle (ERR Codex enemy names + category labels like "Summoning
@@ -866,6 +890,42 @@ void goblin::setup_messages()
                          new_entries.size() - before);
     }
 
+    // --- Collision-proof remap ---------------------------------------------
+    // Every queued string is RELOCATED from its offset-encoded id to a FRESH id
+    // allocated contiguously ABOVE the runtime max PlaceName id, in new_entries
+    // push order (so each producer's strings form a contiguous, dynamically-sized
+    // run - never a fixed-width band, so they can't overflow into each other no
+    // matter how many strings a profile has). g_textid_remap then drives
+    // remap_textid() so live marker textIds point at the fresh ids. Result: our
+    // ids sit strictly above anything the game / overhaul / another mod put in
+    // PlaceName, so they can never collide. Raw PlaceName location ids (never
+    // queued here) are untouched and pass through remap_textid() unchanged.
+    {
+        int32_t max_id = 0;
+        for (int slot : {19, 329, 429})   // PlaceName base + DLC layers (game merges these)
+            if (slot < count2 && sub[slot])
+                max_id = std::max(max_id, fmg_max_id(sub[slot]));
+
+        int64_t next = (int64_t)max_id + 1;
+        g_textid_remap.clear();
+        g_textid_remap.reserve(new_entries.size());
+        bool overflow = false;
+        for (auto &e : new_entries)
+        {
+            auto it = g_textid_remap.find(e.id);
+            if (it != g_textid_remap.end()) { e.id = it->second; continue; }  // dup original -> same fresh
+            if (next > 2'100'000'000)  // int32 headroom guard (never hit in practice)
+            { overflow = true; break; }
+            int32_t fresh = (int32_t)next++;
+            g_textid_remap[e.id] = fresh;   // key = ORIGINAL encoded id
+            e.id = fresh;
+        }
+        if (overflow)
+            spdlog::error("[FMG] remap: id space exhausted above max={} - some labels may be unresolved", max_id);
+        spdlog::info("[FMG] remap: PlaceName max={}, allocated {} fresh ids [{}..{}) for {} queued strings (contiguous, above max)",
+                     max_id, (uint32_t)g_textid_remap.size(), max_id + 1, (int32_t)next, new_entries.size());
+    }
+
     if (patch_fmg_in_memory(fmg_ptr, &sub[19], new_entries, /*capture_valid_ids=*/true))
     {
         spdlog::info("PlaceName FMG merged ({} entries)", new_entries.size());
@@ -943,26 +1003,59 @@ void goblin::setup_messages()
     // STATIC strings written below - there is no runtime text rewriting.
     if (count2 > 208 && sub[208])
     {
+        // Allocate the 4 toast text ids ABOVE the live TutorialBody max (dynamic -
+        // never collides with an overhaul's codex text). inject_tutorial_popup_rows
+        // (runs after this) points its param rows' textId at these.
+        int32_t tb_base = fmg_max_id(sub[208]) + 1;
+        for (int s = 0; s < goblin::TOAST_COUNT; ++s)
+            goblin::g_toast_fmg_id[s] = tb_base + s;
         const auto toast_lang = goblin::i18n::current_language();
         std::vector<NewEntry> tb_entries = {
-            {goblin::TUTORIAL_FMG_ID_ON,
+            {goblin::g_toast_fmg_id[goblin::TOAST_ON],
              goblin::i18n::wtr(goblin::i18n::ToastId::MapIconsOn, toast_lang)},
-            {goblin::TUTORIAL_FMG_ID_OFF,
+            {goblin::g_toast_fmg_id[goblin::TOAST_OFF],
              goblin::i18n::wtr(goblin::i18n::ToastId::MapIconsOff, toast_lang)},
-            {goblin::TUTORIAL_FMG_ID_DUMP_OK,
+            {goblin::g_toast_fmg_id[goblin::TOAST_DUMP_OK],
              goblin::i18n::wtr(goblin::i18n::ToastId::MarkersDumped, toast_lang)},
-            {goblin::TUTORIAL_FMG_ID_DUMP_FAIL,
+            {goblin::g_toast_fmg_id[goblin::TOAST_DUMP_FAIL],
              goblin::i18n::wtr(goblin::i18n::ToastId::MarkerDumpFailed, toast_lang)},
         };
         if (patch_fmg_in_memory(sub[208], &sub[208], tb_entries))
-            spdlog::info("[TOAST] TutorialBody.fmg expanded (ON={}, OFF={}, DUMP_OK={}, DUMP_FAIL={})",
-                         goblin::TUTORIAL_FMG_ID_ON, goblin::TUTORIAL_FMG_ID_OFF,
-                         goblin::TUTORIAL_FMG_ID_DUMP_OK, goblin::TUTORIAL_FMG_ID_DUMP_FAIL);
+            spdlog::info("[TOAST] TutorialBody.fmg expanded (ids {}/{}/{}/{} above max {})",
+                         goblin::g_toast_fmg_id[goblin::TOAST_ON], goblin::g_toast_fmg_id[goblin::TOAST_OFF],
+                         goblin::g_toast_fmg_id[goblin::TOAST_DUMP_OK], goblin::g_toast_fmg_id[goblin::TOAST_DUMP_FAIL],
+                         tb_base - 1);
         else
             spdlog::warn("[TOAST] TutorialBody.fmg merge failed - codex banners unavailable");
     }
     else
         spdlog::warn("[TOAST] TutorialBody (slot 208) unavailable - codex banners unavailable");
+
+    // Point every injected marker textId at its FRESH remapped id (the strings
+    // now live at fresh ids in PlaceName, allocated above the runtime max). Raw
+    // PlaceName location ids and any key we did not copy pass through unchanged.
+    // Done here (inject_map_entries runs before setup_messages, so the rows exist
+    // and still hold their offset-encoded ids); the live-loot relabel paths below
+    // route their own writes through remap_textid() too. g_lot_backed_rows keep
+    // their ORIGINAL encoded baked_text1 (captured at inject) for classification.
+    {
+        int remapped = 0, blank_high = 0;
+        for (uint8_t *rp : goblin::injected_row_ptrs())
+        {
+            auto *p = reinterpret_cast<from::paramdef::WORLD_MAP_POINT_PARAM_ST *>(rp);
+            int32_t *tids[8] = {&p->textId1, &p->textId2, &p->textId3, &p->textId4,
+                                &p->textId5, &p->textId6, &p->textId7, &p->textId8};
+            for (auto *t : tids)
+            {
+                if (*t <= 0) continue;
+                int32_t nv = goblin::remap_textid(*t);
+                if (nv != *t) { *t = nv; remapped++; }
+                else if (*t >= 50000000) blank_high++;  // a high (encoded) id we did NOT copy -> would be blank
+            }
+        }
+        spdlog::info("[FMG] remapped {} live marker textId slots to fresh ids ({} high ids left unmapped/blank-risk)",
+                     remapped, blank_high);
+    }
 
     // Final safety pass: strip any marker textId that didn't end up with a real
     // string in the expanded PlaceName FMG. The game's GetMessage returns null

@@ -697,12 +697,12 @@ void goblin::inject_map_entries()
 //   offset 20 (0x14) f32 dispMinTime
 //   offset 24 (0x18) f32 dispTime
 
-// TutorialParam template row we clone + the new row ids we inject.
+// TutorialParam template row we clone.
 static constexpr int TUTORIAL_TEMPLATE_ROW_ID = 4167000;
-static constexpr int TUTORIAL_NEW_ROW_ID_ON        = goblin::TUTORIAL_FMG_ID_ON;
-static constexpr int TUTORIAL_NEW_ROW_ID_OFF       = goblin::TUTORIAL_FMG_ID_OFF;
-static constexpr int TUTORIAL_NEW_ROW_ID_DUMP_OK   = goblin::TUTORIAL_FMG_ID_DUMP_OK;
-static constexpr int TUTORIAL_NEW_ROW_ID_DUMP_FAIL = goblin::TUTORIAL_FMG_ID_DUMP_FAIL;
+
+// Dynamically-allocated codex-toast ids (see goblin_inject.hpp). 0 until init.
+int goblin::g_toast_fmg_id[goblin::TOAST_COUNT]       = {0, 0, 0, 0};
+int goblin::g_toast_param_row_id[goblin::TOAST_COUNT] = {0, 0, 0, 0};
 
 static ParamResCap *find_param_res_cap_by_name(const wchar_t *target)
 {
@@ -858,10 +858,17 @@ bool goblin::inject_tutorial_popup_rows()
         auto *data = old_file + old_table->rows[i].param_offset;
         all_rows.push_back({(int32_t)old_table->rows[i].row_id, data});
     }
-    all_rows.push_back({TUTORIAL_NEW_ROW_ID_ON,        template_data});
-    all_rows.push_back({TUTORIAL_NEW_ROW_ID_OFF,       template_data});
-    all_rows.push_back({TUTORIAL_NEW_ROW_ID_DUMP_OK,   template_data});
-    all_rows.push_back({TUTORIAL_NEW_ROW_ID_DUMP_FAIL, template_data});
+    // Allocate our 4 TutorialParam row ids ABOVE the live max (dynamic - never
+    // collides with an overhaul's/another mod's tutorial rows).
+    int32_t tp_max = 0;
+    for (uint16_t i = 0; i < orig_rows; i++)
+        tp_max = std::max(tp_max, (int32_t)old_table->rows[i].row_id);
+    for (int s = 0; s < goblin::TOAST_COUNT; ++s)
+        goblin::g_toast_param_row_id[s] = tp_max + 1 + s;
+    all_rows.push_back({goblin::g_toast_param_row_id[goblin::TOAST_ON],        template_data});
+    all_rows.push_back({goblin::g_toast_param_row_id[goblin::TOAST_OFF],       template_data});
+    all_rows.push_back({goblin::g_toast_param_row_id[goblin::TOAST_DUMP_OK],   template_data});
+    all_rows.push_back({goblin::g_toast_param_row_id[goblin::TOAST_DUMP_FAIL], template_data});
 
     std::sort(all_rows.begin(), all_rows.end(),
               [](const RowSource &a, const RowSource &b) { return a.row_id < b.row_id; });
@@ -880,29 +887,34 @@ bool goblin::inject_tutorial_popup_rows()
         new_wrapper_locs[i].row = all_rows[i].row_id;
         new_wrapper_locs[i].index = (int32_t)i;
 
-        // Patch our new rows: textId -> their own row id (so the FMG-lookup
-        // side resolves to the entries we injected separately), clear
-        // unlockEventFlagId so no gate prevents display. repeatType is set
-        // to 1 explicitly: ERR's template carries 1, but vanilla menuType=0
-        // rows ship repeatType=0 (show-once) - the toast must repeat.
+        // Patch our new rows: textId -> our dynamically-allocated TutorialBody fmg
+        // id (set by setup_messages, which runs first), clear unlockEventFlagId so
+        // no gate prevents display. repeatType is set to 1 explicitly: ERR's
+        // template carries 1, but vanilla menuType=0 rows ship repeatType=0
+        // (show-once) - the toast must repeat.
         int32_t rid = all_rows[i].row_id;
-        if (rid == TUTORIAL_NEW_ROW_ID_ON || rid == TUTORIAL_NEW_ROW_ID_OFF ||
-            rid == TUTORIAL_NEW_ROW_ID_DUMP_OK || rid == TUTORIAL_NEW_ROW_ID_DUMP_FAIL)
+        int slot = -1;
+        for (int s = 0; s < goblin::TOAST_COUNT; ++s)
+            if (rid == goblin::g_toast_param_row_id[s]) { slot = s; break; }
+        if (slot >= 0)
         {
             auto *p = new_file + data_offset;
             *reinterpret_cast<uint8_t *>(p + 4)  = 0;      // menuType = 0 (toast)
             *reinterpret_cast<uint8_t *>(p + 6)  = 1;      // repeatType = 1 (repeatable)
             *reinterpret_cast<uint32_t *>(p + 12) = 0;     // unlockEventFlagId = 0
-            *reinterpret_cast<int32_t *>(p + 16)  = rid;   // textId -> our row id
+            *reinterpret_cast<int32_t *>(p + 16)  = goblin::g_toast_fmg_id[slot]; // textId -> our TutorialBody fmg id
         }
     }
 
     file_ptr = new_file;
     file_size = (int64_t)param_file_size;
 
-    spdlog::info("[TOAST] TutorialParam expanded: {} -> {} rows (ON={}, OFF={}, DUMP_OK={}, DUMP_FAIL={})",
-                 orig_rows, total_rows, TUTORIAL_NEW_ROW_ID_ON, TUTORIAL_NEW_ROW_ID_OFF,
-                 TUTORIAL_NEW_ROW_ID_DUMP_OK, TUTORIAL_NEW_ROW_ID_DUMP_FAIL);
+    spdlog::info("[TOAST] TutorialParam expanded: {} -> {} rows (row ids ON={}, OFF={}, DUMP_OK={}, DUMP_FAIL={} -> fmg {}/{}/{}/{})",
+                 orig_rows, total_rows,
+                 goblin::g_toast_param_row_id[goblin::TOAST_ON], goblin::g_toast_param_row_id[goblin::TOAST_OFF],
+                 goblin::g_toast_param_row_id[goblin::TOAST_DUMP_OK], goblin::g_toast_param_row_id[goblin::TOAST_DUMP_FAIL],
+                 goblin::g_toast_fmg_id[goblin::TOAST_ON], goblin::g_toast_fmg_id[goblin::TOAST_OFF],
+                 goblin::g_toast_fmg_id[goblin::TOAST_DUMP_OK], goblin::g_toast_fmg_id[goblin::TOAST_DUMP_FAIL]);
     return true;
 }
 
@@ -1054,7 +1066,10 @@ static void apply_loot_settings()
         }
         p->iconId = static_cast<decltype(p->iconId)>(icon);
 
-        // Item-name label (only touch an item-name slot)
+        // Item-name label (only touch an item-name slot). Classify by the ORIGINAL
+        // encoded baked_text1, write the collision-proof remapped id (the string
+        // lives at the fresh id setup_messages allocated; remap_textid is identity
+        // for an unmapped key).
         if (lr.baked_text1 >= 50000000 && lr.baked_text1 < 600000000)
         {
             int32_t label = lr.baked_text1;
@@ -1065,7 +1080,7 @@ static void apply_loot_settings()
                 int32_t enc = encode_live_item(item, cat);
                 if (enc > 0) label = enc;
             }
-            p->textId1 = label;
+            p->textId1 = goblin::remap_textid(label);
         }
 
         // Hide-on-pickup flag (all populated lines that had a baked flag)
@@ -1185,7 +1200,7 @@ static void show_tutorial_popup_trampoline(uintptr_t /*er*/, int tutorial_id)
 // SEH-guarded codex-toast fire (POD-only locals, no C++ unwinding).
 static void seh_dispatch_toast(uintptr_t er, bool icons_on)
 {
-    int tutorial_id = icons_on ? goblin::TUTORIAL_FMG_ID_ON : goblin::TUTORIAL_FMG_ID_OFF;
+    int tutorial_id = goblin::g_toast_param_row_id[icons_on ? goblin::TOAST_ON : goblin::TOAST_OFF];
     __try
     {
         show_tutorial_popup_trampoline(er, tutorial_id);
@@ -1214,8 +1229,8 @@ static void seh_fire_trampoline(uintptr_t er, int tutorial_id)
 }
 
 // Fire an upper-left codex toast for one of the injected TutorialParam rows
-// (a TUTORIAL_FMG_ID_* id). Static text via the same trampoline path as the
-// F10 banner - no FMG rewrite. Used by the F9 marker-dump banner.
+// (a goblin::g_toast_param_row_id[...] value). Static text via the same trampoline
+// path as the F10 banner - no FMG rewrite. Used by the F9 marker-dump banner.
 void goblin::show_codex_toast(int tutorial_id)
 {
     static uintptr_t er = 0;
@@ -1408,34 +1423,30 @@ void goblin::refresh_loot_from_itemlot()
             else no_flag++;
         }
 
+        // Classify the item-name slot by the ORIGINAL encoded baked_text1 (the
+        // live textId1 now holds a remapped fresh id, which no longer carries the
+        // 50M..600M item band), and write the collision-proof remapped id.
+        const bool item_slot = (lr.baked_text1 >= 50000000 && lr.baked_text1 < 600000000);
         if (do_anon)
         {
-            // Spoiler-free mode: replace the item name with the generic
-            // localized label. Same slot guard as the live relabel below - only
-            // overwrite an actual item-name slot, never a location/enemy slot.
-            int32_t cur = p->textId1;
-            if (cur >= 50000000 && cur < 600000000 && cur != ANON_LABEL_TEXTID)
+            if (item_slot)
             {
-                p->textId1 = ANON_LABEL_TEXTID;
-                relabeled++;
+                int32_t anon = goblin::remap_textid(ANON_LABEL_TEXTID);
+                if (p->textId1 != anon) { p->textId1 = anon; relabeled++; }
             }
         }
         else if (do_labels)
         {
-            // Relabel the item-name slot (textId1) to whatever the lot now
-            // gives. Guard: only touch textId1 if it already holds an
-            // item-name encoded id (50M..600M item bands) - never clobber a
-            // location (<50M) or enemy/npc (>=700M) slot. The encoded id maps
-            // into the full item-name space copied into PlaceName at init.
-            int32_t cur = p->textId1;
-            if (cur >= 50000000 && cur < 600000000)
+            // Relabel the item-name slot (textId1) to whatever the lot now gives.
+            if (item_slot)
             {
                 int32_t item_id = *reinterpret_cast<int32_t *>(row->b + 0x00);  // lotItemId01
                 int32_t cat     = *reinterpret_cast<int32_t *>(row->b + 0x20);  // lotItemCategory01
                 int32_t enc = encode_live_item(item_id, cat);
-                if (item_id > 0 && enc > 0 && enc != cur)
+                int32_t fresh = goblin::remap_textid(enc);
+                if (item_id > 0 && enc > 0 && fresh != p->textId1)
                 {
-                    p->textId1 = enc;
+                    p->textId1 = fresh;
                     relabeled++;
                 }
             }

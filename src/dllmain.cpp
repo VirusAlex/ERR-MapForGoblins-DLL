@@ -164,8 +164,12 @@ static void setup_mod()
     safe_init_step(&init_kindling,        "kindling::initialize");
     safe_init_step(&init_inject_entries,  "inject_map_entries");
     safe_init_step(&init_apply_map_logic, "apply_map_logic");
-    safe_init_step(&init_tutorial_popup,  "inject_tutorial_popup_rows");
+    // setup_messages MUST precede inject_tutorial_popup_rows: it allocates the
+    // dynamic codex-toast FMG ids (goblin::g_toast_fmg_id) that the popup rows
+    // point their textId at. (It also builds the PlaceName textId remap used by
+    // the marker rows injected above.)
     safe_init_step(&init_setup_messages,  "setup_messages");
+    safe_init_step(&init_tutorial_popup,  "inject_tutorial_popup_rows");
     safe_init_step(&init_live_loot,       "refresh_loot_from_itemlot");
     safe_init_step(&init_overlay,         "overlay::setup");
     safe_init_step(&init_map_timing,      "map_timing::setup");

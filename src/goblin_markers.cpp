@@ -653,8 +653,8 @@ void hotkey_loop()
                 spdlog::info("Marker dump OK: {} markers", count);
             else
                 spdlog::error("Marker dump failed (code {})", count);
-            goblin::show_codex_toast(count >= 0 ? goblin::TUTORIAL_FMG_ID_DUMP_OK
-                                                : goblin::TUTORIAL_FMG_ID_DUMP_FAIL);
+            goblin::show_codex_toast(goblin::g_toast_param_row_id[
+                count >= 0 ? goblin::TOAST_DUMP_OK : goblin::TOAST_DUMP_FAIL]);
         }
         prev_down = down;
     }

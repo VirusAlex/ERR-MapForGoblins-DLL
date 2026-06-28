@@ -57,18 +57,21 @@ namespace goblin
     void set_icons_hidden(bool hidden);
     bool icons_hidden();
 
-    // Row ids used for both the TutorialParam rows AND the TutorialBody.fmg
-    // entries holding each banner's STATIC text. Injected by
-    // inject_tutorial_popup_rows() (param table) and goblin_messages
-    // setup_messages() (FMG bank). All texts are static (no runtime FMG
-    // rewrite - that approach crashed; each distinct message gets its own id).
-    // Chosen just past the highest existing ERR codex id (9004250) - keeps
-    // ids close to the original range to avoid any internal int32-cast or
-    // size-bucket assumptions that hit far-out values.
-    constexpr int TUTORIAL_FMG_ID_ON        = 9004251;  // "Map icons: ON"
-    constexpr int TUTORIAL_FMG_ID_OFF       = 9004252;  // "Map icons: OFF"
-    constexpr int TUTORIAL_FMG_ID_DUMP_OK   = 9004253;  // "Markers dumped"
-    constexpr int TUTORIAL_FMG_ID_DUMP_FAIL = 9004254;  // "Marker dump failed - press again"
+    // Codex-toast ids, allocated DYNAMICALLY at runtime above the live max so they
+    // never collide with an overhaul's / another mod's tutorial content (same
+    // principle as the marker textId remap). Two independent id spaces:
+    //   g_toast_fmg_id[]       = TutorialBody.fmg text ids (set by setup_messages,
+    //                            above the live TutorialBody max). The TutorialParam
+    //                            row's textId field points here, and the FMG text
+    //                            lives here.
+    //   g_toast_param_row_id[] = TutorialParam row ids (set by inject_tutorial_popup_rows,
+    //                            above the live TutorialParam max). show_codex_toast
+    //                            triggers a banner by one of THESE.
+    // setup_messages MUST run before inject_tutorial_popup_rows (the popup rows
+    // point at the fmg ids). 0 until allocated.
+    enum ToastSlot { TOAST_ON = 0, TOAST_OFF, TOAST_DUMP_OK, TOAST_DUMP_FAIL, TOAST_COUNT };
+    extern int g_toast_fmg_id[TOAST_COUNT];
+    extern int g_toast_param_row_id[TOAST_COUNT];
 
     // Inject the codex-toast TutorialParam rows for the F10/F9 banners. Rows
     // get menuType=0 (upper-left codex caption widget) with textId pointing
@@ -77,8 +80,8 @@ namespace goblin
     bool inject_tutorial_popup_rows();
 
     // Fire an upper-left codex-style toast for one of the injected TutorialParam
-    // rows (pass a TUTORIAL_FMG_ID_* id). Static text, no FMG rewrite - same
-    // path as the F10 banner. Safe from any thread once init has run.
+    // rows (pass a goblin::g_toast_param_row_id[...] value). Static text, no FMG
+    // rewrite - same path as the F10 banner. Safe from any thread once init has run.
     void show_codex_toast(int tutorial_id);
 
     // Background thread polling the toggle hotkey.
