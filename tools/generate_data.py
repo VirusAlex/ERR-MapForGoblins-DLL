@@ -294,10 +294,12 @@ def _load_lot_linkage():
     return {int(k): (int(v[0]), int(v[1])) for k, v in raw.items()}
 
 
-def generate_map_data_cpp(entries, output_path, geom_slots=None):
+def generate_map_data_cpp(entries, output_path, geom_slots=None, orig_xz=None):
     """Generate goblin_map_data.cpp with all param entries."""
     if geom_slots is None:
         geom_slots = {}
+    if orig_xz is None:
+        orig_xz = {}
 
     lot_linkage = _load_lot_linkage()
 
@@ -344,8 +346,13 @@ def generate_map_data_cpp(entries, output_path, geom_slots=None):
             obj_name = meta.get('object_name', '') if isinstance(meta, dict) else ''
             lot_id, lot_type = lot_linkage.get(row_id, (0, 0))
             name_field = f'"{obj_name}"' if obj_name else 'nullptr'
+            # real_posX/real_posZ = pre-de-overlap MSB-true coords (fall back to the
+            # possibly-shifted display pos if not snapshotted) for collected tracking.
+            rx, rz = orig_xz.get(row_id, (fields.get("posX", "0"), fields.get("posZ", "0")))
+            rx = format_value("real_posX", "f", str(rx))
+            rz = format_value("real_posZ", "f", str(rz))
             f.write(f"    }}, Category::{category}, {slot}, {suffix}, {name_field}, "
-                    f"{lot_id}u, {lot_type}}},\n")
+                    f"{lot_id}u, {lot_type}, {rx}, {rz}}},\n")
 
         f.write("};\n\n")
         f.write("} // namespace goblin::generated\n")
@@ -392,12 +399,18 @@ def generate_item_icons_cpp(output_path):
     print(f"Generated {output_path} with {len(table)} item-icon entries")
 
 
-def generate_item_fallback_cpp(output_path):
-    """Generate goblin_item_fallback.cpp: encoded-item-key -> English name. Source =
-    item_icon_table.json from generate_loot_massedit (3rd field = English name read from the
-    engus msgbnd). Injected by setup_messages as the lowest-priority PlaceName layer so a
-    marker whose item lacks a string in the player's language falls back to English instead
-    of '?PlaceName?'. Same encoded-id space as goblin_item_icons, so ids match the markers."""
+def generate_item_fallback_cpp(output_path, entries=None):
+    """Generate goblin_item_fallback.cpp: marker-textId -> English string. Injected by
+    setup_messages as the lowest-priority PlaceName layer so a marker whose text has no
+    string in the player's LANGUAGE falls back to English instead of resolving to nothing
+    (the engine draws no icon for a fully text-less marker). Overhauls (e.g. The Convergence)
+    localize only part of their custom content, so a non-English player otherwise gets blank
+    boss names / locations / item names. Covers three id spaces, all keyed the way the marker
+    references them (so remap_textid lines them up):
+      - items:     encoded-item-key -> English name   (item_icon_table.json, 3rd field)
+      - bosses:    npcNameId+700M    -> English name   (boss_list.json vanillaPlaceName)
+      - locations: raw PlaceName id  -> English name   (PlaceName_engus.json), only ids a
+                   marker actually references (collected from `entries`)."""
     import config
     p = config.DATA_DIR / 'item_icon_table.json'
     table = {}  # key(int) -> English name
@@ -408,6 +421,37 @@ def generate_item_fallback_cpp(output_path):
             name = (v[2] if len(v) > 2 else '').strip()
             if name:
                 table[int(k)] = name
+
+    # English fallback for EVERY other band a marker references (NpcName boss/NPC
+    # names +700M, ActionButtonText prompts +800M, raw PlaceName locations), from
+    # english_fallback.json (extract_english_fallback.py dumps it from the engus
+    # msgbnd, keyed by the same offset-encoded id the markers use). Only ids a marker
+    # actually references are emitted. setdefault => a real localized string (copied
+    # from the player's language at runtime) still wins; this only fills the gaps an
+    # overhaul left untranslated in that language. Items are already covered above.
+    if entries:
+        ef = config.DATA_DIR / 'english_fallback.json'
+        english = {}
+        if ef.exists():
+            with open(ef, encoding='utf-8') as f:
+                english = json.load(f)
+        else:
+            print("  WARNING: english_fallback.json not found - run extract_english_fallback.py")
+        referenced = set()
+        for fields in entries.values():
+            for fld, val in fields.items():
+                if not fld.startswith('textId'):
+                    continue
+                try:
+                    tid = int(float(val))
+                except (TypeError, ValueError):
+                    continue
+                if tid > 0:
+                    referenced.add(tid)
+        for tid in referenced:
+            nm = english.get(str(tid))
+            if nm:
+                table.setdefault(tid, nm.strip())
 
     with open(output_path, "w", encoding="utf-8") as f:
         f.write("// AUTO-GENERATED FILE - DO NOT EDIT\n")
@@ -517,6 +561,13 @@ def main():
     entries = parse_massedit_files(massedit_dir)
     print(f"Total unique entries: {len(entries)}")
 
+    # Snapshot REAL (MSB-true) X/Z BEFORE the de-overlap pass shifts them. Collected-
+    # geometry tracking (goblin_collected) matches a marker to its live CSWorldGeomMan
+    # instance by position; the spiral de-overlap below can move a tracked node up to
+    # ~15u from its real coords, which broke immediate WGM hiding (it then only hid via
+    # GEOF on tile reload). Baked as real_posX/real_posZ so tracking uses the true pos.
+    orig_xz = {rid: (f.get("posX", "0"), f.get("posZ", "0")) for rid, f in entries.items()}
+
     # De-overlap: pull markers that sit within CLUSTER_RADIUS of each other (visually stacked on
     # the map - even across categories, and even a few units apart) onto a square spiral
     # SPIRAL_STEP apart around the cluster anchor. The old logic only grouped EXACT (0.1-rounded)
@@ -618,14 +669,14 @@ def main():
     print(f"Loaded {len(geom_slots)} piece metadata entries")
 
     print("\n=== Generating map data C++ ===")
-    generate_map_data_cpp(entries, output_dir / "goblin_map_data.cpp", geom_slots)
+    generate_map_data_cpp(entries, output_dir / "goblin_map_data.cpp", geom_slots, orig_xz)
 
     print("\n=== Generating item-icon table C++ ===")
     generate_item_icons_cpp(output_dir / "goblin_item_icons.cpp")
 
     print("\n=== Generating enemy-name table C++ ===")
     generate_enemy_names_cpp(output_dir / "goblin_enemy_names.cpp")
-    generate_item_fallback_cpp(output_dir / "goblin_item_fallback.cpp")
+    generate_item_fallback_cpp(output_dir / "goblin_item_fallback.cpp", entries)
 
     print("\n=== Generating legacy-conv C++ ===")
     generate_legacy_conv_cpp(config.DATA_DIR / "WorldMapLegacyConvParam.json",

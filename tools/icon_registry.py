@@ -15,8 +15,15 @@ Add/relayer/rename a category by editing map_categories.py only.
 import re as _re
 import map_categories as _mc
 
-FIRST_CUSTOM = 369  # numbering start; value arbitrary (iconIds are remapped keys). Hard limit:
-                    # FIRST_CUSTOM + len(ICON_ORDER) < ICON_MAP_SIZE=1024 (DLL g_icon_iid array).
+FIRST_CUSTOM = 0    # numbering start. 0-based ON PURPOSE: the baked iconId is a placeholder the DLL
+                    # remaps to a runtime-APPENDED sprite-171 frame at index [frameCount+1 .. +N].
+                    # Keeping the placeholder range [0 .. len-1] strictly BELOW any worldmap frame
+                    # count (hundreds: ERR 261 / stock 348 / Convergence 756) guarantees it never
+                    # overlaps the appended-frame range, so remap_injected_icons can't double-map a
+                    # marker (an appended frame id is never mistaken for a source id). All our markers
+                    # use injected icons (verified: every baked iconId was in the custom range, no
+                    # vanilla ids), so 0-based collides with nothing. Hard limit: len(ICON_ORDER)
+                    # < ICON_MAP_SIZE=1024 (DLL g_icon_iid array).
 
 # distinct icon slugs in table order (category slugs first, then file-less extras)
 ICON_ORDER = []

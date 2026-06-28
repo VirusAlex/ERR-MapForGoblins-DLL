@@ -246,15 +246,15 @@ namespace
         unsigned char buf[0xC0];
         if (!addr || !safe_copy(buf, (void *)addr, sizeof(buf)))
         {
-            spdlog::info("[gfxprobe] {} @ 0x{:X} <unreadable>", label, addr);
+            spdlog::debug("[gfxprobe] {} @ 0x{:X} <unreadable>", label, addr);
             return;
         }
-        spdlog::info("[gfxprobe] ---- {} @ 0x{:X} ----", label, addr);
+        spdlog::debug("[gfxprobe] ---- {} @ 0x{:X} ----", label, addr);
         for (size_t r = 0; r < sizeof(buf); r += 8)
         {
             uint64_t v;
             memcpy(&v, buf + r, 8);
-            spdlog::info("[gfxprobe]   +0x{:02X}: {:016X}", (unsigned)r, v);
+            spdlog::debug("[gfxprobe]   +0x{:02X}: {:016X}", (unsigned)r, v);
         }
     }
 
@@ -275,14 +275,14 @@ namespace
         }
         if (!node)
         {
-            spdlog::info("[cmp] {} charId {} NOT in dict.", label, charId);
+            spdlog::debug("[cmp] {} charId {} NOT in dict.", label, charId);
             return;
         }
-        spdlog::info("[cmp] {} charId {} node@0x{:X}:", label, charId, node);
+        spdlog::debug("[cmp] {} charId {} node@0x{:X}:", label, charId, node);
         for (unsigned off = 0; off < 0x60; off += 8)
         {
             uint64_t v = rq(node + off);
-            spdlog::info("[cmp]     +0x{:02X}: {:016X}{}", off, v, looks_heap(v) ? " <heap>" : "");
+            spdlog::debug("[cmp]     +0x{:02X}: {:016X}{}", off, v, looks_heap(v) ? " <heap>" : "");
         }
     }
 
@@ -326,16 +326,16 @@ namespace
         uint64_t svcptr = exe + (0x144593250ull - 0x140000000ull);
         uint64_t svc = rq(svcptr);
         uint64_t vt = rq(svc);
-        spdlog::info("[r2] image service ptr@0x{:X} svc=0x{:X} vt=0x{:X}", svcptr, svc, vt);
+        spdlog::debug("[r2] image service ptr@0x{:X} svc=0x{:X} vt=0x{:X}", svcptr, svc, vt);
         for (unsigned off = 0; off <= 0x70; off += 8)
-            spdlog::info("[r2]   vtbl+0x{:02X}: 0x{:X}", off, rq(vt + off));
+            spdlog::debug("[r2]   vtbl+0x{:02X}: 0x{:X}", off, rq(vt + off));
         unsigned lc = g_lossless_calls.load(std::memory_order_relaxed);
         uint64_t ctx = g_lossless_ctx.load(std::memory_order_relaxed);
-        spdlog::info("[r2] lossless loader fired {} times; sample movieContext=0x{:X}", lc, ctx);
+        spdlog::debug("[r2] lossless loader fired {} times; sample movieContext=0x{:X}", lc, ctx);
         if (ctx)
         {
             uint64_t mgr = rq(ctx + 0x18);
-            spdlog::info("[r2]   ctx+0x18(mgr)=0x{:X} ->+0x40=0x{:X}; ctx+0x418(reader)=0x{:X}",
+            spdlog::debug("[r2]   ctx+0x18(mgr)=0x{:X} ->+0x40=0x{:X}; ctx+0x418(reader)=0x{:X}",
                          mgr, rq(mgr + 0x40), rq(ctx + 0x418));
         }
     }
@@ -523,7 +523,7 @@ namespace
                     if (s >= 0) { if ((uint32_t)s < src_lo) src_lo = (uint32_t)s; if ((uint32_t)s > src_hi) src_hi = (uint32_t)s; }
                 }
                 bool overlap = iid_lo <= src_hi && src_lo <= iid_hi;
-                spdlog::info("[icons] base={} fcnt={} placed={}; frame ids [{},{}]; key range "
+                spdlog::debug("[icons] base={} fcnt={} placed={}; frame ids [{},{}]; key range "
                              "[{},{}]; overlap={}",
                              inject_base(), fcnt, placed, iid_lo, iid_hi, src_lo, src_hi, overlap ? "YES" : "no");
             }
@@ -549,6 +549,8 @@ namespace
         __except (EXCEPTION_EXECUTE_HANDLER) { return false; }
     }
 
+    uint64_t locate_sprite171();  // fwd decl (defined below): worldmap sprite-171 by charId+frameCount
+
     void *spriteloader_detour(void *rcx, void *rdx)
     {
         uint32_t cid = (rcx ? peek_charid((uint64_t)rcx) : 0xFFFFFFFF); // charId before the load consumes it
@@ -566,18 +568,23 @@ namespace
                 if (n_cid < 1024) seen_cid[n_cid++] = cid;
                 unsigned di = g_idx.load(std::memory_order_relaxed);
                 uint64_t dsd = di ? (uint64_t)g_sprites[(di - 1) % RING] : 0;
-                spdlog::info("[icondiag] spriteloader charId={} (last-ctor fc={})",
+                spdlog::debug("[icondiag] spriteloader charId={} (last-ctor fc={})",
                              cid, dsd ? rd32(dsd + OFF_FRAMECOUNT) : 0);
             }
         }
         if (cid == 171 && rcx && !g_qmark_injected.load(std::memory_order_relaxed))
         {
-            // gate to the WORLDMAP sprite-171 (hundreds of frames); other movies' 171 have 1 frame.
-            unsigned i = g_idx.load(std::memory_order_relaxed);
-            uint64_t sd = i ? (uint64_t)g_sprites[(i - 1) % RING] : 0;
-            uint32_t fcnt = sd ? rd32(sd + OFF_FRAMECOUNT) : 0;
-            if (fcnt >= 300 && fcnt <= 4096) // worldmap sprite-171 on any base (stock 348 / our 440 / Convergence 756)
+            // Find the WORLDMAP sprite-171 among ALL recorded ctors (charId 171 + worldmap-sized
+            // frameCount), NOT just the last-ctor'd sprite. The previous "last ctor" proxy was a
+            // RACE: a 1-frame child sprite is often ctor'd between the worldmap 171 ctor and this
+            // loader call, so the proxy read frameCount=1 (and the old fcnt>=300 gate also rejected
+            // overhauls whose worldmap 171 has fewer frames, e.g. ERR 2.2.9.x = 261). locate_sprite171
+            // already scans the ring for charId==171 with a frame array of fc in [100,4096] (skips
+            // 1-frame "other movie" 171s), so it returns the real worldmap sprite on any base.
+            uint64_t sd = locate_sprite171();
+            if (sd)
             {
+                uint32_t fcnt = rd32(sd + OFF_FRAMECOUNT);
                 g_qmark_injected.store(true, std::memory_order_relaxed);
                 seh_inject_sprite171(sd, (uint64_t)rcx, fcnt); // SEH-guarded (runs for every user on map load)
             }
@@ -631,7 +638,7 @@ namespace
                         break;
                     }
                 }
-            spdlog::info("[rmtag] my RM2 depth={} ctx=0x{:X} listBase=0x{:X} cnt={} -> entry@0x{:X} flag71=0x{:02X}",
+            spdlog::debug("[rmtag] my RM2 depth={} ctx=0x{:X} listBase=0x{:X} cnt={} -> entry@0x{:X} flag71=0x{:02X}",
                          dep, cx, lbase, lcnt, foundNode, f71);
         }
         return o_rm2exec(thisTag, ctx, frame);
@@ -651,7 +658,7 @@ namespace
             uint64_t elem = fdata + (uint64_t)fi * FRAME_STRIDE;
             uint64_t tagsArr = rq(elem);
             uint32_t tc = rd32(elem + 8);
-            spdlog::info("[framedump] frame[{}] elem@0x{:X} tagsArr=0x{:X} tagCount={}", fi, elem, tagsArr, tc);
+            spdlog::debug("[framedump] frame[{}] elem@0x{:X} tagsArr=0x{:X} tagCount={}", fi, elem, tagsArr, tc);
             if (!looks_heap(tagsArr) || tc == 0 || tc > 32) continue;
             const uint64_t RM2_VT = (uint64_t)GetModuleHandleW(nullptr) + RVA_VT_REMOVEOBJECT2;
             for (uint32_t k = 0; k < tc; ++k)
@@ -661,7 +668,7 @@ namespace
                 safe_copy(b, (void *)t, sizeof(b));
                 uint64_t vt = 0; memcpy(&vt, b, 8);
                 const char *kind = (vt == RM2_VT) ? "RM2" : "PO?";
-                spdlog::info("[framedump]   tag[{}]@0x{:X} {} +0x08={:02X} {:02X} {:02X} {:02X} {:02X} {:02X} {:02X} {:02X} +0x10={:02X} {:02X} {:02X} {:02X} {:02X} {:02X} {:02X} {:02X} +0x18={:02X} {:02X} {:02X} {:02X} {:02X} {:02X} {:02X} {:02X}",
+                spdlog::debug("[framedump]   tag[{}]@0x{:X} {} +0x08={:02X} {:02X} {:02X} {:02X} {:02X} {:02X} {:02X} {:02X} +0x10={:02X} {:02X} {:02X} {:02X} {:02X} {:02X} {:02X} {:02X} +0x18={:02X} {:02X} {:02X} {:02X} {:02X} {:02X} {:02X} {:02X}",
                              k, t, kind,
                              b[0x08], b[0x09], b[0x0A], b[0x0B], b[0x0C], b[0x0D], b[0x0E], b[0x0F],
                              b[0x10], b[0x11], b[0x12], b[0x13], b[0x14], b[0x15], b[0x16], b[0x17],
@@ -765,7 +772,7 @@ namespace
         uint64_t cont = movieDef + OFF_MOVIEDEF_DICT;
         uint64_t base = rq(cont);
         uint32_t count = rd32(cont + 8);
-        spdlog::info("[dictdump] movieDef=0x{:X} container@0x{:X}: base=0x{:X} count={} (+0x10=0x{:X} +0x18=0x{:X})",
+        spdlog::debug("[dictdump] movieDef=0x{:X} container@0x{:X}: base=0x{:X} count={} (+0x10=0x{:X} +0x18=0x{:X})",
                      movieDef, cont, base, count, rq(cont + 0x10), rq(cont + 0x18));
         if (!looks_heap(base) || count == 0 || count > 100000)
         {
@@ -774,46 +781,59 @@ namespace
         }
         auto node_at = [&](uint32_t k) { return rq(base + (uint64_t)k * 16); };
         // head + tail nodes: charId@+0x2c, to confirm ascending sort + find max charId
-        spdlog::info("[dictdump] first 8 nodes (charId@+0x2c, vtable@+0):");
+        spdlog::debug("[dictdump] first 8 nodes (charId@+0x2c, vtable@+0):");
         for (uint32_t k = 0; k < 8 && k < count; ++k)
         {
             uint64_t n = node_at(k);
-            spdlog::info("[dictdump]   [{}] node=0x{:X} charId={} vt=0x{:X}", k, n, rd32(n + OFF_NODE_CHARID), rq(n));
+            spdlog::debug("[dictdump]   [{}] node=0x{:X} charId={} vt=0x{:X}", k, n, rd32(n + OFF_NODE_CHARID), rq(n));
         }
-        spdlog::info("[dictdump] last 6 nodes:");
+        spdlog::debug("[dictdump] last 6 nodes:");
         for (uint32_t k = (count > 6 ? count - 6 : 0); k < count; ++k)
         {
             uint64_t n = node_at(k);
-            spdlog::info("[dictdump]   [{}] node=0x{:X} charId={} vt=0x{:X}", k, n, rd32(n + OFF_NODE_CHARID), rq(n));
+            spdlog::debug("[dictdump]   [{}] node=0x{:X} charId={} vt=0x{:X}", k, n, rd32(n + OFF_NODE_CHARID), rq(n));
         }
         // dump full structure of node[0] (low charId = image, the R1 clone template) and a mid node
         for (uint32_t idx : {0u, count / 2})
         {
             uint64_t nn = node_at(idx);
-            spdlog::info("[dictdump] node [{}] @0x{:X} charId={} vt=0x{:X} - first 0x60 bytes:",
+            spdlog::debug("[dictdump] node [{}] @0x{:X} charId={} vt=0x{:X} - first 0x60 bytes:",
                          idx, nn, rd32(nn + OFF_NODE_CHARID), rq(nn));
             for (unsigned off = 0; off < 0x60; off += 8)
             {
                 uint64_t v = rq(nn + off);
                 const char *t = looks_heap(v) ? " <heap>" : "";
-                spdlog::info("[dictdump]     +0x{:02X}: {:016X}{}", off, v, t);
+                spdlog::debug("[dictdump]     +0x{:02X}: {:016X}{}", off, v, t);
             }
         }
     }
 
-    // Among recorded ctor'd SpriteDefs, return the worldmap icon sprite: charId@+0x18==171 and
-    // a plausible frameCount@+0x30. Returns 0 if not found yet.
+    // Return the worldmap ICON sprite: the MOST-RECENTLY ctor'd SpriteDef with charId@+0x18==171 and
+    // more than one frame. Rationale:
+    //  - charId 171 exists in several movies; the worldmap's is the multi-frame icon sprite (it holds
+    //    the game's map-pin frames - hundreds), decorative 171s elsewhere are 1 frame. So "fc>1" is the
+    //    discriminator - frame-count-VALUE agnostic (ERR 2.2.9.x 261 / stock 348 / our 440 / Convergence
+    //    756 / anything), NO hardcoded threshold.
+    //  - MOST-RECENT (not biggest): the sprite-loader hook injects using the CURRENT load context
+    //    (rcx) to register bitmaps in that movie's image manager, so the sprite MUST be the one this
+    //    load call is processing = the 171 just ctor'd for it. (The old code took the absolute-last
+    //    ctor'd sprite of ANY charId -> usually a 1-frame child ctor'd in between -> read frameCount=1;
+    //    scanning for the most-recent charId==171 specifically fixes that race.)
+    // Movie-based identity isn't usable here: injection must run at LOAD, before the render-time
+    // charId-171 lookup (lookup_detour) reveals the worldmap movie. Returns 0 if none seen yet.
     uint64_t locate_sprite171()
     {
-        for (int k = 0; k < RING; ++k)
+        unsigned head = g_idx.load(std::memory_order_relaxed); // total ctors; head-1 = most recent slot
+        unsigned n = head < (unsigned)RING ? head : (unsigned)RING; // scan only written slots (no underflow)
+        for (unsigned back = 1; back <= n; ++back)
         {
-            uint64_t sd = (uint64_t)g_sprites[k];
+            uint64_t sd = (uint64_t)g_sprites[(head - back) % RING];
             if (!looks_heap(sd))
                 continue;
             if (rd32(sd + OFF_CHARID) != 171)
                 continue;
             uint32_t fc = rd32(sd + OFF_FRAMECOUNT);
-            if (fc < 100 || fc > 4096) // worldmap sprite has hundreds of frames; skip 1-frame sprites
+            if (fc <= 1 || fc > 1000000) // 1-frame decorative 171 (not the icon sprite) / garbage
                 continue;
             // sanity: frame array present and self-consistent
             uint64_t data = rq(sd + OFF_FRAMEARR_DATA);
@@ -1040,7 +1060,7 @@ void goblin::gfx_probe::tick()
     if (recorded != last_logged)
     {
         last_logged = recorded;
-        spdlog::info("[gfxprobe] SpriteDef ctor fired {} times so far; scanning...", recorded);
+        spdlog::debug("[gfxprobe] SpriteDef ctor fired {} times so far; scanning...", recorded);
     }
 
 
@@ -1051,7 +1071,7 @@ void goblin::gfx_probe::tick()
         if (!sd)
             return;
         g_found_sd.store(sd, std::memory_order_relaxed);
-        spdlog::info("[gfxprobe] *** SpriteDef-171 @ 0x{:X}: frameCount={} ***", sd, rd32(sd + OFF_FRAMECOUNT));
+        spdlog::debug("[gfxprobe] *** SpriteDef-171 @ 0x{:X}: frameCount={} ***", sd, rd32(sd + OFF_FRAMECOUNT));
         if (probe)
             dump_obj("SpriteDef-171", sd);
     }
@@ -1071,7 +1091,7 @@ void goblin::gfx_probe::tick()
             {
                 last_ad = ad;
                 last_lk = lk;
-                spdlog::info("[icons] handler calls: AddDisplayObject={} lookup={} movieDef=0x{:X}",
+                spdlog::debug("[icons] handler calls: AddDisplayObject={} lookup={} movieDef=0x{:X}",
                              ad, lk, g_moviedef.load(std::memory_order_relaxed));
             }
         }
@@ -1106,7 +1126,7 @@ void goblin::gfx_probe::tick()
                     if (c >= base && c < base + cnt) { ++in_window; if (c > window_max) window_max = c; }
                     else if (c < base && c > native_max) native_max = c;
                 }
-                spdlog::info("[icons] dict: native maxCharId={} ; NATIVE entries in our window [{}, {})={}",
+                spdlog::debug("[icons] dict: native maxCharId={} ; NATIVE entries in our window [{}, {})={}",
                              native_max, base, base + cnt, in_window);
                 if (in_window > 0)
                 {
@@ -1163,8 +1183,8 @@ void goblin::gfx_probe::setup()
             {.aob = "48 89 5C 24 10 48 89 74 24 18 57 48 83 EC 20 48 8B 99 18 04 "
                     "00 00 48 8B F9 48 85 DB"},
             spriteloader_detour, o_spriteloader);
-        spdlog::info("[gfxprobe] icon handlers ready (ctor + movieDef read + registrar + lossless + "
-                     "DefineSprite-loader). Open the world map.");
+        spdlog::info("[gfxprobe] icon handlers armed (ctor + movieDef read + registrar + lossless + "
+                     "DefineSprite-loader)");
         goblin::diag::set_hooks(true, "");
 
         if (goblin::config::debugLogging)
@@ -1173,7 +1193,7 @@ void goblin::gfx_probe::setup()
             modutils::hook<ExecFn>(
                 {.address = reinterpret_cast<void *>((uint64_t)GetModuleHandleW(nullptr) + RVA_FN_REMOVEOBJECT2_EXEC)},
                 rm2exec_detour, o_rm2exec); // DIAG: real RemoveObject2::Execute (file VA 0x1411bde10)
-            spdlog::info("[gfxprobe] RM2::Execute diagnostic trace enabled (debug_logging).");
+            spdlog::debug("[gfxprobe] RM2::Execute diagnostic trace enabled (debug_logging).");
         }
     }
     catch (const std::exception &e)

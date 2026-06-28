@@ -7,7 +7,7 @@ then runs with build.bat --skip-shared, so the per-profile work (data pipeline +
 DLL compile - both isolated per profile: own data/<p> cache, own generated_<p>,
 own builds/build-<p>) runs concurrently without racing on src/generated_shared.
 
-LTCG linking is RAM-heavy, so concurrency is capped by --jobs (default 3). Each
+LTCG linking is RAM-heavy, so concurrency is capped by --jobs (default 4). Each
 build.bat still uses msbuild /m internally, so don't set --jobs too high.
 
 Usage:
@@ -23,7 +23,9 @@ ROOT = Path(__file__).resolve().parent.parent
 TOOLS = ROOT / 'tools'
 LOG = ROOT / 'scratch'
 LOG.mkdir(exist_ok=True)
-ALL = ['err', 'vanilla', 'convergence2', 'convergence3', 'erte', 'goldenage', 'vins', 'reborn']
+# convergence2 (Convergence 2.x / ME2) is unpublished/unsupported - excluded from the default
+# all-profiles build. Build it explicitly with --profiles convergence2 if ever needed.
+ALL = ['err', 'vanilla', 'convergence3', 'erte', 'goldenage', 'vins', 'reborn']
 GEN_SHARED = ['generate_logo.py', 'generate_map_icons.py', 'generate_overlay_icons.py', 'generate_i18n.py']
 
 

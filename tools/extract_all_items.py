@@ -653,10 +653,17 @@ def main():
         # Scarab/enemy drops
         90005300: (8, 16, 20),
         90005301: (8, 16, 20),
-        # Boss rewards (field bosses, dungeon bosses)
+        # Boss rewards (field bosses, dungeon bosses).
+        # 90005860/61: boss entity = X8_4 (args@16), award lot = X16_4 (args@24).
+        # 90005880 has a DIFFERENT layout: boss entity = X12_4 (args@20), lot = X16_4
+        # (args@24) - verified against common_func (WaitFor(CharacterDead(X12_4)) +
+        # AwardItemsIncludingClients(X16_4)). Reading entity@16 here grabbed X8_4 (a
+        # flag, not an MSB part), so the reward never matched a position and the loot
+        # marker was silently dropped (e.g. Convergence's Red Wolf of Radagon ->
+        # Warding Remnant). entity@20 fixes every 90005880-awarded boss.
         90005860: (16, 24, 28),
         90005861: (16, 24, 28),
-        90005880: (16, 24, 28),
+        90005880: (20, 24, 28),
         # NPC quest/dialog rewards
         90005750: (8, 16, 20),
         90005753: (8, 16, 20),

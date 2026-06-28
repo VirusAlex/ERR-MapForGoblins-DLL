@@ -169,6 +169,16 @@ STAGES = [
           script='extract_placename_dump.py',
           also_scripts=['config.py']),
 
+    # English strings for every band a marker references (NpcName/ActionButtonText/
+    # PlaceName), offset-encoded. Lowest-priority fallback so non-English clients get
+    # English instead of blank text (which makes the engine draw no icon) when the
+    # overhaul left that content untranslated. Consumed by generate_data.
+    Stage('extract_english_fallback',
+          inputs=[MSGBND, MENU_MSGBND],
+          outputs=[DATA / 'english_fallback.json'],
+          script='extract_english_fallback.py',
+          also_scripts=['config.py']),
+
     # ERR-only: Rune/Ember Piece positions from ERR MSBs (AEG099_821/822).
     Stage('extract_rune_positions',
           inputs=[MSB_DIR],
@@ -382,6 +392,7 @@ STAGES = [
     Stage('generate_data',
           inputs=[MASSEDIT_OUT, DATA / 'loot_lot_linkage.json',
                   DATA / 'item_icon_table.json',
+                  DATA / 'english_fallback.json',
                   config.PROJECT_DIR / 'data' / 'enemy_names_i18n.json',
                   DATA / '_relocating_boss_fix.done'],
           outputs=[GENERATED_CPP / 'goblin_map_data.cpp',

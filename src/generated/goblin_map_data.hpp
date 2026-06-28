@@ -86,6 +86,13 @@ struct MapEntry
     // memory at runtime → randomizer-compatible). 0/0 = not lot-backed.
     uint32_t lotId;       // ItemLotParam row id (0 = none)
     uint8_t  lotType;     // 0 = none, 1 = ItemLotParam_map (pref), 2 = ItemLotParam_enemy (pref)
+    // REAL (pre-de-overlap) MSB-local X/Z. data.posX/posZ may be spiral-shifted by
+    // the de-overlap pass so stacked icons read separately; collected-geometry
+    // tracking must match the LIVE CSWorldGeomMan instance at its true coordinates,
+    // so it uses these instead of the shifted display position. Equal to
+    // data.posX/posZ for any row the de-overlap didn't move.
+    float real_posX;
+    float real_posZ;
 };
 
 extern const MapEntry MAP_ENTRIES[];

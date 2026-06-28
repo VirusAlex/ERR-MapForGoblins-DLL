@@ -6,6 +6,7 @@
 
 #include <algorithm>
 #include <cmath>
+#include <cstdlib>
 #include <cstring>
 #include <map>
 #include <set>
@@ -256,6 +257,16 @@ struct WGMSnapshot
     // keep the part name, e.g. two AEG099_931_9006 in m12_02), where per-name state is
     // ambiguous and rows must be classified by the instance at THEIR coordinates.
     std::vector<std::tuple<float, float, std::string>> alive_occupied;  // (x, z, name)
+
+    // COORDINATE-FREE identity (engine's own key). Per ACTUAL-model prefix -> geom slot
+    // -> live instances. The engine keys collected state on (model_id, geom_idx) only
+    // (FUN_1406b2b80: key = ((geom_idx | model_id<<0x11) << 0xf)); slot = runtime
+    // geom_idx - 0x2328 == GEOF slot == part suffix-9000, so this matches
+    // g_tile_slot_to_row directly - immune to de-overlap display-coord shifts. px/pz kept
+    // only to disambiguate twins (same slot). suffix_slot = slot from the MSB name, for
+    // a live cross-check of the geom_idx->slot formula.
+    struct SlotInst { bool alive; float px, pz; int suffix_slot; };
+    std::map<std::string, std::map<int, std::vector<SlotInst>>> slot_insts;
 };
 
 static std::map<uint32_t, WGMSnapshot> read_wgm_snapshot()
@@ -400,6 +411,30 @@ static std::map<uint32_t, WGMSnapshot> read_wgm_snapshot()
                             snap.alive_names.insert(narrow_str);
                             snap.alive_occupied.emplace_back(px, pz, narrow_str);
                         }
+
+                        // Coordinate-free record, keyed by ACTUAL model + geom slot
+                        // (the engine's identity). model_id @inst+0x28; geom_idx @
+                        // [[inst+0x48]+8]; slot = geom_idx - 0x2328. Keyed by the
+                        // model's prefix (not the part-name prefix) so ERR model
+                        // substitution (part AEG099_753 -> model AEG463_860) lines up
+                        // with g_tile_slot_to_row's geof_prefix.
+                        uint32_t model_id = 0;
+                        safe_read((char *)geom_ins + 0x28, &model_id, 4);
+                        void *gobj = nullptr;
+                        safe_read((char *)geom_ins + 0x48, &gobj, 8);
+                        uint32_t gidx = 0;
+                        if (gobj) safe_read((char *)gobj + 8, &gidx, 4);
+                        std::string mprefix = prefix_from_model_id(model_id);
+                        if (!mprefix.empty() && g_tracked_prefixes.count(mprefix))
+                        {
+                            int slot = (int)gidx - 0x2328;
+                            // suffix_slot from the MSB name (e.g. _9006 -> 6) for the
+                            // formula cross-check logged in refresh().
+                            int suffix_slot = -1;
+                            const char *us = strrchr(narrow, '_');
+                            if (us && us[1]) suffix_slot = atoi(us + 1) - 9000;
+                            snap.slot_insts[mprefix][slot].push_back({alive, px, pz, suffix_slot});
+                        }
                     }
                 }
             }
@@ -521,8 +556,11 @@ void goblin::collected::initialize()
         // WGM name tracking: full object name for accurate alive matching
         g_tile_name_to_row[tile][e.object_name].push_back(e.row_id);
 
-        // MSB-local position for replacement detection via WGM occupancy
-        g_entry_positions[e.row_id] = {e.data.posX, e.data.posY, e.data.posZ};
+        // MSB-local position for replacement detection via WGM occupancy. Use the
+        // REAL (pre-de-overlap) X/Z: data.posX/posZ may be spiral-shifted for icon
+        // declutter, which would miss the live instance's true coords and break
+        // immediate WGM hiding (regressed via the de-overlap pass).
+        g_entry_positions[e.row_id] = {e.real_posX, e.data.posY, e.real_posZ};
     }
 
     // Build model_id set for GEOF filtering
@@ -685,87 +723,72 @@ int goblin::collected::refresh()
     // live instance, not just because the tile is unloaded.
     std::set<uint64_t> demonstrably_alive_rows;
 
-    // Position key uses X/Z only (rounded to int). posY in MAP_ENTRIES is sometimes
-    // not set (defaults to 0) while WGM's posY is the real MSB height - matching on
-    // Y would cause false negatives. Same-XZ collisions are extremely rare in
-    // practice (gathering nodes don't stack vertically).
-    auto pos_key = [](float x, float z) {
-        return std::make_pair((int)std::lround(x), (int)std::lround(z));
-    };
-
+    // Coordinate-free WGM classification, keyed by the engine's own (model_id, geom_idx)
+    // identity (slot). The previous position-based "occupied/replacement" heuristic was
+    // broken by the de-overlap pass shifting display coords; matching by slot reads each
+    // instance's real collected flag directly, so display coords are irrelevant.
+    int slot_ok = 0, slot_bad = 0;  // geom_idx->slot vs name-suffix cross-check
     for (auto &[tile_id, snap] : wgm)
     {
         wgm_tiles.insert(tile_id);
 
-        auto name_it = g_tile_name_to_row.find(tile_id);
-        if (name_it == g_tile_name_to_row.end())
+        auto tile_it = g_tile_slot_to_row.find(tile_id);
+        if (tile_it == g_tile_slot_to_row.end())
             continue;
 
-        std::map<std::pair<int, int>, std::vector<std::string>> pos_to_names;
-        for (auto &[x, y, z, name] : snap.occupied)
-            pos_to_names[pos_key(x, z)].push_back(name);
-        std::map<std::pair<int, int>, std::set<std::string>> alive_pos_to_names;
-        for (auto &[x, z, name] : snap.alive_occupied)
-            alive_pos_to_names[pos_key(x, z)].insert(name);
-
-        // Walk every tracked MAP_ENTRY on this tile and classify it.
-        for (auto &[object_name, row_ids] : name_it->second)
+        for (auto &[prefix, slot_map] : tile_it->second)
         {
-            // Fast path: unique name (the normal case). Its own instance alive → visible.
-            if (row_ids.size() == 1 && snap.alive_names.count(object_name))
+            auto pref_it = snap.slot_insts.find(prefix);
+            if (pref_it == snap.slot_insts.end())
+                continue;  // no live instance of this model on the tile → undetermined
+
+            for (auto &[slot, row_ids] : slot_map)
             {
-                demonstrably_alive_rows.insert(row_ids.front());
-                continue;
-            }
+                auto si = pref_it->second.find(slot);
+                if (si == pref_it->second.end() || si->second.empty())
+                    continue;  // not spawned yet (lazy) or despawned → GEOF/sticky handle
+                const auto &insts = si->second;
 
-            for (uint64_t row_id : row_ids)
-            {
-                // Look up MAP_ENTRY coords to probe the position index
-                auto pt_it = g_entry_positions.find(row_id);
-                if (pt_it == g_entry_positions.end()) continue;
-                auto [ex, ey, ez] = pt_it->second;
+                for (auto &in : insts)
+                    if (in.suffix_slot >= 0) (in.suffix_slot == slot ? slot_ok : slot_bad)++;
 
-                // Check a 3x3 integer-bucket neighborhood. Strict single-key lookup
-                // misses cases where an adjacent asset sits on the border of the
-                // rounding boundary - e.g. AEG463_600 at X=-60.48 rounds to -60
-                // while the gathered AEG463_840 at X=-60.96 probes key -61.
-                int cx = (int)std::lround(ex);
-                int cz = (int)std::lround(ez);
-
-                // Duplicate-named parts (ERR copy-pastes keep the part name): the
-                // name-level alive check is ambiguous - classify THIS row by the
-                // instance standing at the row's own coordinates.
-                if (row_ids.size() > 1)
+                // Single row + single instance: read its flag directly.
+                if (row_ids.size() == 1 && insts.size() == 1)
                 {
-                    bool alive_here = false;
-                    for (int dx = -1; dx <= 1 && !alive_here; ++dx)
-                        for (int dz = -1; dz <= 1 && !alive_here; ++dz)
-                        {
-                            auto ap = alive_pos_to_names.find({cx + dx, cz + dz});
-                            if (ap != alive_pos_to_names.end() && ap->second.count(object_name))
-                                alive_here = true;
-                        }
-                    if (alive_here)
-                    {
-                        demonstrably_alive_rows.insert(row_id);
-                        continue;
-                    }
+                    if (insts[0].alive) demonstrably_alive_rows.insert(row_ids[0]);
+                    else                new_collected.insert(row_ids[0]);
+                    continue;
                 }
 
-                bool occupied = false;
-                for (int dx = -1; dx <= 1 && !occupied; ++dx)
-                    for (int dz = -1; dz <= 1 && !occupied; ++dz)
-                        if (pos_to_names.count({cx + dx, cz + dz}))
-                            occupied = true;
-                if (!occupied) continue;  // nothing nearby → undetermined, keep visible
-
-                // Something is there. Either our own dead instance, or a replacement
-                // spawned by ERR (collected AEG099_860 → respawning AEG099_780 at the
-                // same coords, or AEG463_600 body where the AEG463_840 flower stood).
-                new_collected.insert(row_id);
+                // Twins share a slot (ERR copy-pastes / multiple instances): the engine
+                // still flags each live instance separately, so match each row to the
+                // nearest instance by REAL coords (g_entry_positions is the pre-de-overlap
+                // position) and read THAT instance's flag.
+                for (uint64_t row_id : row_ids)
+                {
+                    auto pt = g_entry_positions.find(row_id);
+                    if (pt == g_entry_positions.end()) continue;
+                    auto [ex, ey, ez] = pt->second;
+                    const WGMSnapshot::SlotInst *best = nullptr;
+                    float best_d2 = 1e18f;
+                    for (auto &in : insts)
+                    {
+                        float dx = in.px - ex, dz = in.pz - ez;
+                        float d2 = dx * dx + dz * dz;
+                        if (d2 < best_d2) { best_d2 = d2; best = &in; }
+                    }
+                    if (!best) continue;
+                    if (best->alive) demonstrably_alive_rows.insert(row_id);
+                    else             new_collected.insert(row_id);
+                }
             }
         }
     }
+    if (slot_bad > 0)
+        spdlog::warn("[COLLECTED] geom_idx->slot mismatch: {} ok, {} BAD (model-family encoding?)",
+                     slot_ok, slot_bad);
+    else if (slot_ok > 0)
+        spdlog::debug("[COLLECTED] geom_idx->slot verified on {} live instances", slot_ok);
 
     // ── GEOF: for unloaded tiles ──
     for (auto &[tid, prefix_slots] : geof_tile_prefix_slots)

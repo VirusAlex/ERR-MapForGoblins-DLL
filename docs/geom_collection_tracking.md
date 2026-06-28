@@ -159,6 +159,78 @@ alive = (byte_263 & 0x02) != 0  AND  (byte_26B & 0x10) == 0
 - **+0x26B** catches objects collected just now while the tile is loaded (immediate)
 - Both flags reset to their "alive" state when a tile unloads and reloads - but +0x263 gets restored from save data with the correct "dead" state
 
+## Disasm verification status of the flags (2026-06-28)
+
+Re-checked against `eldenring.exe` in `scratch/ghidra_proj` (not just live dumps):
+- **DISASM-PROVEN: instance identity** (model_id, geom_idx) and the engine key - see the
+  table/section below. This is what the coordinate-free matching depends on.
+- **DISASM-PROVEN: persistent collected = `[[inst+0x530]+0xb]`.** The `+0x530` sub-object is
+  the geom flag/state object: `+0xb` = collected (predicate `FUN_1406bba60`; setter
+  `FUN_1406bcbd0`, whose ONLY caller is the tile-reload apply `FUN_1406b2b80` -> so this byte
+  is set on RELOAD, read by the GEOF serializer `FUN_1406a9b80` when saving, and drives
+  visibility via togglers `FUN_1406e72c0`/`FUN_1406e7340` -> `FUN_1406bd120/180/690`). Because
+  it is reload-set it CANNOT be the immediate signal - matches the long-standing observation
+  that 651 nodes only flip persistent state after a reload.
+- **DISASM-CORROBORATED: `+0x263` bit1 is part of the engine "alive" check.** The engine's
+  alive test is `(*(byte*)(inst+0x263) & 0x7e) == 0x7e` (FUN_140695770 @0x140695878) - bits
+  1..6 all set == alive; collecting clears bit1 → 0x7d (matches the live-dump 0x7f→0x7d). So
+  reading `+0x263 & 0x02` for "alive" is now disasm-backed, not just empirical. (+0x263 is a
+  busy byte - bit0/<0x80 are streaming/LOD state used by FUN_1406c90c0; the 0x6c8xxx-0x6cbxxx
+  cluster sets individual bits; +0x434 bits4-5 and +0x4d are a separate load state machine.)
+- **EMPIRICAL ONLY (not yet disasm-isolated): `+0x26B` bit4 immediate flag.** A whole-`.text`
+  scan for `[reg+0x26b]` found only readers (`FUN_140d41900`: `[obj+0x26b]!=0 && [obj+0x26c]>0`,
+  a stream/active predicate), no `OR [reg+0x26b],0x10` setter. The geom-manager, stream/LOD
+  (FUN_1406c6050/c6400/c90c0) and render/collect-state (the +0x263 cluster, the +0x530 togglers)
+  layers were all walked and none write +0x26b - so the gather/asset-pickup interaction handler
+  sets it (different subsystem, addresses via an intermediate base register so no literal
+  `0x26b` displacement). Pinning it needs RE of that ActionButton/asset-interaction path. It
+  stays verified by the 32/32 before/after live dumps (3×AEG099_651 + AEG099_821, incl restarts).
+
+Bottom line: the coordinate-free matching is disasm-solid; the per-instance alive/immediate
+flags (`+0x263 bit1`, `+0x26B bit4`) the code reads remain the live-verified values.
+
+## Engine identity = (model_id, geom_idx), NOT coordinates (disasm-confirmed 2026-06-28)
+
+Decompiled from the on-disk `eldenring.exe` via the Ghidra project (`scratch/ghidra_proj`).
+The engine identifies every gather instance purely by **(model_id, geom_idx)** - no
+coordinates anywhere - so MapForGoblins can match the same way (immune to the de-overlap
+display-coord shift, see regression note below). All offsets are on a `CSWorldGeomIns*`:
+
+| field | read | source fn (VA) |
+|---|---|---|
+| model_id | `*(u32*)(inst + 0x28)` | `FUN_140ef2aef(inst+0x18)` → `[+0x10]` |
+| geom_idx (runtime) | `*(u32*)(*(void**)(inst + 0x48) + 8)` | `FUN_140cedc90(inst+0x30)` → `[[+0x18]+8]` |
+| collected (persistent) | `*(u8*)(*(void**)(inst + 0x530) + 0xb)` | predicate `FUN_1406bba60`; setter `FUN_1406bcbd0`/`FUN_1406e6ef0` |
+| is-gather-asset | `*(u8*)(*(void**)(inst + 0x20) + 0x3c) >> 5 & 1` | `FUN_1406c4c50(inst+0x18)` |
+
+Load/apply (`FUN_1406b2b80` @0x6b2b80, runs on tile load): iterates the block's inline
+instance array (`block+0x2c0`, count `block+0x2b8`, stride `0x5b0`), rebuilds
+**`key = ((geom_idx | (model_id << 0x11)) << 0xf)`** per instance, looks it up in the RB-set
+of collected keys loaded from GEOF, and on a hit calls `FUN_1406bcbd0(inst)` → sets the
+`[[inst+0x530]+0xb]` collected byte. This `key` is byte-identical to the 8-byte GEOF record
+(`rec = (((model_id<<0x11)|geom_idx)<<0xf)|flagByte`), confirming GEOF and live instances
+share one identity.
+
+**Runtime geom_idx → slot:** `slot = geom_idx - 0x2328` (runtime geom_idx = `2*disk + bit`,
+`0x2328 = 2*0x1194`; `slot == GEOF slot == part suffix-9000`). `goblin_collected.cpp` logs a
+live cross-check (`geom_idx->slot verified on N instances` / a `mismatch` warning) in case a
+model family (e.g. AEG463) encodes differently.
+
+**MapForGoblins uses this (coordinate-free matching):** `read_wgm_snapshot` records per live
+instance its `(model_prefix, slot)` (model_id→prefix handles ERR model substitution natively,
+unlike the old name match) and alive flag; `refresh` matches our rows via
+`g_tile_slot_to_row[tile][prefix][slot]` and reads that instance's flag. Twins (rows sharing a
+slot) are split by the row's REAL pre-de-overlap coords (`real_posX/real_posZ`).
+
+### Regression that motivated this (fixed 2026-06-28)
+The de-overlap pass (`generate_data.py`, ~v2.0.2) spiral-shifts clustered markers' display
+posX/posZ up to ~15u. The OLD WGM detection matched a row to its live instance **by position**
+(±1u), so a shifted node never matched → it only hid via GEOF on tile reload, not immediately
+("some material nodes disappear only after location reload"; 554/1548 convergence3 nodes
+shifted). Stopgap: bake `real_posX/real_posZ` (true MSB coords) and match on those. Proper fix:
+the coordinate-free (model_id, geom_idx)→slot matching above, which doesn't depend on coords
+at all (real_posX/Z now only disambiguates twins).
+
 ### AEG099_651 Caveat
 
 For gathering nodes (AEG099_651), +0x263 does **not** update while the tile is loaded. It only reflects the correct state after the tile unloads (GEOF saves it) and reloads. This means:

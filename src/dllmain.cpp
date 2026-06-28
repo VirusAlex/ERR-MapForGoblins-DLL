@@ -283,7 +283,7 @@ bool WINAPI DllMain(HINSTANCE dll_instance, unsigned int fdw_reason, void *lpv_r
 
         setup_logger(folder / "logs" / "MapForGoblins.log");
 
-        spdlog::info("Map For Goblins DLL v{}", PROJECT_VERSION);
+        spdlog::info("Map For Goblins DLL v{} [{}] ({})", PROJECT_VERSION, BUILD_NAME, GIT_HASH);
         goblin::load_config(folder / "MapForGoblins.ini");
 
         if (goblin::config::debugLogging)

@@ -22,6 +22,11 @@ namespace goblin
     /// no entry. Used by the marker dump to print exact loot/location names.
     const wchar_t *lookup_text(int32_t id);
 
+    /// Like lookup_text but probes the PlaceName DLC layer FMGs (slots 329/429)
+    /// with a RAW id - for the marker dump to resolve DLC-layer-only location
+    /// names that the game falls back to but our expanded base buffer omits.
+    const wchar_t *lookup_text_dlc(int32_t id);
+
     /// Collision-proof textId remap. setup_messages() copies every injected
     /// string into PlaceName at a FRESH id allocated contiguously ABOVE the
     /// runtime max PlaceName id (dynamically sized bands, never a fixed range),

@@ -54,6 +54,11 @@ int32_t goblin::remap_textid(int32_t encoded)
 static uint8_t **g_placename_slot_ptr = nullptr;
 static uint8_t *g_vanilla_placename_fmg = nullptr;
 static uint8_t *g_expanded_placename_fmg = nullptr;
+// PlaceName DLC layer FMGs (slots 329, 429). The game resolves a marker's
+// PlaceName textId through these layers first, then the base slot; ids that live
+// only in a DLC layer aren't in our expanded base buffer. Captured at setup so
+// the marker dump can resolve location names the way the game does.
+static uint8_t *g_placename_dlc_slots[2] = {nullptr, nullptr};
 static bool g_fmg_injection_active = false;
 
 // ── SEH-guarded slot access ──
@@ -934,6 +939,8 @@ void goblin::setup_messages()
         g_placename_slot_ptr = &sub[19];
         g_vanilla_placename_fmg = fmg_ptr;
         g_expanded_placename_fmg = sub[19];
+        g_placename_dlc_slots[0] = (329 < count2) ? sub[329] : nullptr;
+        g_placename_dlc_slots[1] = (429 < count2) ? sub[429] : nullptr;
         g_fmg_injection_active = true;
 
 #ifdef MFG_VANILLA
@@ -1125,12 +1132,11 @@ bool goblin::is_fmg_injection_active()
     return g_fmg_injection_active;
 }
 
-const wchar_t *goblin::lookup_text(int32_t id)
+// Look an id up in ONE FMG-v2 buffer (same layout fixup as patch_fmg_in_memory).
+static const wchar_t *fmg_lookup_in(uint8_t *fmg, int32_t id)
 {
-    uint8_t *fmg = g_expanded_placename_fmg;
     if (!fmg || id <= 0)
         return nullptr;
-    // Same FMG-v2 layout + relative/absolute offset fixup as patch_fmg_in_memory.
     uint32_t group_cnt  = *reinterpret_cast<uint32_t *>(fmg + 0x0C);
     uint32_t string_cnt = *reinterpret_cast<uint32_t *>(fmg + 0x10);
     uint64_t raw        = *reinterpret_cast<uint64_t *>(fmg + 0x18);
@@ -1153,5 +1159,21 @@ const wchar_t *goblin::lookup_text(int32_t id)
             return (s && *s) ? s : nullptr;
         }
     }
+    return nullptr;
+}
+
+const wchar_t *goblin::lookup_text(int32_t id)
+{
+    return fmg_lookup_in(g_expanded_placename_fmg, id);
+}
+
+const wchar_t *goblin::lookup_text_dlc(int32_t id)
+{
+    // Raw (un-remapped) PlaceName id, probed in the DLC layers the game falls back
+    // to. Used by the marker dump for DLC-layer-only locations that aren't carried
+    // in our expanded base buffer.
+    for (uint8_t *fmg : g_placename_dlc_slots)
+        if (const wchar_t *s = fmg_lookup_in(fmg, id))
+            return s;
     return nullptr;
 }

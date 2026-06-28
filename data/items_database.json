@@ -901334,6 +901334,66 @@
   "npcParamId": 45020022
  },
  {
+  "map": "m60_33_42_00",
+  "x": -40.589,
+  "y": 346.7,
+  "z": 86.259,
+  "areaNo": 60,
+  "gridX": 33,
+  "gridZ": 42,
+  "dispMask": "dispMask00",
+  "itemLotId": 30266,
+  "eventFlag": 1042617107,
+  "partName": "c2100_9000",
+  "items": [
+   {
+    "id": 800010,
+    "category": 1,
+    "num": 3,
+    "name": "Rune Piece",
+    "broad_category": "crafting_material",
+    "sub_category": "crafting_material"
+   }
+  ],
+  "primary_category": "crafting_material",
+  "source": "emevd",
+  "guaranteed": true,
+  "enemyModel": "c2100",
+  "npcParamId": 21002922,
+  "defeatFlag": 1033420800,
+  "emevdEventId": 90005880
+ },
+ {
+  "map": "m60_33_42_00",
+  "x": -40.589,
+  "y": 346.7,
+  "z": 86.259,
+  "areaNo": 60,
+  "gridX": 33,
+  "gridZ": 42,
+  "dispMask": "dispMask00",
+  "itemLotId": 30265,
+  "eventFlag": 530265,
+  "partName": "c2100_9000",
+  "items": [
+   {
+    "id": 300000,
+    "category": 1,
+    "num": 1,
+    "name": "Black Knife Tiche",
+    "broad_category": "consumable",
+    "sub_category": "consumable"
+   }
+  ],
+  "primary_category": "consumable",
+  "source": "emevd",
+  "guaranteed": true,
+  "enemyModel": "c2100",
+  "npcParamId": 21002922,
+  "defeatFlag": 1033420800,
+  "emevdEventId": 90005880
+ },
+ {
   "map": "m60_33_43_00",
   "x": 42.488,
   "y": 291.7,
@@ -901540,6 +901600,66 @@
   "npcParamId": 543110020,
   "defeatFlag": 1033440180,
   "emevdEventId": 90005792
+ },
+ {
+  "map": "m60_33_45_00",
+  "x": -51.825,
+  "y": 244.952,
+  "z": -29.646,
+  "areaNo": 60,
+  "gridX": 33,
+  "gridZ": 45,
+  "dispMask": "dispMask00",
+  "itemLotId": 30251,
+  "eventFlag": 1042617104,
+  "partName": "c4601_9001",
+  "items": [
+   {
+    "id": 800010,
+    "category": 1,
+    "num": 1,
+    "name": "Rune Piece",
+    "broad_category": "crafting_material",
+    "sub_category": "crafting_material"
+   }
+  ],
+  "primary_category": "crafting_material",
+  "source": "emevd",
+  "guaranteed": true,
+  "enemyModel": "c4601",
+  "npcParamId": 46010920,
+  "defeatFlag": 1033450800,
+  "emevdEventId": 90005880
+ },
+ {
+  "map": "m60_33_45_00",
+  "x": -51.825,
+  "y": 244.952,
+  "z": -29.646,
+  "areaNo": 60,
+  "gridX": 33,
+  "gridZ": 45,
+  "dispMask": "dispMask00",
+  "itemLotId": 30250,
+  "eventFlag": 530250,
+  "partName": "c4601_9001",
+  "items": [
+   {
+    "id": 4302,
+    "category": 1,
+    "num": 1,
+    "name": "Greatblade Phalanx",
+    "broad_category": "key_item",
+    "sub_category": "key_item"
+   }
+  ],
+  "primary_category": "key_item",
+  "source": "emevd",
+  "guaranteed": true,
+  "enemyModel": "c4601",
+  "npcParamId": 46010920,
+  "defeatFlag": 1033450800,
+  "emevdEventId": 90005880
  },
  {
   "map": "m60_33_45_00",
@@ -902582,6 +902702,66 @@
   "npcParamId": 48600520
  },
  {
+  "map": "m60_36_50_00",
+  "x": 121.092,
+  "y": 379.592,
+  "z": 10.945,
+  "areaNo": 60,
+  "gridX": 36,
+  "gridZ": 50,
+  "dispMask": "dispMask00",
+  "itemLotId": 30256,
+  "eventFlag": 1042617105,
+  "partName": "c3600_9000",
+  "items": [
+   {
+    "id": 800010,
+    "category": 1,
+    "num": 1,
+    "name": "Rune Piece",
+    "broad_category": "crafting_material",
+    "sub_category": "crafting_material"
+   }
+  ],
+  "primary_category": "crafting_material",
+  "source": "emevd",
+  "guaranteed": true,
+  "enemyModel": "c3600",
+  "npcParamId": 36001921,
+  "defeatFlag": 1036500800,
+  "emevdEventId": 90005880
+ },
+ {
+  "map": "m60_36_50_00",
+  "x": 121.092,
+  "y": 379.592,
+  "z": 10.945,
+  "areaNo": 60,
+  "gridX": 36,
+  "gridZ": 50,
+  "dispMask": "dispMask00",
+  "itemLotId": 30255,
+  "eventFlag": 530255,
+  "partName": "c3600_9000",
+  "items": [
+   {
+    "id": 4700,
+    "category": 1,
+    "num": 1,
+    "name": "Meteorite",
+    "broad_category": "key_item",
+    "sub_category": "key_item"
+   }
+  ],
+  "primary_category": "key_item",
+  "source": "emevd",
+  "guaranteed": true,
+  "enemyModel": "c3600",
+  "npcParamId": 36001921,
+  "defeatFlag": 1036500800,
+  "emevdEventId": 90005880
+ },
+ {
   "map": "m60_36_54_00",
   "x": 100.824,
   "y": 1048.673,
@@ -903344,6 +903524,66 @@
   "guaranteed": true,
   "enemyModel": "c3060",
   "npcParamId": 30600120
+ },
+ {
+  "map": "m60_38_41_00",
+  "x": -0.769,
+  "y": 257.239,
+  "z": -116.265,
+  "areaNo": 60,
+  "gridX": 38,
+  "gridZ": 41,
+  "dispMask": "dispMask00",
+  "itemLotId": 30246,
+  "eventFlag": 1042617103,
+  "partName": "c3910_9000",
+  "items": [
+   {
+    "id": 800010,
+    "category": 1,
+    "num": 1,
+    "name": "Rune Piece",
+    "broad_category": "crafting_material",
+    "sub_category": "crafting_material"
+   }
+  ],
+  "primary_category": "crafting_material",
+  "source": "emevd",
+  "guaranteed": true,
+  "enemyModel": "c3910",
+  "npcParamId": 39100120,
+  "defeatFlag": 1038410800,
+  "emevdEventId": 90005880
+ },
+ {
+  "map": "m60_38_41_00",
+  "x": -0.769,
+  "y": 257.239,
+  "z": -116.265,
+  "areaNo": 60,
+  "gridX": 38,
+  "gridZ": 41,
+  "dispMask": "dispMask00",
+  "itemLotId": 30245,
+  "eventFlag": 530245,
+  "partName": "c3910_9000",
+  "items": [
+   {
+    "id": 6110,
+    "category": 1,
+    "num": 1,
+    "name": "Flame of the Fell God",
+    "broad_category": "key_item",
+    "sub_category": "remembrance"
+   }
+  ],
+  "primary_category": "key_item",
+  "source": "emevd",
+  "guaranteed": true,
+  "enemyModel": "c3910",
+  "npcParamId": 39100120,
+  "defeatFlag": 1038410800,
+  "emevdEventId": 90005880
  },
  {
   "map": "m60_38_44_00",
@@ -904976,6 +905216,66 @@
   "npcParamId": 41914012
  },
  {
+  "map": "m60_42_33_00",
+  "x": -127.374,
+  "y": 19.942,
+  "z": 109.081,
+  "areaNo": 60,
+  "gridX": 42,
+  "gridZ": 33,
+  "dispMask": "dispMask00",
+  "itemLotId": 1042330101,
+  "eventFlag": 1042617155,
+  "partName": "c7100_9001",
+  "items": [
+   {
+    "id": 800010,
+    "category": 1,
+    "num": 1,
+    "name": "Rune Piece",
+    "broad_category": "crafting_material",
+    "sub_category": "crafting_material"
+   }
+  ],
+  "primary_category": "crafting_material",
+  "source": "emevd",
+  "guaranteed": true,
+  "enemyModel": "c7100",
+  "npcParamId": 71000012,
+  "defeatFlag": 1042330800,
+  "emevdEventId": 90005880
+ },
+ {
+  "map": "m60_42_33_00",
+  "x": -127.374,
+  "y": 19.942,
+  "z": 109.081,
+  "areaNo": 60,
+  "gridX": 42,
+  "gridZ": 33,
+  "dispMask": "dispMask00",
+  "itemLotId": 1042330100,
+  "eventFlag": 1042337100,
+  "partName": "c7100_9001",
+  "items": [
+   {
+    "id": 1050,
+    "category": 4,
+    "num": 1,
+    "name": "Radagon's Scarseal",
+    "broad_category": "talisman",
+    "sub_category": "talisman"
+   }
+  ],
+  "primary_category": "talisman",
+  "source": "emevd",
+  "guaranteed": true,
+  "enemyModel": "c7100",
+  "npcParamId": 71000012,
+  "defeatFlag": 1042330800,
+  "emevdEventId": 90005880
+ },
+ {
   "map": "m60_42_36_00",
   "x": -12.138,
   "y": 88.955,
@@ -905034,6 +905334,66 @@
   "npcParamId": 32510010,
   "defeatFlag": 1042360800,
   "emevdEventId": 90005860
+ },
+ {
+  "map": "m60_42_37_00",
+  "x": -82.454,
+  "y": 160.516,
+  "z": 64.524,
+  "areaNo": 60,
+  "gridX": 42,
+  "gridZ": 37,
+  "dispMask": "dispMask00",
+  "itemLotId": 30121,
+  "eventFlag": 1042617092,
+  "partName": "c2500_9000",
+  "items": [
+   {
+    "id": 800010,
+    "category": 1,
+    "num": 1,
+    "name": "Rune Piece",
+    "broad_category": "crafting_material",
+    "sub_category": "crafting_material"
+   }
+  ],
+  "primary_category": "crafting_material",
+  "source": "emevd",
+  "guaranteed": true,
+  "enemyModel": "c2500",
+  "npcParamId": 25000015,
+  "defeatFlag": 1042370800,
+  "emevdEventId": 90005880
+ },
+ {
+  "map": "m60_42_37_00",
+  "x": -82.454,
+  "y": 160.516,
+  "z": 64.524,
+  "areaNo": 60,
+  "gridX": 42,
+  "gridZ": 37,
+  "dispMask": "dispMask00",
+  "itemLotId": 30120,
+  "eventFlag": 530120,
+  "partName": "c2500_9000",
+  "items": [
+   {
+    "id": 7500,
+    "category": 1,
+    "num": 1,
+    "name": "Aspects of the Crucible: Tail",
+    "broad_category": "key_item",
+    "sub_category": "remembrance"
+   }
+  ],
+  "primary_category": "key_item",
+  "source": "emevd",
+  "guaranteed": true,
+  "enemyModel": "c2500",
+  "npcParamId": 25000015,
+  "defeatFlag": 1042370800,
+  "emevdEventId": 90005880
  },
  {
   "map": "m60_42_38_00",
@@ -906298,6 +906658,66 @@
   "guaranteed": true,
   "enemyModel": "c4191",
   "npcParamId": 41912012
+ },
+ {
+  "map": "m60_44_35_00",
+  "x": -17.201,
+  "y": 105.649,
+  "z": -137.828,
+  "areaNo": 60,
+  "gridX": 44,
+  "gridZ": 35,
+  "dispMask": "dispMask00",
+  "itemLotId": 30131,
+  "eventFlag": 1042617093,
+  "partName": "c4290_9000",
+  "items": [
+   {
+    "id": 800010,
+    "category": 1,
+    "num": 1,
+    "name": "Rune Piece",
+    "broad_category": "crafting_material",
+    "sub_category": "crafting_material"
+   }
+  ],
+  "primary_category": "crafting_material",
+  "source": "emevd",
+  "guaranteed": true,
+  "enemyModel": "c4290",
+  "npcParamId": 42900010,
+  "defeatFlag": 1044350800,
+  "emevdEventId": 90005880
+ },
+ {
+  "map": "m60_44_35_00",
+  "x": -17.201,
+  "y": 105.649,
+  "z": -137.828,
+  "areaNo": 60,
+  "gridX": 44,
+  "gridZ": 35,
+  "dispMask": "dispMask00",
+  "itemLotId": 30130,
+  "eventFlag": 530130,
+  "partName": "c4290_9000",
+  "items": [
+   {
+    "id": 8030000,
+    "category": 2,
+    "num": 1,
+    "name": "Bloodhound's Fang",
+    "broad_category": "armament",
+    "sub_category": "flail"
+   }
+  ],
+  "primary_category": "armament",
+  "source": "emevd",
+  "guaranteed": true,
+  "enemyModel": "c4290",
+  "npcParamId": 42900010,
+  "defeatFlag": 1044350800,
+  "emevdEventId": 90005880
  },
  {
   "map": "m60_44_35_00",
@@ -908023,6 +908443,96 @@
  },
  {
   "map": "m60_49_39_00",
+  "x": -87.897,
+  "y": 164.005,
+  "z": -8.448,
+  "areaNo": 60,
+  "gridX": 49,
+  "gridZ": 39,
+  "dispMask": "dispMask00",
+  "itemLotId": 1049390851,
+  "eventFlag": 1049397850,
+  "partName": "c3704_9000",
+  "items": [
+   {
+    "id": 900258,
+    "category": 1,
+    "num": 1,
+    "name": "Fortune of Haima",
+    "broad_category": "consumable",
+    "sub_category": "consumable"
+   }
+  ],
+  "primary_category": "consumable",
+  "source": "emevd",
+  "guaranteed": true,
+  "enemyModel": "c3704",
+  "npcParamId": 37040940,
+  "defeatFlag": 1049390850,
+  "emevdEventId": 90005880
+ },
+ {
+  "map": "m60_49_39_00",
+  "x": -87.897,
+  "y": 164.005,
+  "z": -8.448,
+  "areaNo": 60,
+  "gridX": 49,
+  "gridZ": 39,
+  "dispMask": "dispMask00",
+  "itemLotId": 1049390852,
+  "eventFlag": 1042617172,
+  "partName": "c3704_9000",
+  "items": [
+   {
+    "id": 800010,
+    "category": 1,
+    "num": 1,
+    "name": "Rune Piece",
+    "broad_category": "crafting_material",
+    "sub_category": "crafting_material"
+   }
+  ],
+  "primary_category": "crafting_material",
+  "source": "emevd",
+  "guaranteed": true,
+  "enemyModel": "c3704",
+  "npcParamId": 37040940,
+  "defeatFlag": 1049390850,
+  "emevdEventId": 90005880
+ },
+ {
+  "map": "m60_49_39_00",
+  "x": -87.897,
+  "y": 164.005,
+  "z": -8.448,
+  "areaNo": 60,
+  "gridX": 49,
+  "gridZ": 39,
+  "dispMask": "dispMask00",
+  "itemLotId": 1049390850,
+  "eventFlag": 1049397850,
+  "partName": "c3704_9000",
+  "items": [
+   {
+    "id": 321000,
+    "category": 1,
+    "num": 1,
+    "name": "Battlemage Hugues",
+    "broad_category": "consumable",
+    "sub_category": "consumable"
+   }
+  ],
+  "primary_category": "consumable",
+  "source": "emevd",
+  "guaranteed": true,
+  "enemyModel": "c3704",
+  "npcParamId": 37040940,
+  "defeatFlag": 1049390850,
+  "emevdEventId": 90005880
+ },
+ {
+  "map": "m60_49_39_00",
   "x": 105.965,
   "y": 92.383,
   "z": -59.205,
@@ -909568,6 +910078,186 @@
   "npcParamId": 48100150,
   "defeatFlag": 1052560800,
   "emevdEventId": 90005860
+ },
+ {
+  "map": "m60_53_56_00",
+  "x": -52.497,
+  "y": 1668.431,
+  "z": -116.306,
+  "areaNo": 60,
+  "gridX": 53,
+  "gridZ": 56,
+  "dispMask": "dispMask00",
+  "itemLotId": 30517,
+  "eventFlag": 530515,
+  "partName": "c0000_9000",
+  "items": [
+   {
+    "id": 950000,
+    "category": 3,
+    "num": 1,
+    "name": "Fingerprint Helm",
+    "broad_category": "armour",
+    "sub_category": "armour"
+   }
+  ],
+  "primary_category": "armour",
+  "source": "emevd",
+  "guaranteed": true,
+  "enemyModel": "c0000",
+  "npcParamId": 523040050,
+  "defeatFlag": 1053560800,
+  "emevdEventId": 90005880
+ },
+ {
+  "map": "m60_53_56_00",
+  "x": -52.497,
+  "y": 1668.431,
+  "z": -116.306,
+  "areaNo": 60,
+  "gridX": 53,
+  "gridZ": 56,
+  "dispMask": "dispMask00",
+  "itemLotId": 30518,
+  "eventFlag": 530515,
+  "partName": "c0000_9000",
+  "items": [
+   {
+    "id": 950100,
+    "category": 3,
+    "num": 1,
+    "name": "Fingerprint Armor",
+    "broad_category": "armour",
+    "sub_category": "armour"
+   }
+  ],
+  "primary_category": "armour",
+  "source": "emevd",
+  "guaranteed": true,
+  "enemyModel": "c0000",
+  "npcParamId": 523040050,
+  "defeatFlag": 1053560800,
+  "emevdEventId": 90005880
+ },
+ {
+  "map": "m60_53_56_00",
+  "x": -52.497,
+  "y": 1668.431,
+  "z": -116.306,
+  "areaNo": 60,
+  "gridX": 53,
+  "gridZ": 56,
+  "dispMask": "dispMask00",
+  "itemLotId": 30519,
+  "eventFlag": 530515,
+  "partName": "c0000_9000",
+  "items": [
+   {
+    "id": 950200,
+    "category": 3,
+    "num": 1,
+    "name": "Fingerprint Gauntlets",
+    "broad_category": "armour",
+    "sub_category": "armour"
+   }
+  ],
+  "primary_category": "armour",
+  "source": "emevd",
+  "guaranteed": true,
+  "enemyModel": "c0000",
+  "npcParamId": 523040050,
+  "defeatFlag": 1053560800,
+  "emevdEventId": 90005880
+ },
+ {
+  "map": "m60_53_56_00",
+  "x": -52.497,
+  "y": 1668.431,
+  "z": -116.306,
+  "areaNo": 60,
+  "gridX": 53,
+  "gridZ": 56,
+  "dispMask": "dispMask00",
+  "itemLotId": 30520,
+  "eventFlag": 530515,
+  "partName": "c0000_9000",
+  "items": [
+   {
+    "id": 950300,
+    "category": 3,
+    "num": 1,
+    "name": "Fingerprint Greaves",
+    "broad_category": "armour",
+    "sub_category": "armour"
+   }
+  ],
+  "primary_category": "armour",
+  "source": "emevd",
+  "guaranteed": true,
+  "enemyModel": "c0000",
+  "npcParamId": 523040050,
+  "defeatFlag": 1053560800,
+  "emevdEventId": 90005880
+ },
+ {
+  "map": "m60_53_56_00",
+  "x": -52.497,
+  "y": 1668.431,
+  "z": -116.306,
+  "areaNo": 60,
+  "gridX": 53,
+  "gridZ": 56,
+  "dispMask": "dispMask00",
+  "itemLotId": 30521,
+  "eventFlag": 1042617128,
+  "partName": "c0000_9000",
+  "items": [
+   {
+    "id": 800010,
+    "category": 1,
+    "num": 3,
+    "name": "Rune Piece",
+    "broad_category": "crafting_material",
+    "sub_category": "crafting_material"
+   }
+  ],
+  "primary_category": "crafting_material",
+  "source": "emevd",
+  "guaranteed": true,
+  "enemyModel": "c0000",
+  "npcParamId": 523040050,
+  "defeatFlag": 1053560800,
+  "emevdEventId": 90005880
+ },
+ {
+  "map": "m60_53_56_00",
+  "x": -52.497,
+  "y": 1668.431,
+  "z": -116.306,
+  "areaNo": 60,
+  "gridX": 53,
+  "gridZ": 56,
+  "dispMask": "dispMask00",
+  "itemLotId": 30515,
+  "eventFlag": 530515,
+  "partName": "c0000_9000",
+  "items": [
+   {
+    "id": 6970,
+    "category": 1,
+    "num": 1,
+    "name": "Vyke's Dragonbolt",
+    "broad_category": "consumable",
+    "sub_category": "consumable"
+   }
+  ],
+  "primary_category": "consumable",
+  "source": "emevd",
+  "guaranteed": true,
+  "enemyModel": "c0000",
+  "npcParamId": 523040050,
+  "defeatFlag": 1053560800,
+  "emevdEventId": 90005880
  },
  {
   "map": "m60_53_57_00",
@@ -924631,56 +925321,6 @@
  },
  {
   "map": "m60_42_33_00",
-  "x": -127.3740005493164,
-  "y": 19.941999435424805,
-  "z": 109.08100128173828,
-  "areaNo": 60,
-  "gridX": 42,
-  "gridZ": 33,
-  "dispMask": "dispMask00",
-  "itemLotId": 1042330100,
-  "eventFlag": 1042337100,
-  "partName": "c7100",
-  "items": [
-   {
-    "id": 1050,
-    "category": 4,
-    "num": 1,
-    "name": "Radagon's Scarseal",
-    "broad_category": "talisman",
-    "sub_category": "talisman"
-   }
-  ],
-  "primary_category": "talisman",
-  "source": "emevd_treasure"
- },
- {
-  "map": "m60_42_33_00",
-  "x": 0.0,
-  "y": 0.0,
-  "z": 0.0,
-  "areaNo": 60,
-  "gridX": 42,
-  "gridZ": 33,
-  "dispMask": "dispMask00",
-  "itemLotId": 1042330101,
-  "eventFlag": 1042617155,
-  "partName": "",
-  "items": [
-   {
-    "id": 800010,
-    "category": 1,
-    "num": 1,
-    "name": "Rune Piece",
-    "broad_category": "crafting_material",
-    "sub_category": "crafting_material"
-   }
-  ],
-  "primary_category": "crafting_material",
-  "from_fallback": true
- },
- {
-  "map": "m60_42_33_00",
   "x": 0.0,
   "y": 0.0,
   "z": 0.0,
@@ -934165,81 +934805,6 @@
   "dispMask": "dispMask00",
   "itemLotId": 1049390801,
   "eventFlag": 1042617184,
-  "partName": "",
-  "items": [
-   {
-    "id": 800010,
-    "category": 1,
-    "num": 1,
-    "name": "Rune Piece",
-    "broad_category": "crafting_material",
-    "sub_category": "crafting_material"
-   }
-  ],
-  "primary_category": "crafting_material",
-  "from_fallback": true
- },
- {
-  "map": "m60_49_39_00",
-  "x": 0.0,
-  "y": 0.0,
-  "z": 0.0,
-  "areaNo": 60,
-  "gridX": 49,
-  "gridZ": 39,
-  "dispMask": "dispMask00",
-  "itemLotId": 1049390850,
-  "eventFlag": 1049397850,
-  "partName": "",
-  "items": [
-   {
-    "id": 321000,
-    "category": 1,
-    "num": 1,
-    "name": "Battlemage Hugues",
-    "broad_category": "consumable",
-    "sub_category": "consumable"
-   }
-  ],
-  "primary_category": "consumable",
-  "from_fallback": true
- },
- {
-  "map": "m60_49_39_00",
-  "x": 0.0,
-  "y": 0.0,
-  "z": 0.0,
-  "areaNo": 60,
-  "gridX": 49,
-  "gridZ": 39,
-  "dispMask": "dispMask00",
-  "itemLotId": 1049390851,
-  "eventFlag": 1049397850,
-  "partName": "",
-  "items": [
-   {
-    "id": 900258,
-    "category": 1,
-    "num": 1,
-    "name": "Fortune of Haima",
-    "broad_category": "consumable",
-    "sub_category": "consumable"
-   }
-  ],
-  "primary_category": "consumable",
-  "from_fallback": true
- },
- {
-  "map": "m60_49_39_00",
-  "x": 0.0,
-  "y": 0.0,
-  "z": 0.0,
-  "areaNo": 60,
-  "gridX": 49,
-  "gridZ": 39,
-  "dispMask": "dispMask00",
-  "itemLotId": 1049390852,
-  "eventFlag": 1042617172,
   "partName": "",
   "items": [
    {

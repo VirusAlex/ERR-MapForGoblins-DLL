@@ -16,6 +16,8 @@
 #include "modutils.hpp"
 #include "goblin_legacy_conv.hpp"
 #include "goblin_map_data.hpp"
+#include "from/params.hpp"
+#include "from/paramdef/WORLD_MAP_POINT_PARAM_ST.hpp"
 
 #include <windows.h>
 #include <spdlog/spdlog.h>
@@ -31,6 +33,7 @@
 #include <sstream>
 #include <string>
 #include <thread>
+#include <unordered_set>
 #include <vector>
 
 namespace goblin::markers
@@ -306,6 +309,7 @@ static const char *category_name(generated::Category c)
 struct NearbyEntry
 {
     uint64_t row_id;
+    const from::paramdef::WORLD_MAP_POINT_PARAM_ST *data;  // baked row (all 8 textId slots)
     generated::Category category;
     int32_t item_tid;         // loot item-name textId  (0 = none)
     int32_t loc_tid;          // location (PlaceName) textId
@@ -321,6 +325,7 @@ struct NearbyEntry
     float entry_worldX;
     float entry_worldZ;
     float dist;
+    bool is_ours;             // true = a marker this mod injected (vs vanilla/overhaul)
 };
 
 // Classify a marker's textId slots into loot / location / drop-source by their
@@ -359,32 +364,41 @@ static std::string wide_to_utf8(const wchar_t *w)
     return out;
 }
 
-// Resolve a marker textId to its in-game string (player's language). "" if none.
+// Resolve a marker textId to its in-game string (player's language), the way the
+// game does: offset-encoded ids were relocated to fresh ids (remap_textid), and
+// DLC-layer-only PlaceName ids aren't in our expanded base buffer (probe layers).
+// "" if it resolves to nothing.
 static std::string resolve_text(int32_t text_id)
 {
-    return wide_to_utf8(goblin::lookup_text(text_id));
+    if (text_id <= 0)
+        return {};
+    int32_t mapped = goblin::remap_textid(text_id);
+    if (const wchar_t *s = goblin::lookup_text(mapped))
+        return wide_to_utf8(s);
+    if (const wchar_t *s = goblin::lookup_text_dlc(text_id))
+        return wide_to_utf8(s);
+    return {};
 }
 
-// For dungeon entries, use LegacyConvParam to map onto overworld (m60/m61).
-static bool entry_world_coords(const generated::MapEntry &e, float &wx, float &wz)
+// Map a marker's (area, grid, local pos) to overworld world coords. Overworld tiles
+// (m60/m61) are direct; dungeon areas go through WorldMapLegacyConvParam (our baked
+// LEGACY_CONV table, dumped from the same param the game uses).
+static bool compute_world_coords(uint8_t area, uint8_t gx, uint8_t gz,
+                                 float posX, float posZ, float &wx, float &wz)
 {
-    uint8_t area = e.data.areaNo;
     if (area == 60 || area == 61)
     {
-        wx = static_cast<float>(e.data.gridXNo) * 256.0f + e.data.posX;
-        wz = static_cast<float>(e.data.gridZNo) * 256.0f + e.data.posZ;
+        wx = static_cast<float>(gx) * 256.0f + posX;
+        wz = static_cast<float>(gz) * 256.0f + posZ;
         return true;
     }
-    // Dungeon: lookup (srcArea, srcGridX) in conv table (takes first match).
     for (size_t i = 0; i < generated::LEGACY_CONV_COUNT; ++i)
     {
         const auto &c = generated::LEGACY_CONV[i];
-        if (c.src_area == area && c.src_gx == e.data.gridXNo)
+        if (c.src_area == area && c.src_gx == gx)
         {
-            wx = static_cast<float>(c.dst_gx) * 256.0f + c.dst_pos_x
-               + (e.data.posX - c.src_pos_x);
-            wz = static_cast<float>(c.dst_gz) * 256.0f + c.dst_pos_z
-               + (e.data.posZ - c.src_pos_z);
+            wx = static_cast<float>(c.dst_gx) * 256.0f + c.dst_pos_x + (posX - c.src_pos_x);
+            wz = static_cast<float>(c.dst_gz) * 256.0f + c.dst_pos_z + (posZ - c.src_pos_z);
             return true;
         }
     }
@@ -398,26 +412,46 @@ static std::vector<NearbyEntry> find_nearby_overworld(float mapX, float mapZ, fl
     float beacon_wz = -mapZ + 16511.0f;
     float r2 = radius * radius;
 
+    // Pointer identity of OUR injected rows - reliable even though the engine may
+    // reassign their row ids at load (see row_id_registry), so match by data ptr.
+    const auto &ours = goblin::injected_row_ptrs();
+    std::unordered_set<const void *> ourset(ours.begin(), ours.end());
+
     std::vector<NearbyEntry> out;
-    for (size_t i = 0; i < generated::MAP_ENTRY_COUNT; ++i)
+    // Iterate the LIVE WorldMapPointParam so the dump lists EVERY marker on the map
+    // (vanilla + overhaul + ours), not only the ones we injected.
+    try
     {
-        const auto &e = generated::MAP_ENTRIES[i];
-        float ewx, ewz;
-        if (!entry_world_coords(e, ewx, ewz)) continue;
-        float dx = ewx - beacon_wx;
-        float dz = ewz - beacon_wz;
-        float d2 = dx * dx + dz * dz;
-        if (d2 > r2) continue;
-        int32_t item_tid, loc_tid, enemy_tid;
-        classify_textids(e.data, item_tid, loc_tid, enemy_tid);
-        out.push_back({
-            e.row_id, e.category, item_tid, loc_tid, enemy_tid,
-            e.data.textDisableFlagId1,
-            e.data.iconId, e.data.areaNo, e.data.gridXNo, e.data.gridZNo,
-            e.data.posX, e.data.posY, e.data.posZ, e.lotId,
-            e.object_name,
-            ewx, ewz, std::sqrt(d2)
-        });
+        auto param = from::params::get_param<from::paramdef::WORLD_MAP_POINT_PARAM_ST>(
+            L"WorldMapPointParam");
+        for (auto entry : param)
+        {
+            uint64_t row_id = entry.first;
+            auto &row = entry.second;
+            float ewx, ewz;
+            if (!compute_world_coords(row.areaNo, row.gridXNo, row.gridZNo,
+                                      row.posX, row.posZ, ewx, ewz))
+                continue;
+            float dx = ewx - beacon_wx;
+            float dz = ewz - beacon_wz;
+            float d2 = dx * dx + dz * dz;
+            if (d2 > r2) continue;
+            int32_t item_tid, loc_tid, enemy_tid;
+            classify_textids(row, item_tid, loc_tid, enemy_tid);
+            out.push_back({
+                row_id, &row, generated::Category{}, item_tid, loc_tid, enemy_tid,
+                row.textDisableFlagId1,
+                row.iconId, row.areaNo, row.gridXNo, row.gridZNo,
+                row.posX, row.posY, row.posZ, 0u,
+                nullptr,
+                ewx, ewz, std::sqrt(d2),
+                ourset.count(&row) != 0
+            });
+        }
+    }
+    catch (...)
+    {
+        spdlog::warn("Marker dump: WorldMapPointParam not available - live marker list skipped");
     }
     std::sort(out.begin(), out.end(),
               [](const NearbyEntry &a, const NearbyEntry &b) { return a.dist < b.dist; });
@@ -463,33 +497,52 @@ static int dump_impl(std::ostream &f, DumpSel sel)
             f << "      (no overworld MAP_ENTRIES within 50u)\n";
             return;
         }
-        f << "      " << nearby.size() << " MAP_ENTRIES within 50u:\n";
+        f << "      " << nearby.size() << " markers within 50u (all map markers, not just ours):\n";
         char tile[16];
         for (const auto &n : nearby)
         {
             std::snprintf(tile, sizeof(tile), "m%02u_%02u_%02u", n.area, n.gx, n.gz);
             bool hidden_by_flag = n.disable_flag1 && is_flag_set(n.disable_flag1);
-            bool hidden_by_mod = goblin::collected::is_original_row_collected(n.row_id);
+            bool hidden_by_mod = n.is_ours && goblin::collected::is_original_row_collected(n.row_id);
             const char *status = hidden_by_flag  ? "hidden(flag)"
                                : hidden_by_mod   ? "hidden(collected)"
                                                  : "visible";
-            std::string loc_name  = resolve_text(n.loc_tid);    // PlaceName next to tile
-            std::string loot_name = resolve_text(n.item_tid);   // exact item name
-            std::string from_name = resolve_text(n.enemy_tid);  // drop source (enemy/boss)
             f << "        dist=" << std::fixed << std::setprecision(1) << n.dist
-              << "  " << tile;
-            if (!loc_name.empty()) f << " (" << loc_name << ")";
-            f << "  icon=" << n.icon_id
+              << "  " << tile
+              << "  icon=" << n.icon_id
               << "  row=" << n.row_id
-              << "  [" << category_name(n.category) << "]"
+              << (n.is_ours ? "  [ours]" : "  [live]")
               << "  " << status
-              << "  loot=" << (loot_name.empty() ? "?" : loot_name);
-            if (!from_name.empty()) f << "  from=" << from_name;
-            f << "  pos=(" << std::fixed << std::setprecision(2)
+              << "  pos=(" << std::fixed << std::setprecision(2)
               << n.posX << "," << n.posY << "," << n.posZ << ")";
-            if (n.lot_id) f << "  lot=" << n.lot_id;
-            f << "  obj=" << (n.object_name ? n.object_name : "-");
             f << "\n";
+
+            // Compact per-slot textId diagnostic, one line for the whole marker.
+            // Per used slot (raw > 0): tN=raw[>remap]='resolved'  - remap shown only
+            // when it differs, the string from our expanded base buffer or (~prefix)
+            // the DLC PlaceName layers, EMPTY when nothing resolves. Lets us tell a
+            // genuinely text-less marker (engine draws no icon) from a wrong string.
+            if (n.data)
+            {
+                const int32_t tids[8] = {n.data->textId1, n.data->textId2, n.data->textId3,
+                                         n.data->textId4, n.data->textId5, n.data->textId6,
+                                         n.data->textId7, n.data->textId8};
+                f << "            ids:";
+                for (int i = 0; i < 8; ++i)
+                {
+                    int32_t raw = tids[i];
+                    if (raw <= 0) continue;
+                    int32_t rm = goblin::remap_textid(raw);
+                    std::string s = wide_to_utf8(goblin::lookup_text(rm));
+                    bool from_dlc = false;
+                    if (s.empty()) { s = wide_to_utf8(goblin::lookup_text_dlc(raw)); from_dlc = !s.empty(); }
+                    f << "  t" << (i + 1) << "=" << raw;
+                    if (rm != raw) f << ">" << rm;
+                    if (!s.empty())      f << "='" << (from_dlc ? "~" : "") << s << "'";
+                    else                 f << "=EMPTY";
+                }
+                f << "\n";
+            }
         }
     };
 

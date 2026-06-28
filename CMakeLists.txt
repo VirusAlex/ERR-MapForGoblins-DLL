@@ -219,6 +219,27 @@ endif()
 # tested snapshot DLL is byte-identical to the release (with /Brepro + same data).
 # The snapshot-vs-release distinction lives in the output folder, not the binary.
 set(FULL_VERSION "${CMAKE_PROJECT_VERSION}")
+# Build identity for the runtime startup log (helps triage user bug reports): the profile
+# name (derived from the bake dir) + the short git commit the DLL was built from (+ "-dirty"
+# when the working tree has uncommitted tracked changes). Same commit => same string => the
+# build-once-promote byte-identity (above) still holds. Captured at CONFIGURE time; git on
+# PATH is not guaranteed under the VS build env, so fall back to "nogit".
+if(GENERATED_SUBDIR STREQUAL "generated")
+  set(BUILD_NAME "err")
+else()
+  string(REPLACE "generated_" "" BUILD_NAME "${GENERATED_SUBDIR}")
+endif()
+execute_process(COMMAND git -C "${CMAKE_SOURCE_DIR}" rev-parse --short HEAD
+                OUTPUT_VARIABLE GIT_HASH OUTPUT_STRIP_TRAILING_WHITESPACE ERROR_QUIET)
+if(NOT GIT_HASH)
+  set(GIT_HASH "nogit")
+else()
+  execute_process(COMMAND git -C "${CMAKE_SOURCE_DIR}" diff --quiet HEAD
+                  RESULT_VARIABLE _git_dirty ERROR_QUIET)
+  if(_git_dirty)
+    set(GIT_HASH "${GIT_HASH}-dirty")
+  endif()
+endif()
 configure_file(${CMAKE_SOURCE_DIR}/src/version.h.in
                ${CMAKE_BINARY_DIR}/generated/version.h @ONLY)
 target_include_directories(MapForGoblins PRIVATE ${CMAKE_BINARY_DIR}/generated)

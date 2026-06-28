@@ -243,9 +243,10 @@ COORD_SHIFTS={(11,10):(-2195.0,-352.0)}
 # ---- parse baked cpp ----
 CPP=str(config.GENERATED_DIR / "goblin_map_data.cpp")
 txt=open(CPP,encoding="utf-8").read()
-# split per entry: "{<id>ull, {" ... "}, Category::<cat>, <geom>, <suffix>, "name"|nullptr, <lotId>u, <lotType>},"
-# (the trailing lotId/lotType pair is optional for backward compat)
-ENTRY=re.compile(r"\{(\d+)ull,\s*\{(.*?)\},\s*Category::(\w+),\s*(-?\d+),\s*(-?\d+),\s*(?:nullptr|\"([^\"]*)\")(?:,\s*\d+u?,\s*\d+)?\}", re.DOTALL)
+# split per entry: "{<id>ull, {" ... "}, Category::<cat>, <geom>, <suffix>, "name"|nullptr, <lotId>u, <lotType>, <real_posX>f, <real_posZ>f},"
+# Trailing tail is optional for backward compat: the lotId/lotType pair, and (newer) the
+# real_posX/real_posZ floats that follow it - so the regex matches old AND current emits.
+ENTRY=re.compile(r"\{(\d+)ull,\s*\{(.*?)\},\s*Category::(\w+),\s*(-?\d+),\s*(-?\d+),\s*(?:nullptr|\"([^\"]*)\")(?:,\s*\d+u?,\s*\d+(?:,\s*-?[\d.]+f?,\s*-?[\d.]+f?)?)?\}", re.DOTALL)
 def fget(body,name):
     m=re.search(r"\."+name+r"\s*=\s*(-?[\d.]+)f?", body)
     return m.group(1) if m else None
