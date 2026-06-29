@@ -11,7 +11,11 @@ LTCG linking is RAM-heavy, so concurrency is capped by --jobs (default 4). Each
 build.bat still uses msbuild /m internally, so don't set --jobs too high.
 
 Usage:
-  py tools/build_all.py [snapshot|release] [--force-all] [--jobs N] [--profiles a,b,c]
+  py tools/build_all.py [snapshot|release] [--force-all] [--scan] [--jobs N] [--profiles a,b,c]
+
+--scan VT-scans each profile's DLL the moment ITS build finishes (via
+dashboard/vt_runner.py), so scans overlap with the still-running builds instead
+of waiting for all eight; a per-profile MS-verdict summary prints at the end.
 
 Prints a profiling summary: gen_shared per-script, per-profile pipeline vs compile,
 slowest pipeline stages, and wall-clock vs sequential-sum (the parallel saving).
@@ -56,6 +60,7 @@ def main():
     args = sys.argv[1:]
     mode = 'release' if 'release' in args else 'snapshot'
     force_all = '--force-all' in args
+    scan = '--scan' in args   # VT-scan each DLL the moment its build finishes (overlaps scans with builds)
     jobs = 4  # Ryzen 5800X 8C/16T + 32GB: LTCG is RAM-light here, CPU-bound; 4-6 is the sweet spot
     profiles = ALL
     for i, a in enumerate(args):
@@ -68,9 +73,16 @@ def main():
         elif a.startswith('--profiles='):
             profiles = [p.strip() for p in a.split('=', 1)[1].split(',') if p.strip()]
 
-    print(f'=== build_all: mode={mode} force_all={force_all} jobs={jobs} '
+    print(f'=== build_all: mode={mode} force_all={force_all} scan={scan} jobs={jobs} '
           f'profiles={",".join(profiles)} ===')
     wall0 = time.time()
+
+    # Version (for the VT scan rows) read straight from CMakeLists - no bump happened here.
+    vt_ver = ''
+    if scan:
+        m = re.search(r'\n\s*VERSION\s+"([^"]+)"', (ROOT / 'CMakeLists.txt').read_text(encoding='utf-8'))
+        vt_ver = m.group(1) if m else ''
+        VT_RUNNER = TOOLS / 'dashboard' / 'vt_runner.py'
 
     # ---- Phase 1: gen_shared ONCE ----
     print('\n[1] gen_shared (once, shared)')
@@ -102,12 +114,40 @@ def main():
         return p, time.time() - t0, rc, logp
 
     results = {}
+    scan_procs = {}  # profile -> (Popen, logpath) for the per-DLL VT scan kicked off on build completion
     with concurrent.futures.ThreadPoolExecutor(max_workers=jobs) as ex:
         futs = {ex.submit(build_one, p): p for p in profiles}
         for fut in concurrent.futures.as_completed(futs):
             p, dt, rc, logp = fut.result()
             results[p] = (dt, rc, parse_log(logp))
             print(f'    {p:14} {dt:6.1f}s  {"OK" if rc == 0 else f"FAIL({rc})"}')
+            # Kick the VT scan for THIS DLL now (don't wait for the other builds). Best-effort:
+            # a scan launch failure never affects the build result.
+            if scan and rc == 0:
+                vlog = LOG / f'ba_vt_{p}.log'
+                cmd = [sys.executable, str(VT_RUNNER), '--profiles', p,
+                       '--version', vt_ver, '--change', f'v{vt_ver} release']
+                try:
+                    scan_procs[p] = (subprocess.Popen(
+                        cmd, cwd=str(ROOT), stdout=open(vlog, 'w', encoding='utf-8', errors='replace'),
+                        stderr=subprocess.STDOUT), vlog)
+                    print(f'    {p:14}         -> VT scan started')
+                except Exception as e:
+                    print(f'    {p:14}         -> VT scan launch failed: {e}')
+
+    # Drain the per-DLL scans (they ran concurrently with the remaining builds).
+    if scan_procs:
+        print(f'\n[2b] VirusTotal: waiting on {len(scan_procs)} scan(s)...')
+        for p, (proc, vlog) in scan_procs.items():
+            proc.wait()
+            verdict = '?'
+            try:
+                for ln in vlog.read_text(encoding='utf-8', errors='replace').splitlines():
+                    if ln.startswith(f'{p}:'):
+                        verdict = ln.split(':', 1)[1].strip()
+            except Exception:
+                pass
+            print(f'    {p:14} {verdict}')
 
     wall = time.time() - wall0
 

@@ -13,6 +13,7 @@
 #include "goblin_config.hpp"
 #include "goblin_inject.hpp"
 #include "goblin_messages.hpp"
+#include "goblin_overlay.hpp"
 #include "modutils.hpp"
 #include "goblin_legacy_conv.hpp"
 #include "goblin_map_data.hpp"
@@ -188,7 +189,7 @@ static std::vector<uintptr_t> find_beacon_arrays()
     if (!seh_copy(reinterpret_cast<const void *>(chain), &obj0, sizeof(obj0)) || !obj0)
     { spdlog::warn("Markers: chain root slot empty (not in-world yet?)"); return out; }
     if (!seh_copy(reinterpret_cast<const void *>(obj0 + MARKER_OFF_OBJ1), &obj1, sizeof(obj1)) || !obj1)
-    { spdlog::warn("Markers: container pointer null"); return out; }
+    { spdlog::warn("Markers: container not available"); return out; }
     if (!seh_copy(reinterpret_cast<const void *>(obj1), &vtab, sizeof(vtab)))
     { spdlog::warn("Markers: container unreadable"); return out; }
     if (vtab != vtable)
@@ -686,8 +687,7 @@ void hotkey_loop()
         std::this_thread::sleep_for(std::chrono::milliseconds(50));
 
         if (!config::enableMarkerDump) { prev_down = false; continue; }
-        SHORT state = GetAsyncKeyState(static_cast<int>(config::markerDumpKey));
-        bool down = (state & 0x8000) != 0;
+        bool down = goblin::overlay::key_down(static_cast<int>(config::markerDumpKey));
         if (down && !prev_down)
         {
             int count = -2;

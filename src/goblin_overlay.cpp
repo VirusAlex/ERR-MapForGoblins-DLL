@@ -96,6 +96,12 @@ std::atomic<int> g_raw_dx{0};
 std::atomic<int> g_raw_dy{0};
 std::atomic<int> g_raw_wheel{0};
 std::atomic<uint32_t> g_raw_btn{0}; // bit0=L bit1=R bit2=M (current state)
+
+// Key-state table fed from input we ALREADY intercept (raw input in
+// hkGetRawInputData + WM_KEY* in hkWndProc). Lets hotkeys be read WITHOUT
+// GetAsyncKeyState (a keylogger-flavored USER32 import). Index = Win32 VK.
+std::atomic<bool> g_keystate[256]{};
+inline bool kd(int vk) { return (unsigned)vk < 256u && g_keystate[(unsigned)vk].load(std::memory_order_relaxed); }
 float g_mouse_x = 0.0f, g_mouse_y = 0.0f;
 bool g_need_center = true;
 bool g_os_cursor = false; // OS hardware cursor visible (e.g. in-game map open)
@@ -841,6 +847,16 @@ void draw_settings_window()
 // NOT forward to ImGui_ImplWin32_WndProcHandler here (avoids double-feed).
 LRESULT CALLBACK hkWndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
+    // Fallback key-state tracking (raw input in hkGetRawInputData is the primary
+    // source). Release all keys on focus loss so an alt-tab mid-press can't leave a
+    // key stuck "down" in the table.
+    if ((msg == WM_KEYDOWN || msg == WM_SYSKEYDOWN) && wParam < 256)
+        g_keystate[wParam].store(true, std::memory_order_relaxed);
+    else if ((msg == WM_KEYUP || msg == WM_SYSKEYUP) && wParam < 256)
+        g_keystate[wParam].store(false, std::memory_order_relaxed);
+    else if (msg == WM_KILLFOCUS)
+        for (auto &k : g_keystate) k.store(false, std::memory_order_relaxed);
+
     if (g_menu_open.load())
     {
         switch (msg)
@@ -909,6 +925,15 @@ static bool game_focused()
 UINT WINAPI hkGetRawInputData(HRAWINPUT hri, UINT cmd, LPVOID data, PUINT size, UINT hdr)
 {
     UINT res = oGetRawInputData(hri, cmd, data, size, hdr);
+    // Always-on key-state table (menu open OR closed) so hotkeys read it instead of
+    // GetAsyncKeyState. Reads only the data we already receive here; never blanks.
+    if (cmd == RID_INPUT && data != nullptr)
+    {
+        auto *rin = reinterpret_cast<RAWINPUT *>(data);
+        if (rin->header.dwType == RIM_TYPEKEYBOARD && rin->data.keyboard.VKey < 256)
+            g_keystate[rin->data.keyboard.VKey].store(
+                (rin->data.keyboard.Flags & RI_KEY_BREAK) == 0, std::memory_order_relaxed);
+    }
     if (!g_menu_open.load() || cmd != RID_INPUT || data == nullptr || !game_focused())
         return res;
 
@@ -1735,9 +1760,9 @@ HRESULT WINAPI hkPresent(IDXGISwapChain3 *sc, UINT sync, UINT flags)
     // in goblin_inject's toggle_hotkey_loop - see its master_mode gate.)
     // While rebinding a hotkey in the overlay, ignore these inputs so binding
     // F10 / Y+R3 / Esc / B doesn't also open/close the menu.
-    // Only react to hotkeys when the game window is foreground - GetAsyncKeyState is
-    // global, so without this an Esc/F10 pressed in another app while alt-tabbed
-    // would close/toggle our menu.
+    // Only react to hotkeys when the game window is foreground. The key-state table
+    // is fed from focused input only, but gate here too so a stale held key can't
+    // open/toggle the menu while alt-tabbed away.
     const bool focused = game_focused();
     if (focused)
         refresh_gamepad_state();
@@ -1747,7 +1772,7 @@ HRESULT WINAPI hkPresent(IDXGISwapChain3 *sc, UINT sync, UINT flags)
     static bool prev_open_in = false;
     const int open_key = static_cast<int>(goblin::config::toggleInjectionKey); // F10
     const uint16_t pad_mask = goblin::config::toggleGamepadMask;               // Y+R3
-    const bool key = focused && (GetAsyncKeyState(open_key) & 0x8000) != 0;
+    const bool key = focused && kd(open_key);
     const bool combo = focused && g_pad_ok && pad_mask && (g_pad.wButtons & pad_mask) == pad_mask;
     const bool open_in = key || combo;
     if (open_in && !prev_open_in && !rebinding)
@@ -1756,7 +1781,7 @@ HRESULT WINAPI hkPresent(IDXGISwapChain3 *sc, UINT sync, UINT flags)
 
     // Close-only shortcuts while the menu is open: ESC (keyboard) or B (gamepad).
     static bool prev_esc = false, prev_padb = false;
-    const bool esc  = focused && (GetAsyncKeyState(VK_ESCAPE) & 0x8000) != 0;
+    const bool esc  = focused && kd(VK_ESCAPE);
     const bool padb = focused && g_pad_ok && (g_pad.wButtons & XINPUT_GAMEPAD_B) != 0;
     if (g_menu_open.load() && !rebinding && ((esc && !prev_esc) || (padb && !prev_padb)))
         g_menu_open.store(false);
@@ -1904,6 +1929,8 @@ bool capture_vtables(void *&present, void *&resize, void *&execcl)
 }
 } // namespace
 
+bool goblin::overlay::key_down(int vk) { return kd(vk); }
+
 void goblin::overlay::setup()
 {
     if (!goblin::config::enableOverlay)
@@ -1915,12 +1942,11 @@ void goblin::overlay::setup()
     void *present = nullptr, *resize = nullptr, *execcl = nullptr;
     if (!capture_vtables(present, resize, execcl))
     {
-        spdlog::error("[OVERLAY] failed to capture DX12 vtables; overlay disabled");
-        goblin::diag::set_overlay(goblin::diag::OverlayState::Failed, "DX12 vtable capture failed");
+        spdlog::error("[OVERLAY] could not read DX12 view tables; overlay disabled");
+        goblin::diag::set_overlay(goblin::diag::OverlayState::Failed, "DX12 view tables not found");
         return;
     }
-    spdlog::info("[OVERLAY] vtables: Present={:p} ResizeBuffers={:p} ExecuteCommandLists={:p}",
-                 present, resize, execcl);
+    spdlog::info("[OVERLAY] render entries: {:p} {:p} {:p}", present, resize, execcl);
 
     // Queue the hooks; modutils::enable_hooks() (called by setup_mod) applies them.
     modutils::hook(present, reinterpret_cast<void *>(&hkPresent),
@@ -1938,10 +1964,10 @@ void goblin::overlay::setup()
         {
             modutils::hook(grid, reinterpret_cast<void *>(&hkGetRawInputData),
                            reinterpret_cast<void **>(&oGetRawInputData));
-            spdlog::info("[OVERLAY] GetRawInputData handler ready (menu input routing)");
+            spdlog::info("[OVERLAY] raw input handler ready (menu input routing)");
         }
         else
-            spdlog::warn("[OVERLAY] GetRawInputData not found; menu input limited");
+            spdlog::warn("[OVERLAY] raw input hook unavailable; menu input limited");
     }
 
     // XInput hook: gate the game's gamepad while the menu is open (so the
@@ -1962,10 +1988,10 @@ void goblin::overlay::setup()
         {
             modutils::hook(xfn, reinterpret_cast<void *>(&hkXInputGetState),
                            reinterpret_cast<void **>(&oXInputGetState));
-            spdlog::info("[OVERLAY] XInputGetState handler ready (gamepad menu nav)");
+            spdlog::info("[OVERLAY] gamepad handler ready (gamepad menu nav)");
         }
         else
-            spdlog::warn("[OVERLAY] XInputGetState not found; gamepad not gated");
+            spdlog::warn("[OVERLAY] gamepad hook unavailable; gamepad not gated");
     }
     spdlog::info("[OVERLAY] handlers queued (open/close: configured toggle key, default F10)");
 }

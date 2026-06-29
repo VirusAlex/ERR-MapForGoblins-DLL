@@ -183,7 +183,6 @@ static void SetupMerchants(int rowId, from::paramdef::WORLD_MAP_POINT_PARAM_ST &
 
 void goblin::apply_map_logic()
 {
-    spdlog::debug("Applying map fragment logic...");
 
     int modified_goblin = 0;
     int modified_boss = 0;

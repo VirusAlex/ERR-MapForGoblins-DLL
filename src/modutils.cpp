@@ -30,7 +30,7 @@ void modutils::initialize()
 
     wchar_t exe_filename[MAX_PATH] = {0};
     GetModuleFileNameW(module_handle, exe_filename, MAX_PATH);
-    spdlog::info("Attached to host process: {}", convert.to_bytes(exe_filename));
+    spdlog::info("Running in: {}", convert.to_bytes(exe_filename));
 
     MEMORY_BASIC_INFORMATION memory_info;
     if (VirtualQuery((void *)module_handle, &memory_info, sizeof(memory_info)) == 0)
@@ -52,7 +52,7 @@ void modutils::initialize()
     auto mh_status = MH_Initialize();
     if (mh_status != MH_OK)
     {
-        throw runtime_error(string("Error initializing MinHook: ") + MH_StatusToString(mh_status));
+        throw runtime_error(string("init failed: ") + MH_StatusToString(mh_status));
     }
 }
 

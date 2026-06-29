@@ -9,6 +9,7 @@
 #include "goblin_item_icons.hpp"
 #include "goblin_location_alt.hpp"
 #include "goblin_gfx_probe.hpp"
+#include "goblin_overlay.hpp"
 #include "goblin_diag.hpp"
 #include "goblin/goblin_map_flags.hpp"
 #include "from/params.hpp"
@@ -375,7 +376,6 @@ void goblin::inject_map_entries()
     auto *old_table = reinterpret_cast<ParamTable *>(old_param_file);
     uint16_t orig_num_rows = old_table->num_rows;
 
-    spdlog::debug("Original WorldMapPointParam: {} rows", orig_num_rows);
 
     // Collect vanilla row IDs to avoid collisions
     std::set<int32_t> vanilla_ids;
@@ -397,11 +397,6 @@ void goblin::inject_map_entries()
     collected::remap_row_ids(id_remap);
     kindling::remap_row_ids(id_remap);
 
-    spdlog::debug("Assigned IDs: {} entries, range {}-{}, remapped {} piece IDs",
-                  entries.size(),
-                  entries.empty() ? 0 : entries.front().row_id,
-                  entries.empty() ? 0 : entries.back().row_id,
-                  id_remap.size());
 
     uint32_t new_entry_count = static_cast<uint32_t>(entries.size());
     uint32_t total_rows = orig_num_rows + new_entry_count;
@@ -438,7 +433,7 @@ void goblin::inject_map_entries()
     allocation = HeapAlloc(GetProcessHeap(), HEAP_ZERO_MEMORY, total_alloc);
     if (!allocation)
     {
-        spdlog::error("HeapAlloc failed ({} bytes)", total_alloc);
+        spdlog::error("alloc failed ({} bytes)", total_alloc);
         return;
     }
 
@@ -660,10 +655,9 @@ void goblin::inject_map_entries()
         }
     }
 
-    spdlog::info("Registered {} piece + {} kindling pointers ({} + {} hidden at load)",
+    spdlog::info("Registered {} piece + {} kindling entries ({} + {} hidden at load)",
                  registered_pieces, registered_kindling, hidden_pieces, hidden_kindling);
 
-    spdlog::debug("Swapping param_file pointer: {:p} -> {:p}", (void *)old_param_file, (void *)new_param_file);
 
     // Capture state for runtime toggle. Save original size before overwriting.
     g_file_ptr_ref = &file_ptr_ref;
@@ -825,7 +819,7 @@ bool goblin::inject_tutorial_popup_rows()
     auto *allocation = HeapAlloc(GetProcessHeap(), HEAP_ZERO_MEMORY, total_alloc);
     if (!allocation)
     {
-        spdlog::error("[TOAST] HeapAlloc failed ({} bytes) for TutorialParam expansion", total_alloc);
+        spdlog::error("[TOAST] alloc failed ({} bytes) for TutorialParam expansion", total_alloc);
         return false;
     }
 
@@ -925,7 +919,7 @@ void goblin::set_param_injection_active(bool active)
 {
     if (!g_file_ptr_ref)
     {
-        spdlog::warn("[TOGGLE] Param swap state not initialized - map entries not added yet");
+        spdlog::warn("[TOGGLE] not ready - map entries not added yet");
         return;
     }
     if (active == g_param_injection_active)
@@ -1152,7 +1146,7 @@ void goblin::toggle_hotkey_loop()
         // toggles icons.
         const bool master_mode = !config::enableOverlay;
         bool kbd = master_mode &&
-                   (GetAsyncKeyState(static_cast<int>(config::toggleInjectionKey)) & 0x8000) != 0;
+                   goblin::overlay::key_down(static_cast<int>(config::toggleInjectionKey));
         bool pad = master_mode && gamepad_combo_held();
 
         // Rising-edge on either input source independently.

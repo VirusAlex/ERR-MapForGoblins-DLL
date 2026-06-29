@@ -210,7 +210,7 @@ namespace
             {"ERR Markers",
              "This section applies this mod's display rules to ERR's OWN pre-placed map\n"
              "markers (camps, merchants, bosses, dungeon entrances) - NOT the icons this\n"
-             "mod injects - so both icon sets follow the same visibility logic\n"
+             "mod adds - so both icon sets follow the same visibility logic\n"
              "(map-fragment discovery, hide on clear). Disable a toggle to leave that\n"
              "marker group exactly as ERR ships it. Our own boss markers are\n"
              "[World] show_bosses and independent of this section.",
@@ -248,7 +248,7 @@ namespace
                 IniEntry{"overlay_font_scale", IniType::Float, &cfg::fontScale, "1.0",
                          "Overlay menu text size multiplier (1.0 = default). Raise on 4K / high-DPI\nscreens if the menu text is too small. Also adjustable live from the slider at\nthe top of the overlay's Settings tab.", false, nullptr},
                 B("enable_overlay", enableOverlay, "true",
-                  "In-game config overlay (Dear ImGui) opened with the toggle key below.\nSet false if a DX-hook conflict (Steam overlay/RTSS/GeForce Experience) or a\nGPU driver issue makes the game unstable."),
+                  "In-game config overlay (Dear ImGui) opened with the toggle key below.\nSet false if a DX overlay conflict (Steam overlay/RTSS/GeForce Experience) or a\nGPU driver issue makes the game unstable."),
                 B("enable_toggle_hotkey", enableToggleHotkey, "true",
                   "Enable toggle_key / toggle_gamepad_combo to switch ALL map icons on/off when\nthe overlay is DISABLED. (When the overlay is enabled, they open it instead.)"),
                 IniEntry{"toggle_key", IniType::VkKey, &cfg::toggleInjectionKey, "F10",

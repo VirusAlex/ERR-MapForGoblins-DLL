@@ -11,4 +11,9 @@ namespace goblin::overlay
     // ExecuteCommandLists. The hooks are applied by modutils::enable_hooks().
     // Safe no-op (logs) if D3D12 init fails. Call before enable_hooks().
     void setup();
+
+    // True while Win32 virtual-key `vk` is currently held. Read from a key-state
+    // table fed by our input hooks (raw input + WM_KEY*), so callers avoid the
+    // GetAsyncKeyState import. Foreground-only (the hooks only see focused input).
+    bool key_down(int vk);
 }

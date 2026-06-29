@@ -6,7 +6,7 @@
 namespace goblin::generated
 {
 
-const size_t ITEM_NAME_FALLBACK_COUNT = 2536;
+const size_t ITEM_NAME_FALLBACK_COUNT = 2537;
 
 const ItemNameFallback ITEM_NAME_FALLBACK[] = {
     {10000, L"Stormveil Castle"},
@@ -2483,6 +2483,7 @@ const ItemNameFallback ITEM_NAME_FALLBACK[] = {
     {700142400, L"Knight of the Solitary Gaol"},
     {700142700, L"Lamenter"},
     {700142900, L"Madding Hand"},
+    {700143100, L"Logur, the Beast Claw"},
     {700143200, L"Moonrithyll, Carian Knight"},
     {700180000, L"Merchant Kal\u00e9"},
     {700180103, L"Nomadic Merchant"},

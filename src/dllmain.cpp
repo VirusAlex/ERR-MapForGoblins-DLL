@@ -162,14 +162,14 @@ static void setup_mod()
 
     safe_init_step(&init_collected,       "collected::initialize");
     safe_init_step(&init_kindling,        "kindling::initialize");
-    safe_init_step(&init_inject_entries,  "inject_map_entries");
+    safe_init_step(&init_inject_entries,  "add_map_entries");
     safe_init_step(&init_apply_map_logic, "apply_map_logic");
     // setup_messages MUST precede inject_tutorial_popup_rows: it allocates the
     // dynamic codex-toast FMG ids (goblin::g_toast_fmg_id) that the popup rows
     // point their textId at. (It also builds the PlaceName textId remap used by
     // the marker rows injected above.)
     safe_init_step(&init_setup_messages,  "setup_messages");
-    safe_init_step(&init_tutorial_popup,  "inject_tutorial_popup_rows");
+    safe_init_step(&init_tutorial_popup,  "add_tutorial_rows");
     safe_init_step(&init_live_loot,       "refresh_loot_from_itemlot");
     safe_init_step(&init_overlay,         "overlay::setup");
     safe_init_step(&init_map_timing,      "map_timing::setup");
@@ -297,7 +297,7 @@ bool WINAPI DllMain(HINSTANCE dll_instance, unsigned int fdw_reason, void *lpv_r
             }
             catch (std::runtime_error const &e)
             {
-                spdlog::error("Error initializing mod: {}", e.what());
+                spdlog::error("mod init failed: {}", e.what());
                 modutils::deinitialize();
                 spdlog::shutdown();
             } });
@@ -311,7 +311,7 @@ bool WINAPI DllMain(HINSTANCE dll_instance, unsigned int fdw_reason, void *lpv_r
         }
         catch (std::runtime_error const &e)
         {
-            spdlog::error("Error deinitializing: {}", e.what());
+            spdlog::error("teardown failed: {}", e.what());
         }
         spdlog::shutdown();
     }

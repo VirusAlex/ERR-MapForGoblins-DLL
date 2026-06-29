@@ -6,7 +6,7 @@
 namespace goblin::generated
 {
 
-const size_t MAP_ENTRY_COUNT = 9173;
+const size_t MAP_ENTRY_COUNT = 9201;
 
 const MapEntry MAP_ENTRIES[] = {
     // Row ID 100000
@@ -19076,6 +19076,51 @@ const MapEntry MAP_ENTRIES[] = {
     {201113ull, {
         .iconId = 44,
         .dispMask00 = true,
+        .areaNo = 10,
+        .posX = -258.624f,
+        .posZ = 147.009f,
+        .textId1 = 500800010,
+        .textDisableFlagId1 = 1042617137,
+        .textId2 = 10000,
+        .textDisableFlagId2 = 1042617137,
+        .textId3 = 904640004,
+        .textDisableFlagId3 = 1042617137,
+        .selectMinZoomStep = 1,
+    }, Category::ReforgedRunePieces, -1, 9000, "c4640_9000", 0u, 0, -258.624f, 147.009f},
+    // Row ID 201114
+    {201114ull, {
+        .iconId = 44,
+        .dispMask00 = true,
+        .areaNo = 11,
+        .posX = -157.282f,
+        .posZ = -201.537f,
+        .textId1 = 500800010,
+        .textDisableFlagId1 = 1042617138,
+        .textId2 = 11000,
+        .textDisableFlagId2 = 1042617138,
+        .textId3 = 904810004,
+        .textDisableFlagId3 = 1042617138,
+        .selectMinZoomStep = 1,
+    }, Category::ReforgedRunePieces, -1, 9000, "c4810_9000", 0u, 0, -157.282f, -201.537f},
+    // Row ID 201115
+    {201115ull, {
+        .iconId = 44,
+        .dispMask00 = true,
+        .areaNo = 11,
+        .posX = -214.637f,
+        .posZ = -321.751f,
+        .textId1 = 500800010,
+        .textDisableFlagId1 = 1042617175,
+        .textId2 = 11000,
+        .textDisableFlagId2 = 1042617175,
+        .textId3 = 904770104,
+        .textDisableFlagId3 = 1042617175,
+        .selectMinZoomStep = 1,
+    }, Category::ReforgedRunePieces, -1, 9003, "c4770_9003", 0u, 0, -214.637f, -321.751f},
+    // Row ID 201116
+    {201116ull, {
+        .iconId = 44,
+        .dispMask00 = true,
         .areaNo = 11,
         .gridXNo = 5,
         .posX = 31.857f,
@@ -19088,8 +19133,8 @@ const MapEntry MAP_ENTRIES[] = {
         .textDisableFlagId3 = 1042617188,
         .selectMinZoomStep = 1,
     }, Category::ReforgedRunePieces, -1, 9000, "c4830_9000", 0u, 0, 31.857f, -219.528f},
-    // Row ID 201114
-    {201114ull, {
+    // Row ID 201117
+    {201117ull, {
         .iconId = 44,
         .dispMask01 = true,
         .areaNo = 12,
@@ -19104,8 +19149,8 @@ const MapEntry MAP_ENTRIES[] = {
         .textDisableFlagId3 = 1042617133,
         .selectMinZoomStep = 1,
     }, Category::ReforgedRunePieces, -1, 9100, "c4650_9100", 0u, 0, -217.385f, -317.671f},
-    // Row ID 201115
-    {201115ull, {
+    // Row ID 201118
+    {201118ull, {
         .iconId = 44,
         .dispMask01 = true,
         .areaNo = 12,
@@ -19120,8 +19165,8 @@ const MapEntry MAP_ENTRIES[] = {
         .textDisableFlagId3 = 1042617139,
         .selectMinZoomStep = 1,
     }, Category::ReforgedRunePieces, -1, 9000, "c4640_9000", 0u, 0, -417.298f, -475.670f},
-    // Row ID 201116
-    {201116ull, {
+    // Row ID 201119
+    {201119ull, {
         .iconId = 44,
         .dispMask01 = true,
         .areaNo = 12,
@@ -19136,8 +19181,8 @@ const MapEntry MAP_ENTRIES[] = {
         .textDisableFlagId3 = 1042617135,
         .selectMinZoomStep = 1,
     }, Category::ReforgedRunePieces, -1, 9004, "c2500_9004", 0u, 0, 1607.901f, 1195.516f},
-    // Row ID 201117
-    {201117ull, {
+    // Row ID 201120
+    {201120ull, {
         .iconId = 44,
         .dispMask01 = true,
         .areaNo = 12,
@@ -19152,8 +19197,8 @@ const MapEntry MAP_ENTRIES[] = {
         .textDisableFlagId3 = 1042617134,
         .selectMinZoomStep = 1,
     }, Category::ReforgedRunePieces, -1, 9000, "c4650_9000", 0u, 0, 1282.240f, 1754.251f},
-    // Row ID 201118
-    {201118ull, {
+    // Row ID 201121
+    {201121ull, {
         .iconId = 44,
         .dispMask01 = true,
         .areaNo = 12,
@@ -19168,8 +19213,8 @@ const MapEntry MAP_ENTRIES[] = {
         .textDisableFlagId3 = 1042617140,
         .selectMinZoomStep = 1,
     }, Category::ReforgedRunePieces, -1, 9000, "c2500_9000", 0u, 0, -908.002f, -316.862f},
-    // Row ID 201119
-    {201119ull, {
+    // Row ID 201122
+    {201122ull, {
         .iconId = 44,
         .dispMask01 = true,
         .areaNo = 12,
@@ -19184,8 +19229,68 @@ const MapEntry MAP_ENTRIES[] = {
         .textDisableFlagId3 = 1042617141,
         .selectMinZoomStep = 1,
     }, Category::ReforgedRunePieces, -1, 9000, "c4810_9000", 0u, 0, -188.204f, -678.163f},
-    // Row ID 201120
-    {201120ull, {
+    // Row ID 201123
+    {201123ull, {
+        .iconId = 44,
+        .dispMask00 = true,
+        .areaNo = 13,
+        .posX = 120.355f,
+        .posZ = 399.675f,
+        .textId1 = 500800010,
+        .textDisableFlagId1 = 1042617177,
+        .textId2 = 13000,
+        .textDisableFlagId2 = 1042617177,
+        .textId3 = 903250004,
+        .textDisableFlagId3 = 1042617177,
+        .selectMinZoomStep = 1,
+    }, Category::ReforgedRunePieces, -1, 9000, "c3250_9000", 0u, 0, 120.355f, 399.675f},
+    // Row ID 201124
+    {201124ull, {
+        .iconId = 44,
+        .dispMask00 = true,
+        .areaNo = 15,
+        .posX = 132.045f,
+        .posZ = 520.476f,
+        .textId1 = 500800010,
+        .textDisableFlagId1 = 1042617182,
+        .textId2 = 15000,
+        .textDisableFlagId2 = 1042617182,
+        .textId3 = 904811004,
+        .textDisableFlagId3 = 1042617182,
+        .selectMinZoomStep = 1,
+    }, Category::ReforgedRunePieces, -1, 9003, "c4811_9003", 0u, 0, 132.045f, 520.476f},
+    // Row ID 201125
+    {201125ull, {
+        .iconId = 44,
+        .dispMask00 = true,
+        .areaNo = 15,
+        .posX = 22.227f,
+        .posZ = 438.025f,
+        .textId1 = 500800010,
+        .textDisableFlagId1 = 1042617142,
+        .textId2 = 15000,
+        .textDisableFlagId2 = 1042617142,
+        .textId3 = 904640004,
+        .textDisableFlagId3 = 1042617142,
+        .selectMinZoomStep = 1,
+    }, Category::ReforgedRunePieces, -1, 9000, "c4640_9000", 0u, 0, 22.227f, 438.025f},
+    // Row ID 201126
+    {201126ull, {
+        .iconId = 44,
+        .dispMask00 = true,
+        .areaNo = 16,
+        .posX = 17.952f,
+        .posZ = -180.561f,
+        .textId1 = 500800010,
+        .textDisableFlagId1 = 1042617143,
+        .textId2 = 16000,
+        .textDisableFlagId2 = 1042617143,
+        .textId3 = 904910004,
+        .textDisableFlagId3 = 1042617143,
+        .selectMinZoomStep = 1,
+    }, Category::ReforgedRunePieces, -1, 9002, "c4910_9002", 0u, 0, 17.952f, -180.561f},
+    // Row ID 201127
+    {201127ull, {
         .iconId = 44,
         .dispMask00 = true,
         .areaNo = 60,
@@ -19199,8 +19304,8 @@ const MapEntry MAP_ENTRIES[] = {
         .textDisableFlagId2 = 1042617107,
         .selectMinZoomStep = 1,
     }, Category::ReforgedRunePieces, -1, 9000, "c2100_9000", 0u, 0, -40.589f, 86.259f},
-    // Row ID 201121
-    {201121ull, {
+    // Row ID 201128
+    {201128ull, {
         .iconId = 44,
         .dispMask00 = true,
         .areaNo = 60,
@@ -19214,8 +19319,8 @@ const MapEntry MAP_ENTRIES[] = {
         .textDisableFlagId2 = 1042617099,
         .selectMinZoomStep = 1,
     }, Category::ReforgedRunePieces, -1, 9000, "c4810_9000", 0u, 0, 42.488f, 31.133f},
-    // Row ID 201122
-    {201122ull, {
+    // Row ID 201129
+    {201129ull, {
         .iconId = 44,
         .dispMask00 = true,
         .areaNo = 60,
@@ -19229,8 +19334,8 @@ const MapEntry MAP_ENTRIES[] = {
         .textDisableFlagId2 = 1042617104,
         .selectMinZoomStep = 1,
     }, Category::ReforgedRunePieces, -1, 9001, "c4601_9001", 0u, 0, -51.825f, -29.646f},
-    // Row ID 201123
-    {201123ull, {
+    // Row ID 201130
+    {201130ull, {
         .iconId = 44,
         .dispMask00 = true,
         .areaNo = 60,
@@ -19244,8 +19349,8 @@ const MapEntry MAP_ENTRIES[] = {
         .textDisableFlagId2 = 1042617106,
         .selectMinZoomStep = 1,
     }, Category::ReforgedRunePieces, -1, 9000, "c4502_9000", 0u, 0, 128.241f, -29.929f},
-    // Row ID 201124
-    {201124ull, {
+    // Row ID 201131
+    {201131ull, {
         .iconId = 44,
         .dispMask00 = true,
         .areaNo = 60,
@@ -19259,8 +19364,8 @@ const MapEntry MAP_ENTRIES[] = {
         .textDisableFlagId2 = 1042617100,
         .selectMinZoomStep = 1,
     }, Category::ReforgedRunePieces, -1, 9000, "c4502_9000", 0u, 0, -51.741f, 52.804f},
-    // Row ID 201125
-    {201125ull, {
+    // Row ID 201132
+    {201132ull, {
         .iconId = 44,
         .dispMask00 = true,
         .areaNo = 60,
@@ -19274,8 +19379,8 @@ const MapEntry MAP_ENTRIES[] = {
         .textDisableFlagId2 = 1042617101,
         .selectMinZoomStep = 1,
     }, Category::ReforgedRunePieces, -1, 9000, "c4820_9000", 0u, 0, -37.509f, -17.679f},
-    // Row ID 201126
-    {201126ull, {
+    // Row ID 201133
+    {201133ull, {
         .iconId = 44,
         .dispMask00 = true,
         .areaNo = 60,
@@ -19289,8 +19394,8 @@ const MapEntry MAP_ENTRIES[] = {
         .textDisableFlagId2 = 1042617185,
         .selectMinZoomStep = 1,
     }, Category::ReforgedRunePieces, -1, 9000, "c4630_9000", 0u, 0, 9.120f, -101.570f},
-    // Row ID 201127
-    {201127ull, {
+    // Row ID 201134
+    {201134ull, {
         .iconId = 44,
         .dispMask00 = true,
         .areaNo = 60,
@@ -19304,8 +19409,8 @@ const MapEntry MAP_ENTRIES[] = {
         .textDisableFlagId2 = 1042617118,
         .selectMinZoomStep = 1,
     }, Category::ReforgedRunePieces, -1, 9000, "c4910_9000", 0u, 0, 1.800f, -80.399f},
-    // Row ID 201128
-    {201128ull, {
+    // Row ID 201135
+    {201135ull, {
         .iconId = 44,
         .dispMask00 = true,
         .areaNo = 60,
@@ -19319,8 +19424,8 @@ const MapEntry MAP_ENTRIES[] = {
         .textDisableFlagId2 = 1042617146,
         .selectMinZoomStep = 1,
     }, Category::ReforgedRunePieces, -1, 9000, "c4980_9000", 0u, 0, -70.066f, 39.677f},
-    // Row ID 201129
-    {201129ull, {
+    // Row ID 201136
+    {201136ull, {
         .iconId = 44,
         .dispMask00 = true,
         .areaNo = 60,
@@ -19334,8 +19439,8 @@ const MapEntry MAP_ENTRIES[] = {
         .textDisableFlagId2 = 1042617147,
         .selectMinZoomStep = 1,
     }, Category::ReforgedRunePieces, -1, 9000, "c3150_9000", 0u, 0, 25.622f, 28.910f},
-    // Row ID 201130
-    {201130ull, {
+    // Row ID 201137
+    {201137ull, {
         .iconId = 44,
         .dispMask00 = true,
         .areaNo = 60,
@@ -19349,8 +19454,8 @@ const MapEntry MAP_ENTRIES[] = {
         .textDisableFlagId2 = 1042617105,
         .selectMinZoomStep = 1,
     }, Category::ReforgedRunePieces, -1, 9000, "c3600_9000", 0u, 0, 121.092f, 10.945f},
-    // Row ID 201131
-    {201131ull, {
+    // Row ID 201138
+    {201138ull, {
         .iconId = 44,
         .dispMask00 = true,
         .areaNo = 60,
@@ -19364,8 +19469,8 @@ const MapEntry MAP_ENTRIES[] = {
         .textDisableFlagId2 = 1042617115,
         .selectMinZoomStep = 1,
     }, Category::ReforgedRunePieces, -1, 9000, "c4680_9000", 0u, 0, 100.824f, -47.660f},
-    // Row ID 201132
-    {201132ull, {
+    // Row ID 201139
+    {201139ull, {
         .iconId = 44,
         .dispMask00 = true,
         .areaNo = 60,
@@ -19379,8 +19484,8 @@ const MapEntry MAP_ENTRIES[] = {
         .textDisableFlagId2 = 1042617148,
         .selectMinZoomStep = 1,
     }, Category::ReforgedRunePieces, -1, 9000, "c4980_9000", 0u, 0, -58.195f, 98.440f},
-    // Row ID 201133
-    {201133ull, {
+    // Row ID 201140
+    {201140ull, {
         .iconId = 44,
         .dispMask00 = true,
         .areaNo = 60,
@@ -19394,8 +19499,8 @@ const MapEntry MAP_ENTRIES[] = {
         .textDisableFlagId2 = 1042617149,
         .selectMinZoomStep = 1,
     }, Category::ReforgedRunePieces, -1, 9000, "c3100_9000", 0u, 0, -48.464f, 9.811f},
-    // Row ID 201135
-    {201135ull, {
+    // Row ID 201142
+    {201142ull, {
         .iconId = 44,
         .dispMask00 = true,
         .areaNo = 60,
@@ -19409,8 +19514,8 @@ const MapEntry MAP_ENTRIES[] = {
         .textDisableFlagId2 = 1042617119,
         .selectMinZoomStep = 1,
     }, Category::ReforgedRunePieces, -1, 9001, "c4130_9001", 0u, 0, 11.740f, -90.788f},
-    // Row ID 201136
-    {201136ull, {
+    // Row ID 201143
+    {201143ull, {
         .iconId = 44,
         .dispMask00 = true,
         .areaNo = 60,
@@ -19424,8 +19529,8 @@ const MapEntry MAP_ENTRIES[] = {
         .textDisableFlagId2 = 1042617116,
         .selectMinZoomStep = 1,
     }, Category::ReforgedRunePieces, -1, 9000, "c4640_9000", 0u, 0, -33.431f, -73.076f},
-    // Row ID 201137
-    {201137ull, {
+    // Row ID 201144
+    {201144ull, {
         .iconId = 44,
         .dispMask00 = true,
         .areaNo = 60,
@@ -19439,8 +19544,8 @@ const MapEntry MAP_ENTRIES[] = {
         .textDisableFlagId2 = 1042617103,
         .selectMinZoomStep = 1,
     }, Category::ReforgedRunePieces, -1, 9000, "c3910_9000", 0u, 0, -0.769f, -116.265f},
-    // Row ID 201138
-    {201138ull, {
+    // Row ID 201145
+    {201145ull, {
         .iconId = 44,
         .dispMask00 = true,
         .areaNo = 60,
@@ -19454,8 +19559,8 @@ const MapEntry MAP_ENTRIES[] = {
         .textDisableFlagId2 = 1042617095,
         .selectMinZoomStep = 1,
     }, Category::ReforgedRunePieces, -1, 9000, "c3251_9000", 0u, 0, -50.994f, -59.320f},
-    // Row ID 201139
-    {201139ull, {
+    // Row ID 201146
+    {201146ull, {
         .iconId = 44,
         .dispMask00 = true,
         .areaNo = 60,
@@ -19469,8 +19574,8 @@ const MapEntry MAP_ENTRIES[] = {
         .textDisableFlagId2 = 1042617117,
         .selectMinZoomStep = 1,
     }, Category::ReforgedRunePieces, -1, 9000, "c4950_9000", 0u, 0, -40.163f, -24.929f},
-    // Row ID 201140
-    {201140ull, {
+    // Row ID 201147
+    {201147ull, {
         .iconId = 44,
         .dispMask00 = true,
         .areaNo = 60,
@@ -19484,8 +19589,8 @@ const MapEntry MAP_ENTRIES[] = {
         .textDisableFlagId2 = 1042617151,
         .selectMinZoomStep = 1,
     }, Category::ReforgedRunePieces, -1, 9000, "c3150_9000", 0u, 0, -126.877f, -8.625f},
-    // Row ID 201141
-    {201141ull, {
+    // Row ID 201148
+    {201148ull, {
         .iconId = 44,
         .dispMask00 = true,
         .areaNo = 60,
@@ -19499,8 +19604,8 @@ const MapEntry MAP_ENTRIES[] = {
         .textDisableFlagId2 = 1042617102,
         .selectMinZoomStep = 1,
     }, Category::ReforgedRunePieces, -1, 9000, "c4950_9000", 0u, 0, -81.594f, -41.358f},
-    // Row ID 201142
-    {201142ull, {
+    // Row ID 201149
+    {201149ull, {
         .iconId = 44,
         .dispMask00 = true,
         .areaNo = 60,
@@ -19514,8 +19619,8 @@ const MapEntry MAP_ENTRIES[] = {
         .textDisableFlagId2 = 1042617153,
         .selectMinZoomStep = 1,
     }, Category::ReforgedRunePieces, -1, 9001, "c3150_9001", 0u, 0, -16.851f, -110.732f},
-    // Row ID 201143
-    {201143ull, {
+    // Row ID 201150
+    {201150ull, {
         .iconId = 44,
         .dispMask00 = true,
         .areaNo = 60,
@@ -19529,8 +19634,8 @@ const MapEntry MAP_ENTRIES[] = {
         .textDisableFlagId2 = 1042617114,
         .selectMinZoomStep = 1,
     }, Category::ReforgedRunePieces, -1, 9000, "c2100_9000", 0u, 0, 51.641f, 7.318f},
-    // Row ID 201144
-    {201144ull, {
+    // Row ID 201151
+    {201151ull, {
         .iconId = 44,
         .dispMask00 = true,
         .areaNo = 60,
@@ -19544,8 +19649,8 @@ const MapEntry MAP_ENTRIES[] = {
         .textDisableFlagId2 = 1042617094,
         .selectMinZoomStep = 1,
     }, Category::ReforgedRunePieces, -1, 9000, "c3150_9000", 0u, 0, -136.191f, 42.737f},
-    // Row ID 201145
-    {201145ull, {
+    // Row ID 201152
+    {201152ull, {
         .iconId = 44,
         .dispMask00 = true,
         .areaNo = 60,
@@ -19559,8 +19664,8 @@ const MapEntry MAP_ENTRIES[] = {
         .textDisableFlagId2 = 1042617109,
         .selectMinZoomStep = 1,
     }, Category::ReforgedRunePieces, -1, 9001, "c4680_9001", 0u, 0, 42.838f, 109.239f},
-    // Row ID 201146
-    {201146ull, {
+    // Row ID 201153
+    {201153ull, {
         .iconId = 44,
         .dispMask00 = true,
         .areaNo = 60,
@@ -19574,8 +19679,8 @@ const MapEntry MAP_ENTRIES[] = {
         .textDisableFlagId2 = 1042617108,
         .selectMinZoomStep = 1,
     }, Category::ReforgedRunePieces, -1, 9000, "c4510_9000", 0u, 0, 46.598f, -88.379f},
-    // Row ID 201147
-    {201147ull, {
+    // Row ID 201154
+    {201154ull, {
         .iconId = 44,
         .dispMask00 = true,
         .areaNo = 60,
@@ -19589,8 +19694,8 @@ const MapEntry MAP_ENTRIES[] = {
         .textDisableFlagId2 = 1042617111,
         .selectMinZoomStep = 1,
     }, Category::ReforgedRunePieces, -1, 9000, "c4580_9000", 0u, 0, -77.540f, 29.154f},
-    // Row ID 201148
-    {201148ull, {
+    // Row ID 201155
+    {201155ull, {
         .iconId = 44,
         .dispMask00 = true,
         .areaNo = 60,
@@ -19604,8 +19709,8 @@ const MapEntry MAP_ENTRIES[] = {
         .textDisableFlagId2 = 1042617155,
         .selectMinZoomStep = 1,
     }, Category::ReforgedRunePieces, -1, 9001, "c7100_9001", 0u, 0, -127.374f, 109.081f},
-    // Row ID 201149
-    {201149ull, {
+    // Row ID 201156
+    {201156ull, {
         .iconId = 44,
         .dispMask00 = true,
         .areaNo = 60,
@@ -19619,8 +19724,8 @@ const MapEntry MAP_ENTRIES[] = {
         .textDisableFlagId2 = 1042617090,
         .selectMinZoomStep = 1,
     }, Category::ReforgedRunePieces, -1, 9000, "c3251_9000", 0u, 0, -12.138f, 46.773f},
-    // Row ID 201150
-    {201150ull, {
+    // Row ID 201157
+    {201157ull, {
         .iconId = 44,
         .dispMask00 = true,
         .areaNo = 60,
@@ -19634,8 +19739,8 @@ const MapEntry MAP_ENTRIES[] = {
         .textDisableFlagId2 = 1042617092,
         .selectMinZoomStep = 1,
     }, Category::ReforgedRunePieces, -1, 9000, "c2500_9000", 0u, 0, -82.454f, 64.524f},
-    // Row ID 201151
-    {201151ull, {
+    // Row ID 201158
+    {201158ull, {
         .iconId = 44,
         .dispMask00 = true,
         .areaNo = 60,
@@ -19649,8 +19754,8 @@ const MapEntry MAP_ENTRIES[] = {
         .textDisableFlagId2 = 1042617156,
         .selectMinZoomStep = 1,
     }, Category::ReforgedRunePieces, -1, 9000, "c4980_9000", 0u, 0, 126.593f, 54.578f},
-    // Row ID 201152
-    {201152ull, {
+    // Row ID 201159
+    {201159ull, {
         .iconId = 44,
         .dispMask00 = true,
         .areaNo = 60,
@@ -19664,8 +19769,23 @@ const MapEntry MAP_ENTRIES[] = {
         .textDisableFlagId2 = 1042617157,
         .selectMinZoomStep = 1,
     }, Category::ReforgedRunePieces, -1, 9000, "c3100_9000", 0u, 0, 11.397f, 90.180f},
-    // Row ID 201153
-    {201153ull, {
+    // Row ID 201160
+    {201160ull, {
+        .iconId = 44,
+        .dispMask00 = true,
+        .areaNo = 60,
+        .gridXNo = 42,
+        .gridZNo = 50,
+        .posX = -36.144f,
+        .posZ = 60.357f,
+        .textId1 = 500800010,
+        .textDisableFlagId1 = 1042617158,
+        .textId2 = 904640004,
+        .textDisableFlagId2 = 1042617158,
+        .selectMinZoomStep = 1,
+    }, Category::ReforgedRunePieces, -1, 9000, "c4640_9000", 0u, 0, -36.144f, 60.357f},
+    // Row ID 201161
+    {201161ull, {
         .iconId = 44,
         .dispMask00 = true,
         .areaNo = 60,
@@ -19679,8 +19799,8 @@ const MapEntry MAP_ENTRIES[] = {
         .textDisableFlagId2 = 1042617176,
         .selectMinZoomStep = 1,
     }, Category::ReforgedRunePieces, -1, 9001, "c4770_9001", 0u, 0, 37.134f, 85.273f},
-    // Row ID 201154
-    {201154ull, {
+    // Row ID 201162
+    {201162ull, {
         .iconId = 44,
         .dispMask00 = true,
         .areaNo = 60,
@@ -19694,8 +19814,8 @@ const MapEntry MAP_ENTRIES[] = {
         .textDisableFlagId2 = 1042617112,
         .selectMinZoomStep = 1,
     }, Category::ReforgedRunePieces, -1, 9000, "c3560_9000", 0u, 0, -35.540f, -38.939f},
-    // Row ID 201155
-    {201155ull, {
+    // Row ID 201163
+    {201163ull, {
         .iconId = 44,
         .dispMask00 = true,
         .areaNo = 60,
@@ -19709,8 +19829,8 @@ const MapEntry MAP_ENTRIES[] = {
         .textDisableFlagId2 = 1042617097,
         .selectMinZoomStep = 1,
     }, Category::ReforgedRunePieces, -1, 9000, "c4810_9000", 0u, 0, -55.753f, 18.901f},
-    // Row ID 201156
-    {201156ull, {
+    // Row ID 201164
+    {201164ull, {
         .iconId = 44,
         .dispMask00 = true,
         .areaNo = 60,
@@ -19724,8 +19844,8 @@ const MapEntry MAP_ENTRIES[] = {
         .textDisableFlagId2 = 1042617180,
         .selectMinZoomStep = 1,
     }, Category::ReforgedRunePieces, -1, 9000, "c4130_9000", 0u, 0, 26.287f, -2.503f},
-    // Row ID 201157
-    {201157ull, {
+    // Row ID 201165
+    {201165ull, {
         .iconId = 44,
         .dispMask00 = true,
         .areaNo = 60,
@@ -19739,8 +19859,8 @@ const MapEntry MAP_ENTRIES[] = {
         .textDisableFlagId2 = 1042617091,
         .selectMinZoomStep = 1,
     }, Category::ReforgedRunePieces, -1, 9000, "c4500_9000", 0u, 0, -73.890f, 65.087f},
-    // Row ID 201158
-    {201158ull, {
+    // Row ID 201166
+    {201166ull, {
         .iconId = 44,
         .dispMask00 = true,
         .areaNo = 60,
@@ -19754,8 +19874,8 @@ const MapEntry MAP_ENTRIES[] = {
         .textDisableFlagId2 = 1042617159,
         .selectMinZoomStep = 1,
     }, Category::ReforgedRunePieces, -1, 9000, "c3150_9000", 0u, 0, 66.377f, -95.647f},
-    // Row ID 201159
-    {201159ull, {
+    // Row ID 201167
+    {201167ull, {
         .iconId = 44,
         .dispMask00 = true,
         .areaNo = 60,
@@ -19769,8 +19889,8 @@ const MapEntry MAP_ENTRIES[] = {
         .textDisableFlagId2 = 1042617160,
         .selectMinZoomStep = 1,
     }, Category::ReforgedRunePieces, -1, 9000, "c3100_9000", 0u, 0, -22.266f, 0.497f},
-    // Row ID 201160
-    {201160ull, {
+    // Row ID 201168
+    {201168ull, {
         .iconId = 44,
         .dispMask00 = true,
         .areaNo = 60,
@@ -19784,8 +19904,8 @@ const MapEntry MAP_ENTRIES[] = {
         .textDisableFlagId2 = 1042617161,
         .selectMinZoomStep = 1,
     }, Category::ReforgedRunePieces, -1, 9000, "c4980_9000", 0u, 0, -110.078f, 12.020f},
-    // Row ID 201161
-    {201161ull, {
+    // Row ID 201169
+    {201169ull, {
         .iconId = 44,
         .dispMask00 = true,
         .areaNo = 60,
@@ -19799,8 +19919,8 @@ const MapEntry MAP_ENTRIES[] = {
         .textDisableFlagId2 = 1042617162,
         .selectMinZoomStep = 1,
     }, Category::ReforgedRunePieces, -1, 9000, "c3150_9000", 0u, 0, 36.034f, 98.873f},
-    // Row ID 201162
-    {201162ull, {
+    // Row ID 201170
+    {201170ull, {
         .iconId = 44,
         .dispMask00 = true,
         .areaNo = 60,
@@ -19814,8 +19934,8 @@ const MapEntry MAP_ENTRIES[] = {
         .textDisableFlagId2 = 1042617093,
         .selectMinZoomStep = 1,
     }, Category::ReforgedRunePieces, -1, 9000, "c4290_9000", 0u, 0, -17.201f, -137.828f},
-    // Row ID 201163
-    {201163ull, {
+    // Row ID 201171
+    {201171ull, {
         .iconId = 44,
         .dispMask00 = true,
         .areaNo = 60,
@@ -19829,8 +19949,8 @@ const MapEntry MAP_ENTRIES[] = {
         .textDisableFlagId2 = 1042617164,
         .selectMinZoomStep = 1,
     }, Category::ReforgedRunePieces, -1, 9000, "c4980_9000", 0u, 0, -25.278f, 83.627f},
-    // Row ID 201164
-    {201164ull, {
+    // Row ID 201172
+    {201172ull, {
         .iconId = 44,
         .dispMask00 = true,
         .areaNo = 60,
@@ -19844,8 +19964,8 @@ const MapEntry MAP_ENTRIES[] = {
         .textDisableFlagId2 = 1042617096,
         .selectMinZoomStep = 1,
     }, Category::ReforgedRunePieces, -1, 9000, "c4950_9000", 0u, 0, -35.050f, 1.295f},
-    // Row ID 201165
-    {201165ull, {
+    // Row ID 201173
+    {201173ull, {
         .iconId = 44,
         .dispMask00 = true,
         .areaNo = 60,
@@ -19859,8 +19979,8 @@ const MapEntry MAP_ENTRIES[] = {
         .textDisableFlagId2 = 1042617110,
         .selectMinZoomStep = 1,
     }, Category::ReforgedRunePieces, -1, 9000, "c3250_9000", 0u, 0, 27.693f, 43.921f},
-    // Row ID 201166
-    {201166ull, {
+    // Row ID 201174
+    {201174ull, {
         .iconId = 44,
         .dispMask00 = true,
         .areaNo = 60,
@@ -19874,8 +19994,8 @@ const MapEntry MAP_ENTRIES[] = {
         .textDisableFlagId2 = 1042617122,
         .selectMinZoomStep = 1,
     }, Category::ReforgedRunePieces, -1, 9000, "c4811_9000", 0u, 0, -102.333f, 102.548f},
-    // Row ID 201167
-    {201167ull, {
+    // Row ID 201175
+    {201175ull, {
         .iconId = 44,
         .dispMask00 = true,
         .areaNo = 60,
@@ -19889,8 +20009,8 @@ const MapEntry MAP_ENTRIES[] = {
         .textDisableFlagId2 = 1042617120,
         .selectMinZoomStep = 1,
     }, Category::ReforgedRunePieces, -1, 9000, "c4501_9000", 0u, 0, -48.086f, -42.666f},
-    // Row ID 201168
-    {201168ull, {
+    // Row ID 201176
+    {201176ull, {
         .iconId = 44,
         .dispMask00 = true,
         .areaNo = 60,
@@ -19904,8 +20024,8 @@ const MapEntry MAP_ENTRIES[] = {
         .textDisableFlagId2 = 1042617166,
         .selectMinZoomStep = 1,
     }, Category::ReforgedRunePieces, -1, 9000, "c3100_9000", 0u, 0, -86.750f, -69.780f},
-    // Row ID 201169
-    {201169ull, {
+    // Row ID 201177
+    {201177ull, {
         .iconId = 44,
         .dispMask00 = true,
         .areaNo = 60,
@@ -19919,8 +20039,8 @@ const MapEntry MAP_ENTRIES[] = {
         .textDisableFlagId2 = 1042617169,
         .selectMinZoomStep = 1,
     }, Category::ReforgedRunePieces, -1, 9000, "c4980_9000", 0u, 0, -110.830f, 109.713f},
-    // Row ID 201170
-    {201170ull, {
+    // Row ID 201178
+    {201178ull, {
         .iconId = 44,
         .dispMask00 = true,
         .areaNo = 60,
@@ -19934,8 +20054,8 @@ const MapEntry MAP_ENTRIES[] = {
         .textDisableFlagId2 = 1042617170,
         .selectMinZoomStep = 1,
     }, Category::ReforgedRunePieces, -1, 9000, "c3150_9000", 0u, 0, -122.259f, -8.493f},
-    // Row ID 201171
-    {201171ull, {
+    // Row ID 201179
+    {201179ull, {
         .iconId = 44,
         .dispMask00 = true,
         .areaNo = 60,
@@ -19949,8 +20069,8 @@ const MapEntry MAP_ENTRIES[] = {
         .textDisableFlagId2 = 1042617171,
         .selectMinZoomStep = 1,
     }, Category::ReforgedRunePieces, -1, 9000, "c4980_9000", 0u, 0, 112.216f, 15.505f},
-    // Row ID 201172
-    {201172ull, {
+    // Row ID 201180
+    {201180ull, {
         .iconId = 44,
         .dispMask00 = true,
         .areaNo = 60,
@@ -19964,8 +20084,8 @@ const MapEntry MAP_ENTRIES[] = {
         .textDisableFlagId2 = 1042617121,
         .selectMinZoomStep = 1,
     }, Category::ReforgedRunePieces, -1, 9000, "c3050_9000", 0u, 0, -25.222f, 50.570f},
-    // Row ID 201173
-    {201173ull, {
+    // Row ID 201181
+    {201181ull, {
         .iconId = 44,
         .dispMask00 = true,
         .areaNo = 60,
@@ -19979,8 +20099,8 @@ const MapEntry MAP_ENTRIES[] = {
         .textDisableFlagId2 = 1042617172,
         .selectMinZoomStep = 1,
     }, Category::ReforgedRunePieces, -1, 9000, "c3704_9000", 0u, 0, -87.897f, -8.448f},
-    // Row ID 201174
-    {201174ull, {
+    // Row ID 201182
+    {201182ull, {
         .iconId = 44,
         .dispMask00 = true,
         .areaNo = 60,
@@ -19994,8 +20114,8 @@ const MapEntry MAP_ENTRIES[] = {
         .textDisableFlagId2 = 1042617126,
         .selectMinZoomStep = 1,
     }, Category::ReforgedRunePieces, -1, 9000, "c4770_9000", 0u, 0, -20.155f, 58.419f},
-    // Row ID 201175
-    {201175ull, {
+    // Row ID 201183
+    {201183ull, {
         .iconId = 44,
         .dispMask00 = true,
         .areaNo = 60,
@@ -20009,8 +20129,8 @@ const MapEntry MAP_ENTRIES[] = {
         .textDisableFlagId2 = 1042617173,
         .selectMinZoomStep = 1,
     }, Category::ReforgedRunePieces, -1, 9000, "c3600_9000", 0u, 0, 88.956f, -104.764f},
-    // Row ID 201176
-    {201176ull, {
+    // Row ID 201184
+    {201184ull, {
         .iconId = 44,
         .dispMask00 = true,
         .areaNo = 60,
@@ -20024,8 +20144,8 @@ const MapEntry MAP_ENTRIES[] = {
         .textDisableFlagId2 = 1042617131,
         .selectMinZoomStep = 1,
     }, Category::ReforgedRunePieces, -1, 9000, "c4911_9000", 0u, 0, 12.074f, 12.362f},
-    // Row ID 201177
-    {201177ull, {
+    // Row ID 201185
+    {201185ull, {
         .iconId = 44,
         .dispMask00 = true,
         .areaNo = 60,
@@ -20039,8 +20159,8 @@ const MapEntry MAP_ENTRIES[] = {
         .textDisableFlagId2 = 1042617130,
         .selectMinZoomStep = 1,
     }, Category::ReforgedRunePieces, -1, 9000, "c4980_9000", 0u, 0, 51.230f, -92.161f},
-    // Row ID 201178
-    {201178ull, {
+    // Row ID 201186
+    {201186ull, {
         .iconId = 44,
         .dispMask00 = true,
         .areaNo = 60,
@@ -20054,8 +20174,8 @@ const MapEntry MAP_ENTRIES[] = {
         .textDisableFlagId2 = 1042617132,
         .selectMinZoomStep = 1,
     }, Category::ReforgedRunePieces, -1, 9000, "c4811_9000", 0u, 0, -85.383f, -56.416f},
-    // Row ID 201179
-    {201179ull, {
+    // Row ID 201187
+    {201187ull, {
         .iconId = 44,
         .dispMask00 = true,
         .areaNo = 60,
@@ -20069,8 +20189,8 @@ const MapEntry MAP_ENTRIES[] = {
         .textDisableFlagId2 = 1042617123,
         .selectMinZoomStep = 1,
     }, Category::ReforgedRunePieces, -1, 9000, "c4811_9000", 0u, 0, 37.409f, 70.231f},
-    // Row ID 201180
-    {201180ull, {
+    // Row ID 201188
+    {201188ull, {
         .iconId = 44,
         .dispMask00 = true,
         .areaNo = 60,
@@ -20084,8 +20204,8 @@ const MapEntry MAP_ENTRIES[] = {
         .textDisableFlagId2 = 1042617125,
         .selectMinZoomStep = 1,
     }, Category::ReforgedRunePieces, -1, 9000, "c4770_9000", 0u, 0, -12.906f, -19.208f},
-    // Row ID 201181
-    {201181ull, {
+    // Row ID 201189
+    {201189ull, {
         .iconId = 44,
         .dispMask00 = true,
         .areaNo = 60,
@@ -20099,8 +20219,8 @@ const MapEntry MAP_ENTRIES[] = {
         .textDisableFlagId2 = 1042617178,
         .selectMinZoomStep = 1,
     }, Category::ReforgedRunePieces, -1, 9001, "c4950_9001", 0u, 0, -17.574f, -12.835f},
-    // Row ID 201182
-    {201182ull, {
+    // Row ID 201190
+    {201190ull, {
         .iconId = 44,
         .dispMask00 = true,
         .areaNo = 60,
@@ -20114,8 +20234,8 @@ const MapEntry MAP_ENTRIES[] = {
         .textDisableFlagId2 = 1042617174,
         .selectMinZoomStep = 1,
     }, Category::ReforgedRunePieces, -1, 9002, "c3150_9002", 0u, 0, 8.289f, 115.716f},
-    // Row ID 201183
-    {201183ull, {
+    // Row ID 201191
+    {201191ull, {
         .iconId = 44,
         .dispMask00 = true,
         .areaNo = 60,
@@ -20129,8 +20249,8 @@ const MapEntry MAP_ENTRIES[] = {
         .textDisableFlagId2 = 1042617187,
         .selectMinZoomStep = 1,
     }, Category::ReforgedRunePieces, -1, 9000, "c4830_9000", 0u, 0, 99.977f, 104.184f},
-    // Row ID 201184
-    {201184ull, {
+    // Row ID 201192
+    {201192ull, {
         .iconId = 44,
         .dispMask00 = true,
         .areaNo = 60,
@@ -20144,8 +20264,8 @@ const MapEntry MAP_ENTRIES[] = {
         .textDisableFlagId2 = 1042617129,
         .selectMinZoomStep = 1,
     }, Category::ReforgedRunePieces, -1, 9000, "c4810_9000", 0u, 0, -44.022f, 69.736f},
-    // Row ID 201185
-    {201185ull, {
+    // Row ID 201193
+    {201193ull, {
         .iconId = 44,
         .dispMask00 = true,
         .areaNo = 60,
@@ -20159,8 +20279,8 @@ const MapEntry MAP_ENTRIES[] = {
         .textDisableFlagId2 = 1042617128,
         .selectMinZoomStep = 1,
     }, Category::ReforgedRunePieces, -1, 9000, "c0000_9000", 0u, 0, -52.497f, -116.306f},
-    // Row ID 201186
-    {201186ull, {
+    // Row ID 201194
+    {201194ull, {
         .iconId = 44,
         .dispMask00 = true,
         .areaNo = 60,
@@ -20174,8 +20294,8 @@ const MapEntry MAP_ENTRIES[] = {
         .textDisableFlagId2 = 1042617127,
         .selectMinZoomStep = 1,
     }, Category::ReforgedRunePieces, -1, 9000, "m60_54_56_00-c4503_9000", 0u, 0, 1.675f, -230.270f},
-    // Row ID 201187
-    {201187ull, {
+    // Row ID 201195
+    {201195ull, {
         .iconId = 44,
         .dispMask00 = true,
         .areaNo = 30,
@@ -20189,8 +20309,8 @@ const MapEntry MAP_ENTRIES[] = {
         .textDisableFlagId3 = 1042617039,
         .selectMinZoomStep = 1,
     }, Category::ReforgedRunePieces, -1, 9000, "c3664_9000", 0u, 0, 1.875f, 65.574f},
-    // Row ID 201188
-    {201188ull, {
+    // Row ID 201196
+    {201196ull, {
         .iconId = 44,
         .dispMask00 = true,
         .areaNo = 30,
@@ -20205,8 +20325,8 @@ const MapEntry MAP_ENTRIES[] = {
         .textDisableFlagId3 = 1042617040,
         .selectMinZoomStep = 1,
     }, Category::ReforgedRunePieces, -1, 9000, "c4260_9000", 0u, 0, -34.557f, -155.671f},
-    // Row ID 201189
-    {201189ull, {
+    // Row ID 201197
+    {201197ull, {
         .iconId = 44,
         .dispMask00 = true,
         .areaNo = 30,
@@ -20221,8 +20341,8 @@ const MapEntry MAP_ENTRIES[] = {
         .textDisableFlagId3 = 1042617041,
         .selectMinZoomStep = 1,
     }, Category::ReforgedRunePieces, -1, 9000, "c4260_9000", 0u, 0, 102.274f, 73.352f},
-    // Row ID 201190
-    {201190ull, {
+    // Row ID 201198
+    {201198ull, {
         .iconId = 44,
         .dispMask00 = true,
         .areaNo = 30,
@@ -20237,8 +20357,8 @@ const MapEntry MAP_ENTRIES[] = {
         .textDisableFlagId3 = 1042617045,
         .selectMinZoomStep = 1,
     }, Category::ReforgedRunePieces, -1, 9000, "c4140_9000", 0u, 0, 89.220f, 36.073f},
-    // Row ID 201191
-    {201191ull, {
+    // Row ID 201199
+    {201199ull, {
         .iconId = 44,
         .dispMask00 = true,
         .areaNo = 30,
@@ -20253,8 +20373,8 @@ const MapEntry MAP_ENTRIES[] = {
         .textDisableFlagId3 = 1042617043,
         .selectMinZoomStep = 1,
     }, Category::ReforgedRunePieces, -1, 9000, "c3400_9000", 0u, 0, -16.758f, 92.348f},
-    // Row ID 201192
-    {201192ull, {
+    // Row ID 201200
+    {201200ull, {
         .iconId = 44,
         .dispMask00 = true,
         .areaNo = 30,
@@ -20269,8 +20389,8 @@ const MapEntry MAP_ENTRIES[] = {
         .textDisableFlagId3 = 1042617044,
         .selectMinZoomStep = 1,
     }, Category::ReforgedRunePieces, -1, 9000, "c3664_9000", 0u, 0, -188.168f, 120.639f},
-    // Row ID 201193
-    {201193ull, {
+    // Row ID 201201
+    {201201ull, {
         .iconId = 44,
         .dispMask00 = true,
         .areaNo = 30,
@@ -20285,8 +20405,8 @@ const MapEntry MAP_ENTRIES[] = {
         .textDisableFlagId3 = 1042617060,
         .selectMinZoomStep = 1,
     }, Category::ReforgedRunePieces, -1, 9000, "c2100_9000", 0u, 0, -240.845f, 16.746f},
-    // Row ID 201194
-    {201194ull, {
+    // Row ID 201202
+    {201202ull, {
         .iconId = 44,
         .dispMask00 = true,
         .areaNo = 30,
@@ -20301,8 +20421,8 @@ const MapEntry MAP_ENTRIES[] = {
         .textDisableFlagId3 = 1042617046,
         .selectMinZoomStep = 1,
     }, Category::ReforgedRunePieces, -1, 9000, "c4260_9000", 0u, 0, 20.859f, -18.721f},
-    // Row ID 201195
-    {201195ull, {
+    // Row ID 201203
+    {201203ull, {
         .iconId = 44,
         .dispMask00 = true,
         .areaNo = 30,
@@ -20317,8 +20437,8 @@ const MapEntry MAP_ENTRIES[] = {
         .textDisableFlagId3 = 1042617051,
         .selectMinZoomStep = 1,
     }, Category::ReforgedRunePieces, -1, 9000, "c4260_9000", 0u, 0, -127.200f, 225.628f},
-    // Row ID 201196
-    {201196ull, {
+    // Row ID 201204
+    {201204ull, {
         .iconId = 44,
         .dispMask00 = true,
         .areaNo = 30,
@@ -20333,8 +20453,8 @@ const MapEntry MAP_ENTRIES[] = {
         .textDisableFlagId3 = 1042617047,
         .selectMinZoomStep = 1,
     }, Category::ReforgedRunePieces, -1, 9001, "c7100_9001", 0u, 0, 357.308f, 11.268f},
-    // Row ID 201197
-    {201197ull, {
+    // Row ID 201205
+    {201205ull, {
         .iconId = 44,
         .dispMask00 = true,
         .areaNo = 30,
@@ -20349,8 +20469,8 @@ const MapEntry MAP_ENTRIES[] = {
         .textDisableFlagId3 = 1042617048,
         .selectMinZoomStep = 1,
     }, Category::ReforgedRunePieces, -1, 9000, "c3181_9000", 0u, 0, -146.713f, 104.804f},
-    // Row ID 201198
-    {201198ull, {
+    // Row ID 201206
+    {201206ull, {
         .iconId = 44,
         .dispMask00 = true,
         .areaNo = 30,
@@ -20365,8 +20485,8 @@ const MapEntry MAP_ENTRIES[] = {
         .textDisableFlagId3 = 1042617049,
         .selectMinZoomStep = 1,
     }, Category::ReforgedRunePieces, -1, 9000, "c2500_9000", 0u, 0, -107.991f, 357.011f},
-    // Row ID 201199
-    {201199ull, {
+    // Row ID 201207
+    {201207ull, {
         .iconId = 44,
         .dispMask00 = true,
         .areaNo = 30,
@@ -20381,8 +20501,8 @@ const MapEntry MAP_ENTRIES[] = {
         .textDisableFlagId3 = 1042617042,
         .selectMinZoomStep = 1,
     }, Category::ReforgedRunePieces, -1, 9000, "c2100_9000", 0u, 0, -210.280f, 21.417f},
-    // Row ID 201200
-    {201200ull, {
+    // Row ID 201208
+    {201208ull, {
         .iconId = 44,
         .dispMask00 = true,
         .areaNo = 30,
@@ -20397,8 +20517,8 @@ const MapEntry MAP_ENTRIES[] = {
         .textDisableFlagId3 = 1042617050,
         .selectMinZoomStep = 1,
     }, Category::ReforgedRunePieces, -1, 9000, "c3460_9000", 0u, 0, 8.087f, 242.750f},
-    // Row ID 201201
-    {201201ull, {
+    // Row ID 201209
+    {201209ull, {
         .iconId = 44,
         .dispMask00 = true,
         .areaNo = 30,
@@ -20413,8 +20533,8 @@ const MapEntry MAP_ENTRIES[] = {
         .textDisableFlagId3 = 1042617052,
         .selectMinZoomStep = 1,
     }, Category::ReforgedRunePieces, -1, 9000, "c3400_9000", 0u, 0, 4.346f, 78.963f},
-    // Row ID 201202
-    {201202ull, {
+    // Row ID 201210
+    {201210ull, {
         .iconId = 44,
         .dispMask00 = true,
         .areaNo = 30,
@@ -20429,8 +20549,8 @@ const MapEntry MAP_ENTRIES[] = {
         .textDisableFlagId3 = 1042617053,
         .selectMinZoomStep = 1,
     }, Category::ReforgedRunePieces, -1, 9000, "c4260_9000", 0u, 0, -123.396f, -33.951f},
-    // Row ID 201203
-    {201203ull, {
+    // Row ID 201211
+    {201211ull, {
         .iconId = 44,
         .dispMask00 = true,
         .areaNo = 30,
@@ -20445,8 +20565,8 @@ const MapEntry MAP_ENTRIES[] = {
         .textDisableFlagId3 = 1042617054,
         .selectMinZoomStep = 1,
     }, Category::ReforgedRunePieces, -1, 9000, "c3664_9000", 0u, 0, 125.709f, 258.026f},
-    // Row ID 201204
-    {201204ull, {
+    // Row ID 201212
+    {201212ull, {
         .iconId = 44,
         .dispMask00 = true,
         .areaNo = 30,
@@ -20461,8 +20581,8 @@ const MapEntry MAP_ENTRIES[] = {
         .textDisableFlagId3 = 1042617055,
         .selectMinZoomStep = 1,
     }, Category::ReforgedRunePieces, -1, 9001, "c4640_9001", 0u, 0, -140.414f, -89.866f},
-    // Row ID 201205
-    {201205ull, {
+    // Row ID 201213
+    {201213ull, {
         .iconId = 44,
         .dispMask00 = true,
         .areaNo = 30,
@@ -20477,8 +20597,8 @@ const MapEntry MAP_ENTRIES[] = {
         .textDisableFlagId3 = 1042617056,
         .selectMinZoomStep = 1,
     }, Category::ReforgedRunePieces, -1, 9001, "c7100_9001", 0u, 0, -7.061f, -35.835f},
-    // Row ID 201206
-    {201206ull, {
+    // Row ID 201214
+    {201214ull, {
         .iconId = 44,
         .dispMask00 = true,
         .areaNo = 30,
@@ -20493,8 +20613,8 @@ const MapEntry MAP_ENTRIES[] = {
         .textDisableFlagId3 = 1042617057,
         .selectMinZoomStep = 1,
     }, Category::ReforgedRunePieces, -1, 9000, "c4640_9000", 0u, 0, -139.242f, 158.039f},
-    // Row ID 201207
-    {201207ull, {
+    // Row ID 201215
+    {201215ull, {
         .iconId = 44,
         .dispMask00 = true,
         .areaNo = 30,
@@ -20509,8 +20629,8 @@ const MapEntry MAP_ENTRIES[] = {
         .textDisableFlagId3 = 1042617058,
         .selectMinZoomStep = 1,
     }, Category::ReforgedRunePieces, -1, 9000, "c3400_9000", 0u, 0, 70.931f, -161.324f},
-    // Row ID 201208
-    {201208ull, {
+    // Row ID 201216
+    {201216ull, {
         .iconId = 44,
         .dispMask00 = true,
         .areaNo = 30,
@@ -20525,8 +20645,8 @@ const MapEntry MAP_ENTRIES[] = {
         .textDisableFlagId3 = 1042617059,
         .selectMinZoomStep = 1,
     }, Category::ReforgedRunePieces, -1, 9003, "c0000_9003", 0u, 0, -88.650f, -299.610f},
-    // Row ID 201209
-    {201209ull, {
+    // Row ID 201217
+    {201217ull, {
         .iconId = 44,
         .dispMask00 = true,
         .areaNo = 31,
@@ -20541,8 +20661,8 @@ const MapEntry MAP_ENTRIES[] = {
         .textDisableFlagId3 = 1042617063,
         .selectMinZoomStep = 1,
     }, Category::ReforgedRunePieces, -1, 9000, "c4630_9000", 0u, 0, -146.914f, -144.925f},
-    // Row ID 201210
-    {201210ull, {
+    // Row ID 201218
+    {201218ull, {
         .iconId = 44,
         .dispMask00 = true,
         .areaNo = 31,
@@ -20557,8 +20677,8 @@ const MapEntry MAP_ENTRIES[] = {
         .textDisableFlagId3 = 1042617062,
         .selectMinZoomStep = 1,
     }, Category::ReforgedRunePieces, -1, 9000, "c4480_9000", 0u, 0, -311.058f, -27.177f},
-    // Row ID 201211
-    {201211ull, {
+    // Row ID 201219
+    {201219ull, {
         .iconId = 44,
         .dispMask00 = true,
         .areaNo = 31,
@@ -20573,8 +20693,8 @@ const MapEntry MAP_ENTRIES[] = {
         .textDisableFlagId3 = 1042617064,
         .selectMinZoomStep = 1,
     }, Category::ReforgedRunePieces, -1, 9000, "c3970_9000", 0u, 0, -120.769f, 80.797f},
-    // Row ID 201212
-    {201212ull, {
+    // Row ID 201220
+    {201220ull, {
         .iconId = 44,
         .dispMask00 = true,
         .areaNo = 31,
@@ -20589,8 +20709,8 @@ const MapEntry MAP_ENTRIES[] = {
         .textDisableFlagId3 = 1042617067,
         .selectMinZoomStep = 1,
     }, Category::ReforgedRunePieces, -1, 9000, "c3800_9000", 0u, 0, 98.030f, -166.709f},
-    // Row ID 201213
-    {201213ull, {
+    // Row ID 201221
+    {201221ull, {
         .iconId = 44,
         .dispMask00 = true,
         .areaNo = 31,
@@ -20605,8 +20725,8 @@ const MapEntry MAP_ENTRIES[] = {
         .textDisableFlagId3 = 1042617068,
         .selectMinZoomStep = 1,
     }, Category::ReforgedRunePieces, -1, 9000, "c4290_9000", 0u, 0, -169.342f, -22.972f},
-    // Row ID 201214
-    {201214ull, {
+    // Row ID 201222
+    {201222ull, {
         .iconId = 44,
         .dispMask00 = true,
         .areaNo = 31,
@@ -20621,8 +20741,8 @@ const MapEntry MAP_ENTRIES[] = {
         .textDisableFlagId3 = 1042617069,
         .selectMinZoomStep = 1,
     }, Category::ReforgedRunePieces, -1, 9000, "c3350_9000", 0u, 0, 186.926f, 104.134f},
-    // Row ID 201215
-    {201215ull, {
+    // Row ID 201223
+    {201223ull, {
         .iconId = 44,
         .dispMask00 = true,
         .areaNo = 31,
@@ -20637,8 +20757,8 @@ const MapEntry MAP_ENTRIES[] = {
         .textDisableFlagId3 = 1042617070,
         .selectMinZoomStep = 1,
     }, Category::ReforgedRunePieces, -1, 9000, "c3810_9000", 0u, 0, -122.642f, 255.966f},
-    // Row ID 201216
-    {201216ull, {
+    // Row ID 201224
+    {201224ull, {
         .iconId = 44,
         .dispMask00 = true,
         .areaNo = 31,
@@ -20653,8 +20773,8 @@ const MapEntry MAP_ENTRIES[] = {
         .textDisableFlagId3 = 1042617071,
         .selectMinZoomStep = 1,
     }, Category::ReforgedRunePieces, -1, 9000, "c4130_9000", 0u, 0, -57.343f, -75.528f},
-    // Row ID 201217
-    {201217ull, {
+    // Row ID 201225
+    {201225ull, {
         .iconId = 44,
         .dispMask00 = true,
         .areaNo = 31,
@@ -20669,8 +20789,8 @@ const MapEntry MAP_ENTRIES[] = {
         .textDisableFlagId3 = 1042617075,
         .selectMinZoomStep = 1,
     }, Category::ReforgedRunePieces, -1, 9000, "c3970_9000", 0u, 0, 36.146f, 21.161f},
-    // Row ID 201218
-    {201218ull, {
+    // Row ID 201226
+    {201226ull, {
         .iconId = 44,
         .dispMask00 = true,
         .areaNo = 31,
@@ -20685,8 +20805,8 @@ const MapEntry MAP_ENTRIES[] = {
         .textDisableFlagId3 = 1042617077,
         .selectMinZoomStep = 1,
     }, Category::ReforgedRunePieces, -1, 9000, "c3350_9000", 0u, 0, -144.103f, 138.609f},
-    // Row ID 201219
-    {201219ull, {
+    // Row ID 201227
+    {201227ull, {
         .iconId = 44,
         .dispMask00 = true,
         .areaNo = 31,
@@ -20701,8 +20821,8 @@ const MapEntry MAP_ENTRIES[] = {
         .textDisableFlagId3 = 1042617078,
         .selectMinZoomStep = 1,
     }, Category::ReforgedRunePieces, -1, 9000, "c3460_9000", 0u, 0, -24.404f, 121.930f},
-    // Row ID 201220
-    {201220ull, {
+    // Row ID 201228
+    {201228ull, {
         .iconId = 44,
         .dispMask00 = true,
         .areaNo = 31,
@@ -20717,8 +20837,8 @@ const MapEntry MAP_ENTRIES[] = {
         .textDisableFlagId3 = 1042617065,
         .selectMinZoomStep = 1,
     }, Category::ReforgedRunePieces, -1, 9001, "c4120_9001", 0u, 0, 30.939f, -99.891f},
-    // Row ID 201221
-    {201221ull, {
+    // Row ID 201229
+    {201229ull, {
         .iconId = 44,
         .dispMask00 = true,
         .areaNo = 31,
@@ -20733,8 +20853,8 @@ const MapEntry MAP_ENTRIES[] = {
         .textDisableFlagId3 = 1042617066,
         .selectMinZoomStep = 1,
     }, Category::ReforgedRunePieces, -1, 9000, "c4660_9000", 0u, 0, 74.418f, 148.682f},
-    // Row ID 201222
-    {201222ull, {
+    // Row ID 201230
+    {201230ull, {
         .iconId = 44,
         .dispMask00 = true,
         .areaNo = 31,
@@ -20749,8 +20869,8 @@ const MapEntry MAP_ENTRIES[] = {
         .textDisableFlagId3 = 1042617072,
         .selectMinZoomStep = 1,
     }, Category::ReforgedRunePieces, -1, 9000, "c4480_9000", 0u, 0, -85.178f, 183.114f},
-    // Row ID 201223
-    {201223ull, {
+    // Row ID 201231
+    {201231ull, {
         .iconId = 44,
         .dispMask00 = true,
         .areaNo = 31,
@@ -20765,8 +20885,8 @@ const MapEntry MAP_ENTRIES[] = {
         .textDisableFlagId3 = 1042617073,
         .selectMinZoomStep = 1,
     }, Category::ReforgedRunePieces, -1, 9000, "c2100_9000", 0u, 0, 130.985f, -12.700f},
-    // Row ID 201224
-    {201224ull, {
+    // Row ID 201232
+    {201232ull, {
         .iconId = 44,
         .dispMask00 = true,
         .areaNo = 31,
@@ -20781,8 +20901,8 @@ const MapEntry MAP_ENTRIES[] = {
         .textDisableFlagId3 = 1042617080,
         .selectMinZoomStep = 1,
     }, Category::ReforgedRunePieces, -1, 9001, "c0000_9001", 0u, 0, 108.325f, -45.186f},
-    // Row ID 201225
-    {201225ull, {
+    // Row ID 201233
+    {201233ull, {
         .iconId = 44,
         .dispMask00 = true,
         .areaNo = 31,
@@ -20797,8 +20917,8 @@ const MapEntry MAP_ENTRIES[] = {
         .textDisableFlagId3 = 1042617076,
         .selectMinZoomStep = 1,
     }, Category::ReforgedRunePieces, -1, 9000, "c3800_9000", 0u, 0, 175.598f, 154.280f},
-    // Row ID 201226
-    {201226ull, {
+    // Row ID 201234
+    {201234ull, {
         .iconId = 44,
         .dispMask00 = true,
         .areaNo = 31,
@@ -20813,8 +20933,8 @@ const MapEntry MAP_ENTRIES[] = {
         .textDisableFlagId3 = 1042617074,
         .selectMinZoomStep = 1,
     }, Category::ReforgedRunePieces, -1, 9000, "c3400_9000", 0u, 0, -166.690f, 48.637f},
-    // Row ID 201227
-    {201227ull, {
+    // Row ID 201235
+    {201235ull, {
         .iconId = 44,
         .dispMask00 = true,
         .areaNo = 31,
@@ -20829,8 +20949,8 @@ const MapEntry MAP_ENTRIES[] = {
         .textDisableFlagId3 = 1042617079,
         .selectMinZoomStep = 1,
     }, Category::ReforgedRunePieces, -1, 9005, "c4140_9005", 0u, 0, -47.503f, -113.570f},
-    // Row ID 201228
-    {201228ull, {
+    // Row ID 201236
+    {201236ull, {
         .iconId = 44,
         .dispMask00 = true,
         .areaNo = 32,
@@ -20844,8 +20964,8 @@ const MapEntry MAP_ENTRIES[] = {
         .textDisableFlagId3 = 1042617081,
         .selectMinZoomStep = 1,
     }, Category::ReforgedRunePieces, -1, 9000, "c3451_9000", 0u, 0, 83.314f, -25.440f},
-    // Row ID 201229
-    {201229ull, {
+    // Row ID 201237
+    {201237ull, {
         .iconId = 44,
         .dispMask00 = true,
         .areaNo = 32,
@@ -20860,8 +20980,8 @@ const MapEntry MAP_ENTRIES[] = {
         .textDisableFlagId3 = 1042617082,
         .selectMinZoomStep = 1,
     }, Category::ReforgedRunePieces, -1, 9000, "c4603_9000", 0u, 0, 27.704f, -0.793f},
-    // Row ID 201230
-    {201230ull, {
+    // Row ID 201238
+    {201238ull, {
         .iconId = 44,
         .dispMask00 = true,
         .areaNo = 32,
@@ -20876,8 +20996,8 @@ const MapEntry MAP_ENTRIES[] = {
         .textDisableFlagId3 = 1042617083,
         .selectMinZoomStep = 1,
     }, Category::ReforgedRunePieces, -1, 9000, "c3350_9000", 0u, 0, 14.996f, 22.789f},
-    // Row ID 201231
-    {201231ull, {
+    // Row ID 201239
+    {201239ull, {
         .iconId = 44,
         .dispMask00 = true,
         .areaNo = 32,
@@ -20892,8 +21012,8 @@ const MapEntry MAP_ENTRIES[] = {
         .textDisableFlagId3 = 1042617084,
         .selectMinZoomStep = 1,
     }, Category::ReforgedRunePieces, -1, 9000, "c4603_9000", 0u, 0, -298.136f, -147.710f},
-    // Row ID 201232
-    {201232ull, {
+    // Row ID 201240
+    {201240ull, {
         .iconId = 44,
         .dispMask00 = true,
         .areaNo = 32,
@@ -20908,8 +21028,8 @@ const MapEntry MAP_ENTRIES[] = {
         .textDisableFlagId3 = 1042617086,
         .selectMinZoomStep = 1,
     }, Category::ReforgedRunePieces, -1, 9000, "c3350_9000", 0u, 0, 62.147f, -41.252f},
-    // Row ID 201233
-    {201233ull, {
+    // Row ID 201241
+    {201241ull, {
         .iconId = 44,
         .dispMask00 = true,
         .areaNo = 32,
@@ -20924,8 +21044,8 @@ const MapEntry MAP_ENTRIES[] = {
         .textDisableFlagId3 = 1042617087,
         .selectMinZoomStep = 1,
     }, Category::ReforgedRunePieces, -1, 9000, "c4910_9000", 0u, 0, -20.456f, 158.679f},
-    // Row ID 201234
-    {201234ull, {
+    // Row ID 201242
+    {201242ull, {
         .iconId = 44,
         .dispMask00 = true,
         .areaNo = 32,
@@ -20940,8 +21060,8 @@ const MapEntry MAP_ENTRIES[] = {
         .textDisableFlagId3 = 1042617088,
         .selectMinZoomStep = 1,
     }, Category::ReforgedRunePieces, -1, 9000, "c4680_9000", 0u, 0, -65.221f, 239.753f},
-    // Row ID 201235
-    {201235ull, {
+    // Row ID 201243
+    {201243ull, {
         .iconId = 44,
         .dispMask00 = true,
         .areaNo = 32,
@@ -20956,8 +21076,8 @@ const MapEntry MAP_ENTRIES[] = {
         .textDisableFlagId3 = 1042617089,
         .selectMinZoomStep = 1,
     }, Category::ReforgedRunePieces, -1, 9000, "c4620_9000", 0u, 0, 51.793f, 149.466f},
-    // Row ID 201236
-    {201236ull, {
+    // Row ID 201244
+    {201244ull, {
         .iconId = 44,
         .dispMask00 = true,
         .areaNo = 34,
@@ -24452,6 +24572,108 @@ const MapEntry MAP_ENTRIES[] = {
     {300279ull, {
         .iconId = 14,
         .dispMask02 = true,
+        .areaNo = 20,
+        .gridXNo = 0,
+        .gridZNo = 0,
+        .posX = -107.312f,
+        .posZ = 45.211f,
+        .textId1 = 500850010,
+        .textDisableFlagId1 = 1042617549,
+        .textId2 = 20000,
+        .textDisableFlagId2 = 1042617549,
+        .textId3 = 904640004,
+        .textDisableFlagId3 = 1042617549,
+        .selectMinZoomStep = 1,
+    }, Category::ReforgedEmberPieces, -1, 9000, "c5960_9000", 0u, 0, -107.312f, 45.211f},
+    // Row ID 300280
+    {300280ull, {
+        .iconId = 14,
+        .dispMask02 = true,
+        .areaNo = 20,
+        .gridXNo = 1,
+        .gridZNo = 0,
+        .posX = -186.338f,
+        .posZ = -145.124f,
+        .textId1 = 500850010,
+        .textDisableFlagId1 = 20010451,
+        .textId2 = 20010,
+        .textDisableFlagId2 = 20010451,
+        .textId3 = 905250104,
+        .textDisableFlagId3 = 20010451,
+        .selectMinZoomStep = 1,
+    }, Category::ReforgedEmberPieces, -1, 9001, "c5250_9001", 0u, 0, -186.338f, -145.124f},
+    // Row ID 300281
+    {300281ull, {
+        .iconId = 14,
+        .dispMask02 = true,
+        .areaNo = 20,
+        .gridXNo = 1,
+        .gridZNo = 0,
+        .posX = -324.750f,
+        .posZ = -86.168f,
+        .textId1 = 500850010,
+        .textDisableFlagId1 = 20010453,
+        .textId2 = 20010,
+        .textDisableFlagId2 = 20010453,
+        .textId3 = 905250104,
+        .textDisableFlagId3 = 20010453,
+        .selectMinZoomStep = 1,
+    }, Category::ReforgedEmberPieces, -1, 9003, "c5250_9003", 0u, 0, -327.090f, -73.523f},
+    // Row ID 300282
+    {300282ull, {
+        .iconId = 14,
+        .dispMask02 = true,
+        .areaNo = 21,
+        .gridXNo = 0,
+        .gridZNo = 0,
+        .posX = 331.389f,
+        .posZ = 166.328f,
+        .textId1 = 500850010,
+        .textDisableFlagId1 = 1042617550,
+        .textId2 = 21000,
+        .textDisableFlagId2 = 1042617550,
+        .textId3 = 904640004,
+        .textDisableFlagId3 = 1042617550,
+        .selectMinZoomStep = 1,
+    }, Category::ReforgedEmberPieces, -1, 9000, "c5960_9000", 0u, 0, 331.389f, 166.328f},
+    // Row ID 300283
+    {300283ull, {
+        .iconId = 14,
+        .dispMask02 = true,
+        .areaNo = 21,
+        .gridXNo = 0,
+        .gridZNo = 0,
+        .posX = 321.772f,
+        .posZ = 219.223f,
+        .textId1 = 500850010,
+        .textDisableFlagId1 = 1042617551,
+        .textId2 = 21000,
+        .textDisableFlagId2 = 1042617551,
+        .textId3 = 904640004,
+        .textDisableFlagId3 = 1042617551,
+        .selectMinZoomStep = 1,
+    }, Category::ReforgedEmberPieces, -1, 9001, "c5960_9001", 0u, 0, 321.772f, 219.223f},
+    // Row ID 300284
+    {300284ull, {
+        .iconId = 14,
+        .dispMask02 = true,
+        .areaNo = 22,
+        .gridXNo = 0,
+        .gridZNo = 0,
+        .posX = -12.082f,
+        .posZ = 230.069f,
+        .textId1 = 500850010,
+        .textDisableFlagId1 = 1042617560,
+        .textId2 = 22000,
+        .textDisableFlagId2 = 1042617560,
+        .textId3 = 1603460010,
+        .textDisableFlagId3 = 1042617560,
+        .selectMinZoomStep = 1,
+    }, Category::ReforgedEmberPieces, -1, 9000, "c5950_9000", 0u, 0, -12.082f, 230.069f},
+    // Row ID 300285
+    {300285ull, {
+        .iconId = 14,
+        .dispMask02 = true,
         .areaNo = 61,
         .gridXNo = 44,
         .gridZNo = 47,
@@ -24463,8 +24685,8 @@ const MapEntry MAP_ENTRIES[] = {
         .textDisableFlagId2 = 1042617532,
         .selectMinZoomStep = 1,
     }, Category::ReforgedEmberPieces, -1, 9000, "c5820_9000", 0u, 0, -45.834f, 108.506f},
-    // Row ID 300280
-    {300280ull, {
+    // Row ID 300286
+    {300286ull, {
         .iconId = 14,
         .dispMask02 = true,
         .areaNo = 61,
@@ -24478,8 +24700,38 @@ const MapEntry MAP_ENTRIES[] = {
         .textDisableFlagId2 = 1042617530,
         .selectMinZoomStep = 1,
     }, Category::ReforgedEmberPieces, -1, 9000, "c5860_9000", 0u, 0, 59.097f, -73.887f},
-    // Row ID 300281
-    {300281ull, {
+    // Row ID 300287
+    {300287ull, {
+        .iconId = 14,
+        .dispMask02 = true,
+        .areaNo = 61,
+        .gridXNo = 11,
+        .gridZNo = 11,
+        .posX = -197.762f,
+        .posZ = 106.093f,
+        .textId1 = 500850010,
+        .textDisableFlagId1 = 2045467500,
+        .textId2 = 905170004,
+        .textDisableFlagId2 = 2045467500,
+        .selectMinZoomStep = 1,
+    }, Category::ReforgedEmberPieces, -1, 9000, "m61_45_46_00-c5170_9000", 0u, 0, -197.762f, 106.093f},
+    // Row ID 300288
+    {300288ull, {
+        .iconId = 14,
+        .dispMask02 = true,
+        .areaNo = 61,
+        .gridXNo = 46,
+        .gridZNo = 38,
+        .posX = 51.327f,
+        .posZ = 34.717f,
+        .textId1 = 500850010,
+        .textDisableFlagId1 = 1042617556,
+        .textId2 = 903664004,
+        .textDisableFlagId2 = 1042617556,
+        .selectMinZoomStep = 1,
+    }, Category::ReforgedEmberPieces, -1, 9000, "c5513_9000", 0u, 0, 51.327f, 34.717f},
+    // Row ID 300289
+    {300289ull, {
         .iconId = 14,
         .dispMask02 = true,
         .areaNo = 61,
@@ -24493,8 +24745,8 @@ const MapEntry MAP_ENTRIES[] = {
         .textDisableFlagId2 = 1042617527,
         .selectMinZoomStep = 1,
     }, Category::ReforgedEmberPieces, -1, 9000, "c5730_9000", 0u, 0, -69.565f, -12.899f},
-    // Row ID 300282
-    {300282ull, {
+    // Row ID 300290
+    {300290ull, {
         .iconId = 14,
         .dispMask02 = true,
         .areaNo = 61,
@@ -24508,8 +24760,8 @@ const MapEntry MAP_ENTRIES[] = {
         .textDisableFlagId2 = 1042617535,
         .selectMinZoomStep = 1,
     }, Category::ReforgedEmberPieces, -1, 9000, "c5210_9000", 0u, 0, -62.724f, -40.748f},
-    // Row ID 300283
-    {300283ull, {
+    // Row ID 300291
+    {300291ull, {
         .iconId = 14,
         .dispMask02 = true,
         .areaNo = 61,
@@ -24523,8 +24775,8 @@ const MapEntry MAP_ENTRIES[] = {
         .textDisableFlagId2 = 1042617559,
         .selectMinZoomStep = 1,
     }, Category::ReforgedEmberPieces, -1, 9000, "c7600_9000", 0u, 0, 23.005f, 181.463f},
-    // Row ID 300284
-    {300284ull, {
+    // Row ID 300292
+    {300292ull, {
         .iconId = 14,
         .dispMask02 = true,
         .areaNo = 61,
@@ -24538,8 +24790,53 @@ const MapEntry MAP_ENTRIES[] = {
         .textDisableFlagId2 = 1042617529,
         .selectMinZoomStep = 1,
     }, Category::ReforgedEmberPieces, -1, 9000, "c6260_9000", 0u, 0, 68.245f, 68.825f},
-    // Row ID 300285
-    {300285ull, {
+    // Row ID 300293
+    {300293ull, {
+        .iconId = 14,
+        .dispMask02 = true,
+        .areaNo = 61,
+        .gridXNo = 47,
+        .gridZNo = 40,
+        .posX = 7.581f,
+        .posZ = -79.814f,
+        .textId1 = 500850010,
+        .textDisableFlagId1 = 1042617545,
+        .textId2 = 700143100,
+        .textDisableFlagId2 = 1042617545,
+        .selectMinZoomStep = 1,
+    }, Category::ReforgedEmberPieces, -1, 9000, "c0000_9000", 0u, 0, 7.581f, -79.814f},
+    // Row ID 300294
+    {300294ull, {
+        .iconId = 14,
+        .dispMask02 = true,
+        .areaNo = 61,
+        .gridXNo = 47,
+        .gridZNo = 43,
+        .posX = -114.718f,
+        .posZ = 39.013f,
+        .textId1 = 500850010,
+        .textDisableFlagId1 = 1042617552,
+        .textId2 = 904640004,
+        .textDisableFlagId2 = 1042617552,
+        .selectMinZoomStep = 1,
+    }, Category::ReforgedEmberPieces, -1, 9000, "c5960_9000", 0u, 0, -114.718f, 39.013f},
+    // Row ID 300295
+    {300295ull, {
+        .iconId = 14,
+        .dispMask02 = true,
+        .areaNo = 61,
+        .gridXNo = 47,
+        .gridZNo = 44,
+        .posX = 96.985f,
+        .posZ = -46.217f,
+        .textId1 = 500850010,
+        .textDisableFlagId1 = 1042617547,
+        .textId2 = 700143200,
+        .textDisableFlagId2 = 1042617547,
+        .selectMinZoomStep = 1,
+    }, Category::ReforgedEmberPieces, -1, 9003, "c0000_9003", 0u, 0, 96.985f, -46.217f},
+    // Row ID 300296
+    {300296ull, {
         .iconId = 14,
         .dispMask02 = true,
         .areaNo = 61,
@@ -24553,8 +24850,23 @@ const MapEntry MAP_ENTRIES[] = {
         .textDisableFlagId2 = 1042617538,
         .selectMinZoomStep = 1,
     }, Category::ReforgedEmberPieces, -1, 9002, "c5840_9002", 0u, 0, -27.670f, -138.662f},
-    // Row ID 300286
-    {300286ull, {
+    // Row ID 300297
+    {300297ull, {
+        .iconId = 14,
+        .dispMask02 = true,
+        .areaNo = 61,
+        .gridXNo = 48,
+        .gridZNo = 37,
+        .posX = -0.218f,
+        .posZ = 100.993f,
+        .textId1 = 500850010,
+        .textDisableFlagId1 = 1042617548,
+        .textId2 = 903664004,
+        .textDisableFlagId2 = 1042617548,
+        .selectMinZoomStep = 1,
+    }, Category::ReforgedEmberPieces, -1, 9000, "c5513_9000", 0u, 0, -0.218f, 100.993f},
+    // Row ID 300298
+    {300298ull, {
         .iconId = 14,
         .dispMask02 = true,
         .areaNo = 61,
@@ -24568,8 +24880,38 @@ const MapEntry MAP_ENTRIES[] = {
         .textDisableFlagId2 = 1042617526,
         .selectMinZoomStep = 1,
     }, Category::ReforgedEmberPieces, -1, 9000, "c5860_9000", 0u, 0, -89.477f, 1.455f},
-    // Row ID 300287
-    {300287ull, {
+    // Row ID 300299
+    {300299ull, {
+        .iconId = 14,
+        .dispMask02 = true,
+        .areaNo = 61,
+        .gridXNo = 49,
+        .gridZNo = 42,
+        .posX = 31.572f,
+        .posZ = 56.889f,
+        .textId1 = 500850010,
+        .textDisableFlagId1 = 2049427700,
+        .textId2 = 905280004,
+        .textDisableFlagId2 = 2049427700,
+        .selectMinZoomStep = 1,
+    }, Category::ReforgedEmberPieces, -1, 9000, "c5280_9000", 0u, 0, 31.572f, 56.889f},
+    // Row ID 300300
+    {300300ull, {
+        .iconId = 14,
+        .dispMask02 = true,
+        .areaNo = 61,
+        .gridXNo = 49,
+        .gridZNo = 42,
+        .posX = -9.421f,
+        .posZ = 81.608f,
+        .textId1 = 500850010,
+        .textDisableFlagId1 = 2049427720,
+        .textId2 = 905280004,
+        .textDisableFlagId2 = 2049427720,
+        .selectMinZoomStep = 1,
+    }, Category::ReforgedEmberPieces, -1, 9002, "c5280_9002", 0u, 0, -9.421f, 81.608f},
+    // Row ID 300301
+    {300301ull, {
         .iconId = 14,
         .dispMask02 = true,
         .areaNo = 61,
@@ -24583,8 +24925,8 @@ const MapEntry MAP_ENTRIES[] = {
         .textDisableFlagId2 = 1042617536,
         .selectMinZoomStep = 1,
     }, Category::ReforgedEmberPieces, -1, 9000, "c5860_9000", 0u, 0, -8.795f, 116.912f},
-    // Row ID 300288
-    {300288ull, {
+    // Row ID 300302
+    {300302ull, {
         .iconId = 14,
         .dispMask02 = true,
         .areaNo = 61,
@@ -24598,8 +24940,8 @@ const MapEntry MAP_ENTRIES[] = {
         .textDisableFlagId2 = 1042617540,
         .selectMinZoomStep = 1,
     }, Category::ReforgedEmberPieces, -1, 9004, "c5840_9004", 0u, 0, 68.875f, -95.656f},
-    // Row ID 300289
-    {300289ull, {
+    // Row ID 300303
+    {300303ull, {
         .iconId = 14,
         .dispMask02 = true,
         .areaNo = 61,
@@ -24613,8 +24955,98 @@ const MapEntry MAP_ENTRIES[] = {
         .textDisableFlagId2 = 1042617533,
         .selectMinZoomStep = 1,
     }, Category::ReforgedEmberPieces, -1, 9000, "c5820_9000", 0u, 0, 75.687f, 113.126f},
-    // Row ID 300290
-    {300290ull, {
+    // Row ID 300304
+    {300304ull, {
+        .iconId = 14,
+        .dispMask02 = true,
+        .areaNo = 61,
+        .gridXNo = 50,
+        .gridZNo = 41,
+        .posX = -17.909f,
+        .posZ = 123.763f,
+        .textId1 = 500850010,
+        .textDisableFlagId1 = 2050417700,
+        .textId2 = 905280004,
+        .textDisableFlagId2 = 2050417700,
+        .selectMinZoomStep = 1,
+    }, Category::ReforgedEmberPieces, -1, 9000, "c5280_9000", 0u, 0, -17.909f, 123.763f},
+    // Row ID 300305
+    {300305ull, {
+        .iconId = 14,
+        .dispMask02 = true,
+        .areaNo = 61,
+        .gridXNo = 50,
+        .gridZNo = 42,
+        .posX = 50.044f,
+        .posZ = 56.914f,
+        .textId1 = 500850010,
+        .textDisableFlagId1 = 2050427700,
+        .textId2 = 905280004,
+        .textDisableFlagId2 = 2050427700,
+        .selectMinZoomStep = 1,
+    }, Category::ReforgedEmberPieces, -1, 9000, "c5280_9000", 0u, 0, 50.044f, 56.914f},
+    // Row ID 300306
+    {300306ull, {
+        .iconId = 14,
+        .dispMask02 = true,
+        .areaNo = 61,
+        .gridXNo = 12,
+        .gridZNo = 11,
+        .posX = 61.837f,
+        .posZ = 247.594f,
+        .textId1 = 500850010,
+        .textDisableFlagId1 = 2050467500,
+        .textId2 = 905170004,
+        .textDisableFlagId2 = 2050467500,
+        .selectMinZoomStep = 1,
+    }, Category::ReforgedEmberPieces, -1, 9000, "m61_50_46_00-c5170_9000", 0u, 0, 61.837f, 247.594f},
+    // Row ID 300307
+    {300307ull, {
+        .iconId = 14,
+        .dispMask02 = true,
+        .areaNo = 61,
+        .gridXNo = 12,
+        .gridZNo = 11,
+        .posX = 6.153f,
+        .posZ = 156.183f,
+        .textId1 = 500850010,
+        .textDisableFlagId1 = 2050467510,
+        .textId2 = 905170004,
+        .textDisableFlagId2 = 2050467510,
+        .selectMinZoomStep = 1,
+    }, Category::ReforgedEmberPieces, -1, 9001, "m61_50_46_00-c5170_9001", 0u, 0, 6.153f, 156.183f},
+    // Row ID 300308
+    {300308ull, {
+        .iconId = 14,
+        .dispMask02 = true,
+        .areaNo = 61,
+        .gridXNo = 51,
+        .gridZNo = 41,
+        .posX = -40.151f,
+        .posZ = 56.729f,
+        .textId1 = 500850010,
+        .textDisableFlagId1 = 2051417710,
+        .textId2 = 905280004,
+        .textDisableFlagId2 = 2051417710,
+        .selectMinZoomStep = 1,
+    }, Category::ReforgedEmberPieces, -1, 9001, "c5280_9001", 0u, 0, -40.151f, 56.729f},
+    // Row ID 300309
+    {300309ull, {
+        .iconId = 14,
+        .dispMask02 = true,
+        .areaNo = 61,
+        .gridXNo = 52,
+        .gridZNo = 42,
+        .posX = -96.313f,
+        .posZ = -71.457f,
+        .textId1 = 500850010,
+        .textDisableFlagId1 = 1042617546,
+        .textId2 = 700142900,
+        .textDisableFlagId2 = 1042617546,
+        .selectMinZoomStep = 1,
+    }, Category::ReforgedEmberPieces, -1, 9000, "c0000_9000", 0u, 0, -96.313f, -71.457f},
+    // Row ID 300310
+    {300310ull, {
         .iconId = 14,
         .dispMask02 = true,
         .areaNo = 61,
@@ -24628,8 +25060,8 @@ const MapEntry MAP_ENTRIES[] = {
         .textDisableFlagId2 = 1042617539,
         .selectMinZoomStep = 1,
     }, Category::ReforgedEmberPieces, -1, 9000, "c6310_9000", 0u, 0, 39.212f, 116.998f},
-    // Row ID 300291
-    {300291ull, {
+    // Row ID 300311
+    {300311ull, {
         .iconId = 14,
         .dispMask02 = true,
         .areaNo = 40,
@@ -24645,8 +25077,8 @@ const MapEntry MAP_ENTRIES[] = {
         .textDisableFlagId3 = 1042617514,
         .selectMinZoomStep = 1,
     }, Category::ReforgedEmberPieces, -1, 9000, "c5070_9000", 0u, 0, -426.560f, -33.971f},
-    // Row ID 300292
-    {300292ull, {
+    // Row ID 300312
+    {300312ull, {
         .iconId = 14,
         .dispMask02 = true,
         .areaNo = 40,
@@ -24662,8 +25094,8 @@ const MapEntry MAP_ENTRIES[] = {
         .textDisableFlagId3 = 1042617515,
         .selectMinZoomStep = 1,
     }, Category::ReforgedEmberPieces, -1, 9000, "c5070_9000", 0u, 0, 185.052f, -137.042f},
-    // Row ID 300293
-    {300293ull, {
+    // Row ID 300313
+    {300313ull, {
         .iconId = 14,
         .dispMask02 = true,
         .areaNo = 41,
@@ -24679,8 +25111,8 @@ const MapEntry MAP_ENTRIES[] = {
         .textDisableFlagId3 = 1042617516,
         .selectMinZoomStep = 1,
     }, Category::ReforgedEmberPieces, -1, 9000, "c5810_9000", 0u, 0, -178.656f, -198.626f},
-    // Row ID 300294
-    {300294ull, {
+    // Row ID 300314
+    {300314ull, {
         .iconId = 14,
         .dispMask02 = true,
         .areaNo = 41,
@@ -24696,8 +25128,8 @@ const MapEntry MAP_ENTRIES[] = {
         .textDisableFlagId3 = 1042617517,
         .selectMinZoomStep = 1,
     }, Category::ReforgedEmberPieces, -1, 9000, "c5040_9000", 0u, 0, -194.629f, 90.689f},
-    // Row ID 300295
-    {300295ull, {
+    // Row ID 300315
+    {300315ull, {
         .iconId = 14,
         .dispMask02 = true,
         .areaNo = 41,
@@ -24713,8 +25145,8 @@ const MapEntry MAP_ENTRIES[] = {
         .textDisableFlagId3 = 1042617518,
         .selectMinZoomStep = 1,
     }, Category::ReforgedEmberPieces, -1, 9001, "c0000_9001", 0u, 0, 152.344f, -14.047f},
-    // Row ID 300296
-    {300296ull, {
+    // Row ID 300316
+    {300316ull, {
         .iconId = 14,
         .dispMask02 = true,
         .areaNo = 43,
@@ -24730,8 +25162,8 @@ const MapEntry MAP_ENTRIES[] = {
         .textDisableFlagId3 = 1042617519,
         .selectMinZoomStep = 1,
     }, Category::ReforgedEmberPieces, -1, 9000, "c5081_9000", 0u, 0, 136.568f, 138.598f},
-    // Row ID 300297
-    {300297ull, {
+    // Row ID 300317
+    {300317ull, {
         .iconId = 14,
         .dispMask02 = true,
         .areaNo = 43,
@@ -29724,7 +30156,7 @@ const MapEntry MAP_ENTRIES[] = {
         .gridZNo = 0,
         .posX = 321.772f,
         .posY = 31.778f,
-        .posZ = 219.223f,
+        .posZ = 211.223f,
         .textId1 = 502002130,
         .textDisableFlagId1 = 21000471,
         .textId2 = 1604640010,
@@ -31620,9 +32052,9 @@ const MapEntry MAP_ENTRIES[] = {
         .areaNo = 61,
         .gridXNo = 46,
         .gridZNo = 38,
-        .posX = 55.767f,
+        .posX = 51.327f,
         .posY = 11.823f,
-        .posZ = 32.000f,
+        .posZ = 26.717f,
         .textId1 = 502009344,
         .textDisableFlagId1 = 68970,
         .selectMinZoomStep = 1,
@@ -32591,7 +33023,7 @@ const MapEntry MAP_ENTRIES[] = {
         .gridZNo = 11,
         .posX = -197.762f,
         .posY = 553.347f,
-        .posZ = 106.093f,
+        .posZ = 98.093f,
         .textId1 = 502011020,
         .textDisableFlagId1 = 65420,
         .textId2 = 905170004,
@@ -32607,7 +33039,7 @@ const MapEntry MAP_ENTRIES[] = {
         .gridZNo = 11,
         .posX = 6.153f,
         .posY = 260.000f,
-        .posZ = 156.183f,
+        .posZ = 148.183f,
         .textId1 = 502011040,
         .textDisableFlagId1 = 65440,
         .textId2 = 905170004,
@@ -32623,7 +33055,7 @@ const MapEntry MAP_ENTRIES[] = {
         .gridZNo = 11,
         .posX = 61.837f,
         .posY = 260.411f,
-        .posZ = 247.594f,
+        .posZ = 239.594f,
         .textId1 = 502011050,
         .textDisableFlagId1 = 65450,
         .textId2 = 905170004,
@@ -34762,7 +35194,7 @@ const MapEntry MAP_ENTRIES[] = {
         .areaNo = 10,
         .posX = -258.624f,
         .posY = 13.846f,
-        .posZ = 147.009f,
+        .posZ = 139.009f,
         .textId1 = 500010010,
         .textDisableFlagId1 = 10000291,
         .textId2 = 1604640000,
@@ -34926,7 +35358,7 @@ const MapEntry MAP_ENTRIES[] = {
         .areaNo = 15,
         .posX = 22.227f,
         .posY = 179.795f,
-        .posZ = 438.025f,
+        .posZ = 430.025f,
         .textId1 = 500010010,
         .textDisableFlagId1 = 15000398,
         .textId2 = 1604640300,
@@ -35024,9 +35456,9 @@ const MapEntry MAP_ENTRIES[] = {
         .areaNo = 20,
         .gridXNo = 1,
         .gridZNo = 0,
-        .posX = -193.918f,
+        .posX = -186.338f,
         .posY = 20.660f,
-        .posZ = -142.584f,
+        .posZ = -153.124f,
         .textId1 = 502010100,
         .textDisableFlagId1 = 20017200,
         .textId2 = 20010,
@@ -35418,7 +35850,7 @@ const MapEntry MAP_ENTRIES[] = {
         .gridZNo = 50,
         .posX = -36.144f,
         .posY = 865.468f,
-        .posZ = 60.357f,
+        .posZ = 52.357f,
         .textId1 = 500010010,
         .textDisableFlagId1 = 1042500300,
         .textId2 = 904640004,
@@ -38669,7 +39101,7 @@ const MapEntry MAP_ENTRIES[] = {
         .gridZNo = 37,
         .posX = -0.218f,
         .posY = 56.947f,
-        .posZ = 100.993f,
+        .posZ = 92.993f,
         .textId1 = 501307900,
         .textDisableFlagId1 = 2048370400,
         .textId2 = 1603664400,
@@ -39007,7 +39439,7 @@ const MapEntry MAP_ENTRIES[] = {
         .areaNo = 11,
         .posX = -214.637f,
         .posY = -17.501f,
-        .posZ = -321.751f,
+        .posZ = -329.751f,
         .textId1 = 118150000,
         .textDisableFlagId1 = 11007987,
         .textId2 = 1604770000,
@@ -39021,9 +39453,9 @@ const MapEntry MAP_ENTRIES[] = {
         .iconId = 2,
         .dispMask00 = true,
         .areaNo = 11,
-        .posX = -214.637f,
+        .posX = -206.637f,
         .posY = -17.501f,
-        .posZ = -329.751f,
+        .posZ = -321.751f,
         .textId1 = 103190000,
         .textDisableFlagId1 = 11000890,
         .textId2 = 1604770000,
@@ -39095,7 +39527,7 @@ const MapEntry MAP_ENTRIES[] = {
         .areaNo = 11,
         .posX = -157.282f,
         .posY = -45.500f,
-        .posZ = -201.537f,
+        .posZ = -209.537f,
         .textId1 = 123070000,
         .textDisableFlagId1 = 11000389,
         .textId2 = 1604810600,
@@ -39670,7 +40102,7 @@ const MapEntry MAP_ENTRIES[] = {
         .areaNo = 15,
         .posX = 132.045f,
         .posY = 213.000f,
-        .posZ = 520.476f,
+        .posZ = 512.476f,
         .textId1 = 123140000,
         .textDisableFlagId1 = 15000393,
         .textId2 = 1604811600,
@@ -39758,7 +40190,7 @@ const MapEntry MAP_ENTRIES[] = {
         .areaNo = 16,
         .posX = 17.952f,
         .posY = -54.479f,
-        .posZ = -180.561f,
+        .posZ = -188.561f,
         .textId1 = 108040000,
         .textDisableFlagId1 = 16000890,
         .textId2 = 1604910320,
@@ -43274,7 +43706,7 @@ const MapEntry MAP_ENTRIES[] = {
         .gridZNo = 44,
         .posX = 96.985f,
         .posY = 380.200f,
-        .posZ = -46.217f,
+        .posZ = -54.217f,
         .textId1 = 104540000,
         .textDisableFlagId1 = 2047440360,
         .textId2 = 700143200,
@@ -43288,9 +43720,9 @@ const MapEntry MAP_ENTRIES[] = {
         .areaNo = 61,
         .gridXNo = 47,
         .gridZNo = 44,
-        .posX = 96.985f,
+        .posX = 104.985f,
         .posY = 371.007f,
-        .posZ = -54.217f,
+        .posZ = -46.217f,
         .textId1 = 131510000,
         .textDisableFlagId1 = 2047447830,
         .selectMinZoomStep = 1,
@@ -43480,7 +43912,7 @@ const MapEntry MAP_ENTRIES[] = {
         .gridZNo = 42,
         .posX = -96.313f,
         .posY = -551.814f,
-        .posZ = -71.457f,
+        .posZ = -79.457f,
         .textId1 = 121530000,
         .textDisableFlagId1 = 2052420300,
         .textId2 = 700142900,
@@ -43993,7 +44425,7 @@ const MapEntry MAP_ENTRIES[] = {
         .areaNo = 13,
         .posX = 120.355f,
         .posY = -32.700f,
-        .posZ = 399.675f,
+        .posZ = 391.675f,
         .textId1 = 200260100,
         .textDisableFlagId1 = 13007995,
         .textId2 = 1603250601,
@@ -44007,9 +44439,9 @@ const MapEntry MAP_ENTRIES[] = {
         .iconId = 3,
         .dispMask00 = true,
         .areaNo = 13,
-        .posX = 120.355f,
+        .posX = 128.355f,
         .posY = -32.700f,
-        .posZ = 391.675f,
+        .posZ = 399.675f,
         .textId1 = 200260200,
         .textDisableFlagId1 = 13007995,
         .textId2 = 1603250601,
@@ -44025,7 +44457,7 @@ const MapEntry MAP_ENTRIES[] = {
         .areaNo = 13,
         .posX = 128.355f,
         .posY = -32.700f,
-        .posZ = 399.675f,
+        .posZ = 407.675f,
         .textId1 = 200260300,
         .textDisableFlagId1 = 13007995,
         .textId2 = 1603250601,
@@ -44039,7 +44471,7 @@ const MapEntry MAP_ENTRIES[] = {
         .iconId = 3,
         .dispMask00 = true,
         .areaNo = 13,
-        .posX = 128.355f,
+        .posX = 120.355f,
         .posY = -32.700f,
         .posZ = 407.675f,
         .textId1 = 200260000,
@@ -48384,7 +48816,7 @@ const MapEntry MAP_ENTRIES[] = {
         .gridZNo = 0,
         .posX = -107.312f,
         .posY = 23.096f,
-        .posZ = 45.211f,
+        .posZ = 37.211f,
         .textId1 = 300007050,
         .textDisableFlagId1 = 20000410,
         .textId2 = 1604640010,
@@ -49731,9 +50163,9 @@ const MapEntry MAP_ENTRIES[] = {
         .areaNo = 61,
         .gridXNo = 46,
         .gridZNo = 38,
-        .posX = 55.767f,
+        .posX = 59.327f,
         .posY = 11.979f,
-        .posZ = 24.000f,
+        .posZ = 34.717f,
         .textId1 = 300006150,
         .textDisableFlagId1 = 2046380350,
         .textId2 = 1603664400,
@@ -52639,7 +53071,7 @@ const MapEntry MAP_ENTRIES[] = {
         .gridZNo = 0,
         .posX = -12.082f,
         .posY = 218.063f,
-        .posZ = 230.069f,
+        .posZ = 222.069f,
         .textId1 = 500006711,
         .textDisableFlagId1 = 22000460,
         .textId2 = 1603460010,
@@ -53778,7 +54210,7 @@ const MapEntry MAP_ENTRIES[] = {
         .gridZNo = 0,
         .posX = 331.389f,
         .posY = 27.753f,
-        .posZ = 166.328f,
+        .posZ = 158.328f,
         .textId1 = 500004950,
         .textDisableFlagId1 = 21000470,
         .textId2 = 1604640010,
@@ -55080,9 +55512,9 @@ const MapEntry MAP_ENTRIES[] = {
         .iconId = 58,
         .dispMask00 = true,
         .areaNo = 10,
-        .posX = -258.624f,
+        .posX = -250.624f,
         .posY = 13.791f,
-        .posZ = 139.009f,
+        .posZ = 147.009f,
         .textId1 = 500008000,
         .textDisableFlagId1 = 10007920,
         .textId2 = 10000,
@@ -57956,9 +58388,9 @@ const MapEntry MAP_ENTRIES[] = {
         .iconId = 18,
         .dispMask00 = true,
         .areaNo = 16,
-        .posX = 17.952f,
+        .posX = 25.952f,
         .posY = 20.838f,
-        .posZ = -188.561f,
+        .posZ = -180.561f,
         .textId1 = 500002908,
         .textDisableFlagId1 = 16007320,
         .textId2 = 16000,
@@ -60922,7 +61354,7 @@ const MapEntry MAP_ENTRIES[] = {
         .areaNo = 16,
         .posX = 25.952f,
         .posY = -54.479f,
-        .posZ = -180.561f,
+        .posZ = -172.561f,
         .textId1 = 500010060,
         .textDisableFlagId1 = 16007999,
         .textId2 = 1604910320,
@@ -62719,7 +63151,7 @@ const MapEntry MAP_ENTRIES[] = {
         .gridZNo = 43,
         .posX = -114.718f,
         .posY = 167.815f,
-        .posZ = 39.013f,
+        .posZ = 31.013f,
         .textId1 = 502003130,
         .textDisableFlagId1 = 2047430300,
         .textId2 = 1604640010,
@@ -63709,9 +64141,9 @@ const MapEntry MAP_ENTRIES[] = {
         .areaNo = 20,
         .gridXNo = 0,
         .gridZNo = 0,
-        .posX = -107.312f,
+        .posX = -99.312f,
         .posY = 23.015f,
-        .posZ = 37.211f,
+        .posZ = 45.211f,
         .textId1 = 500010150,
         .textDisableFlagId1 = 20007250,
         .textId2 = 20000,
@@ -66646,9 +67078,9 @@ const MapEntry MAP_ENTRIES[] = {
         .iconId = 22,
         .dispMask00 = true,
         .areaNo = 15,
-        .posX = 22.227f,
+        .posX = 30.227f,
         .posY = 179.795f,
-        .posZ = 430.025f,
+        .posZ = 438.025f,
         .textId1 = 500010909,
         .textDisableFlagId1 = 15007890,
         .textId2 = 15000,
@@ -81569,9 +82001,9 @@ const MapEntry MAP_ENTRIES[] = {
         .areaNo = 20,
         .gridXNo = 1,
         .gridZNo = 0,
-        .posX = -324.750f,
+        .posX = -316.750f,
         .posY = 94.502f,
-        .posZ = -86.168f,
+        .posZ = -78.168f,
         .textId1 = 500000910,
         .textDisableFlagId1 = 20017440,
         .textId2 = 20010,
@@ -86620,7 +87052,7 @@ const MapEntry MAP_ENTRIES[] = {
         .areaNo = 10,
         .posX = -250.624f,
         .posY = 13.862f,
-        .posZ = 147.009f,
+        .posZ = 155.009f,
         .textId1 = 500001700,
         .textDisableFlagId1 = 10007930,
         .textId2 = 10000,
@@ -86952,7 +87384,7 @@ const MapEntry MAP_ENTRIES[] = {
         .gridZNo = 0,
         .posX = -99.312f,
         .posY = 23.015f,
-        .posZ = 45.211f,
+        .posZ = 53.211f,
         .textId1 = 500001720,
         .textDisableFlagId1 = 20007260,
         .textId2 = 20000,
@@ -88424,7 +88856,7 @@ const MapEntry MAP_ENTRIES[] = {
         .iconId = 10,
         .dispMask00 = true,
         .areaNo = 10,
-        .posX = -250.624f,
+        .posX = -258.624f,
         .posY = 13.827f,
         .posZ = 155.009f,
         .textId1 = 500020802,
@@ -95249,9 +95681,9 @@ const MapEntry MAP_ENTRIES[] = {
         .areaNo = 61,
         .gridXNo = 11,
         .gridZNo = 11,
-        .posX = -197.762f,
+        .posX = -189.762f,
         .posY = 553.347f,
-        .posZ = 98.093f,
+        .posZ = 106.093f,
         .textId1 = 502020035,
         .textDisableFlagId1 = 2045460200,
         .textId2 = 905170004,
@@ -95265,9 +95697,9 @@ const MapEntry MAP_ENTRIES[] = {
         .areaNo = 61,
         .gridXNo = 12,
         .gridZNo = 11,
-        .posX = 6.153f,
+        .posX = 14.153f,
         .posY = 260.000f,
-        .posZ = 148.183f,
+        .posZ = 156.183f,
         .textId1 = 502020035,
         .textDisableFlagId1 = 2050460310,
         .textId2 = 905170004,
@@ -95281,9 +95713,9 @@ const MapEntry MAP_ENTRIES[] = {
         .areaNo = 61,
         .gridXNo = 12,
         .gridZNo = 11,
-        .posX = 61.837f,
+        .posX = 69.837f,
         .posY = 260.411f,
-        .posZ = 239.594f,
+        .posZ = 247.594f,
         .textId1 = 502020035,
         .textDisableFlagId1 = 2050460300,
         .textId2 = 905170004,
@@ -96307,7 +96739,7 @@ const MapEntry MAP_ENTRIES[] = {
         .gridZNo = 42,
         .posX = -9.421f,
         .posY = -562.084f,
-        .posZ = 81.608f,
+        .posZ = 73.608f,
         .textId1 = 502020017,
         .textDisableFlagId1 = 2049420202,
         .textId2 = 905280004,
@@ -96323,7 +96755,7 @@ const MapEntry MAP_ENTRIES[] = {
         .gridZNo = 42,
         .posX = 31.572f,
         .posY = -560.407f,
-        .posZ = 56.889f,
+        .posZ = 48.889f,
         .textId1 = 502020017,
         .textDisableFlagId1 = 2049420200,
         .textId2 = 905280004,
@@ -96693,7 +97125,7 @@ const MapEntry MAP_ENTRIES[] = {
         .gridZNo = 41,
         .posX = -17.909f,
         .posY = -562.198f,
-        .posZ = 123.763f,
+        .posZ = 115.763f,
         .textId1 = 502020017,
         .textDisableFlagId1 = 2050410200,
         .textId2 = 905280004,
@@ -96709,7 +97141,7 @@ const MapEntry MAP_ENTRIES[] = {
         .gridZNo = 42,
         .posX = 50.044f,
         .posY = -562.044f,
-        .posZ = 56.914f,
+        .posZ = 48.914f,
         .textId1 = 502020017,
         .textDisableFlagId1 = 2050420200,
         .textId2 = 905280004,
@@ -96893,7 +97325,7 @@ const MapEntry MAP_ENTRIES[] = {
         .gridZNo = 41,
         .posX = -40.151f,
         .posY = -551.656f,
-        .posZ = 56.729f,
+        .posZ = 48.729f,
         .textId1 = 502020017,
         .textDisableFlagId1 = 2051410201,
         .textId2 = 905280004,
@@ -127072,7 +127504,7 @@ const MapEntry MAP_ENTRIES[] = {
         .areaNo = 15,
         .posX = 30.227f,
         .posY = 179.800f,
-        .posZ = 438.025f,
+        .posZ = 446.025f,
         .textId1 = 700139000,
         .textDisableFlagId1 = 7610,
         .textId2 = 15000,
@@ -127100,7 +127532,7 @@ const MapEntry MAP_ENTRIES[] = {
         .clearedEventFlagId = 7610,
         .dispMask00 = true,
         .areaNo = 15,
-        .posX = 30.227f,
+        .posX = 22.227f,
         .posY = 179.790f,
         .posZ = 446.025f,
         .textId1 = 700138700,

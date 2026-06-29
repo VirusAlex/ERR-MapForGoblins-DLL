@@ -190,8 +190,6 @@ static bool patch_fmg_in_memory(uint8_t *fmg_ptr, uint8_t **slot_ptr,
         orig_offsets_ptr = fmg_ptr + orig_str_off_rel;
     }
 
-    spdlog::debug("[FMG] Original: fileSize={}, groups={}, strings={}, strOffRel=0x{:X} (raw=0x{:X})",
-                  orig_file_size, orig_group_cnt, orig_string_cnt, orig_str_off_rel, raw_str_off);
 
     auto *orig_groups = reinterpret_cast<FmgGroup *>(fmg_ptr + 0x28);
     auto *orig_offsets = reinterpret_cast<uint64_t *>(orig_offsets_ptr);
@@ -217,13 +215,10 @@ static bool patch_fmg_in_memory(uint8_t *fmg_ptr, uint8_t **slot_ptr,
         }
     }
 
-    spdlog::debug("[FMG] Parsed {} existing entries", all_entries.size());
 
     for (size_t i = 0; i < (std::min)(all_entries.size(), (size_t)5); i++)
     {
         auto &e = all_entries[i];
-        spdlog::debug("[FMG] Entry[{}]: id={}, strOff=0x{:X}",
-                      i, e.id, e.str_offset);
     }
 
     // Injected entries OVERRIDE pre-existing ids. Overhaul mods can pre-seed
@@ -313,7 +308,6 @@ static bool patch_fmg_in_memory(uint8_t *fmg_ptr, uint8_t **slot_ptr,
 
     uint32_t total_strings = (uint32_t)merged.size();
 
-    spdlog::debug("[FMG] Total entries after merge: {}", total_strings);
 
     // One group per entry (sparse IDs)
     uint32_t total_groups = total_strings;
@@ -325,14 +319,12 @@ static bool patch_fmg_in_memory(uint8_t *fmg_ptr, uint8_t **slot_ptr,
     size_t new_str_data_start = new_str_off_pos + offsets_size;
     size_t new_file_size = new_str_data_start + new_str_data.size();
 
-    spdlog::debug("[FMG] New layout: groups={}, strings={}, fileSize={}",
-                  total_groups, total_strings, new_file_size);
 
     // Allocate the expanded FMG buffer from the process heap.
     fmg_allocation = HeapAlloc(GetProcessHeap(), HEAP_ZERO_MEMORY, new_file_size);
     if (!fmg_allocation)
     {
-        spdlog::error("[FMG] HeapAlloc failed ({} bytes)", new_file_size);
+        spdlog::error("[FMG] alloc failed ({} bytes)", new_file_size);
         return false;
     }
 
@@ -402,10 +394,8 @@ static bool patch_fmg_in_memory(uint8_t *fmg_ptr, uint8_t **slot_ptr,
 
     memcpy(nfmg + new_str_data_start, new_str_data.data(), new_str_data.size());
 
-    spdlog::debug("[FMG] Swapping FMG pointer: {:p} -> {:p}", (void *)*slot_ptr, fmg_allocation);
     *slot_ptr = nfmg;
 
-    spdlog::debug("[FMG] PlaceName FMG merged: {} entries", total_strings);
     return true;
 }
 
@@ -488,23 +478,16 @@ void goblin::setup_messages()
             // IDs < 100M are raw PlaceName IDs (location names, no copy needed)
         }
     }
-    spdlog::debug("{} Goods + {} Weapon + {} Protector + {} Accessory + {} Gem + {} NpcName + {} ActionBtn + {} Tutorial IDs need lookup",
-                  goods_ids_needed.size(), weapon_ids_needed.size(),
-                  protector_ids_needed.size(), accessory_ids_needed.size(),
-                  gem_ids_needed.size(),
-                  npc_name_ids_needed.size(), action_btn_ids_needed.size(),
-                  tutorial_ids_needed.size());
 
     auto msg_repository_address = modutils::scan<from::CS::MsgRepositoryImp *>({
         .aob = "48 8B 3D ?? ?? ?? ?? 44 0F B6 30 48 85 FF 75",
         .relative_offsets = {{3, 7}},
     });
-    if (!msg_repository_address) { spdlog::error("MsgRepositoryImp address not found"); return; }
+    if (!msg_repository_address) { spdlog::error("MsgRepositoryImp not found"); return; }
 
     while (!(msg_repository = *msg_repository_address))
         std::this_thread::sleep_for(std::chrono::milliseconds(100));
 
-    spdlog::debug("MsgRepositoryImp at {:p}", (void *)msg_repository);
 
     // PlaceName = bnd index 19 in MsgRepositoryImp
     auto *repo = reinterpret_cast<uint8_t *>(msg_repository);
@@ -620,8 +603,6 @@ void goblin::setup_messages()
             }
             total += copied;
         }
-        if (!needed_ids.empty())
-            spdlog::debug("{}: {} ids not found in any layer", label, needed_ids.size());
         return total;
     };
 
@@ -818,7 +799,6 @@ void goblin::setup_messages()
         return;
     }
 
-    spdlog::debug("PlaceName FMG at {:p}", (void *)fmg_ptr);
 
     // Composed labels for duplicate-named sub-zones (e.g. the two Hallowhorn Grounds):
     // synthesize "<sub> (<super>)" from the game's OWN PlaceName strings so the text is
@@ -1147,7 +1127,7 @@ void goblin::set_fmg_injection_active(bool active)
 {
     if (!g_placename_slot_ptr)
     {
-        spdlog::warn("[TOGGLE] FMG swap state not initialized - setup_messages didn't run");
+        spdlog::warn("[TOGGLE] FMG not ready - setup_messages didn't run");
         return;
     }
     if (active == g_fmg_injection_active)

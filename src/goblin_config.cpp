@@ -296,7 +296,6 @@ void goblin::load_config(const std::filesystem::path &ini_path)
             else
                 continue;
             set_from_string(e, v);
-            spdlog::debug("Config: {} = {}", e.key, v);
         }
     }
 }

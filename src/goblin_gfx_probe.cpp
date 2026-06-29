@@ -241,6 +241,7 @@ namespace
     bool wr32(uint64_t a, uint32_t v) { return a && safe_copy((void *)a, &v, 4); }
     bool wr64(uint64_t a, uint64_t v) { return a && safe_copy((void *)a, &v, 8); }
 
+#ifdef MFG_DUMP_FRAMES
     void dump_obj(const char *label, uint64_t addr)
     {
         unsigned char buf[0xC0];
@@ -285,6 +286,7 @@ namespace
             spdlog::debug("[cmp]     +0x{:02X}: {:016X}{}", off, v, looks_heap(v) ? " <heap>" : "");
         }
     }
+#endif // MFG_DUMP_FRAMES
 
     void *ctor_detour(void *self, void *cdef)
     {
@@ -326,17 +328,11 @@ namespace
         uint64_t svcptr = exe + (0x144593250ull - 0x140000000ull);
         uint64_t svc = rq(svcptr);
         uint64_t vt = rq(svc);
-        spdlog::debug("[r2] image service ptr@0x{:X} svc=0x{:X} vt=0x{:X}", svcptr, svc, vt);
-        for (unsigned off = 0; off <= 0x70; off += 8)
-            spdlog::debug("[r2]   vtbl+0x{:02X}: 0x{:X}", off, rq(vt + off));
         unsigned lc = g_lossless_calls.load(std::memory_order_relaxed);
         uint64_t ctx = g_lossless_ctx.load(std::memory_order_relaxed);
-        spdlog::debug("[r2] lossless loader fired {} times; sample movieContext=0x{:X}", lc, ctx);
         if (ctx)
         {
             uint64_t mgr = rq(ctx + 0x18);
-            spdlog::debug("[r2]   ctx+0x18(mgr)=0x{:X} ->+0x40=0x{:X}; ctx+0x418(reader)=0x{:X}",
-                         mgr, rq(mgr + 0x40), rq(ctx + 0x418));
         }
     }
 
@@ -345,7 +341,9 @@ namespace
     void capture_tag_vtables(uint64_t sd);                                    // defined below
     uint32_t append_icon_frame(uint64_t sd, uint16_t newCharId, const unsigned char *mat, unsigned matLen); // defined below
     uint32_t compute_safe_base(uint64_t movieDef, uint32_t count);            // defined below (self-healing)
+#ifdef MFG_DUMP_FRAMES
     void dump_frames(uint64_t sd);                                 // defined below
+#endif
 
     // SEH-isolated call into the native lossless loader (kept object-free for __try/__except).
     void *seh_call_lossless(void *ctx, void *taginfo)
@@ -523,11 +521,10 @@ namespace
                     if (s >= 0) { if ((uint32_t)s < src_lo) src_lo = (uint32_t)s; if ((uint32_t)s > src_hi) src_hi = (uint32_t)s; }
                 }
                 bool overlap = iid_lo <= src_hi && src_lo <= iid_hi;
-                spdlog::debug("[icons] base={} fcnt={} placed={}; frame ids [{},{}]; key range "
-                             "[{},{}]; overlap={}",
-                             inject_base(), fcnt, placed, iid_lo, iid_hi, src_lo, src_hi, overlap ? "YES" : "no");
             }
-            dump_frames(sd); // DIAGNOSTIC: live tag layout of key frames
+#ifdef MFG_DUMP_FRAMES
+            dump_frames(sd); // DEV-only (compile-time gated): live tag layout of key frames
+#endif
             spdlog::info("[icons] appended {} frames; remapping markers.", placed);
             goblin::diag::set_sprite171(true, base, placed, goblin::generated::MAP_ICON_TAG_COUNT, "");
             goblin::diag::set_heap_sample(sd); // live worldmap sprite ptr -> shows the game heap region
@@ -568,8 +565,6 @@ namespace
                 if (n_cid < 1024) seen_cid[n_cid++] = cid;
                 unsigned di = g_idx.load(std::memory_order_relaxed);
                 uint64_t dsd = di ? (uint64_t)g_sprites[(di - 1) % RING] : 0;
-                spdlog::debug("[icondiag] spriteloader charId={} (last-ctor fc={})",
-                             cid, dsd ? rd32(dsd + OFF_FRAMECOUNT) : 0);
             }
         }
         if (cid == 171 && rcx && !g_qmark_injected.load(std::memory_order_relaxed))
@@ -644,6 +639,7 @@ namespace
         return o_rm2exec(thisTag, ctx, frame);
     }
 
+#ifdef MFG_DUMP_FRAMES
     // One-shot diagnostic: dump the live tag layout of selected frames so we can see, for THIS build's
     // gfx in memory, what RemoveObject2 vs PlaceObject tag objects actually look like (vtable + body).
     void dump_frames(uint64_t sd)
@@ -676,6 +672,7 @@ namespace
             }
         }
     }
+#endif // MFG_DUMP_FRAMES
 
     // Append ONE frame at the END of the live timeline (any base gfx), placing newCharId, and return its
     // 1-based iconId (= the new frameCount). Frame = RemoveObject2(d1)+RemoveObject2(d2)+PlaceObject(@d1)
@@ -767,6 +764,7 @@ namespace
     // READ-ONLY: dump the resource-dict read array so we can design resource insertion (R1) from
     // exact live structure. Logs count, head/tail nodes (charId@+0x2c, vtable), to learn sort order,
     // max charId, and a clonable image binding node. Never writes.
+#ifdef MFG_DUMP_FRAMES
     void dump_dict(uint64_t movieDef)
     {
         uint64_t cont = movieDef + OFF_MOVIEDEF_DICT;
@@ -807,6 +805,7 @@ namespace
             }
         }
     }
+#endif // MFG_DUMP_FRAMES
 
     // Return the worldmap ICON sprite: the MOST-RECENTLY ctor'd SpriteDef with charId@+0x18==171 and
     // more than one frame. Rationale:
@@ -1060,7 +1059,6 @@ void goblin::gfx_probe::tick()
     if (recorded != last_logged)
     {
         last_logged = recorded;
-        spdlog::debug("[gfxprobe] SpriteDef ctor fired {} times so far; scanning...", recorded);
     }
 
 
@@ -1072,8 +1070,10 @@ void goblin::gfx_probe::tick()
             return;
         g_found_sd.store(sd, std::memory_order_relaxed);
         spdlog::debug("[gfxprobe] *** SpriteDef-171 @ 0x{:X}: frameCount={} ***", sd, rd32(sd + OFF_FRAMECOUNT));
+#ifdef MFG_DUMP_FRAMES
         if (probe)
             dump_obj("SpriteDef-171", sd);
+#endif
     }
 
     // Icon/logo register + frame append + remap all happen at LOAD (sprite-loader hook), before pins
@@ -1091,20 +1091,20 @@ void goblin::gfx_probe::tick()
             {
                 last_ad = ad;
                 last_lk = lk;
-                spdlog::debug("[icons] handler calls: AddDisplayObject={} lookup={} movieDef=0x{:X}",
-                             ad, lk, g_moviedef.load(std::memory_order_relaxed));
             }
         }
         uint64_t md = g_moviedef.load(std::memory_order_relaxed);
         if (md && !g_dict_dumped.exchange(true, std::memory_order_relaxed))
         {
+#ifdef MFG_DUMP_FRAMES
             if (probe)
             {
                 dump_dict(md);
                 // side-by-side: gfx-native "?" (13507) vs our first runtime-injected bitmap (BASE)
                 dump_charid_node(md, 13507, "NATIVE-gfx");
-                dump_charid_node(md, inject_base(), "INJECTED");
+                dump_charid_node(md, inject_base(), "ADDED");
             }
+#endif
 
             // Collision guard + SELF-HEAL. Our injected charIds live in the image manager, NOT this READ
             // dict, so a collision = a NATIVE charId sitting in our window [base, base+COUNT+1) (icons +
@@ -1126,8 +1126,6 @@ void goblin::gfx_probe::tick()
                     if (c >= base && c < base + cnt) { ++in_window; if (c > window_max) window_max = c; }
                     else if (c < base && c > native_max) native_max = c;
                 }
-                spdlog::debug("[icons] dict: native maxCharId={} ; NATIVE entries in our window [{}, {})={}",
-                             native_max, base, base + cnt, in_window);
                 if (in_window > 0)
                 {
                     uint32_t newbase = window_max + INJECT_BASE_MARGIN;
@@ -1183,7 +1181,7 @@ void goblin::gfx_probe::setup()
             {.aob = "48 89 5C 24 10 48 89 74 24 18 57 48 83 EC 20 48 8B 99 18 04 "
                     "00 00 48 8B F9 48 85 DB"},
             spriteloader_detour, o_spriteloader);
-        spdlog::info("[gfxprobe] icon handlers armed (ctor + movieDef read + registrar + lossless + "
+        spdlog::info("[gfxprobe] icon handlers ready (ctor + movieDef read + registrar + lossless + "
                      "DefineSprite-loader)");
         goblin::diag::set_hooks(true, "");
 
@@ -1193,7 +1191,6 @@ void goblin::gfx_probe::setup()
             modutils::hook<ExecFn>(
                 {.address = reinterpret_cast<void *>((uint64_t)GetModuleHandleW(nullptr) + RVA_FN_REMOVEOBJECT2_EXEC)},
                 rm2exec_detour, o_rm2exec); // DIAG: real RemoveObject2::Execute (file VA 0x1411bde10)
-            spdlog::debug("[gfxprobe] RM2::Execute diagnostic trace enabled (debug_logging).");
         }
     }
     catch (const std::exception &e)

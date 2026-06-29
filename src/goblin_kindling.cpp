@@ -555,8 +555,6 @@ void goblin::kindling::initialize()
               [](const auto &a, const auto &b) { return a.slot < b.slot; });
 
     spdlog::info("[KINDLING] Initialized: {} slot(s) tracked", g_slots.size());
-    for (const auto &s : g_slots)
-        spdlog::debug("[KINDLING]   slot {} entity {} row {}", s.slot, s.entity_id, s.row_id);
 
     g_initialized = true;
 
@@ -659,7 +657,7 @@ int goblin::kindling::refresh()
         std::sort(stale.begin(), stale.end());
         stale.erase(std::unique(stale.begin(), stale.end()), stale.end());
         for (auto id : stale) g_param_ptrs.erase(id);
-        spdlog::warn("[KINDLING] Evicted {} stale param pointer(s) (write AV)", stale.size());
+        spdlog::warn("[KINDLING] Dropped {} stale entries", stale.size());
     }
 
     int delta = (int)new_collected.size() - (int)g_collected_rows.size();

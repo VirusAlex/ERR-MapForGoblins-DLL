@@ -579,8 +579,6 @@ void goblin::collected::initialize()
                  total_piece_entries, g_tile_to_rows.size(),
                  g_tracked_prefixes.size(), g_tracked_model_ids.size());
 
-    for (auto &prefix : g_tracked_prefixes)
-        spdlog::debug("[COLLECTED]   prefix: {} -> model_id {}", prefix, model_id_from_prefix(prefix));
 
     g_initialized = true;
     spdlog::info("[COLLECTED] Initialized, awaiting refresh()");
@@ -787,8 +785,6 @@ int goblin::collected::refresh()
     if (slot_bad > 0)
         spdlog::warn("[COLLECTED] geom_idx->slot mismatch: {} ok, {} BAD (model-family encoding?)",
                      slot_ok, slot_bad);
-    else if (slot_ok > 0)
-        spdlog::debug("[COLLECTED] geom_idx->slot verified on {} live instances", slot_ok);
 
     // ── GEOF: for unloaded tiles ──
     for (auto &[tid, prefix_slots] : geof_tile_prefix_slots)
@@ -912,7 +908,7 @@ int goblin::collected::refresh()
         stale.erase(std::unique(stale.begin(), stale.end()), stale.end());
         for (auto id : stale)
             g_param_ptrs.erase(id);
-        spdlog::warn("[COLLECTED] Evicted {} stale param pointer(s) (write AV); {} remain",
+        spdlog::warn("[COLLECTED] Dropped {} stale entries; {} remain",
                      stale.size(), g_param_ptrs.size());
     }
     if (missed > 0)
