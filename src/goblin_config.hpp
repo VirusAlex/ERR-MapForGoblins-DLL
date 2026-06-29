@@ -115,6 +115,7 @@ namespace goblin
         extern bool showGraces;
         extern bool showImpStatues;
         extern bool showWorldMaps;
+        extern bool worldMapsIgnoreFragments;
         extern bool showPaintings;
         extern bool showSpiritSprings;
         extern bool showSpiritspringHawks;

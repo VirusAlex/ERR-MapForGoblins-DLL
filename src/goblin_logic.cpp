@@ -8,6 +8,7 @@
 #include "goblin/goblin_map_exceptions.hpp"
 
 #include <spdlog/spdlog.h>
+#include <unordered_map>
 
 using namespace goblin;
 using namespace goblin::mapPoint;
@@ -15,6 +16,26 @@ using namespace goblin::mapPoint;
 // Goblin icon ID ranges (same as Goblin-ERR)
 static constexpr ParamRange goblinIcons(1, 78500);
 static constexpr ParamRange goblinIconsERR(1000000, 10025000);
+
+// Original (pre-patch) eventFlagId per ERR-patched row, keyed by row id (these
+// rows are the game's own - their ids are stable, never our reassigned ones).
+// apply_map_logic runs again on every overlay-open (reapply_live_settings), and
+// the ERR setup functions stash eventFlagId into a textEnableFlag slot then mutate
+// eventFlagId - reading the LIVE eventFlagId on the 2nd run would stash the
+// already-mutated value (e.g. SetupDungeonERR zeroes it, so textEnableFlagId3
+// became 0 = always-enabled -> the icon showed with no map fragment). Capturing
+// the original ONCE and reusing it makes the patching idempotent.
+static std::unordered_map<int, int> g_err_orig_eventflag;
+
+static int OrigEventFlag(int rowId, from::paramdef::WORLD_MAP_POINT_PARAM_ST &row)
+{
+    auto it = g_err_orig_eventflag.find(rowId);
+    if (it != g_err_orig_eventflag.end())
+        return it->second;
+    int v = row.eventFlagId;
+    g_err_orig_eventflag[rowId] = v;
+    return v;
+}
 
 static bool HasException(int paramId, int &mapFragment)
 {
@@ -59,6 +80,21 @@ static int GetMapFragment(int rowId, from::paramdef::WORLD_MAP_POINT_PARAM_ST &r
     if (!HasException(rowId, requiredMapFragment))
     {
         requiredMapFragment = GetMapFlagFromTile(chunk);
+    }
+
+    // Lake of Rot shares fine tile m12_01 with Ainsel River but is revealed by its
+    // OWN map fragment (LakeOfRot 62061, not Ainsel 62060). The two are one tile, so
+    // the tile->fragment table put the whole tile under Ainsel - which leaked Lake of
+    // Rot icons onto the map the moment the Ainsel fragment was owned (e.g. opening
+    // the Ainsel River map). Distinguish by the marker's runtime-resolved location
+    // text (LOCATION_ALT runs in inject_map_entries, before this): PlaceName 12011 =
+    // Lake of Rot. (12011 is a raw PlaceName id, stored un-remapped on the row.)
+    if (chunk == MapTile(12, 1))
+    {
+        const int loc[8] = {row.textId1, row.textId2, row.textId3, row.textId4,
+                            row.textId5, row.textId6, row.textId7, row.textId8};
+        for (int t : loc)
+            if (t == 12011) { requiredMapFragment = flag::LakeOfRot; break; }
     }
 
     if (config::requireMapFragments)
@@ -113,7 +149,7 @@ static void HideOnCompletion(int rowId, from::paramdef::WORLD_MAP_POINT_PARAM_ST
 
 static void SetupOverworldERR(int rowId, from::paramdef::WORLD_MAP_POINT_PARAM_ST &row)
 {
-    row.textEnableFlagId2 = row.eventFlagId;
+    row.textEnableFlagId2 = OrigEventFlag(rowId, row);
     row.eventFlagId = GetIconFlag(rowId, row);
 }
 
@@ -122,7 +158,7 @@ static void SetupDungeonERR(int rowId, from::paramdef::WORLD_MAP_POINT_PARAM_ST 
     int mapFragment = GetIconFlag(rowId, row);
     row.textEnableFlagId1 = mapFragment;
     row.textEnableFlagId2 = mapFragment;
-    row.textEnableFlagId3 = row.eventFlagId;
+    row.textEnableFlagId3 = OrigEventFlag(rowId, row);
     row.eventFlagId = 0;
 
     if (config::hideDungeonIconsOnClear)
@@ -133,7 +169,7 @@ static void SetupDungeonERR(int rowId, from::paramdef::WORLD_MAP_POINT_PARAM_ST 
 
 static void SetupCampsERR(int rowId, from::paramdef::WORLD_MAP_POINT_PARAM_ST &row)
 {
-    row.textEnableFlagId2 = row.eventFlagId;
+    row.textEnableFlagId2 = OrigEventFlag(rowId, row);
     row.eventFlagId = GetIconFlag(rowId, row);
 }
 

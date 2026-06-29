@@ -14,7 +14,7 @@ controller, param[-1] of the seal) match.
 Output entries include each seal's MSB position so the marker generator
 can place icons in-world.
 """
-import sys, io, os, tempfile, struct, json
+import sys, io, os, re, tempfile, struct, json
 sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8')
 import config
 from pythonnet import load
@@ -36,6 +36,44 @@ _emevd = asm.GetType('SoulsFormats.EMEVD').GetMethod('Read',
 
 TPL_CONTROLLER = 90006050
 TPL_SEAL = 90006051
+
+# Cross-tile placeholder remap (mirrors extract_all_items.py). Some assets live
+# in a COARSE aggregate "supertile" MSB (suffix _01/_02/_12) but encode their real
+# fine owner tile in the part-name prefix, e.g. part "m60_48_57_00-AEG110_029_2000"
+# living in m60_24_28_01. Its Position is in placeholder-local coords, so it must
+# be offset back into owner-tile local coords or the marker lands ~150u off (e.g.
+# Ordina's 4 "light the brazier" statues were shoved up-left, near the Deathbird).
+SUFFIX_SCALE = {'01': 2, '02': 4, '12': 4}
+FINE_TILE_SIZE = 256
+_prefix_re = re.compile(r'^m(\d{2})_(\d{2})_(\d{2})_(\d{2})-')
+_msb_re = re.compile(r'^m(\d{2})_(\d{2})_(\d{2})_(\d{2})$')
+
+
+def remap_placeholder_pos(part):
+    """If `part` lives in a coarse placeholder supertile but its name prefix names a
+    different fine owner tile, offset its x/z back into owner-tile space. Needs the
+    'msb' key (only set by the global supertile lookup). Mutates and returns part."""
+    if not part:
+        return part
+    pm = _prefix_re.match(part.get('name', '') or '')
+    mm = _msb_re.match(part.get('msb', '') or '')
+    if not pm or not mm:
+        return part
+    own_area, own_gx, own_gz, own_p3 = (int(g) for g in pm.groups())
+    ph_area, ph_p1, ph_p2, _ = (int(g) for g in mm.groups())
+    msb = part['msb']
+    # Already the owner tile, or a cross-area placeholder (out of scope) - leave it.
+    if msb.startswith(f'm{own_area:02d}_{own_gx:02d}_{own_gz:02d}_') or own_area != ph_area:
+        return part
+    scale = SUFFIX_SCALE.get(msb[-2:])
+    if scale is None:
+        return part
+    agg = FINE_TILE_SIZE * scale
+    part['x'] = part.get('x', 0.0) + ph_p1 * agg + agg / 2 - own_gx * FINE_TILE_SIZE - FINE_TILE_SIZE / 2
+    part['z'] = part.get('z', 0.0) + ph_p2 * agg + agg / 2 - own_gz * FINE_TILE_SIZE - FINE_TILE_SIZE / 2
+    part['remapped_from'] = msb
+    part['msb'] = f'm{own_area:02d}_{own_gx:02d}_{own_gz:02d}_{own_p3:02d}'
+    return part
 
 
 def _read(reader, path, suf='.tmp'):
@@ -124,6 +162,19 @@ def main():
     # all of them uniformly.
     extra = _extract_extra_puzzles(ev_dir, msb_dir)
     out.extend(extra)
+
+    # Offset any placeholder-supertile parts back to their owner-tile coords.
+    remapped = 0
+    for puzzle in out:
+        if remap_placeholder_pos(puzzle.get('door_part')) and \
+                'remapped_from' in (puzzle.get('door_part') or {}):
+            remapped += 1
+        for s in puzzle.get('seals', []):
+            p = remap_placeholder_pos(s.get('part'))
+            if p and 'remapped_from' in p:
+                remapped += 1
+    if remapped:
+        print(f"  Remapped {remapped} placeholder-supertile parts to owner-tile coords")
 
     out_path = config.DATA_DIR / 'seal_puzzles.json'
     with open(out_path, 'w', encoding='utf-8') as f:

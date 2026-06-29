@@ -409,6 +409,8 @@ static bool patch_fmg_in_memory(uint8_t *fmg_ptr, uint8_t **slot_ptr,
     return true;
 }
 
+static const wchar_t *fmg_lookup_in(uint8_t *fmg, int32_t id);  // defined below
+
 void goblin::setup_messages()
 {
     using namespace goblin::generated;
@@ -882,13 +884,37 @@ void goblin::setup_messages()
     // only fills ids the player's language left empty - a marker whose item has no string in
     // the active language then shows the English name instead of "?PlaceName?". Overhauls
     // (e.g. The Convergence) ship many items localized only in English; this catches those.
+    //
+    // CRITICAL gap-fill gate for RAW PlaceName location ids (< 100M). Unlike the
+    // offset-encoded item/boss bands (which the game's PlaceName never carries, so
+    // queuing them is always safe), a raw location id usually DOES resolve natively
+    // in the player's language - and queuing it here would create a g_textid_remap
+    // entry that hijacks the marker's location textId onto our English copy, showing
+    // English locations/graces on a fully-localized build (e.g. ERR in Russian). So
+    // for a raw location id, only queue the English fallback when the native FMG (the
+    // current language's PlaceName, incl. the DLC layers the game falls back to) has
+    // NO string for it - a true gap. Offset-encoded ids (>= 100M) are queued as before.
     {
         size_t before = new_entries.size();
+        auto native_has = [&](int32_t id) -> bool
+        {
+#ifdef MFG_VANILLA
+            for (int slot : {429, 329})
+                if (slot < count2 && sub[slot] && fmg_lookup_in(sub[slot], id))
+                    return true;
+#endif
+            return fmg_lookup_in(fmg_ptr, id) != nullptr;
+        };
         for (size_t i = 0; i < generated::ITEM_NAME_FALLBACK_COUNT; ++i)
         {
             const auto &fe = generated::ITEM_NAME_FALLBACK[i];
-            if (fe.name && fe.name[0])
-                new_entries.push_back({fe.id, fe.name});
+            if (!fe.name || !fe.name[0])
+                continue;
+            // raw PlaceName location id that the player's language already has -> let the
+            // marker pass through to the native localized string (no remap, no override)
+            if (fe.id > 0 && fe.id < 100000000 && native_has(fe.id))
+                continue;
+            new_entries.push_back({fe.id, fe.name});
         }
         if (new_entries.size() != before)
             spdlog::info("Queued {} English item-name fallback entries (fill gaps only)",

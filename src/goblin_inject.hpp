@@ -43,6 +43,10 @@ namespace goblin
     // changes. Idempotent.
     void apply_category_visibility();
 
+    // Force World Map fragment markers visible regardless of require_map_fragments
+    // (config::worldMapsIgnoreFragments). Call AFTER apply_map_logic. Idempotent.
+    void apply_worldmap_fragment_bypass();
+
     // Live re-apply of hide_killed_bosses across boss/hawk/hostile-NPC rows.
     void apply_kill_display();
 

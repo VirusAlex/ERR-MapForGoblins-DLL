@@ -987,6 +987,22 @@ void goblin::apply_category_visibility()
     }
 }
 
+// World Map fragment markers are only useful BEFORE you own that fragment, but the
+// require_map_fragments gate (apply_map_logic sets eventFlagId = the area's fragment
+// flag) would hide them until you do - i.e. never usefully. When the option is on,
+// clear that gate (eventFlagId = AlwaysOn) so they always show. Independent of
+// show_world_maps (the category on/off). Runs AFTER apply_map_logic, which re-derives
+// eventFlagId every call, so turning the option off restores the gate on next reapply.
+void goblin::apply_worldmap_fragment_bypass()
+{
+    if (!goblin::config::worldMapsIgnoreFragments)
+        return;
+    for (auto &cr : g_category_rows)
+        if (cr.cat == Category::WorldMaps && cr.p)
+            cr.p->eventFlagId =
+                static_cast<decltype(cr.p->eventFlagId)>(goblin::flag::AlwaysOn);
+}
+
 // Live re-apply of hide_killed_bosses (boss / spiritspring-hawk / hostile-NPC
 // rows). Re-derives from the baked fields so either mode is reversible.
 void goblin::apply_kill_display()
@@ -1116,6 +1132,7 @@ void goblin::reapply_live_settings()
     apply_kill_display();                  // hide_killed_bosses
     apply_loot_settings();                 // anonymous_loot + live_loot_icons/labels/flags
     goblin::apply_map_logic();             // require_map_fragments + ERR patch_* markers
+    goblin::apply_worldmap_fragment_bypass(); // after map logic (it re-gates eventFlagId)
 }
 
 void goblin::set_icons_hidden(bool hidden) { g_icons_user_disabled.store(hidden); }

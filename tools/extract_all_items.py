@@ -689,6 +689,16 @@ def main():
     # Hostile NPCs: 90005792 - X0_4 = invader defeat flag.
     BOSS_EVENTS = {90005860, 90005861, 90005880, 90005792}
 
+    # Scarab / strong-enemy drop templates (90005300/301). Their X0_4 (args byte 8)
+    # is the kill flag the template SetEventFlag's on death ([12] SetEventFlag(X0_4)).
+    # Unlike boss rewards (90005860+), these have NO 2004:76 RegisterItemAwardOnFlag -
+    # they just AwardItems(IncludingClients)(lot), which does NOT set the lot's
+    # getItemFlagId. So a scarab marker hidden via the lot's getItemFlagId never hides
+    # (the flag is never set in-game - confirmed report: Determination/Unsheathe icons
+    # stayed after looting). The reliable signal is X0_4, so we capture it and use it
+    # as the marker's hide flag instead of the lot flag.
+    SCARAB_EVENTS = {90005300, 90005301}
+
     emevd_dir = ERR_MOD_DIR / 'event'
     emevd_calls = []  # (entityId, lotId, map_name, eventId, defeatFlag)
 
@@ -717,8 +727,10 @@ def main():
                     continue
                 entity_id = struct.unpack_from('<i', args, entity_off)[0]
                 lot_id = struct.unpack_from('<i', args, lot_off)[0]
-                # Extract defeat flag for boss events (offset 8 = args[2])
-                defeat_flag = struct.unpack_from('<i', args, 8)[0] if event_id in BOSS_EVENTS else 0
+                # Extract defeat/kill flag (offset 8 = X0_4) for boss events AND
+                # scarab drops - both SetEventFlag(X0_4) on death.
+                defeat_flag = (struct.unpack_from('<i', args, 8)[0]
+                               if event_id in BOSS_EVENTS or event_id in SCARAB_EVENTS else 0)
                 if lot_id > 0 and entity_id > 0:
                     emevd_calls.append((entity_id, lot_id, map_name, event_id, defeat_flag))
 
@@ -799,7 +811,7 @@ def main():
     # explicitly, so we recover it heuristically: walk the trigger event's
     # instructions, find any entity_id reference matching an MSB enemy in the
     # same map; prefer boss-like entities (eid%1000 in 800..899).
-    print('\n=== Scanning common.emevd ev0 for RunEvent(1200, ...) - flag→lot map ===')
+    print('\n=== Scanning common.emevd for RunEvent(1200, ...) - flag→lot map ===')
     flag_to_lot = {}
     common_path = ERR_MOD_DIR / 'event' / 'common.emevd.dcx'
     if common_path.exists():
@@ -808,9 +820,14 @@ def main():
             SysFile.WriteAllBytes(tmp_c, SoulsFormats.DCX.Decompress(str(common_path)).ToArray())
             common_em = _emevd_read.Invoke(None, Array[Object]([tmp_c]))
             _safe_unlink(tmp_c)
+            # Scan EVERY event, not just ev0. Vanilla/ERR register all their
+            # RunEvent(1200,...) award calls in common ev0 (the constructor), but
+            # overhauls can put theirs in a separate event - e.g. The Convergence
+            # registers its custom boss/chest drops in common ev9008002. Limiting
+            # the scan to ev0 silently dropped every such award (e.g. Convergence's
+            # Stormcaller Boss -> Stormcaller's Dirk, flag 9207 -> lot 20070). The
+            # eid_call==1200 filter below keeps this precise regardless of event id.
             for event in common_em.Events:
-                if int(event.ID) != 0:
-                    continue
                 for instr in event.Instructions:
                     if int(instr.Bank) != 2000 or int(instr.ID) != 0:
                         continue  # RunEvent (2000:00) only
@@ -950,6 +967,139 @@ def main():
         emevd1200_matched += 1
     print(f'  {emevd1200_matched} event-1200 unique drops matched to entities')
 
+    # ── EMEVD: scripted LITERAL item awards in per-map events ──
+    # Some enemy/boss drops are delivered by a bespoke per-map event that calls
+    # AwardItems(IncludingClients) (2003:36) / AwardItemLot (2003:04) with a
+    # LITERAL lot id, gated on a specific enemy's death - not via a common_func
+    # template (handled above) nor the event-1200 flag mechanism. Example: the
+    # Fort Haight tower (m60_46_36 ev1046362300) waits for the Godrick Knight
+    # (1046360250) to die, then AwardItems(1046360700) = Ash of War: Bloody Slash.
+    # These lots otherwise only surface as a 0,0,0 fallback (or not at all, for
+    # short ids decode_itemlot_id can't map), so the marker was missing or sat in
+    # the tile corner. We pair each literally-awarded lot with the enemy
+    # referenced in the same event: a death-checked one (IFCharacterDeadAlive,
+    # 4:0) first, else a boss-like 800-899 entity, else the sole referenced enemy.
+    print('\n=== Scanning per-map EMEVD for scripted literal AwardItems drops ===')
+    # Roundtable Hold (m18) is not on the world map; its AwardItems are starting
+    # gifts / merchant stock, not field drops - skip it.
+    HUB_MAPS = {'m18_00_00_00'}
+    # Rune Piece / Runic Trace goods have a dedicated AEG099_821 tracker; don't
+    # fabricate generic loot markers for them here.
+    RUNE_GOODS = {800010, 800011}
+    existing_lot_ids = {t['itemLotId'] for t in treasures}
+
+    award_events = []  # (map_name, event_id, [lots], death_vals, all_vals)
+    for emevd_path in sorted(emevd_dir.glob('*.emevd.dcx')):
+        map_name = emevd_path.name.replace('.emevd.dcx', '')
+        if map_name in ('common', 'common_func') or map_name in HUB_MAPS:
+            continue
+        try:
+            tmp4 = os.path.join(tempfile.gettempdir(), str(os.getpid()) + '_mfg_emevd4.tmp')
+            SysFile.WriteAllBytes(tmp4, SoulsFormats.DCX.Decompress(str(emevd_path)).ToArray())
+            em = _emevd_read.Invoke(None, Array[Object]([tmp4]))
+            _safe_unlink(tmp4)
+        except Exception:
+            continue
+        for event in em.Events:
+            evparams = list(event.Parameters) if event.Parameters else []
+            # instruction indices whose arg offset 0 (the lot id) is a parameter
+            # placeholder - their literal ArgData is a default (usually 0), so the
+            # real lot comes from the caller. Skip those to avoid phantom lots.
+            param_lot_instr = {int(p.InstructionIndex) for p in evparams
+                               if int(p.TargetStartByte) == 0}
+            lots = []
+            death_vals = set()
+            all_vals = set()
+            for idx, instr in enumerate(event.Instructions):
+                bank = int(instr.Bank); iid = int(instr.ID)
+                args = bytes(instr.ArgData) if instr.ArgData else b''
+                if bank == 2003 and iid in (4, 36) and len(args) >= 4 \
+                        and idx not in param_lot_instr:
+                    lot = struct.unpack_from('<i', args, 0)[0]
+                    if lot > 0:
+                        lots.append(lot)
+                vals = [struct.unpack_from('<i', args, i)[0]
+                        for i in range(0, len(args) - 3, 4)]
+                all_vals.update(vals)
+                if bank == 4 and iid == 0:  # IF Character Dead/Alive
+                    death_vals.update(vals)
+            if lots:
+                award_events.append((map_name, int(event.ID), lots, death_vals, all_vals))
+
+    # Index MSB enemies for the maps that have literal-award events.
+    award_maps = {m for m, _, _, _, _ in award_events}
+    award_enemy_pos = {}
+    award_enemy_set = defaultdict(set)
+    for msb_path in sorted(MSB_DIR.glob('*.msb.dcx')):
+        mi = parse_map_name(msb_path.name)
+        if not mi or mi['map'] not in award_maps or mi['p3'] == 99:
+            continue
+        try:
+            msb = _read_from_bytes(_msbe_read, SoulsFormats.DCX.Decompress(str(msb_path)), '.msb')
+        except Exception:
+            continue
+        for p in msb.Parts.Enemies:
+            if int(getattr(p, 'GameEditionDisable', 0) or 0) == 1:
+                continue
+            eid = int(p.EntityID)
+            if eid <= 0:
+                continue
+            award_enemy_set[mi['map']].add(eid)
+            if eid not in award_enemy_pos:
+                award_enemy_pos[eid] = {
+                    'x': float(p.Position.X), 'y': float(p.Position.Y), 'z': float(p.Position.Z),
+                    'map': mi['map'], 'areaNo': mi['areaNo'], 'p1': mi['p1'], 'p2': mi['p2'],
+                    'name': str(p.Name), 'model': str(p.ModelName), 'npcParam': int(p.NPCParamID),
+                }
+
+    scripted_matched = 0
+    seen_scripted = set()
+    for map_name, evid, lots, death_vals, all_vals in award_events:
+        ents = award_enemy_set.get(map_name, set())
+        death = sorted(e for e in death_vals if e in ents)
+        allm = sorted(e for e in all_vals if e in ents)
+        # Menu/shop guard: a NON-death event awarding many distinct lots is an
+        # upgrade/exchange menu (e.g. a spirit-tuner offering Twinned Spirit
+        # Jellyfish +0..+10), not a set of drops - it would stack N markers on
+        # one NPC. Real combat drops are death-gated or award only a few lots.
+        if not death and len(set(lots)) > 3:
+            continue
+        if death:
+            cand = death
+        else:
+            boss = [e for e in allm if 800 <= (e % 1000) <= 899]
+            if boss:
+                cand = boss
+            elif len(allm) == 1:
+                cand = allm
+            else:
+                continue  # ambiguous - no clear enemy to pin the drop on
+        chosen = sorted([e for e in cand if 800 <= (e % 1000) <= 899] or cand)[0]
+        pos = award_enemy_pos.get(chosen)
+        if not pos:
+            continue
+        for lot in set(lots):
+            if lot in existing_lot_ids:
+                continue  # already harvested by a treasure/enemy/template pass
+            lot_def = item_lots.get(lot) or item_lots_enemy.get(lot)
+            if not lot_def:
+                continue
+            if any(lot_def.get(f'lotItemId0{s}', 0) in RUNE_GOODS for s in range(1, 9)):
+                continue
+            if (chosen, lot) in seen_scripted:
+                continue
+            seen_scripted.add((chosen, lot))
+            treasures.append({
+                'map': pos['map'], 'areaNo': pos['areaNo'],
+                'p1': pos['p1'], 'p2': pos['p2'],
+                'x': pos['x'], 'y': pos['y'], 'z': pos['z'],
+                'itemLotId': lot, 'partName': pos['name'],
+                'source': 'emevd', 'enemyModel': pos['model'],
+                'npcParamId': pos.get('npcParam', 0),
+            })
+            scripted_matched += 1
+    print(f'  {scripted_matched} scripted literal-award drops matched to entities')
+
     print('\n=== Cross-referencing data ===')
     # Build set of all MSB treasure base lot IDs (to avoid treating them as sub-lots)
     treasure_base_lots = {tr['itemLotId'] for tr in treasures if tr.get('source') == 'treasure'}
@@ -1034,6 +1184,12 @@ def main():
         # Use the first lot for basic items, but collect flagged sub-lots separately
         base_lot_id, base_lot = lots_to_check[0]
         event_flag = base_lot.get('getItemFlagId', 0)
+        # Scarab / strong-enemy drops (90005300/301) award via AwardItems(Including
+        # Clients) with no 2004:76 registration, so the lot's getItemFlagId is never
+        # set in-game - the marker would never hide. Use the kill flag X0_4 the
+        # template SetEventFlag's on death (captured as defeatFlag) as the hide flag.
+        if tr.get('emevdEventId') in (90005300, 90005301) and tr.get('defeatFlag'):
+            event_flag = tr['defeatFlag']
         items = extract_lot_items(base_lot)
 
         # For sub-lots with their own getItemFlagId, create separate records

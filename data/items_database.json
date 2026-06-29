@@ -897701,7 +897701,7 @@
   "gridZ": 0,
   "dispMask": "dispMask00",
   "itemLotId": 10001085,
-  "eventFlag": 10007085,
+  "eventFlag": 10000289,
   "partName": "c4270_9000",
   "items": [
    {
@@ -897717,7 +897717,9 @@
   "source": "emevd",
   "guaranteed": true,
   "enemyModel": "c4270",
-  "npcParamId": 42700014
+  "npcParamId": 42700014,
+  "defeatFlag": 10000289,
+  "emevdEventId": 90005300
  },
  {
   "map": "m10_00_00_00",
@@ -897745,7 +897747,9 @@
   "source": "emevd",
   "guaranteed": true,
   "enemyModel": "c4640",
-  "npcParamId": 46400014
+  "npcParamId": 46400014,
+  "defeatFlag": 10000291,
+  "emevdEventId": 90005300
  },
  {
   "map": "m10_00_00_00",
@@ -897757,7 +897761,7 @@
   "gridZ": 0,
   "dispMask": "dispMask00",
   "itemLotId": 10001095,
-  "eventFlag": 10007195,
+  "eventFlag": 10000291,
   "partName": "c4640_9000",
   "items": [
    {
@@ -897773,7 +897777,9 @@
   "source": "emevd",
   "guaranteed": true,
   "enemyModel": "c4640",
-  "npcParamId": 46400014
+  "npcParamId": 46400014,
+  "defeatFlag": 10000291,
+  "emevdEventId": 90005300
  },
  {
   "map": "m10_00_00_00",
@@ -897785,7 +897791,7 @@
   "gridZ": 0,
   "dispMask": "dispMask00",
   "itemLotId": 10001295,
-  "eventFlag": 10007295,
+  "eventFlag": 10000498,
   "partName": "c2500_9000",
   "items": [
    {
@@ -897801,7 +897807,9 @@
   "source": "emevd",
   "guaranteed": true,
   "enemyModel": "c2500",
-  "npcParamId": 25001014
+  "npcParamId": 25001014,
+  "defeatFlag": 10000498,
+  "emevdEventId": 90005300
  },
  {
   "map": "m10_00_00_00",
@@ -897813,7 +897821,7 @@
   "gridZ": 0,
   "dispMask": "dispMask00",
   "itemLotId": 40170,
-  "eventFlag": 540170,
+  "eventFlag": 10000495,
   "partName": "c4191_9000",
   "items": [
    {
@@ -897829,7 +897837,9 @@
   "source": "emevd",
   "guaranteed": true,
   "enemyModel": "c4191",
-  "npcParamId": 41912014
+  "npcParamId": 41912014,
+  "defeatFlag": 10000495,
+  "emevdEventId": 90005300
  },
  {
   "map": "m10_00_00_00",
@@ -897841,7 +897851,7 @@
   "gridZ": 0,
   "dispMask": "dispMask00",
   "itemLotId": 40172,
-  "eventFlag": 540172,
+  "eventFlag": 10000496,
   "partName": "c4191_9001",
   "items": [
    {
@@ -897857,7 +897867,9 @@
   "source": "emevd",
   "guaranteed": true,
   "enemyModel": "c4191",
-  "npcParamId": 41912014
+  "npcParamId": 41912014,
+  "defeatFlag": 10000496,
+  "emevdEventId": 90005300
  },
  {
   "map": "m10_00_00_00",
@@ -897869,7 +897881,7 @@
   "gridZ": 0,
   "dispMask": "dispMask00",
   "itemLotId": 40174,
-  "eventFlag": 540174,
+  "eventFlag": 10000497,
   "partName": "c4190_9002",
   "items": [
    {
@@ -897885,7 +897897,9 @@
   "source": "emevd",
   "guaranteed": true,
   "enemyModel": "c4190",
-  "npcParamId": 41903014
+  "npcParamId": 41903014,
+  "defeatFlag": 10000497,
+  "emevdEventId": 90005300
  },
  {
   "map": "m11_00_00_00",
@@ -897913,7 +897927,9 @@
   "source": "emevd",
   "guaranteed": true,
   "enemyModel": "c4810",
-  "npcParamId": 48100034
+  "npcParamId": 48100034,
+  "defeatFlag": 11000389,
+  "emevdEventId": 90005300
  },
  {
   "map": "m11_00_00_00",
@@ -897925,7 +897941,7 @@
   "gridZ": 0,
   "dispMask": "dispMask00",
   "itemLotId": 11001198,
-  "eventFlag": 11007998,
+  "eventFlag": 11000389,
   "partName": "c4810_9000",
   "items": [
    {
@@ -897941,7 +897957,9 @@
   "source": "emevd",
   "guaranteed": true,
   "enemyModel": "c4810",
-  "npcParamId": 48100034
+  "npcParamId": 48100034,
+  "defeatFlag": 11000389,
+  "emevdEventId": 90005300
  },
  {
   "map": "m11_00_00_00",
@@ -897953,7 +897971,7 @@
   "gridZ": 0,
   "dispMask": "dispMask00",
   "itemLotId": 11000185,
-  "eventFlag": 11007185,
+  "eventFlag": 11000399,
   "partName": "c4270_9001",
   "items": [
    {
@@ -897969,7 +897987,9 @@
   "source": "emevd",
   "guaranteed": true,
   "enemyModel": "c4270",
-  "npcParamId": 42700034
+  "npcParamId": 42700034,
+  "defeatFlag": 11000399,
+  "emevdEventId": 90005300
  },
  {
   "map": "m11_00_00_00",
@@ -897981,7 +898001,7 @@
   "gridZ": 0,
   "dispMask": "dispMask00",
   "itemLotId": 12020445,
-  "eventFlag": 12027445,
+  "eventFlag": 11000495,
   "partName": "c2500_9000",
   "items": [
    {
@@ -897997,7 +898017,9 @@
   "source": "emevd",
   "guaranteed": true,
   "enemyModel": "c2500",
-  "npcParamId": 25001134
+  "npcParamId": 25001134,
+  "defeatFlag": 11000495,
+  "emevdEventId": 90005300
  },
  {
   "map": "m11_00_00_00",
@@ -898009,7 +898031,7 @@
   "gridZ": 0,
   "dispMask": "dispMask00",
   "itemLotId": 12020435,
-  "eventFlag": 12027435,
+  "eventFlag": 11000496,
   "partName": "c2500_9001",
   "items": [
    {
@@ -898025,7 +898047,9 @@
   "source": "emevd",
   "guaranteed": true,
   "enemyModel": "c2500",
-  "npcParamId": 25000034
+  "npcParamId": 25000034,
+  "defeatFlag": 11000496,
+  "emevdEventId": 90005300
  },
  {
   "map": "m11_00_00_00",
@@ -898037,7 +898061,7 @@
   "gridZ": 0,
   "dispMask": "dispMask00",
   "itemLotId": 11001193,
-  "eventFlag": 11007993,
+  "eventFlag": 11000497,
   "partName": "c4640_9000",
   "items": [
    {
@@ -898053,7 +898077,9 @@
   "source": "emevd",
   "guaranteed": true,
   "enemyModel": "c4640",
-  "npcParamId": 46400034
+  "npcParamId": 46400034,
+  "defeatFlag": 11000497,
+  "emevdEventId": 90005300
  },
  {
   "map": "m11_00_00_00",
@@ -898065,7 +898091,7 @@
   "gridZ": 0,
   "dispMask": "dispMask00",
   "itemLotId": 11000265,
-  "eventFlag": 11007265,
+  "eventFlag": 11000484,
   "partName": "c2100_9000",
   "items": [
    {
@@ -898081,7 +898107,9 @@
   "source": "emevd",
   "guaranteed": true,
   "enemyModel": "c2100",
-  "npcParamId": 21000034
+  "npcParamId": 21000034,
+  "defeatFlag": 11000484,
+  "emevdEventId": 90005300
  },
  {
   "map": "m11_00_00_00",
@@ -898093,7 +898121,7 @@
   "gridZ": 0,
   "dispMask": "dispMask00",
   "itemLotId": 40370,
-  "eventFlag": 540370,
+  "eventFlag": 11000665,
   "partName": "c4191_9000",
   "items": [
    {
@@ -898109,7 +898137,9 @@
   "source": "emevd",
   "guaranteed": true,
   "enemyModel": "c4191",
-  "npcParamId": 41914034
+  "npcParamId": 41914034,
+  "defeatFlag": 11000665,
+  "emevdEventId": 90005300
  },
  {
   "map": "m11_00_00_00",
@@ -898121,7 +898151,7 @@
   "gridZ": 0,
   "dispMask": "dispMask00",
   "itemLotId": 40372,
-  "eventFlag": 540372,
+  "eventFlag": 11000666,
   "partName": "c4191_9001",
   "items": [
    {
@@ -898137,7 +898167,9 @@
   "source": "emevd",
   "guaranteed": true,
   "enemyModel": "c4191",
-  "npcParamId": 41912034
+  "npcParamId": 41912034,
+  "defeatFlag": 11000666,
+  "emevdEventId": 90005300
  },
  {
   "map": "m11_00_00_00",
@@ -898165,7 +898197,9 @@
   "source": "emevd",
   "guaranteed": true,
   "enemyModel": "c4770",
-  "npcParamId": 47701034
+  "npcParamId": 47701034,
+  "defeatFlag": 11000890,
+  "emevdEventId": 90005300
  },
  {
   "map": "m11_00_00_00",
@@ -898193,7 +898227,9 @@
   "source": "emevd",
   "guaranteed": true,
   "enemyModel": "c4770",
-  "npcParamId": 47701034
+  "npcParamId": 47701034,
+  "defeatFlag": 11000890,
+  "emevdEventId": 90005300
  },
  {
   "map": "m11_00_00_00",
@@ -898205,7 +898241,7 @@
   "gridZ": 0,
   "dispMask": "dispMask00",
   "itemLotId": 11001187,
-  "eventFlag": 11007987,
+  "eventFlag": 11000890,
   "partName": "c4770_9003",
   "items": [
    {
@@ -898221,7 +898257,9 @@
   "source": "emevd",
   "guaranteed": true,
   "enemyModel": "c4770",
-  "npcParamId": 47701034
+  "npcParamId": 47701034,
+  "defeatFlag": 11000890,
+  "emevdEventId": 90005300
  },
  {
   "map": "m11_05_00_00",
@@ -898339,7 +898377,9 @@
   "source": "emevd",
   "guaranteed": true,
   "enemyModel": "c4280",
-  "npcParamId": 42800360
+  "npcParamId": 42800360,
+  "defeatFlag": 12010240,
+  "emevdEventId": 90005300
  },
  {
   "map": "m12_01_00_00",
@@ -898351,7 +898391,7 @@
   "gridZ": 0,
   "dispMask": "dispMask01",
   "itemLotId": 12010105,
-  "eventFlag": 12017105,
+  "eventFlag": 12010240,
   "partName": "c4280_9030",
   "items": [
    {
@@ -898367,7 +898407,9 @@
   "source": "emevd",
   "guaranteed": true,
   "enemyModel": "c4280",
-  "npcParamId": 42800360
+  "npcParamId": 42800360,
+  "defeatFlag": 12010240,
+  "emevdEventId": 90005300
  },
  {
   "map": "m12_01_00_00",
@@ -898379,7 +898421,7 @@
   "gridZ": 0,
   "dispMask": "dispMask01",
   "itemLotId": 12010915,
-  "eventFlag": 12017915,
+  "eventFlag": 12010258,
   "partName": "c3300_9030",
   "items": [
    {
@@ -898395,7 +898437,9 @@
   "source": "emevd",
   "guaranteed": true,
   "enemyModel": "c3300",
-  "npcParamId": 33000162
+  "npcParamId": 33000162,
+  "defeatFlag": 12010258,
+  "emevdEventId": 90005300
  },
  {
   "map": "m12_01_00_00",
@@ -898467,7 +898511,7 @@
   "gridZ": 0,
   "dispMask": "dispMask01",
   "itemLotId": 12015985,
-  "eventFlag": 12017985,
+  "eventFlag": 12010400,
   "partName": "c4620_9000",
   "items": [
    {
@@ -898483,7 +898527,9 @@
   "source": "emevd",
   "guaranteed": true,
   "enemyModel": "c4620",
-  "npcParamId": 46202060
+  "npcParamId": 46202060,
+  "defeatFlag": 12010400,
+  "emevdEventId": 90005300
  },
  {
   "map": "m12_01_00_00",
@@ -898495,7 +898541,7 @@
   "gridZ": 0,
   "dispMask": "dispMask01",
   "itemLotId": 12015995,
-  "eventFlag": 12017995,
+  "eventFlag": 12010401,
   "partName": "c4620_9001",
   "items": [
    {
@@ -898511,7 +898557,9 @@
   "source": "emevd",
   "guaranteed": true,
   "enemyModel": "c4620",
-  "npcParamId": 46202062
+  "npcParamId": 46202062,
+  "defeatFlag": 12010401,
+  "emevdEventId": 90005300
  },
  {
   "map": "m12_01_00_00",
@@ -898523,7 +898571,7 @@
   "gridZ": 0,
   "dispMask": "dispMask01",
   "itemLotId": 40600,
-  "eventFlag": 540600,
+  "eventFlag": 12010403,
   "partName": "c4191_9011",
   "items": [
    {
@@ -898539,7 +898587,9 @@
   "source": "emevd",
   "guaranteed": true,
   "enemyModel": "c4191",
-  "npcParamId": 41915062
+  "npcParamId": 41915062,
+  "defeatFlag": 12010403,
+  "emevdEventId": 90005300
  },
  {
   "map": "m12_01_00_00",
@@ -898551,7 +898601,7 @@
   "gridZ": 0,
   "dispMask": "dispMask01",
   "itemLotId": 40602,
-  "eventFlag": 540602,
+  "eventFlag": 12010404,
   "partName": "c4191_9012",
   "items": [
    {
@@ -898567,7 +898617,9 @@
   "source": "emevd",
   "guaranteed": true,
   "enemyModel": "c4191",
-  "npcParamId": 41915062
+  "npcParamId": 41915062,
+  "defeatFlag": 12010404,
+  "emevdEventId": 90005300
  },
  {
   "map": "m12_01_00_00",
@@ -898699,7 +898751,7 @@
   "gridZ": 0,
   "dispMask": "dispMask01",
   "itemLotId": 40648,
-  "eventFlag": 540648,
+  "eventFlag": 12020470,
   "partName": "c4191_9020",
   "items": [
    {
@@ -898715,7 +898767,9 @@
   "source": "emevd",
   "guaranteed": true,
   "enemyModel": "c4191",
-  "npcParamId": 41914065
+  "npcParamId": 41914065,
+  "defeatFlag": 12020470,
+  "emevdEventId": 90005300
  },
  {
   "map": "m12_02_00_00",
@@ -898727,7 +898781,7 @@
   "gridZ": 0,
   "dispMask": "dispMask01",
   "itemLotId": 40630,
-  "eventFlag": 540630,
+  "eventFlag": 12020472,
   "partName": "c4191_9012",
   "items": [
    {
@@ -898743,7 +898797,9 @@
   "source": "emevd",
   "guaranteed": true,
   "enemyModel": "c4191",
-  "npcParamId": 41912064
+  "npcParamId": 41912064,
+  "defeatFlag": 12020472,
+  "emevdEventId": 90005300
  },
  {
   "map": "m12_02_00_00",
@@ -898755,7 +898811,7 @@
   "gridZ": 0,
   "dispMask": "dispMask01",
   "itemLotId": 40610,
-  "eventFlag": 540610,
+  "eventFlag": 12020474,
   "partName": "c4192_9022",
   "items": [
    {
@@ -898771,7 +898827,9 @@
   "source": "emevd",
   "guaranteed": true,
   "enemyModel": "c4192",
-  "npcParamId": 41923065
+  "npcParamId": 41923065,
+  "defeatFlag": 12020474,
+  "emevdEventId": 90005300
  },
  {
   "map": "m12_02_00_00",
@@ -898783,7 +898841,7 @@
   "gridZ": 0,
   "dispMask": "dispMask01",
   "itemLotId": 40642,
-  "eventFlag": 540642,
+  "eventFlag": 12020477,
   "partName": "c4191_9021",
   "items": [
    {
@@ -898799,7 +898857,9 @@
   "source": "emevd",
   "guaranteed": true,
   "enemyModel": "c4191",
-  "npcParamId": 41915065
+  "npcParamId": 41915065,
+  "defeatFlag": 12020477,
+  "emevdEventId": 90005300
  },
  {
   "map": "m12_02_00_00",
@@ -898811,7 +898871,7 @@
   "gridZ": 0,
   "dispMask": "dispMask01",
   "itemLotId": 40646,
-  "eventFlag": 540646,
+  "eventFlag": 12020479,
   "partName": "c4191_9019",
   "items": [
    {
@@ -898827,7 +898887,9 @@
   "source": "emevd",
   "guaranteed": true,
   "enemyModel": "c4191",
-  "npcParamId": 41912065
+  "npcParamId": 41912065,
+  "defeatFlag": 12020479,
+  "emevdEventId": 90005300
  },
  {
   "map": "m12_02_00_00",
@@ -898975,7 +899037,9 @@
   "source": "emevd",
   "guaranteed": true,
   "enemyModel": "c4280",
-  "npcParamId": 42800366
+  "npcParamId": 42800366,
+  "defeatFlag": 12030240,
+  "emevdEventId": 90005300
  },
  {
   "map": "m12_03_00_00",
@@ -898987,7 +899051,7 @@
   "gridZ": 0,
   "dispMask": "dispMask01",
   "itemLotId": 12030800,
-  "eventFlag": 12037800,
+  "eventFlag": 12030240,
   "partName": "c4280_9040",
   "items": [
    {
@@ -899003,7 +899067,9 @@
   "source": "emevd",
   "guaranteed": true,
   "enemyModel": "c4280",
-  "npcParamId": 42800366
+  "npcParamId": 42800366,
+  "defeatFlag": 12030240,
+  "emevdEventId": 90005300
  },
  {
   "map": "m12_03_00_00",
@@ -899031,7 +899097,9 @@
   "source": "emevd",
   "guaranteed": true,
   "enemyModel": "c4280",
-  "npcParamId": 42800366
+  "npcParamId": 42800366,
+  "defeatFlag": 12030241,
+  "emevdEventId": 90005300
  },
  {
   "map": "m12_03_00_00",
@@ -899043,7 +899111,7 @@
   "gridZ": 0,
   "dispMask": "dispMask01",
   "itemLotId": 12030810,
-  "eventFlag": 12037810,
+  "eventFlag": 12030241,
   "partName": "c4280_9041",
   "items": [
    {
@@ -899059,7 +899127,9 @@
   "source": "emevd",
   "guaranteed": true,
   "enemyModel": "c4280",
-  "npcParamId": 42800366
+  "npcParamId": 42800366,
+  "defeatFlag": 12030241,
+  "emevdEventId": 90005300
  },
  {
   "map": "m12_03_00_00",
@@ -899087,7 +899157,9 @@
   "source": "emevd",
   "guaranteed": true,
   "enemyModel": "c4280",
-  "npcParamId": 42800366
+  "npcParamId": 42800366,
+  "defeatFlag": 12030256,
+  "emevdEventId": 90005300
  },
  {
   "map": "m12_03_00_00",
@@ -899099,7 +899171,7 @@
   "gridZ": 0,
   "dispMask": "dispMask01",
   "itemLotId": 12030820,
-  "eventFlag": 12037820,
+  "eventFlag": 12030256,
   "partName": "c4280_9076",
   "items": [
    {
@@ -899115,7 +899187,9 @@
   "source": "emevd",
   "guaranteed": true,
   "enemyModel": "c4280",
-  "npcParamId": 42800366
+  "npcParamId": 42800366,
+  "defeatFlag": 12030256,
+  "emevdEventId": 90005300
  },
  {
   "map": "m12_03_00_00",
@@ -899143,7 +899217,9 @@
   "source": "emevd",
   "guaranteed": true,
   "enemyModel": "c4280",
-  "npcParamId": 42800366
+  "npcParamId": 42800366,
+  "defeatFlag": 12030257,
+  "emevdEventId": 90005300
  },
  {
   "map": "m12_03_00_00",
@@ -899155,7 +899231,7 @@
   "gridZ": 0,
   "dispMask": "dispMask01",
   "itemLotId": 12030830,
-  "eventFlag": 12037830,
+  "eventFlag": 12030257,
   "partName": "c4280_9077",
   "items": [
    {
@@ -899171,7 +899247,9 @@
   "source": "emevd",
   "guaranteed": true,
   "enemyModel": "c4280",
-  "npcParamId": 42800366
+  "npcParamId": 42800366,
+  "defeatFlag": 12030257,
+  "emevdEventId": 90005300
  },
  {
   "map": "m12_03_00_00",
@@ -899199,7 +899277,9 @@
   "source": "emevd",
   "guaranteed": true,
   "enemyModel": "c4280",
-  "npcParamId": 42800366
+  "npcParamId": 42800366,
+  "defeatFlag": 12030297,
+  "emevdEventId": 90005300
  },
  {
   "map": "m12_03_00_00",
@@ -899211,7 +899291,7 @@
   "gridZ": 0,
   "dispMask": "dispMask01",
   "itemLotId": 12030840,
-  "eventFlag": 12037840,
+  "eventFlag": 12030297,
   "partName": "c4280_9037",
   "items": [
    {
@@ -899227,7 +899307,9 @@
   "source": "emevd",
   "guaranteed": true,
   "enemyModel": "c4280",
-  "npcParamId": 42800366
+  "npcParamId": 42800366,
+  "defeatFlag": 12030297,
+  "emevdEventId": 90005300
  },
  {
   "map": "m12_03_00_00",
@@ -899255,7 +899337,9 @@
   "source": "emevd",
   "guaranteed": true,
   "enemyModel": "c4280",
-  "npcParamId": 42800366
+  "npcParamId": 42800366,
+  "defeatFlag": 12030201,
+  "emevdEventId": 90005300
  },
  {
   "map": "m12_03_00_00",
@@ -899267,7 +899351,7 @@
   "gridZ": 0,
   "dispMask": "dispMask01",
   "itemLotId": 12030850,
-  "eventFlag": 12037850,
+  "eventFlag": 12030201,
   "partName": "c4280_9001",
   "items": [
    {
@@ -899283,7 +899367,9 @@
   "source": "emevd",
   "guaranteed": true,
   "enemyModel": "c4280",
-  "npcParamId": 42800366
+  "npcParamId": 42800366,
+  "defeatFlag": 12030201,
+  "emevdEventId": 90005300
  },
  {
   "map": "m12_03_00_00",
@@ -899295,7 +899381,7 @@
   "gridZ": 0,
   "dispMask": "dispMask01",
   "itemLotId": 40660,
-  "eventFlag": 540660,
+  "eventFlag": 12030350,
   "partName": "c4191_9000",
   "items": [
    {
@@ -899311,7 +899397,9 @@
   "source": "emevd",
   "guaranteed": true,
   "enemyModel": "c4191",
-  "npcParamId": 41912066
+  "npcParamId": 41912066,
+  "defeatFlag": 12030350,
+  "emevdEventId": 90005300
  },
  {
   "map": "m12_03_00_00",
@@ -899323,7 +899411,7 @@
   "gridZ": 0,
   "dispMask": "dispMask01",
   "itemLotId": 40668,
-  "eventFlag": 540668,
+  "eventFlag": 12030354,
   "partName": "c4191_9004",
   "items": [
    {
@@ -899339,7 +899427,9 @@
   "source": "emevd",
   "guaranteed": true,
   "enemyModel": "c4191",
-  "npcParamId": 41915066
+  "npcParamId": 41915066,
+  "defeatFlag": 12030354,
+  "emevdEventId": 90005300
  },
  {
   "map": "m12_03_00_00",
@@ -899351,7 +899441,7 @@
   "gridZ": 0,
   "dispMask": "dispMask01",
   "itemLotId": 40670,
-  "eventFlag": 540670,
+  "eventFlag": 12030355,
   "partName": "c4191_9005",
   "items": [
    {
@@ -899367,7 +899457,9 @@
   "source": "emevd",
   "guaranteed": true,
   "enemyModel": "c4191",
-  "npcParamId": 41915066
+  "npcParamId": 41915066,
+  "defeatFlag": 12030355,
+  "emevdEventId": 90005300
  },
  {
   "map": "m12_03_00_00",
@@ -899499,7 +899591,7 @@
   "gridZ": 0,
   "dispMask": "dispMask01",
   "itemLotId": 40686,
-  "eventFlag": 540686,
+  "eventFlag": 12050403,
   "partName": "c4191_9003",
   "items": [
    {
@@ -899515,7 +899607,9 @@
   "source": "emevd",
   "guaranteed": true,
   "enemyModel": "c4191",
-  "npcParamId": 41912068
+  "npcParamId": 41912068,
+  "defeatFlag": 12050403,
+  "emevdEventId": 90005300
  },
  {
   "map": "m12_05_00_00",
@@ -899647,7 +899741,7 @@
   "gridZ": 0,
   "dispMask": "dispMask01",
   "itemLotId": 40652,
-  "eventFlag": 540652,
+  "eventFlag": 12070402,
   "partName": "c4191_9003",
   "items": [
    {
@@ -899663,7 +899757,9 @@
   "source": "emevd",
   "guaranteed": true,
   "enemyModel": "c4191",
-  "npcParamId": 41913064
+  "npcParamId": 41913064,
+  "defeatFlag": 12070402,
+  "emevdEventId": 90005300
  },
  {
   "map": "m13_00_00_00",
@@ -899675,7 +899771,7 @@
   "gridZ": 0,
   "dispMask": "dispMask00",
   "itemLotId": 40772,
-  "eventFlag": 540772,
+  "eventFlag": 13000341,
   "partName": "c4191_9001",
   "items": [
    {
@@ -899691,7 +899787,9 @@
   "source": "emevd",
   "guaranteed": true,
   "enemyModel": "c4191",
-  "npcParamId": 41914072
+  "npcParamId": 41914072,
+  "defeatFlag": 13000341,
+  "emevdEventId": 90005300
  },
  {
   "map": "m13_00_00_00",
@@ -899703,7 +899801,7 @@
   "gridZ": 0,
   "dispMask": "dispMask00",
   "itemLotId": 13002091,
-  "eventFlag": 13007991,
+  "eventFlag": 13000490,
   "partName": "c4510_9000",
   "items": [
    {
@@ -899719,7 +899817,9 @@
   "source": "emevd",
   "guaranteed": true,
   "enemyModel": "c4510",
-  "npcParamId": 45102272
+  "npcParamId": 45102272,
+  "defeatFlag": 13000490,
+  "emevdEventId": 90005300
  },
  {
   "map": "m13_00_00_00",
@@ -899731,7 +899831,7 @@
   "gridZ": 0,
   "dispMask": "dispMask00",
   "itemLotId": 13002093,
-  "eventFlag": 13007993,
+  "eventFlag": 13000495,
   "partName": "c4510_9005",
   "items": [
    {
@@ -899747,7 +899847,9 @@
   "source": "emevd",
   "guaranteed": true,
   "enemyModel": "c4510",
-  "npcParamId": 45101272
+  "npcParamId": 45101272,
+  "defeatFlag": 13000495,
+  "emevdEventId": 90005300
  },
  {
   "map": "m13_00_00_00",
@@ -899775,7 +899877,9 @@
   "source": "emevd",
   "guaranteed": true,
   "enemyModel": "c3250",
-  "npcParamId": 32500072
+  "npcParamId": 32500072,
+  "defeatFlag": 13000496,
+  "emevdEventId": 90005300
  },
  {
   "map": "m13_00_00_00",
@@ -899803,7 +899907,9 @@
   "source": "emevd",
   "guaranteed": true,
   "enemyModel": "c3250",
-  "npcParamId": 32500072
+  "npcParamId": 32500072,
+  "defeatFlag": 13000496,
+  "emevdEventId": 90005300
  },
  {
   "map": "m13_00_00_00",
@@ -899831,7 +899937,9 @@
   "source": "emevd",
   "guaranteed": true,
   "enemyModel": "c3250",
-  "npcParamId": 32500072
+  "npcParamId": 32500072,
+  "defeatFlag": 13000496,
+  "emevdEventId": 90005300
  },
  {
   "map": "m13_00_00_00",
@@ -899859,7 +899967,9 @@
   "source": "emevd",
   "guaranteed": true,
   "enemyModel": "c3250",
-  "npcParamId": 32500072
+  "npcParamId": 32500072,
+  "defeatFlag": 13000496,
+  "emevdEventId": 90005300
  },
  {
   "map": "m13_00_00_00",
@@ -899871,7 +899981,7 @@
   "gridZ": 0,
   "dispMask": "dispMask00",
   "itemLotId": 13002095,
-  "eventFlag": 13007995,
+  "eventFlag": 13000496,
   "partName": "c3250_9000",
   "items": [
    {
@@ -899887,7 +899997,9 @@
   "source": "emevd",
   "guaranteed": true,
   "enemyModel": "c3250",
-  "npcParamId": 32500072
+  "npcParamId": 32500072,
+  "defeatFlag": 13000496,
+  "emevdEventId": 90005300
  },
  {
   "map": "m13_00_00_00",
@@ -900109,7 +900221,7 @@
   "gridZ": 0,
   "dispMask": "dispMask00",
   "itemLotId": 14000005,
-  "eventFlag": 14007005,
+  "eventFlag": 14000633,
   "partName": "c2275_9026",
   "items": [
    {
@@ -900125,7 +900237,9 @@
   "source": "emevd",
   "guaranteed": true,
   "enemyModel": "c2275",
-  "npcParamId": 22751024
+  "npcParamId": 22751024,
+  "defeatFlag": 14000633,
+  "emevdEventId": 90005300
  },
  {
   "map": "m14_00_00_00",
@@ -900137,7 +900251,7 @@
   "gridZ": 0,
   "dispMask": "dispMask00",
   "itemLotId": 14000025,
-  "eventFlag": 14007025,
+  "eventFlag": 14000637,
   "partName": "c2275_9031",
   "items": [
    {
@@ -900153,7 +900267,9 @@
   "source": "emevd",
   "guaranteed": true,
   "enemyModel": "c2275",
-  "npcParamId": 22751024
+  "npcParamId": 22751024,
+  "defeatFlag": 14000637,
+  "emevdEventId": 90005300
  },
  {
   "map": "m14_00_00_00",
@@ -900165,7 +900281,7 @@
   "gridZ": 0,
   "dispMask": "dispMask00",
   "itemLotId": 14000035,
-  "eventFlag": 14007035,
+  "eventFlag": 14000638,
   "partName": "c2275_9032",
   "items": [
    {
@@ -900181,7 +900297,9 @@
   "source": "emevd",
   "guaranteed": true,
   "enemyModel": "c2275",
-  "npcParamId": 22751024
+  "npcParamId": 22751024,
+  "defeatFlag": 14000638,
+  "emevdEventId": 90005300
  },
  {
   "map": "m14_00_00_00",
@@ -900193,7 +900311,7 @@
   "gridZ": 0,
   "dispMask": "dispMask00",
   "itemLotId": 40272,
-  "eventFlag": 540272,
+  "eventFlag": 14000486,
   "partName": "c4191_9001",
   "items": [
    {
@@ -900209,7 +900327,9 @@
   "source": "emevd",
   "guaranteed": true,
   "enemyModel": "c4191",
-  "npcParamId": 41912024
+  "npcParamId": 41912024,
+  "defeatFlag": 14000486,
+  "emevdEventId": 90005300
  },
  {
   "map": "m14_00_00_00",
@@ -900221,7 +900341,7 @@
   "gridZ": 0,
   "dispMask": "dispMask00",
   "itemLotId": 14000980,
-  "eventFlag": 14007980,
+  "eventFlag": 14000499,
   "partName": "c0000_9014",
   "items": [
    {
@@ -900237,7 +900357,9 @@
   "source": "emevd",
   "guaranteed": true,
   "enemyModel": "c0000",
-  "npcParamId": 523590024
+  "npcParamId": 523590024,
+  "defeatFlag": 14000499,
+  "emevdEventId": 90005300
  },
  {
   "map": "m15_00_00_00",
@@ -900265,7 +900387,9 @@
   "source": "emevd",
   "guaranteed": true,
   "enemyModel": "c4811",
-  "npcParamId": 48110056
+  "npcParamId": 48110056,
+  "defeatFlag": 15000393,
+  "emevdEventId": 90005300
  },
  {
   "map": "m15_00_00_00",
@@ -900277,7 +900401,7 @@
   "gridZ": 0,
   "dispMask": "dispMask00",
   "itemLotId": 15001280,
-  "eventFlag": 15001280,
+  "eventFlag": 15000393,
   "partName": "c4811_9003",
   "items": [
    {
@@ -900293,7 +900417,9 @@
   "source": "emevd",
   "guaranteed": true,
   "enemyModel": "c4811",
-  "npcParamId": 48110056
+  "npcParamId": 48110056,
+  "defeatFlag": 15000393,
+  "emevdEventId": 90005300
  },
  {
   "map": "m15_00_00_00",
@@ -900321,7 +900447,9 @@
   "source": "emevd",
   "guaranteed": true,
   "enemyModel": "c4640",
-  "npcParamId": 46400156
+  "npcParamId": 46400156,
+  "defeatFlag": 15000398,
+  "emevdEventId": 90005300
  },
  {
   "map": "m15_00_00_00",
@@ -900333,7 +900461,7 @@
   "gridZ": 0,
   "dispMask": "dispMask00",
   "itemLotId": 15001200,
-  "eventFlag": 15001200,
+  "eventFlag": 15000398,
   "partName": "c4640_9000",
   "items": [
    {
@@ -900349,7 +900477,9 @@
   "source": "emevd",
   "guaranteed": true,
   "enemyModel": "c4640",
-  "npcParamId": 46400156
+  "npcParamId": 46400156,
+  "defeatFlag": 15000398,
+  "emevdEventId": 90005300
  },
  {
   "map": "m16_00_00_00",
@@ -900407,7 +900537,9 @@
   "source": "emevd",
   "guaranteed": true,
   "enemyModel": "c4910",
-  "npcParamId": 49100038
+  "npcParamId": 49100038,
+  "defeatFlag": 16000890,
+  "emevdEventId": 90005300
  },
  {
   "map": "m16_00_00_00",
@@ -900435,7 +900567,9 @@
   "source": "emevd",
   "guaranteed": true,
   "enemyModel": "c4910",
-  "npcParamId": 49100038
+  "npcParamId": 49100038,
+  "defeatFlag": 16000890,
+  "emevdEventId": 90005300
  },
  {
   "map": "m16_00_00_00",
@@ -900447,7 +900581,7 @@
   "gridZ": 0,
   "dispMask": "dispMask00",
   "itemLotId": 16002000,
-  "eventFlag": 16007999,
+  "eventFlag": 16000890,
   "partName": "c4910_9002",
   "items": [
    {
@@ -900463,7 +900597,9 @@
   "source": "emevd",
   "guaranteed": true,
   "enemyModel": "c4910",
-  "npcParamId": 49100038
+  "npcParamId": 49100038,
+  "defeatFlag": 16000890,
+  "emevdEventId": 90005300
  },
  {
   "map": "m16_00_00_00",
@@ -900475,7 +900611,7 @@
   "gridZ": 0,
   "dispMask": "dispMask00",
   "itemLotId": 40590,
-  "eventFlag": 540590,
+  "eventFlag": 16000420,
   "partName": "c4191_9001",
   "items": [
    {
@@ -900491,7 +900627,9 @@
   "source": "emevd",
   "guaranteed": true,
   "enemyModel": "c4191",
-  "npcParamId": 41915038
+  "npcParamId": 41915038,
+  "defeatFlag": 16000420,
+  "emevdEventId": 90005300
  },
  {
   "map": "m16_00_00_00",
@@ -900503,7 +900641,7 @@
   "gridZ": 0,
   "dispMask": "dispMask00",
   "itemLotId": 40592,
-  "eventFlag": 540592,
+  "eventFlag": 16000421,
   "partName": "c4191_9002",
   "items": [
    {
@@ -900519,7 +900657,9 @@
   "source": "emevd",
   "guaranteed": true,
   "enemyModel": "c4191",
-  "npcParamId": 41915038
+  "npcParamId": 41915038,
+  "defeatFlag": 16000421,
+  "emevdEventId": 90005300
  },
  {
   "map": "m18_00_00_00",
@@ -900531,7 +900671,7 @@
   "gridZ": 0,
   "dispMask": "dispMask00",
   "itemLotId": 18000330,
-  "eventFlag": 18007330,
+  "eventFlag": 18000330,
   "partName": "c3010_9000",
   "items": [
    {
@@ -900547,7 +900687,9 @@
   "source": "emevd",
   "guaranteed": true,
   "enemyModel": "c3010",
-  "npcParamId": 30100507
+  "npcParamId": 30100507,
+  "defeatFlag": 18000330,
+  "emevdEventId": 90005300
  },
  {
   "map": "m20_00_00_00",
@@ -900575,7 +900717,9 @@
   "source": "emevd",
   "guaranteed": true,
   "enemyModel": "c4640",
-  "npcParamId": 46400088
+  "npcParamId": 46400088,
+  "defeatFlag": 20000410,
+  "emevdEventId": 90005301
  },
  {
   "map": "m20_00_00_00",
@@ -900587,7 +900731,7 @@
   "gridZ": 0,
   "dispMask": "pad2_0",
   "itemLotId": 20001991,
-  "eventFlag": 20007991,
+  "eventFlag": 20000410,
   "partName": "c5960_9000",
   "items": [
    {
@@ -900603,7 +900747,9 @@
   "source": "emevd",
   "guaranteed": true,
   "enemyModel": "c4640",
-  "npcParamId": 46400088
+  "npcParamId": 46400088,
+  "defeatFlag": 20000410,
+  "emevdEventId": 90005301
  },
  {
   "map": "m20_00_00_00",
@@ -900615,7 +900761,7 @@
   "gridZ": 0,
   "dispMask": "pad2_0",
   "itemLotId": 20001995,
-  "eventFlag": 20007995,
+  "eventFlag": 20000403,
   "partName": "c5250_9003",
   "items": [
    {
@@ -900631,7 +900777,9 @@
   "source": "emevd",
   "guaranteed": true,
   "enemyModel": "c5250",
-  "npcParamId": 52500988
+  "npcParamId": 52500988,
+  "defeatFlag": 20000403,
+  "emevdEventId": 90005301
  },
  {
   "map": "m20_01_00_00",
@@ -900643,7 +900791,7 @@
   "gridZ": 0,
   "dispMask": "pad2_0",
   "itemLotId": 20010900,
-  "eventFlag": 1042617553,
+  "eventFlag": 20010451,
   "partName": "c5250_9001",
   "items": [
    {
@@ -900659,7 +900807,9 @@
   "source": "emevd",
   "guaranteed": true,
   "enemyModel": "c5250",
-  "npcParamId": 52501289
+  "npcParamId": 52501289,
+  "defeatFlag": 20010451,
+  "emevdEventId": 90005300
  },
  {
   "map": "m20_01_00_00",
@@ -900671,7 +900821,7 @@
   "gridZ": 0,
   "dispMask": "pad2_0",
   "itemLotId": 20010910,
-  "eventFlag": 1042617554,
+  "eventFlag": 20010453,
   "partName": "c5250_9003",
   "items": [
    {
@@ -900687,7 +900837,9 @@
   "source": "emevd",
   "guaranteed": true,
   "enemyModel": "c5250",
-  "npcParamId": 52501389
+  "npcParamId": 52501389,
+  "defeatFlag": 20010453,
+  "emevdEventId": 90005300
  },
  {
   "map": "m21_00_00_00",
@@ -900715,7 +900867,9 @@
   "source": "emevd",
   "guaranteed": true,
   "enemyModel": "c4640",
-  "npcParamId": 46400098
+  "npcParamId": 46400098,
+  "defeatFlag": 21000470,
+  "emevdEventId": 90005301
  },
  {
   "map": "m21_00_00_00",
@@ -900727,7 +900881,7 @@
   "gridZ": 0,
   "dispMask": "pad2_0",
   "itemLotId": 21001991,
-  "eventFlag": 21007991,
+  "eventFlag": 21000470,
   "partName": "c5960_9000",
   "items": [
    {
@@ -900743,7 +900897,9 @@
   "source": "emevd",
   "guaranteed": true,
   "enemyModel": "c4640",
-  "npcParamId": 46400098
+  "npcParamId": 46400098,
+  "defeatFlag": 21000470,
+  "emevdEventId": 90005301
  },
  {
   "map": "m21_00_00_00",
@@ -900771,7 +900927,9 @@
   "source": "emevd",
   "guaranteed": true,
   "enemyModel": "c4640",
-  "npcParamId": 46400098
+  "npcParamId": 46400098,
+  "defeatFlag": 21000471,
+  "emevdEventId": 90005301
  },
  {
   "map": "m21_00_00_00",
@@ -900783,7 +900941,7 @@
   "gridZ": 0,
   "dispMask": "pad2_0",
   "itemLotId": 21001995,
-  "eventFlag": 21007995,
+  "eventFlag": 21000471,
   "partName": "c5960_9001",
   "items": [
    {
@@ -900799,7 +900957,9 @@
   "source": "emevd",
   "guaranteed": true,
   "enemyModel": "c4640",
-  "npcParamId": 46400098
+  "npcParamId": 46400098,
+  "defeatFlag": 21000471,
+  "emevdEventId": 90005301
  },
  {
   "map": "m21_00_00_00",
@@ -900811,7 +900971,7 @@
   "gridZ": 0,
   "dispMask": "pad2_0",
   "itemLotId": 21001998,
-  "eventFlag": 21007998,
+  "eventFlag": 21000453,
   "partName": "c5160_9003",
   "items": [
    {
@@ -900827,7 +900987,9 @@
   "source": "emevd",
   "guaranteed": true,
   "enemyModel": "c5160",
-  "npcParamId": 51602198
+  "npcParamId": 51602198,
+  "defeatFlag": 21000453,
+  "emevdEventId": 90005301
  },
  {
   "map": "m21_01_00_00",
@@ -900855,7 +901017,9 @@
   "source": "emevd",
   "guaranteed": true,
   "enemyModel": "c5160",
-  "npcParamId": 51600199
+  "npcParamId": 51600199,
+  "defeatFlag": 21010459,
+  "emevdEventId": 90005301
  },
  {
   "map": "m21_01_00_00",
@@ -900867,7 +901031,7 @@
   "gridZ": 0,
   "dispMask": "pad2_0",
   "itemLotId": 21011991,
-  "eventFlag": 21017991,
+  "eventFlag": 21010459,
   "partName": "c5160_9009",
   "items": [
    {
@@ -900883,7 +901047,9 @@
   "source": "emevd",
   "guaranteed": true,
   "enemyModel": "c5160",
-  "npcParamId": 51600199
+  "npcParamId": 51600199,
+  "defeatFlag": 21010459,
+  "emevdEventId": 90005301
  },
  {
   "map": "m21_02_00_00",
@@ -900911,7 +901077,9 @@
   "source": "emevd",
   "guaranteed": true,
   "enemyModel": "c5160",
-  "npcParamId": 51601198
+  "npcParamId": 51601198,
+  "defeatFlag": 21020450,
+  "emevdEventId": 90005301
  },
  {
   "map": "m21_02_00_00",
@@ -900923,7 +901091,7 @@
   "gridZ": 0,
   "dispMask": "pad2_0",
   "itemLotId": 21021991,
-  "eventFlag": 21027991,
+  "eventFlag": 21020450,
   "partName": "c5160_9000",
   "items": [
    {
@@ -900939,7 +901107,9 @@
   "source": "emevd",
   "guaranteed": true,
   "enemyModel": "c5160",
-  "npcParamId": 51601198
+  "npcParamId": 51601198,
+  "defeatFlag": 21020450,
+  "emevdEventId": 90005301
  },
  {
   "map": "m22_00_00_00",
@@ -900967,7 +901137,9 @@
   "source": "emevd",
   "guaranteed": true,
   "enemyModel": "c3461",
-  "npcParamId": 34600087
+  "npcParamId": 34600087,
+  "defeatFlag": 22000460,
+  "emevdEventId": 90005301
  },
  {
   "map": "m22_00_00_00",
@@ -900979,7 +901151,7 @@
   "gridZ": 0,
   "dispMask": "pad2_0",
   "itemLotId": 22000900,
-  "eventFlag": 22007900,
+  "eventFlag": 22000460,
   "partName": "c5950_9000",
   "items": [
    {
@@ -900995,7 +901167,9 @@
   "source": "emevd",
   "guaranteed": true,
   "enemyModel": "c3461",
-  "npcParamId": 34600087
+  "npcParamId": 34600087,
+  "defeatFlag": 22000460,
+  "emevdEventId": 90005301
  },
  {
   "map": "m30_09_00_00",
@@ -901023,7 +901197,9 @@
   "source": "emevd",
   "guaranteed": true,
   "enemyModel": "c4290",
-  "npcParamId": 42900132
+  "npcParamId": 42900132,
+  "defeatFlag": 30090300,
+  "emevdEventId": 90005300
  },
  {
   "map": "m30_09_00_00",
@@ -901051,7 +901227,9 @@
   "source": "emevd",
   "guaranteed": true,
   "enemyModel": "c4290",
-  "npcParamId": 42900132
+  "npcParamId": 42900132,
+  "defeatFlag": 30090300,
+  "emevdEventId": 90005300
  },
  {
   "map": "m30_09_00_00",
@@ -901079,7 +901257,9 @@
   "source": "emevd",
   "guaranteed": true,
   "enemyModel": "c4290",
-  "npcParamId": 42900132
+  "npcParamId": 42900132,
+  "defeatFlag": 30090300,
+  "emevdEventId": 90005300
  },
  {
   "map": "m30_09_00_00",
@@ -901091,7 +901271,7 @@
   "gridZ": 0,
   "dispMask": "dispMask00",
   "itemLotId": 30090080,
-  "eventFlag": 30097080,
+  "eventFlag": 30090300,
   "partName": "c4290_9000",
   "items": [
    {
@@ -901107,7 +901287,9 @@
   "source": "emevd",
   "guaranteed": true,
   "enemyModel": "c4290",
-  "npcParamId": 42900132
+  "npcParamId": 42900132,
+  "defeatFlag": 30090300,
+  "emevdEventId": 90005300
  },
  {
   "map": "m34_11_00_00",
@@ -901119,7 +901301,7 @@
   "gridZ": 0,
   "dispMask": "dispMask00",
   "itemLotId": 34110700,
-  "eventFlag": 34117700,
+  "eventFlag": 34110710,
   "partName": "c0000_9010",
   "items": [
    {
@@ -901135,7 +901317,9 @@
   "source": "emevd",
   "guaranteed": true,
   "enemyModel": "c0000",
-  "npcParamId": 523520028
+  "npcParamId": 523520028,
+  "defeatFlag": 34110710,
+  "emevdEventId": 90005300
  },
  {
   "map": "m34_11_00_00",
@@ -901147,7 +901331,7 @@
   "gridZ": 0,
   "dispMask": "dispMask00",
   "itemLotId": 34110710,
-  "eventFlag": 34117710,
+  "eventFlag": 34110711,
   "partName": "c0000_9011",
   "items": [
    {
@@ -901163,7 +901347,9 @@
   "source": "emevd",
   "guaranteed": true,
   "enemyModel": "c0000",
-  "npcParamId": 523521028
+  "npcParamId": 523521028,
+  "defeatFlag": 34110711,
+  "emevdEventId": 90005300
  },
  {
   "map": "m35_00_00_00",
@@ -901175,7 +901361,7 @@
   "gridZ": 0,
   "dispMask": "dispMask00",
   "itemLotId": 35000970,
-  "eventFlag": 35007970,
+  "eventFlag": 35000495,
   "partName": "c4191_9005",
   "items": [
    {
@@ -901191,7 +901377,9 @@
   "source": "emevd",
   "guaranteed": true,
   "enemyModel": "c4191",
-  "npcParamId": 41915035
+  "npcParamId": 41915035,
+  "defeatFlag": 35000495,
+  "emevdEventId": 90005300
  },
  {
   "map": "m35_00_00_00",
@@ -901203,7 +901391,7 @@
   "gridZ": 0,
   "dispMask": "dispMask00",
   "itemLotId": 35000980,
-  "eventFlag": 35007980,
+  "eventFlag": 35000496,
   "partName": "c4191_9006",
   "items": [
    {
@@ -901219,7 +901407,9 @@
   "source": "emevd",
   "guaranteed": true,
   "enemyModel": "c4191",
-  "npcParamId": 41915035
+  "npcParamId": 41915035,
+  "defeatFlag": 35000496,
+  "emevdEventId": 90005300
  },
  {
   "map": "m43_01_00_00",
@@ -901247,7 +901437,9 @@
   "source": "emevd",
   "guaranteed": true,
   "enemyModel": "c4910",
-  "npcParamId": 49100174
+  "npcParamId": 49100174,
+  "defeatFlag": 43010350,
+  "emevdEventId": 90005301
  },
  {
   "map": "m43_01_00_00",
@@ -901259,7 +901451,7 @@
   "gridZ": 0,
   "dispMask": "pad2_0",
   "itemLotId": 43010900,
-  "eventFlag": 43017900,
+  "eventFlag": 43010350,
   "partName": "c5920_9000",
   "items": [
    {
@@ -901275,7 +901467,9 @@
   "source": "emevd",
   "guaranteed": true,
   "enemyModel": "c4910",
-  "npcParamId": 49100174
+  "npcParamId": 49100174,
+  "defeatFlag": 43010350,
+  "emevdEventId": 90005301
  },
  {
   "map": "m60_33_41_00",
@@ -901287,7 +901481,7 @@
   "gridZ": 41,
   "dispMask": "dispMask00",
   "itemLotId": 1033410400,
-  "eventFlag": 1033417400,
+  "eventFlag": 1033410350,
   "partName": "c4502_9000",
   "items": [
    {
@@ -901303,7 +901497,9 @@
   "source": "emevd",
   "guaranteed": true,
   "enemyModel": "c4502",
-  "npcParamId": 45020022
+  "npcParamId": 45020022,
+  "defeatFlag": 1033410350,
+  "emevdEventId": 90005300
  },
  {
   "map": "m60_33_41_00",
@@ -901315,7 +901511,7 @@
   "gridZ": 41,
   "dispMask": "dispMask00",
   "itemLotId": 1033410410,
-  "eventFlag": 1033417410,
+  "eventFlag": 1033410351,
   "partName": "c4502_9001",
   "items": [
    {
@@ -901331,7 +901527,9 @@
   "source": "emevd",
   "guaranteed": true,
   "enemyModel": "c4502",
-  "npcParamId": 45020022
+  "npcParamId": 45020022,
+  "defeatFlag": 1033410351,
+  "emevdEventId": 90005300
  },
  {
   "map": "m60_33_42_00",
@@ -901493,7 +901691,7 @@
   "gridZ": 43,
   "dispMask": "dispMask00",
   "itemLotId": 40238,
-  "eventFlag": 540238,
+  "eventFlag": 1033430200,
   "partName": "c4191_9000",
   "items": [
    {
@@ -901509,7 +901707,9 @@
   "source": "emevd",
   "guaranteed": true,
   "enemyModel": "c4191",
-  "npcParamId": 41912020
+  "npcParamId": 41912020,
+  "defeatFlag": 1033430200,
+  "emevdEventId": 90005300
  },
  {
   "map": "m60_33_44_00",
@@ -901671,7 +901871,7 @@
   "gridZ": 45,
   "dispMask": "dispMask00",
   "itemLotId": 40264,
-  "eventFlag": 540264,
+  "eventFlag": 1033450200,
   "partName": "c4191_9001",
   "items": [
    {
@@ -901687,7 +901887,9 @@
   "source": "emevd",
   "guaranteed": true,
   "enemyModel": "c4191",
-  "npcParamId": 41915220
+  "npcParamId": 41915220,
+  "defeatFlag": 1033450200,
+  "emevdEventId": 90005300
  },
  {
   "map": "m60_34_42_00",
@@ -901789,7 +901991,7 @@
   "gridZ": 42,
   "dispMask": "dispMask00",
   "itemLotId": 1034420400,
-  "eventFlag": 1034427400,
+  "eventFlag": 1034420340,
   "partName": "c4502_9001",
   "items": [
    {
@@ -901805,7 +902007,9 @@
   "source": "emevd",
   "guaranteed": true,
   "enemyModel": "c4502",
-  "npcParamId": 45020022
+  "npcParamId": 45020022,
+  "defeatFlag": 1034420340,
+  "emevdEventId": 90005300
  },
  {
   "map": "m60_34_43_00",
@@ -901817,7 +902021,7 @@
   "gridZ": 43,
   "dispMask": "dispMask00",
   "itemLotId": 40260,
-  "eventFlag": 540260,
+  "eventFlag": 1034430310,
   "partName": "c4191_9000",
   "items": [
    {
@@ -901833,7 +902037,9 @@
   "source": "emevd",
   "guaranteed": true,
   "enemyModel": "c4191",
-  "npcParamId": 41915020
+  "npcParamId": 41915020,
+  "defeatFlag": 1034430310,
+  "emevdEventId": 90005300
  },
  {
   "map": "m60_34_44_00",
@@ -901845,7 +902051,7 @@
   "gridZ": 44,
   "dispMask": "dispMask00",
   "itemLotId": 40218,
-  "eventFlag": 540218,
+  "eventFlag": 1034440220,
   "partName": "c4192_9000",
   "items": [
    {
@@ -901861,7 +902067,9 @@
   "source": "emevd",
   "guaranteed": true,
   "enemyModel": "c4192",
-  "npcParamId": 41924020
+  "npcParamId": 41924020,
+  "defeatFlag": 1034440220,
+  "emevdEventId": 90005300
  },
  {
   "map": "m60_34_45_00",
@@ -901933,7 +902141,7 @@
   "gridZ": 50,
   "dispMask": "dispMask00",
   "itemLotId": 1034500300,
-  "eventFlag": 1034507300,
+  "eventFlag": 1034500300,
   "partName": "c0000_9016",
   "items": [
    {
@@ -901949,7 +902157,9 @@
   "source": "emevd",
   "guaranteed": true,
   "enemyModel": "c0000",
-  "npcParamId": 523590021
+  "npcParamId": 523590021,
+  "defeatFlag": 1034500300,
+  "emevdEventId": 90005300
  },
  {
   "map": "m60_35_42_00",
@@ -902021,7 +902231,7 @@
   "gridZ": 42,
   "dispMask": "dispMask00",
   "itemLotId": 40208,
-  "eventFlag": 540208,
+  "eventFlag": 1035420220,
   "partName": "c4191_9000",
   "items": [
    {
@@ -902037,7 +902247,9 @@
   "source": "emevd",
   "guaranteed": true,
   "enemyModel": "c4191",
-  "npcParamId": 41912020
+  "npcParamId": 41912020,
+  "defeatFlag": 1035420220,
+  "emevdEventId": 90005300
  },
  {
   "map": "m60_35_42_00",
@@ -902049,7 +902261,7 @@
   "gridZ": 42,
   "dispMask": "dispMask00",
   "itemLotId": 1035420300,
-  "eventFlag": 1035427300,
+  "eventFlag": 1035420338,
   "partName": "c2275_9038",
   "items": [
    {
@@ -902065,7 +902277,9 @@
   "source": "emevd",
   "guaranteed": true,
   "enemyModel": "c2275",
-  "npcParamId": 22751020
+  "npcParamId": 22751020,
+  "defeatFlag": 1035420338,
+  "emevdEventId": 90005300
  },
  {
   "map": "m60_35_43_00",
@@ -902105,7 +902319,7 @@
   "gridZ": 47,
   "dispMask": "dispMask00",
   "itemLotId": 40210,
-  "eventFlag": 540210,
+  "eventFlag": 1035470260,
   "partName": "c4191_9000",
   "items": [
    {
@@ -902121,7 +902335,9 @@
   "source": "emevd",
   "guaranteed": true,
   "enemyModel": "c4191",
-  "npcParamId": 41912220
+  "npcParamId": 41912220,
+  "defeatFlag": 1035470260,
+  "emevdEventId": 90005300
  },
  {
   "map": "m60_35_48_00",
@@ -902193,7 +902409,7 @@
   "gridZ": 50,
   "dispMask": "dispMask00",
   "itemLotId": 40220,
-  "eventFlag": 540220,
+  "eventFlag": 1035500322,
   "partName": "c4191_9002",
   "items": [
    {
@@ -902209,7 +902425,9 @@
   "source": "emevd",
   "guaranteed": true,
   "enemyModel": "c4191",
-  "npcParamId": 41913020
+  "npcParamId": 41913020,
+  "defeatFlag": 1035500322,
+  "emevdEventId": 90005300
  },
  {
   "map": "m60_35_50_00",
@@ -902221,7 +902439,7 @@
   "gridZ": 50,
   "dispMask": "dispMask00",
   "itemLotId": 40250,
-  "eventFlag": 540250,
+  "eventFlag": 1035500320,
   "partName": "c4191_9000",
   "items": [
    {
@@ -902237,7 +902455,9 @@
   "source": "emevd",
   "guaranteed": true,
   "enemyModel": "c4191",
-  "npcParamId": 41913020
+  "npcParamId": 41913020,
+  "defeatFlag": 1035500320,
+  "emevdEventId": 90005300
  },
  {
   "map": "m60_35_53_00",
@@ -902309,7 +902529,7 @@
   "gridZ": 42,
   "dispMask": "dispMask00",
   "itemLotId": 1036420500,
-  "eventFlag": 1036427500,
+  "eventFlag": 1036420500,
   "partName": "c4381_9005",
   "items": [
    {
@@ -902325,7 +902545,9 @@
   "source": "emevd",
   "guaranteed": true,
   "enemyModel": "c4381",
-  "npcParamId": 43810820
+  "npcParamId": 43810820,
+  "defeatFlag": 1036420500,
+  "emevdEventId": 90005300
  },
  {
   "map": "m60_36_44_00",
@@ -902337,7 +902559,7 @@
   "gridZ": 44,
   "dispMask": "dispMask00",
   "itemLotId": 40202,
-  "eventFlag": 540202,
+  "eventFlag": 1036440250,
   "partName": "c4191_9000",
   "items": [
    {
@@ -902353,7 +902575,9 @@
   "source": "emevd",
   "guaranteed": true,
   "enemyModel": "c4191",
-  "npcParamId": 41912020
+  "npcParamId": 41912020,
+  "defeatFlag": 1036440250,
+  "emevdEventId": 90005300
  },
  {
   "map": "m60_36_45_00",
@@ -902425,7 +902649,7 @@
   "gridZ": 46,
   "dispMask": "dispMask00",
   "itemLotId": 1036460500,
-  "eventFlag": 1036467500,
+  "eventFlag": 1036460500,
   "partName": "c4180_9004",
   "items": [
    {
@@ -902441,7 +902665,9 @@
   "source": "emevd",
   "guaranteed": true,
   "enemyModel": "c4180",
-  "npcParamId": 41800720
+  "npcParamId": 41800720,
+  "defeatFlag": 1036460500,
+  "emevdEventId": 90005300
  },
  {
   "map": "m60_36_48_00",
@@ -902543,7 +902769,7 @@
   "gridZ": 49,
   "dispMask": "dispMask00",
   "itemLotId": 40204,
-  "eventFlag": 540204,
+  "eventFlag": 1036490200,
   "partName": "c4192_9000",
   "items": [
    {
@@ -902559,7 +902785,9 @@
   "source": "emevd",
   "guaranteed": true,
   "enemyModel": "c4192",
-  "npcParamId": 41922021
+  "npcParamId": 41922021,
+  "defeatFlag": 1036490200,
+  "emevdEventId": 90005300
  },
  {
   "map": "m60_36_49_00",
@@ -902587,7 +902815,9 @@
   "source": "emevd",
   "guaranteed": true,
   "enemyModel": "c4860",
-  "npcParamId": 48600520
+  "npcParamId": 48600520,
+  "defeatFlag": 1036490300,
+  "emevdEventId": 90005300
  },
  {
   "map": "m60_36_49_00",
@@ -902615,7 +902845,9 @@
   "source": "emevd",
   "guaranteed": true,
   "enemyModel": "c4860",
-  "npcParamId": 48600520
+  "npcParamId": 48600520,
+  "defeatFlag": 1036490300,
+  "emevdEventId": 90005300
  },
  {
   "map": "m60_36_49_00",
@@ -902643,7 +902875,9 @@
   "source": "emevd",
   "guaranteed": true,
   "enemyModel": "c4860",
-  "npcParamId": 48600520
+  "npcParamId": 48600520,
+  "defeatFlag": 1036490300,
+  "emevdEventId": 90005300
  },
  {
   "map": "m60_36_49_00",
@@ -902671,7 +902905,9 @@
   "source": "emevd",
   "guaranteed": true,
   "enemyModel": "c4860",
-  "npcParamId": 48600520
+  "npcParamId": 48600520,
+  "defeatFlag": 1036490300,
+  "emevdEventId": 90005300
  },
  {
   "map": "m60_36_49_00",
@@ -902683,7 +902919,7 @@
   "gridZ": 49,
   "dispMask": "dispMask00",
   "itemLotId": 1036490010,
-  "eventFlag": 1036497010,
+  "eventFlag": 1036490300,
   "partName": "c4860_9000",
   "items": [
    {
@@ -902699,7 +902935,9 @@
   "source": "emevd",
   "guaranteed": true,
   "enemyModel": "c4860",
-  "npcParamId": 48600520
+  "npcParamId": 48600520,
+  "defeatFlag": 1036490300,
+  "emevdEventId": 90005300
  },
  {
   "map": "m60_36_50_00",
@@ -902891,7 +903129,7 @@
   "gridZ": 54,
   "dispMask": "dispMask00",
   "itemLotId": 40334,
-  "eventFlag": 540334,
+  "eventFlag": 1036540498,
   "partName": "c4191_9000",
   "items": [
    {
@@ -902907,7 +903145,9 @@
   "source": "emevd",
   "guaranteed": true,
   "enemyModel": "c4191",
-  "npcParamId": 41912032
+  "npcParamId": 41912032,
+  "defeatFlag": 1036540498,
+  "emevdEventId": 90005300
  },
  {
   "map": "m60_37_42_00",
@@ -902979,7 +903219,7 @@
   "gridZ": 44,
   "dispMask": "dispMask00",
   "itemLotId": 40262,
-  "eventFlag": 540262,
+  "eventFlag": 1037440210,
   "partName": "c4191_9000",
   "items": [
    {
@@ -902995,7 +903235,9 @@
   "source": "emevd",
   "guaranteed": true,
   "enemyModel": "c4191",
-  "npcParamId": 41915020
+  "npcParamId": 41915020,
+  "defeatFlag": 1037440210,
+  "emevdEventId": 90005300
  },
  {
   "map": "m60_37_46_00",
@@ -903097,7 +903339,7 @@
   "gridZ": 48,
   "dispMask": "dispMask00",
   "itemLotId": 40236,
-  "eventFlag": 540236,
+  "eventFlag": 1037480200,
   "partName": "c4190_9003",
   "items": [
    {
@@ -903113,7 +903355,9 @@
   "source": "emevd",
   "guaranteed": true,
   "enemyModel": "c4190",
-  "npcParamId": 41904020
+  "npcParamId": 41904020,
+  "defeatFlag": 1037480200,
+  "emevdEventId": 90005300
  },
  {
   "map": "m60_37_48_00",
@@ -903125,7 +903369,7 @@
   "gridZ": 48,
   "dispMask": "dispMask00",
   "itemLotId": 40254,
-  "eventFlag": 540254,
+  "eventFlag": 1037480210,
   "partName": "c4191_9000",
   "items": [
    {
@@ -903141,7 +903385,9 @@
   "source": "emevd",
   "guaranteed": true,
   "enemyModel": "c4191",
-  "npcParamId": 41915020
+  "npcParamId": 41915020,
+  "defeatFlag": 1037480210,
+  "emevdEventId": 90005300
  },
  {
   "map": "m60_37_49_00",
@@ -903273,7 +903519,7 @@
   "gridZ": 51,
   "dispMask": "dispMask00",
   "itemLotId": 40224,
-  "eventFlag": 540224,
+  "eventFlag": 1037510210,
   "partName": "c4191_9000",
   "items": [
    {
@@ -903289,7 +903535,9 @@
   "source": "emevd",
   "guaranteed": true,
   "enemyModel": "c4191",
-  "npcParamId": 41912020
+  "npcParamId": 41912020,
+  "defeatFlag": 1037510210,
+  "emevdEventId": 90005300
  },
  {
   "map": "m60_37_51_00",
@@ -903301,7 +903549,7 @@
   "gridZ": 51,
   "dispMask": "dispMask00",
   "itemLotId": 40300,
-  "eventFlag": 540300,
+  "eventFlag": 1037510500,
   "partName": "c4191_9002",
   "items": [
    {
@@ -903317,7 +903565,9 @@
   "source": "emevd",
   "guaranteed": true,
   "enemyModel": "c4191",
-  "npcParamId": 41912030
+  "npcParamId": 41912030,
+  "defeatFlag": 1037510500,
+  "emevdEventId": 90005300
  },
  {
   "map": "m60_37_53_00",
@@ -903389,7 +903639,7 @@
   "gridZ": 53,
   "dispMask": "dispMask00",
   "itemLotId": 40332,
-  "eventFlag": 540332,
+  "eventFlag": 1037530400,
   "partName": "c4190_9000",
   "items": [
    {
@@ -903405,7 +903655,9 @@
   "source": "emevd",
   "guaranteed": true,
   "enemyModel": "c4190",
-  "npcParamId": 41902032
+  "npcParamId": 41902032,
+  "defeatFlag": 1037530400,
+  "emevdEventId": 90005300
  },
  {
   "map": "m60_37_54_00",
@@ -903507,7 +903759,7 @@
   "gridZ": 39,
   "dispMask": "dispMask00",
   "itemLotId": 1038390210,
-  "eventFlag": 1038397210,
+  "eventFlag": 1038390210,
   "partName": "c3060_9000",
   "items": [
    {
@@ -903523,7 +903775,9 @@
   "source": "emevd",
   "guaranteed": true,
   "enemyModel": "c3060",
-  "npcParamId": 30600120
+  "npcParamId": 30600120,
+  "defeatFlag": 1038390210,
+  "emevdEventId": 90005300
  },
  {
   "map": "m60_38_41_00",
@@ -903595,7 +903849,7 @@
   "gridZ": 44,
   "dispMask": "dispMask00",
   "itemLotId": 1038440500,
-  "eventFlag": 1038447500,
+  "eventFlag": 1038440500,
   "partName": "c4353_9000",
   "items": [
    {
@@ -903611,7 +903865,9 @@
   "source": "emevd",
   "guaranteed": true,
   "enemyModel": "c4353",
-  "npcParamId": 43530020
+  "npcParamId": 43530020,
+  "defeatFlag": 1038440500,
+  "emevdEventId": 90005300
  },
  {
   "map": "m60_38_45_00",
@@ -903623,7 +903879,7 @@
   "gridZ": 45,
   "dispMask": "dispMask00",
   "itemLotId": 1038450500,
-  "eventFlag": 1038457500,
+  "eventFlag": 1038450500,
   "partName": "c4381_9003",
   "items": [
    {
@@ -903639,7 +903895,9 @@
   "source": "emevd",
   "guaranteed": true,
   "enemyModel": "c4381",
-  "npcParamId": 43810820
+  "npcParamId": 43810820,
+  "defeatFlag": 1038450500,
+  "emevdEventId": 90005300
  },
  {
   "map": "m60_38_48_00",
@@ -903801,7 +904059,7 @@
   "gridZ": 50,
   "dispMask": "dispMask00",
   "itemLotId": 40256,
-  "eventFlag": 540256,
+  "eventFlag": 1038500210,
   "partName": "c4191_9000",
   "items": [
    {
@@ -903817,7 +904075,9 @@
   "source": "emevd",
   "guaranteed": true,
   "enemyModel": "c4191",
-  "npcParamId": 41915020
+  "npcParamId": 41915020,
+  "defeatFlag": 1038500210,
+  "emevdEventId": 90005300
  },
  {
   "map": "m60_38_51_00",
@@ -903829,7 +904089,7 @@
   "gridZ": 51,
   "dispMask": "dispMask00",
   "itemLotId": 40302,
-  "eventFlag": 540302,
+  "eventFlag": 1038510500,
   "partName": "c4191_9000",
   "items": [
    {
@@ -903845,7 +904105,9 @@
   "source": "emevd",
   "guaranteed": true,
   "enemyModel": "c4191",
-  "npcParamId": 41912230
+  "npcParamId": 41912230,
+  "defeatFlag": 1038510500,
+  "emevdEventId": 90005300
  },
  {
   "map": "m60_38_52_00",
@@ -903993,7 +904255,9 @@
   "source": "emevd",
   "guaranteed": true,
   "enemyModel": "c0000",
-  "npcParamId": 523720030
+  "npcParamId": 523720030,
+  "defeatFlag": 1038540400,
+  "emevdEventId": 90005300
  },
  {
   "map": "m60_38_54_00",
@@ -904021,7 +904285,9 @@
   "source": "emevd",
   "guaranteed": true,
   "enemyModel": "c0000",
-  "npcParamId": 523720030
+  "npcParamId": 523720030,
+  "defeatFlag": 1038540400,
+  "emevdEventId": 90005300
  },
  {
   "map": "m60_38_54_00",
@@ -904033,7 +904299,7 @@
   "gridZ": 54,
   "dispMask": "dispMask00",
   "itemLotId": 1038540100,
-  "eventFlag": 1038547100,
+  "eventFlag": 1038540400,
   "partName": "c0000_9002",
   "items": [
    {
@@ -904049,7 +904315,9 @@
   "source": "emevd",
   "guaranteed": true,
   "enemyModel": "c0000",
-  "npcParamId": 523720030
+  "npcParamId": 523720030,
+  "defeatFlag": 1038540400,
+  "emevdEventId": 90005300
  },
  {
   "map": "m60_39_39_00",
@@ -904061,7 +904329,7 @@
   "gridZ": 39,
   "dispMask": "dispMask00",
   "itemLotId": 40206,
-  "eventFlag": 540206,
+  "eventFlag": 1039390200,
   "partName": "c4191_9000",
   "items": [
    {
@@ -904077,7 +904345,9 @@
   "source": "emevd",
   "guaranteed": true,
   "enemyModel": "c4191",
-  "npcParamId": 41912020
+  "npcParamId": 41912020,
+  "defeatFlag": 1039390200,
+  "emevdEventId": 90005300
  },
  {
   "map": "m60_39_43_00",
@@ -904149,7 +904419,7 @@
   "gridZ": 43,
   "dispMask": "dispMask00",
   "itemLotId": 40252,
-  "eventFlag": 540252,
+  "eventFlag": 1039430310,
   "partName": "c4191_9000",
   "items": [
    {
@@ -904165,7 +904435,9 @@
   "source": "emevd",
   "guaranteed": true,
   "enemyModel": "c4191",
-  "npcParamId": 41915020
+  "npcParamId": 41915020,
+  "defeatFlag": 1039430310,
+  "emevdEventId": 90005300
  },
  {
   "map": "m60_39_44_00",
@@ -904267,7 +904539,7 @@
   "gridZ": 48,
   "dispMask": "dispMask00",
   "itemLotId": 1039480500,
-  "eventFlag": 1039487500,
+  "eventFlag": 1039480500,
   "partName": "c4355_9000",
   "items": [
    {
@@ -904283,7 +904555,9 @@
   "source": "emevd",
   "guaranteed": true,
   "enemyModel": "c4355",
-  "npcParamId": 43550920
+  "npcParamId": 43550920,
+  "defeatFlag": 1039480500,
+  "emevdEventId": 90005300
  },
  {
   "map": "m60_39_51_00",
@@ -904295,7 +904569,7 @@
   "gridZ": 51,
   "dispMask": "dispMask00",
   "itemLotId": 1040520500,
-  "eventFlag": 62030,
+  "eventFlag": 1039510390,
   "partName": "c4860_9000",
   "items": [
    {
@@ -904311,7 +904585,9 @@
   "source": "emevd",
   "guaranteed": true,
   "enemyModel": "c4860",
-  "npcParamId": 48601530
+  "npcParamId": 48601530,
+  "defeatFlag": 1039510390,
+  "emevdEventId": 90005300
  },
  {
   "map": "m60_39_51_00",
@@ -904383,7 +904659,7 @@
   "gridZ": 51,
   "dispMask": "dispMask00",
   "itemLotId": 40304,
-  "eventFlag": 540304,
+  "eventFlag": 1039510500,
   "partName": "c4191_9001",
   "items": [
    {
@@ -904399,7 +904675,9 @@
   "source": "emevd",
   "guaranteed": true,
   "enemyModel": "c4191",
-  "npcParamId": 41912030
+  "npcParamId": 41912030,
+  "defeatFlag": 1039510500,
+  "emevdEventId": 90005300
  },
  {
   "map": "m60_39_52_00",
@@ -904471,7 +904749,7 @@
   "gridZ": 52,
   "dispMask": "dispMask00",
   "itemLotId": 40306,
-  "eventFlag": 540306,
+  "eventFlag": 1039520500,
   "partName": "c4191_9000",
   "items": [
    {
@@ -904487,7 +904765,9 @@
   "source": "emevd",
   "guaranteed": true,
   "enemyModel": "c4191",
-  "npcParamId": 41912030
+  "npcParamId": 41912030,
+  "defeatFlag": 1039520500,
+  "emevdEventId": 90005300
  },
  {
   "map": "m60_40_39_00",
@@ -904499,7 +904779,7 @@
   "gridZ": 39,
   "dispMask": "dispMask00",
   "itemLotId": 40100,
-  "eventFlag": 540100,
+  "eventFlag": 1040390200,
   "partName": "c4191_9000",
   "items": [
    {
@@ -904515,7 +904795,9 @@
   "source": "emevd",
   "guaranteed": true,
   "enemyModel": "c4191",
-  "npcParamId": 41912020
+  "npcParamId": 41912020,
+  "defeatFlag": 1040390200,
+  "emevdEventId": 90005300
  },
  {
   "map": "m60_40_51_00",
@@ -904527,7 +904809,7 @@
   "gridZ": 51,
   "dispMask": "dispMask00",
   "itemLotId": 40310,
-  "eventFlag": 540310,
+  "eventFlag": 1040510500,
   "partName": "c4192_9000",
   "items": [
    {
@@ -904543,7 +904825,9 @@
   "source": "emevd",
   "guaranteed": true,
   "enemyModel": "c4192",
-  "npcParamId": 41922030
+  "npcParamId": 41922030,
+  "defeatFlag": 1040510500,
+  "emevdEventId": 90005300
  },
  {
   "map": "m60_40_52_00",
@@ -904615,7 +904899,7 @@
   "gridZ": 53,
   "dispMask": "dispMask00",
   "itemLotId": 40320,
-  "eventFlag": 540320,
+  "eventFlag": 1040530500,
   "partName": "c4191_9000",
   "items": [
    {
@@ -904631,7 +904915,9 @@
   "source": "emevd",
   "guaranteed": true,
   "enemyModel": "c4191",
-  "npcParamId": 41915030
+  "npcParamId": 41915030,
+  "defeatFlag": 1040530500,
+  "emevdEventId": 90005300
  },
  {
   "map": "m60_40_54_00",
@@ -904643,7 +904929,7 @@
   "gridZ": 54,
   "dispMask": "dispMask00",
   "itemLotId": 40312,
-  "eventFlag": 540312,
+  "eventFlag": 1040540500,
   "partName": "c4191_9000",
   "items": [
    {
@@ -904659,7 +904945,9 @@
   "source": "emevd",
   "guaranteed": true,
   "enemyModel": "c4191",
-  "npcParamId": 41914030
+  "npcParamId": 41914030,
+  "defeatFlag": 1040540500,
+  "emevdEventId": 90005300
  },
  {
   "map": "m60_40_55_00",
@@ -904671,7 +904959,7 @@
   "gridZ": 55,
   "dispMask": "dispMask00",
   "itemLotId": 1040550500,
-  "eventFlag": 1040557500,
+  "eventFlag": 1040550500,
   "partName": "c3704_9000",
   "items": [
    {
@@ -904687,7 +904975,9 @@
   "source": "emevd",
   "guaranteed": true,
   "enemyModel": "c3704",
-  "npcParamId": 37040830
+  "npcParamId": 37040830,
+  "defeatFlag": 1040550500,
+  "emevdEventId": 90005300
  },
  {
   "map": "m60_41_32_00",
@@ -904699,7 +904989,7 @@
   "gridZ": 32,
   "dispMask": "dispMask00",
   "itemLotId": 40148,
-  "eventFlag": 540148,
+  "eventFlag": 1041320210,
   "partName": "c4190_9000",
   "items": [
    {
@@ -904715,7 +905005,9 @@
   "source": "emevd",
   "guaranteed": true,
   "enemyModel": "c4190",
-  "npcParamId": 41905012
+  "npcParamId": 41905012,
+  "defeatFlag": 1041320210,
+  "emevdEventId": 90005300
  },
  {
   "map": "m60_41_35_00",
@@ -904727,7 +905019,7 @@
   "gridZ": 35,
   "dispMask": "dispMask00",
   "itemLotId": 40144,
-  "eventFlag": 540144,
+  "eventFlag": 1041350210,
   "partName": "c4191_9000",
   "items": [
    {
@@ -904743,7 +905035,9 @@
   "source": "emevd",
   "guaranteed": true,
   "enemyModel": "c4191",
-  "npcParamId": 41915010
+  "npcParamId": 41915010,
+  "defeatFlag": 1041350210,
+  "emevdEventId": 90005300
  },
  {
   "map": "m60_41_37_00",
@@ -904755,7 +905049,7 @@
   "gridZ": 37,
   "dispMask": "dispMask00",
   "itemLotId": 40120,
-  "eventFlag": 540120,
+  "eventFlag": 1041370200,
   "partName": "c4191_9000",
   "items": [
    {
@@ -904771,7 +905065,9 @@
   "source": "emevd",
   "guaranteed": true,
   "enemyModel": "c4191",
-  "npcParamId": 41912010
+  "npcParamId": 41912010,
+  "defeatFlag": 1041370200,
+  "emevdEventId": 90005300
  },
  {
   "map": "m60_41_38_00",
@@ -904783,7 +905079,7 @@
   "gridZ": 38,
   "dispMask": "dispMask00",
   "itemLotId": 40104,
-  "eventFlag": 540104,
+  "eventFlag": 1041380230,
   "partName": "c4191_9000",
   "items": [
    {
@@ -904799,7 +905095,9 @@
   "source": "emevd",
   "guaranteed": true,
   "enemyModel": "c4191",
-  "npcParamId": 41912015
+  "npcParamId": 41912015,
+  "defeatFlag": 1041380230,
+  "emevdEventId": 90005300
  },
  {
   "map": "m60_41_39_00",
@@ -904871,7 +905169,7 @@
   "gridZ": 39,
   "dispMask": "dispMask00",
   "itemLotId": 40150,
-  "eventFlag": 540150,
+  "eventFlag": 1041390250,
   "partName": "c4191_9000",
   "items": [
    {
@@ -904887,7 +905185,9 @@
   "source": "emevd",
   "guaranteed": true,
   "enemyModel": "c4191",
-  "npcParamId": 41915010
+  "npcParamId": 41915010,
+  "defeatFlag": 1041390250,
+  "emevdEventId": 90005300
  },
  {
   "map": "m60_41_50_00",
@@ -905169,7 +905469,7 @@
   "gridZ": 53,
   "dispMask": "dispMask00",
   "itemLotId": 40308,
-  "eventFlag": 540308,
+  "eventFlag": 1041530500,
   "partName": "c4191_9002",
   "items": [
    {
@@ -905185,7 +905485,9 @@
   "source": "emevd",
   "guaranteed": true,
   "enemyModel": "c4191",
-  "npcParamId": 41912030
+  "npcParamId": 41912030,
+  "defeatFlag": 1041530500,
+  "emevdEventId": 90005300
  },
  {
   "map": "m60_42_33_00",
@@ -905197,7 +905499,7 @@
   "gridZ": 33,
   "dispMask": "dispMask00",
   "itemLotId": 40132,
-  "eventFlag": 540132,
+  "eventFlag": 1042330220,
   "partName": "c4191_9000",
   "items": [
    {
@@ -905213,7 +905515,9 @@
   "source": "emevd",
   "guaranteed": true,
   "enemyModel": "c4191",
-  "npcParamId": 41914012
+  "npcParamId": 41914012,
+  "defeatFlag": 1042330220,
+  "emevdEventId": 90005300
  },
  {
   "map": "m60_42_33_00",
@@ -905555,7 +905859,7 @@
   "gridZ": 39,
   "dispMask": "dispMask00",
   "itemLotId": 40146,
-  "eventFlag": 540146,
+  "eventFlag": 1042390310,
   "partName": "c4191_9000",
   "items": [
    {
@@ -905571,7 +905875,9 @@
   "source": "emevd",
   "guaranteed": true,
   "enemyModel": "c4191",
-  "npcParamId": 41915015
+  "npcParamId": 41915015,
+  "defeatFlag": 1042390310,
+  "emevdEventId": 90005300
  },
  {
   "map": "m60_42_39_00",
@@ -905629,7 +905935,9 @@
   "source": "emevd",
   "guaranteed": true,
   "enemyModel": "c4640",
-  "npcParamId": 46400033
+  "npcParamId": 46400033,
+  "defeatFlag": 1042500300,
+  "emevdEventId": 90005300
  },
  {
   "map": "m60_42_50_00",
@@ -905641,7 +905949,7 @@
   "gridZ": 50,
   "dispMask": "dispMask00",
   "itemLotId": 1042500020,
-  "eventFlag": 1042507020,
+  "eventFlag": 1042500300,
   "partName": "c4640_9000",
   "items": [
    {
@@ -905657,7 +905965,9 @@
   "source": "emevd",
   "guaranteed": true,
   "enemyModel": "c4640",
-  "npcParamId": 46400033
+  "npcParamId": 46400033,
+  "defeatFlag": 1042500300,
+  "emevdEventId": 90005300
  },
  {
   "map": "m60_42_51_00",
@@ -905877,7 +906187,7 @@
   "gridZ": 32,
   "dispMask": "dispMask00",
   "itemLotId": 1043320280,
-  "eventFlag": 1043327280,
+  "eventFlag": 1043320280,
   "partName": "c3660_9000",
   "items": [
    {
@@ -905893,7 +906203,9 @@
   "source": "emevd",
   "guaranteed": true,
   "enemyModel": "c4351",
-  "npcParamId": 43510212
+  "npcParamId": 43510212,
+  "defeatFlag": 1043320280,
+  "emevdEventId": 90005300
  },
  {
   "map": "m60_43_33_00",
@@ -905995,7 +906307,7 @@
   "gridZ": 33,
   "dispMask": "dispMask00",
   "itemLotId": 40136,
-  "eventFlag": 540136,
+  "eventFlag": 1043330221,
   "partName": "c4191_9002",
   "items": [
    {
@@ -906011,7 +906323,9 @@
   "source": "emevd",
   "guaranteed": true,
   "enemyModel": "c4191",
-  "npcParamId": 41914012
+  "npcParamId": 41914012,
+  "defeatFlag": 1043330221,
+  "emevdEventId": 90005300
  },
  {
   "map": "m60_43_34_00",
@@ -906173,7 +906487,7 @@
   "gridZ": 37,
   "dispMask": "dispMask00",
   "itemLotId": 40108,
-  "eventFlag": 540108,
+  "eventFlag": 1043370210,
   "partName": "c4191_9000",
   "items": [
    {
@@ -906189,7 +906503,9 @@
   "source": "emevd",
   "guaranteed": true,
   "enemyModel": "c4191",
-  "npcParamId": 41912010
+  "npcParamId": 41912010,
+  "defeatFlag": 1043370210,
+  "emevdEventId": 90005300
  },
  {
   "map": "m60_43_37_00",
@@ -906261,7 +906577,7 @@
   "gridZ": 51,
   "dispMask": "dispMask00",
   "itemLotId": 40314,
-  "eventFlag": 540314,
+  "eventFlag": 1043510500,
   "partName": "c4191_9001",
   "items": [
    {
@@ -906277,7 +906593,9 @@
   "source": "emevd",
   "guaranteed": true,
   "enemyModel": "c4191",
-  "npcParamId": 41912033
+  "npcParamId": 41912033,
+  "defeatFlag": 1043510500,
+  "emevdEventId": 90005300
  },
  {
   "map": "m60_43_52_00",
@@ -906289,7 +906607,7 @@
   "gridZ": 52,
   "dispMask": "dispMask00",
   "itemLotId": 40316,
-  "eventFlag": 540316,
+  "eventFlag": 1043520400,
   "partName": "c4191_9000",
   "items": [
    {
@@ -906305,7 +906623,9 @@
   "source": "emevd",
   "guaranteed": true,
   "enemyModel": "c4191",
-  "npcParamId": 41912233
+  "npcParamId": 41912233,
+  "defeatFlag": 1043520400,
+  "emevdEventId": 90005300
  },
  {
   "map": "m60_43_52_00",
@@ -906317,7 +906637,7 @@
   "gridZ": 52,
   "dispMask": "dispMask00",
   "itemLotId": 1043520300,
-  "eventFlag": 1043527300,
+  "eventFlag": 1043520300,
   "partName": "c4353_9000",
   "items": [
    {
@@ -906333,7 +906653,9 @@
   "source": "emevd",
   "guaranteed": true,
   "enemyModel": "c4353",
-  "npcParamId": 43530334
+  "npcParamId": 43530334,
+  "defeatFlag": 1043520300,
+  "emevdEventId": 90005300
  },
  {
   "map": "m60_43_53_00",
@@ -906345,7 +906667,7 @@
   "gridZ": 53,
   "dispMask": "dispMask00",
   "itemLotId": 40318,
-  "eventFlag": 540318,
+  "eventFlag": 1043530500,
   "partName": "c4191_9000",
   "items": [
    {
@@ -906361,7 +906683,9 @@
   "source": "emevd",
   "guaranteed": true,
   "enemyModel": "c4191",
-  "npcParamId": 41912030
+  "npcParamId": 41912030,
+  "defeatFlag": 1043530500,
+  "emevdEventId": 90005300
  },
  {
   "map": "m60_43_53_00",
@@ -906463,7 +906787,7 @@
   "gridZ": 32,
   "dispMask": "dispMask00",
   "itemLotId": 40138,
-  "eventFlag": 540138,
+  "eventFlag": 1044320200,
   "partName": "c4191_9002",
   "items": [
    {
@@ -906479,7 +906803,9 @@
   "source": "emevd",
   "guaranteed": true,
   "enemyModel": "c4191",
-  "npcParamId": 41914212
+  "npcParamId": 41914212,
+  "defeatFlag": 1044320200,
+  "emevdEventId": 90005300
  },
  {
   "map": "m60_44_32_00",
@@ -906641,7 +906967,7 @@
   "gridZ": 33,
   "dispMask": "dispMask00",
   "itemLotId": 40140,
-  "eventFlag": 540140,
+  "eventFlag": 1044330290,
   "partName": "c4191_9000",
   "items": [
    {
@@ -906657,7 +906983,9 @@
   "source": "emevd",
   "guaranteed": true,
   "enemyModel": "c4191",
-  "npcParamId": 41912012
+  "npcParamId": 41912012,
+  "defeatFlag": 1044330290,
+  "emevdEventId": 90005300
  },
  {
   "map": "m60_44_35_00",
@@ -906757,7 +907085,7 @@
   "gridZ": 36,
   "dispMask": "dispMask00",
   "itemLotId": 40112,
-  "eventFlag": 540112,
+  "eventFlag": 1044360220,
   "partName": "c4191_9000",
   "items": [
    {
@@ -906773,7 +907101,9 @@
   "source": "emevd",
   "guaranteed": true,
   "enemyModel": "c4191",
-  "npcParamId": 41912010
+  "npcParamId": 41912010,
+  "defeatFlag": 1044360220,
+  "emevdEventId": 90005300
  },
  {
   "map": "m60_44_38_00",
@@ -906785,7 +907115,7 @@
   "gridZ": 38,
   "dispMask": "dispMask00",
   "itemLotId": 40142,
-  "eventFlag": 540142,
+  "eventFlag": 1044380210,
   "partName": "c4191_9000",
   "items": [
    {
@@ -906801,7 +907131,9 @@
   "source": "emevd",
   "guaranteed": true,
   "enemyModel": "c4191",
-  "npcParamId": 41915010
+  "npcParamId": 41915010,
+  "defeatFlag": 1044380210,
+  "emevdEventId": 90005300
  },
  {
   "map": "m60_44_53_00",
@@ -906873,7 +907205,7 @@
   "gridZ": 33,
   "dispMask": "dispMask00",
   "itemLotId": 1045330900,
-  "eventFlag": 1045337900,
+  "eventFlag": 1045330900,
   "partName": "c3600_9000",
   "items": [
    {
@@ -906889,7 +907221,9 @@
   "source": "emevd",
   "guaranteed": true,
   "enemyModel": "c3600",
-  "npcParamId": 36000012
+  "npcParamId": 36000012,
+  "defeatFlag": 1045330900,
+  "emevdEventId": 90005300
  },
  {
   "map": "m60_45_37_00",
@@ -906901,7 +907235,7 @@
   "gridZ": 37,
   "dispMask": "dispMask00",
   "itemLotId": 40116,
-  "eventFlag": 540116,
+  "eventFlag": 1045370200,
   "partName": "c4191_9000",
   "items": [
    {
@@ -906917,7 +907251,9 @@
   "source": "emevd",
   "guaranteed": true,
   "enemyModel": "c4191",
-  "npcParamId": 41912010
+  "npcParamId": 41912010,
+  "defeatFlag": 1045370200,
+  "emevdEventId": 90005300
  },
  {
   "map": "m60_45_39_00",
@@ -907109,7 +907445,7 @@
   "gridZ": 52,
   "dispMask": "dispMask00",
   "itemLotId": 1045520450,
-  "eventFlag": 1045527450,
+  "eventFlag": 1045520450,
   "partName": "c4050_9000",
   "items": [
    {
@@ -907125,7 +907461,9 @@
   "source": "emevd",
   "guaranteed": true,
   "enemyModel": "c4050",
-  "npcParamId": 40500033
+  "npcParamId": 40500033,
+  "defeatFlag": 1045520450,
+  "emevdEventId": 90005300
  },
  {
   "map": "m60_45_52_00",
@@ -907167,7 +907505,7 @@
   "gridZ": 39,
   "dispMask": "dispMask00",
   "itemLotId": 40118,
-  "eventFlag": 540118,
+  "eventFlag": 1046390210,
   "partName": "c4191_9000",
   "items": [
    {
@@ -907183,7 +907521,9 @@
   "source": "emevd",
   "guaranteed": true,
   "enemyModel": "c4191",
-  "npcParamId": 41912010
+  "npcParamId": 41912010,
+  "defeatFlag": 1046390210,
+  "emevdEventId": 90005300
  },
  {
   "map": "m60_46_40_00",
@@ -907225,7 +907565,7 @@
   "gridZ": 38,
   "dispMask": "dispMask00",
   "itemLotId": 1047380700,
-  "eventFlag": 1047387700,
+  "eventFlag": 1047380299,
   "partName": "c4270_9000",
   "items": [
    {
@@ -907241,7 +907581,9 @@
   "source": "emevd",
   "guaranteed": true,
   "enemyModel": "c4270",
-  "npcParamId": 42700040
+  "npcParamId": 42700040,
+  "defeatFlag": 1047380299,
+  "emevdEventId": 90005300
  },
  {
   "map": "m60_47_39_00",
@@ -907253,7 +907595,7 @@
   "gridZ": 39,
   "dispMask": "dispMask00",
   "itemLotId": 40410,
-  "eventFlag": 540410,
+  "eventFlag": 1047390299,
   "partName": "c4191_9000",
   "items": [
    {
@@ -907269,7 +907611,9 @@
   "source": "emevd",
   "guaranteed": true,
   "enemyModel": "c4191",
-  "npcParamId": 41912040
+  "npcParamId": 41912040,
+  "defeatFlag": 1047390299,
+  "emevdEventId": 90005300
  },
  {
   "map": "m60_47_39_00",
@@ -907281,7 +907625,7 @@
   "gridZ": 39,
   "dispMask": "dispMask00",
   "itemLotId": 40422,
-  "eventFlag": 540422,
+  "eventFlag": 1047390298,
   "partName": "c4191_9001",
   "items": [
    {
@@ -907297,7 +907641,9 @@
   "source": "emevd",
   "guaranteed": true,
   "enemyModel": "c4191",
-  "npcParamId": 41915040
+  "npcParamId": 41915040,
+  "defeatFlag": 1047390298,
+  "emevdEventId": 90005300
  },
  {
   "map": "m60_47_40_00",
@@ -907309,7 +907655,7 @@
   "gridZ": 40,
   "dispMask": "dispMask00",
   "itemLotId": 40400,
-  "eventFlag": 540400,
+  "eventFlag": 1047400290,
   "partName": "c4191_9000",
   "items": [
    {
@@ -907325,7 +907671,9 @@
   "source": "emevd",
   "guaranteed": true,
   "enemyModel": "c4191",
-  "npcParamId": 41914040
+  "npcParamId": 41914040,
+  "defeatFlag": 1047400290,
+  "emevdEventId": 90005300
  },
  {
   "map": "m60_47_40_00",
@@ -907577,7 +907925,7 @@
   "gridZ": 37,
   "dispMask": "dispMask00",
   "itemLotId": 40406,
-  "eventFlag": 540406,
+  "eventFlag": 1048370299,
   "partName": "c4191_9000",
   "items": [
    {
@@ -907593,7 +907941,9 @@
   "source": "emevd",
   "guaranteed": true,
   "enemyModel": "c4191",
-  "npcParamId": 41912240
+  "npcParamId": 41912240,
+  "defeatFlag": 1048370299,
+  "emevdEventId": 90005300
  },
  {
   "map": "m60_48_38_00",
@@ -907725,7 +908075,7 @@
   "gridZ": 38,
   "dispMask": "dispMask00",
   "itemLotId": 40402,
-  "eventFlag": 540402,
+  "eventFlag": 1048380290,
   "partName": "c4191_9000",
   "items": [
    {
@@ -907741,7 +908091,9 @@
   "source": "emevd",
   "guaranteed": true,
   "enemyModel": "c4191",
-  "npcParamId": 41912040
+  "npcParamId": 41912040,
+  "defeatFlag": 1048380290,
+  "emevdEventId": 90005300
  },
  {
   "map": "m60_48_41_00",
@@ -907753,7 +908105,7 @@
   "gridZ": 41,
   "dispMask": "dispMask00",
   "itemLotId": 40412,
-  "eventFlag": 540412,
+  "eventFlag": 1048410290,
   "partName": "c4191_9000",
   "items": [
    {
@@ -907769,7 +908121,9 @@
   "source": "emevd",
   "guaranteed": true,
   "enemyModel": "c4191",
-  "npcParamId": 41912042
+  "npcParamId": 41912042,
+  "defeatFlag": 1048410290,
+  "emevdEventId": 90005300
  },
  {
   "map": "m60_48_41_00",
@@ -907871,7 +908225,7 @@
   "gridZ": 55,
   "dispMask": "dispMask00",
   "itemLotId": 40522,
-  "eventFlag": 540522,
+  "eventFlag": 1048550200,
   "partName": "c4192_9001",
   "items": [
    {
@@ -907887,7 +908241,9 @@
   "source": "emevd",
   "guaranteed": true,
   "enemyModel": "c4192",
-  "npcParamId": 41924052
+  "npcParamId": 41924052,
+  "defeatFlag": 1048550200,
+  "emevdEventId": 90005300
  },
  {
   "map": "m60_48_56_00",
@@ -907929,7 +908285,7 @@
   "gridZ": 28,
   "dispMask": "dispMask00",
   "itemLotId": 40524,
-  "eventFlag": 540524,
+  "eventFlag": 1148560200,
   "partName": "m60_48_56_00-c4191_9000",
   "items": [
    {
@@ -907945,7 +908301,9 @@
   "source": "emevd",
   "guaranteed": true,
   "enemyModel": "c4191",
-  "npcParamId": 41912052
+  "npcParamId": 41912052,
+  "defeatFlag": 1148560200,
+  "emevdEventId": 90005300
  },
  {
   "map": "m60_48_57_00",
@@ -907957,7 +908315,7 @@
   "gridZ": 57,
   "dispMask": "dispMask00",
   "itemLotId": 1048570900,
-  "eventFlag": 1048577900,
+  "eventFlag": 1048570250,
   "partName": "c2100_9000",
   "items": [
    {
@@ -907973,7 +908331,9 @@
   "source": "emevd",
   "guaranteed": true,
   "enemyModel": "c2100",
-  "npcParamId": 21000052
+  "npcParamId": 21000052,
+  "defeatFlag": 1048570250,
+  "emevdEventId": 90005300
  },
  {
   "map": "m60_48_57_00",
@@ -907985,7 +908345,7 @@
   "gridZ": 57,
   "dispMask": "dispMask00",
   "itemLotId": 1048570910,
-  "eventFlag": 1048577910,
+  "eventFlag": 1048570251,
   "partName": "c2100_9001",
   "items": [
    {
@@ -908001,7 +908361,9 @@
   "source": "emevd",
   "guaranteed": true,
   "enemyModel": "c2100",
-  "npcParamId": 21000052
+  "npcParamId": 21000052,
+  "defeatFlag": 1048570251,
+  "emevdEventId": 90005300
  },
  {
   "map": "m60_48_57_00",
@@ -908013,7 +908375,7 @@
   "gridZ": 57,
   "dispMask": "dispMask00",
   "itemLotId": 1048570920,
-  "eventFlag": 1048577920,
+  "eventFlag": 1048570252,
   "partName": "c2100_9002",
   "items": [
    {
@@ -908029,7 +908391,9 @@
   "source": "emevd",
   "guaranteed": true,
   "enemyModel": "c2100",
-  "npcParamId": 21000052
+  "npcParamId": 21000052,
+  "defeatFlag": 1048570252,
+  "emevdEventId": 90005300
  },
  {
   "map": "m60_48_57_00",
@@ -908041,7 +908405,7 @@
   "gridZ": 57,
   "dispMask": "dispMask00",
   "itemLotId": 1048570930,
-  "eventFlag": 1048577930,
+  "eventFlag": 1048570253,
   "partName": "c2100_9003",
   "items": [
    {
@@ -908057,7 +908421,9 @@
   "source": "emevd",
   "guaranteed": true,
   "enemyModel": "c2100",
-  "npcParamId": 21000052
+  "npcParamId": 21000052,
+  "defeatFlag": 1048570253,
+  "emevdEventId": 90005300
  },
  {
   "map": "m60_48_57_00",
@@ -908129,7 +908495,7 @@
   "gridZ": 36,
   "dispMask": "dispMask00",
   "itemLotId": 40414,
-  "eventFlag": 540414,
+  "eventFlag": 1049360290,
   "partName": "c4191_9000",
   "items": [
    {
@@ -908145,7 +908511,9 @@
   "source": "emevd",
   "guaranteed": true,
   "enemyModel": "c4191",
-  "npcParamId": 41912040
+  "npcParamId": 41912040,
+  "defeatFlag": 1049360290,
+  "emevdEventId": 90005300
  },
  {
   "map": "m60_49_36_00",
@@ -908157,7 +908525,7 @@
   "gridZ": 36,
   "dispMask": "dispMask00",
   "itemLotId": 40424,
-  "eventFlag": 540424,
+  "eventFlag": 1049360291,
   "partName": "c4191_9001",
   "items": [
    {
@@ -908173,7 +908541,9 @@
   "source": "emevd",
   "guaranteed": true,
   "enemyModel": "c4191",
-  "npcParamId": 41915040
+  "npcParamId": 41915040,
+  "defeatFlag": 1049360291,
+  "emevdEventId": 90005300
  },
  {
   "map": "m60_49_37_00",
@@ -908305,7 +908675,7 @@
   "gridZ": 37,
   "dispMask": "dispMask00",
   "itemLotId": 1049370700,
-  "eventFlag": 1049377700,
+  "eventFlag": 1049370299,
   "partName": "c4270_9000",
   "items": [
    {
@@ -908321,7 +908691,9 @@
   "source": "emevd",
   "guaranteed": true,
   "enemyModel": "c4270",
-  "npcParamId": 42700040
+  "npcParamId": 42700040,
+  "defeatFlag": 1049370299,
+  "emevdEventId": 90005300
  },
  {
   "map": "m60_49_38_00",
@@ -908333,7 +908705,7 @@
   "gridZ": 38,
   "dispMask": "dispMask00",
   "itemLotId": 40404,
-  "eventFlag": 540404,
+  "eventFlag": 1049380290,
   "partName": "c4191_9000",
   "items": [
    {
@@ -908349,7 +908721,9 @@
   "source": "emevd",
   "guaranteed": true,
   "enemyModel": "c4191",
-  "npcParamId": 41912040
+  "npcParamId": 41912040,
+  "defeatFlag": 1049380290,
+  "emevdEventId": 90005300
  },
  {
   "map": "m60_49_38_00",
@@ -908541,7 +908915,7 @@
   "gridZ": 39,
   "dispMask": "dispMask00",
   "itemLotId": 40418,
-  "eventFlag": 540418,
+  "eventFlag": 1049390299,
   "partName": "c4191_9000",
   "items": [
    {
@@ -908557,7 +908931,9 @@
   "source": "emevd",
   "guaranteed": true,
   "enemyModel": "c4191",
-  "npcParamId": 41912240
+  "npcParamId": 41912240,
+  "defeatFlag": 1049390299,
+  "emevdEventId": 90005300
  },
  {
   "map": "m60_49_39_00",
@@ -908569,7 +908945,7 @@
   "gridZ": 39,
   "dispMask": "dispMask00",
   "itemLotId": 40416,
-  "eventFlag": 540416,
+  "eventFlag": 1049390298,
   "partName": "c4191_9003",
   "items": [
    {
@@ -908585,7 +908961,9 @@
   "source": "emevd",
   "guaranteed": true,
   "enemyModel": "c4191",
-  "npcParamId": 41914040
+  "npcParamId": 41914040,
+  "defeatFlag": 1049390298,
+  "emevdEventId": 90005300
  },
  {
   "map": "m60_49_41_00",
@@ -908597,7 +908975,7 @@
   "gridZ": 41,
   "dispMask": "dispMask00",
   "itemLotId": 40426,
-  "eventFlag": 540426,
+  "eventFlag": 1049410299,
   "partName": "c4191_9000",
   "items": [
    {
@@ -908613,7 +908991,9 @@
   "source": "emevd",
   "guaranteed": true,
   "enemyModel": "c4191",
-  "npcParamId": 41915042
+  "npcParamId": 41915042,
+  "defeatFlag": 1049410299,
+  "emevdEventId": 90005300
  },
  {
   "map": "m60_49_52_00",
@@ -908715,7 +909095,7 @@
   "gridZ": 54,
   "dispMask": "dispMask00",
   "itemLotId": 1049540700,
-  "eventFlag": 1049547700,
+  "eventFlag": 1049540200,
   "partName": "c4191_9000",
   "items": [
    {
@@ -908731,7 +909111,9 @@
   "source": "emevd",
   "guaranteed": true,
   "enemyModel": "c4191",
-  "npcParamId": 41915052
+  "npcParamId": 41915052,
+  "defeatFlag": 1049540200,
+  "emevdEventId": 90005300
  },
  {
   "map": "m60_49_57_00",
@@ -908743,7 +909125,7 @@
   "gridZ": 57,
   "dispMask": "dispMask00",
   "itemLotId": 1049570710,
-  "eventFlag": 1049577710,
+  "eventFlag": 1049570300,
   "partName": "c4190_9000",
   "items": [
    {
@@ -908759,7 +909141,9 @@
   "source": "emevd",
   "guaranteed": true,
   "enemyModel": "c4190",
-  "npcParamId": 41905052
+  "npcParamId": 41905052,
+  "defeatFlag": 1049570300,
+  "emevdEventId": 90005300
  },
  {
   "map": "m60_49_57_00",
@@ -908771,7 +909155,7 @@
   "gridZ": 57,
   "dispMask": "dispMask00",
   "itemLotId": 1049570700,
-  "eventFlag": 1049577700,
+  "eventFlag": 1049570310,
   "partName": "c4191_9001",
   "items": [
    {
@@ -908787,7 +909171,9 @@
   "source": "emevd",
   "guaranteed": true,
   "enemyModel": "c4191",
-  "npcParamId": 41915052
+  "npcParamId": 41915052,
+  "defeatFlag": 1049570310,
+  "emevdEventId": 90005300
  },
  {
   "map": "m60_49_57_00",
@@ -908799,7 +909185,7 @@
   "gridZ": 57,
   "dispMask": "dispMask00",
   "itemLotId": 1049570720,
-  "eventFlag": 1049577720,
+  "eventFlag": 1049570320,
   "partName": "c4192_9000",
   "items": [
    {
@@ -908815,7 +909201,9 @@
   "source": "emevd",
   "guaranteed": true,
   "enemyModel": "c4192",
-  "npcParamId": 41925052
+  "npcParamId": 41925052,
+  "defeatFlag": 1049570320,
+  "emevdEventId": 90005300
  },
  {
   "map": "m60_50_38_00",
@@ -908827,7 +909215,7 @@
   "gridZ": 38,
   "dispMask": "dispMask00",
   "itemLotId": 40154,
-  "eventFlag": 540154,
+  "eventFlag": 1050380250,
   "partName": "c4192_9000",
   "items": [
    {
@@ -908843,7 +909231,9 @@
   "source": "emevd",
   "guaranteed": true,
   "enemyModel": "c4192",
-  "npcParamId": 41925040
+  "npcParamId": 41925040,
+  "defeatFlag": 1050380250,
+  "emevdEventId": 90005300
  },
  {
   "map": "m60_50_39_00",
@@ -908915,7 +909305,7 @@
   "gridZ": 40,
   "dispMask": "dispMask00",
   "itemLotId": 1050400800,
-  "eventFlag": 1050407800,
+  "eventFlag": 1050400800,
   "partName": "c4504_9000",
   "items": [
    {
@@ -908931,7 +909321,9 @@
   "source": "emevd",
   "guaranteed": true,
   "enemyModel": "c4504",
-  "npcParamId": 45040042
+  "npcParamId": 45040042,
+  "defeatFlag": 1050400800,
+  "emevdEventId": 90005300
  },
  {
   "map": "m60_50_53_00",
@@ -908943,7 +909335,7 @@
   "gridZ": 53,
   "dispMask": "dispMask00",
   "itemLotId": 1050530700,
-  "eventFlag": 1050537700,
+  "eventFlag": 1050530210,
   "partName": "c4191_9000",
   "items": [
    {
@@ -908959,7 +909351,9 @@
   "source": "emevd",
   "guaranteed": true,
   "enemyModel": "c4191",
-  "npcParamId": 41915050
+  "npcParamId": 41915050,
+  "defeatFlag": 1050530210,
+  "emevdEventId": 90005300
  },
  {
   "map": "m60_50_56_00",
@@ -909181,7 +909575,7 @@
   "gridZ": 35,
   "dispMask": "dispMask00",
   "itemLotId": 40408,
-  "eventFlag": 540408,
+  "eventFlag": 1051350290,
   "partName": "c4191_9000",
   "items": [
    {
@@ -909197,7 +909591,9 @@
   "source": "emevd",
   "guaranteed": true,
   "enemyModel": "c4191",
-  "npcParamId": 41912041
+  "npcParamId": 41912041,
+  "defeatFlag": 1051350290,
+  "emevdEventId": 90005300
  },
  {
   "map": "m60_51_40_00",
@@ -909299,7 +909695,7 @@
   "gridZ": 40,
   "dispMask": "dispMask00",
   "itemLotId": 1051400290,
-  "eventFlag": 1051407290,
+  "eventFlag": 1051400299,
   "partName": "c4660_9000",
   "items": [
    {
@@ -909315,7 +909711,9 @@
   "source": "emevd",
   "guaranteed": true,
   "enemyModel": "c4660",
-  "npcParamId": 46604242
+  "npcParamId": 46604242,
+  "defeatFlag": 1051400299,
+  "emevdEventId": 90005300
  },
  {
   "map": "m60_51_41_00",
@@ -909327,7 +909725,7 @@
   "gridZ": 41,
   "dispMask": "dispMask00",
   "itemLotId": 40420,
-  "eventFlag": 540420,
+  "eventFlag": 1051410290,
   "partName": "c4191_9000",
   "items": [
    {
@@ -909343,7 +909741,9 @@
   "source": "emevd",
   "guaranteed": true,
   "enemyModel": "c4191",
-  "npcParamId": 41914042
+  "npcParamId": 41914042,
+  "defeatFlag": 1051410290,
+  "emevdEventId": 90005300
  },
  {
   "map": "m60_51_42_00",
@@ -909355,7 +909755,7 @@
   "gridZ": 42,
   "dispMask": "dispMask00",
   "itemLotId": 40428,
-  "eventFlag": 540428,
+  "eventFlag": 1051420299,
   "partName": "c4191_9000",
   "items": [
    {
@@ -909371,7 +909771,9 @@
   "source": "emevd",
   "guaranteed": true,
   "enemyModel": "c4191",
-  "npcParamId": 41915042
+  "npcParamId": 41915042,
+  "defeatFlag": 1051420299,
+  "emevdEventId": 90005300
  },
  {
   "map": "m60_51_43_00",
@@ -909473,7 +909875,7 @@
   "gridZ": 53,
   "dispMask": "dispMask00",
   "itemLotId": 1051530700,
-  "eventFlag": 1051537700,
+  "eventFlag": 1051530210,
   "partName": "c4192_9000",
   "items": [
    {
@@ -909489,7 +909891,9 @@
   "source": "emevd",
   "guaranteed": true,
   "enemyModel": "c4192",
-  "npcParamId": 41925250
+  "npcParamId": 41925250,
+  "defeatFlag": 1051530210,
+  "emevdEventId": 90005300
  },
  {
   "map": "m60_51_53_00",
@@ -909561,7 +909965,7 @@
   "gridZ": 56,
   "dispMask": "dispMask00",
   "itemLotId": 1051560700,
-  "eventFlag": 1051567700,
+  "eventFlag": 1051560210,
   "partName": "c4190_9000",
   "items": [
    {
@@ -909577,7 +909981,9 @@
   "source": "emevd",
   "guaranteed": true,
   "enemyModel": "c4190",
-  "npcParamId": 41905050
+  "npcParamId": 41905050,
+  "defeatFlag": 1051560210,
+  "emevdEventId": 90005300
  },
  {
   "map": "m60_51_57_00",
@@ -909589,7 +909995,7 @@
   "gridZ": 57,
   "dispMask": "dispMask00",
   "itemLotId": 1051570800,
-  "eventFlag": 1051577800,
+  "eventFlag": 1051570310,
   "partName": "c4270_9000",
   "items": [
    {
@@ -909605,7 +910011,9 @@
   "source": "emevd",
   "guaranteed": true,
   "enemyModel": "c4270",
-  "npcParamId": 42701051
+  "npcParamId": 42701051,
+  "defeatFlag": 1051570310,
+  "emevdEventId": 90005300
  },
  {
   "map": "m60_51_57_00",
@@ -909617,7 +910025,7 @@
   "gridZ": 57,
   "dispMask": "dispMask00",
   "itemLotId": 1051570810,
-  "eventFlag": 1051577810,
+  "eventFlag": 1051570311,
   "partName": "c4270_9001",
   "items": [
    {
@@ -909633,7 +910041,9 @@
   "source": "emevd",
   "guaranteed": true,
   "enemyModel": "c4270",
-  "npcParamId": 42701051
+  "npcParamId": 42701051,
+  "defeatFlag": 1051570311,
+  "emevdEventId": 90005300
  },
  {
   "map": "m60_51_57_00",
@@ -909735,7 +910145,7 @@
   "gridZ": 41,
   "dispMask": "dispMask00",
   "itemLotId": 1052410300,
-  "eventFlag": 1052417300,
+  "eventFlag": 1052410300,
   "partName": "c3730_9000",
   "items": [
    {
@@ -909751,7 +910161,9 @@
   "source": "emevd",
   "guaranteed": true,
   "enemyModel": "c3730",
-  "npcParamId": 37300042
+  "npcParamId": 37300042,
+  "defeatFlag": 1052410300,
+  "emevdEventId": 90005300
  },
  {
   "map": "m60_52_41_00",
@@ -909943,7 +910355,7 @@
   "gridZ": 55,
   "dispMask": "dispMask00",
   "itemLotId": 1052550700,
-  "eventFlag": 1052557700,
+  "eventFlag": 1052550390,
   "partName": "c0000_9007",
   "items": [
    {
@@ -909959,7 +910371,9 @@
   "source": "emevd",
   "guaranteed": true,
   "enemyModel": "c0000",
-  "npcParamId": 523820050
+  "npcParamId": 523820050,
+  "defeatFlag": 1052550390,
+  "emevdEventId": 90005300
  },
  {
   "map": "m60_52_55_00",
@@ -909971,7 +910385,7 @@
   "gridZ": 55,
   "dispMask": "dispMask00",
   "itemLotId": 40516,
-  "eventFlag": 540516,
+  "eventFlag": 1052550300,
   "partName": "c4191_9000",
   "items": [
    {
@@ -909987,7 +910401,9 @@
   "source": "emevd",
   "guaranteed": true,
   "enemyModel": "c4191",
-  "npcParamId": 41912050
+  "npcParamId": 41912050,
+  "defeatFlag": 1052550300,
+  "emevdEventId": 90005300
  },
  {
   "map": "m60_52_56_00",
@@ -910269,7 +910685,7 @@
   "gridZ": 57,
   "dispMask": "dispMask00",
   "itemLotId": 40510,
-  "eventFlag": 540510,
+  "eventFlag": 1053570210,
   "partName": "c4191_9000",
   "items": [
    {
@@ -910285,7 +910701,9 @@
   "source": "emevd",
   "guaranteed": true,
   "enemyModel": "c4191",
-  "npcParamId": 41912050
+  "npcParamId": 41912050,
+  "defeatFlag": 1053570210,
+  "emevdEventId": 90005300
  },
  {
   "map": "m60_13_14_02",
@@ -910357,7 +910775,7 @@
   "gridZ": 57,
   "dispMask": "dispMask00",
   "itemLotId": 40156,
-  "eventFlag": 540156,
+  "eventFlag": 1054570250,
   "partName": "c4192_9000",
   "items": [
    {
@@ -910373,7 +910791,9 @@
   "source": "emevd",
   "guaranteed": true,
   "enemyModel": "c4192",
-  "npcParamId": 41925050
+  "npcParamId": 41925050,
+  "defeatFlag": 1054570250,
+  "emevdEventId": 90005300
  },
  {
   "map": "m61_44_47_00",
@@ -910551,7 +910971,9 @@
   "source": "emevd",
   "guaranteed": true,
   "enemyModel": "c5170",
-  "npcParamId": 51702094
+  "npcParamId": 51702094,
+  "defeatFlag": 2045460200,
+  "emevdEventId": 90005301
  },
  {
   "map": "m61_11_11_02",
@@ -910579,7 +911001,9 @@
   "source": "emevd",
   "guaranteed": true,
   "enemyModel": "c5170",
-  "npcParamId": 51702094
+  "npcParamId": 51702094,
+  "defeatFlag": 2045460200,
+  "emevdEventId": 90005301
  },
  {
   "map": "m61_11_11_02",
@@ -910591,7 +911015,7 @@
   "gridZ": 11,
   "dispMask": "pad2_0",
   "itemLotId": 2045460500,
-  "eventFlag": 2045467500,
+  "eventFlag": 2045460200,
   "partName": "m61_45_46_00-c5170_9000",
   "items": [
    {
@@ -910607,7 +911031,9 @@
   "source": "emevd",
   "guaranteed": true,
   "enemyModel": "c5170",
-  "npcParamId": 51702094
+  "npcParamId": 51702094,
+  "defeatFlag": 2045460200,
+  "emevdEventId": 90005301
  },
  {
   "map": "m61_45_47_00",
@@ -910709,7 +911135,7 @@
   "gridZ": 47,
   "dispMask": "pad2_0",
   "itemLotId": 40916,
-  "eventFlag": 540916,
+  "eventFlag": 2045470350,
   "partName": "c6201_9000",
   "items": [
    {
@@ -910725,7 +911151,9 @@
   "source": "emevd",
   "guaranteed": true,
   "enemyModel": "c4191",
-  "npcParamId": 41912095
+  "npcParamId": 41912095,
+  "defeatFlag": 2045470350,
+  "emevdEventId": 90005301
  },
  {
   "map": "m61_46_38_00",
@@ -910753,7 +911181,9 @@
   "source": "emevd",
   "guaranteed": true,
   "enemyModel": "c3664",
-  "npcParamId": 36640083
+  "npcParamId": 36640083,
+  "defeatFlag": 2046380350,
+  "emevdEventId": 90005300
  },
  {
   "map": "m61_46_38_00",
@@ -910765,7 +911195,7 @@
   "gridZ": 38,
   "dispMask": "pad2_0",
   "itemLotId": 2046380350,
-  "eventFlag": 2046387350,
+  "eventFlag": 2046380350,
   "partName": "c5513_9000",
   "items": [
    {
@@ -910781,7 +911211,9 @@
   "source": "emevd",
   "guaranteed": true,
   "enemyModel": "c3664",
-  "npcParamId": 36640083
+  "npcParamId": 36640083,
+  "defeatFlag": 2046380350,
+  "emevdEventId": 90005300
  },
  {
   "map": "m61_46_40_00",
@@ -910913,7 +911345,7 @@
   "gridZ": 46,
   "dispMask": "pad2_0",
   "itemLotId": 2046460000,
-  "eventFlag": 2046467000,
+  "eventFlag": 2046460290,
   "partName": "c5011_9004",
   "items": [
    {
@@ -910929,7 +911361,9 @@
   "source": "emevd",
   "guaranteed": true,
   "enemyModel": "c5011",
-  "npcParamId": 50110094
+  "npcParamId": 50110094,
+  "defeatFlag": 2046460290,
+  "emevdEventId": 90005301
  },
  {
   "map": "m61_46_46_00",
@@ -911017,7 +911451,9 @@
   "source": "emevd",
   "guaranteed": true,
   "enemyModel": "c5390",
-  "npcParamId": 53900083
+  "npcParamId": 53900083,
+  "defeatFlag": 2047370300,
+  "emevdEventId": 90005301
  },
  {
   "map": "m61_47_37_00",
@@ -911029,7 +911465,7 @@
   "gridZ": 37,
   "dispMask": "pad2_0",
   "itemLotId": 2047370010,
-  "eventFlag": 68520,
+  "eventFlag": 2047370300,
   "partName": "c5390_9000",
   "items": [
    {
@@ -911045,7 +911481,9 @@
   "source": "emevd",
   "guaranteed": true,
   "enemyModel": "c5390",
-  "npcParamId": 53900083
+  "npcParamId": 53900083,
+  "defeatFlag": 2047370300,
+  "emevdEventId": 90005301
  },
  {
   "map": "m61_47_39_00",
@@ -911117,7 +911555,7 @@
   "gridZ": 39,
   "dispMask": "pad2_0",
   "itemLotId": 2047390070,
-  "eventFlag": 2047397070,
+  "eventFlag": 2047390300,
   "partName": "c5810_9000",
   "items": [
    {
@@ -911133,7 +911571,9 @@
   "source": "emevd",
   "guaranteed": true,
   "enemyModel": "c5810",
-  "npcParamId": 58108083
+  "npcParamId": 58108083,
+  "defeatFlag": 2047390300,
+  "emevdEventId": 90005301
  },
  {
   "map": "m61_47_40_00",
@@ -911161,7 +911601,9 @@
   "source": "emevd",
   "guaranteed": true,
   "enemyModel": "c0000",
-  "npcParamId": 524310080
+  "npcParamId": 524310080,
+  "defeatFlag": 2047400499,
+  "emevdEventId": 90005301
  },
  {
   "map": "m61_47_40_00",
@@ -911173,7 +911615,7 @@
   "gridZ": 40,
   "dispMask": "pad2_0",
   "itemLotId": 2047400980,
-  "eventFlag": 2047407980,
+  "eventFlag": 2047400499,
   "partName": "c0000_9000",
   "items": [
    {
@@ -911189,7 +911631,9 @@
   "source": "emevd",
   "guaranteed": true,
   "enemyModel": "c0000",
-  "npcParamId": 524310080
+  "npcParamId": 524310080,
+  "defeatFlag": 2047400499,
+  "emevdEventId": 90005301
  },
  {
   "map": "m61_47_43_00",
@@ -911217,7 +911661,9 @@
   "source": "emevd",
   "guaranteed": true,
   "enemyModel": "c4640",
-  "npcParamId": 46400081
+  "npcParamId": 46400081,
+  "defeatFlag": 2047430300,
+  "emevdEventId": 90005301
  },
  {
   "map": "m61_47_43_00",
@@ -911229,7 +911675,7 @@
   "gridZ": 43,
   "dispMask": "pad2_0",
   "itemLotId": 2047430980,
-  "eventFlag": 2047437980,
+  "eventFlag": 2047430300,
   "partName": "c5960_9000",
   "items": [
    {
@@ -911245,7 +911691,9 @@
   "source": "emevd",
   "guaranteed": true,
   "enemyModel": "c4640",
-  "npcParamId": 46400081
+  "npcParamId": 46400081,
+  "defeatFlag": 2047430300,
+  "emevdEventId": 90005301
  },
  {
   "map": "m61_47_44_00",
@@ -911273,7 +911721,9 @@
   "source": "emevd",
   "guaranteed": true,
   "enemyModel": "c0000",
-  "npcParamId": 524320082
+  "npcParamId": 524320082,
+  "defeatFlag": 2047440360,
+  "emevdEventId": 90005301
  },
  {
   "map": "m61_47_44_00",
@@ -911285,7 +911735,7 @@
   "gridZ": 44,
   "dispMask": "pad2_0",
   "itemLotId": 30865,
-  "eventFlag": 6001,
+  "eventFlag": 2047440360,
   "partName": "c0000_9003",
   "items": [
    {
@@ -911301,7 +911751,9 @@
   "source": "emevd",
   "guaranteed": true,
   "enemyModel": "c0000",
-  "npcParamId": 524320082
+  "npcParamId": 524320082,
+  "defeatFlag": 2047440360,
+  "emevdEventId": 90005301
  },
  {
   "map": "m61_47_44_00",
@@ -911329,7 +911781,9 @@
   "source": "emevd",
   "guaranteed": true,
   "enemyModel": "c4601",
-  "npcParamId": 46010082
+  "npcParamId": 46010082,
+  "defeatFlag": 2047440310,
+  "emevdEventId": 90005301
  },
  {
   "map": "m61_47_44_00",
@@ -911341,7 +911795,7 @@
   "gridZ": 44,
   "dispMask": "pad2_0",
   "itemLotId": 2047440900,
-  "eventFlag": 2047447900,
+  "eventFlag": 2047440310,
   "partName": "c5391_9001",
   "items": [
    {
@@ -911357,7 +911811,9 @@
   "source": "emevd",
   "guaranteed": true,
   "enemyModel": "c4601",
-  "npcParamId": 46010082
+  "npcParamId": 46010082,
+  "defeatFlag": 2047440310,
+  "emevdEventId": 90005301
  },
  {
   "map": "m61_47_45_00",
@@ -911429,7 +911885,7 @@
   "gridZ": 45,
   "dispMask": "pad2_0",
   "itemLotId": 2047450700,
-  "eventFlag": 2047457700,
+  "eventFlag": 2047450380,
   "partName": "c5391_9000",
   "items": [
    {
@@ -911445,7 +911901,9 @@
   "source": "emevd",
   "guaranteed": true,
   "enemyModel": "c4601",
-  "npcParamId": 46010190
+  "npcParamId": 46010190,
+  "defeatFlag": 2047450380,
+  "emevdEventId": 90005301
  },
  {
   "map": "m61_48_37_00",
@@ -911473,7 +911931,9 @@
   "source": "emevd",
   "guaranteed": true,
   "enemyModel": "c3664",
-  "npcParamId": 36640983
+  "npcParamId": 36640983,
+  "defeatFlag": 2048370400,
+  "emevdEventId": 90005300
  },
  {
   "map": "m61_48_37_00",
@@ -911485,7 +911945,7 @@
   "gridZ": 37,
   "dispMask": "pad2_0",
   "itemLotId": 2048370400,
-  "eventFlag": 1041587070,
+  "eventFlag": 2048370400,
   "partName": "c5513_9000",
   "items": [
    {
@@ -911501,7 +911961,9 @@
   "source": "emevd",
   "guaranteed": true,
   "enemyModel": "c3664",
-  "npcParamId": 36640983
+  "npcParamId": 36640983,
+  "defeatFlag": 2048370400,
+  "emevdEventId": 90005300
  },
  {
   "map": "m61_48_38_00",
@@ -911513,7 +911975,7 @@
   "gridZ": 38,
   "dispMask": "pad2_0",
   "itemLotId": 2048380020,
-  "eventFlag": 68900,
+  "eventFlag": 2048380800,
   "partName": "c5620_9000",
   "items": [
    {
@@ -911529,7 +911991,9 @@
   "source": "emevd",
   "guaranteed": true,
   "enemyModel": "c4950",
-  "npcParamId": 49500084
+  "npcParamId": 49500084,
+  "defeatFlag": 2048380800,
+  "emevdEventId": 90005301
  },
  {
   "map": "m61_48_38_00",
@@ -911647,7 +912111,9 @@
   "source": "emevd",
   "guaranteed": true,
   "enemyModel": "c0100",
-  "npcParamId": 1000000
+  "npcParamId": 1000000,
+  "defeatFlag": 2048400200,
+  "emevdEventId": 90005301
  },
  {
   "map": "m61_48_40_00",
@@ -911675,7 +912141,9 @@
   "source": "emevd",
   "guaranteed": true,
   "enemyModel": "c0100",
-  "npcParamId": 1000000
+  "npcParamId": 1000000,
+  "defeatFlag": 2048400200,
+  "emevdEventId": 90005301
  },
  {
   "map": "m61_48_40_00",
@@ -911687,7 +912155,7 @@
   "gridZ": 40,
   "dispMask": "pad2_0",
   "itemLotId": 2048400020,
-  "eventFlag": 2048407020,
+  "eventFlag": 2048400200,
   "partName": "c0100_9000",
   "items": [
    {
@@ -911703,7 +912171,9 @@
   "source": "emevd",
   "guaranteed": true,
   "enemyModel": "c0100",
-  "npcParamId": 1000000
+  "npcParamId": 1000000,
+  "defeatFlag": 2048400200,
+  "emevdEventId": 90005301
  },
  {
   "map": "m61_48_41_00",
@@ -911715,7 +912185,7 @@
   "gridZ": 41,
   "dispMask": "pad2_0",
   "itemLotId": 2048410980,
-  "eventFlag": 2048417980,
+  "eventFlag": 2048410300,
   "partName": "c5840_9000",
   "items": [
    {
@@ -911731,7 +912201,9 @@
   "source": "emevd",
   "guaranteed": true,
   "enemyModel": "c5840",
-  "npcParamId": 58400080
+  "npcParamId": 58400080,
+  "defeatFlag": 2048410300,
+  "emevdEventId": 90005301
  },
  {
   "map": "m61_48_44_00",
@@ -911743,7 +912215,7 @@
   "gridZ": 44,
   "dispMask": "pad2_0",
   "itemLotId": 40902,
-  "eventFlag": 540902,
+  "eventFlag": 2048440392,
   "partName": "c6201_9002",
   "items": [
    {
@@ -911759,7 +912231,9 @@
   "source": "emevd",
   "guaranteed": true,
   "enemyModel": "c4191",
-  "npcParamId": 41912090
+  "npcParamId": 41912090,
+  "defeatFlag": 2048440392,
+  "emevdEventId": 90005300
  },
  {
   "map": "m61_48_44_00",
@@ -911771,7 +912245,7 @@
   "gridZ": 44,
   "dispMask": "pad2_0",
   "itemLotId": 40920,
-  "eventFlag": 540920,
+  "eventFlag": 2048440393,
   "partName": "c6201_9003",
   "items": [
    {
@@ -911787,7 +912261,9 @@
   "source": "emevd",
   "guaranteed": true,
   "enemyModel": "c4191",
-  "npcParamId": 41915090
+  "npcParamId": 41915090,
+  "defeatFlag": 2048440393,
+  "emevdEventId": 90005300
  },
  {
   "map": "m61_48_44_00",
@@ -911799,7 +912275,7 @@
   "gridZ": 44,
   "dispMask": "pad2_0",
   "itemLotId": 40922,
-  "eventFlag": 540922,
+  "eventFlag": 2048440398,
   "partName": "c6201_9008",
   "items": [
    {
@@ -911815,7 +912291,9 @@
   "source": "emevd",
   "guaranteed": true,
   "enemyModel": "c4191",
-  "npcParamId": 41915090
+  "npcParamId": 41915090,
+  "defeatFlag": 2048440398,
+  "emevdEventId": 90005300
  },
  {
   "map": "m61_48_46_00",
@@ -911827,7 +912305,7 @@
   "gridZ": 46,
   "dispMask": "pad2_0",
   "itemLotId": 2048460710,
-  "eventFlag": 2048467710,
+  "eventFlag": 2048460301,
   "partName": "c5840_9001",
   "items": [
    {
@@ -911843,7 +912321,9 @@
   "source": "emevd",
   "guaranteed": true,
   "enemyModel": "c5840",
-  "npcParamId": 58400190
+  "npcParamId": 58400190,
+  "defeatFlag": 2048460301,
+  "emevdEventId": 90005301
  },
  {
   "map": "m61_48_46_00",
@@ -911855,7 +912335,7 @@
   "gridZ": 46,
   "dispMask": "pad2_0",
   "itemLotId": 40904,
-  "eventFlag": 540904,
+  "eventFlag": 2048460390,
   "partName": "c6201_9000",
   "items": [
    {
@@ -911871,7 +912351,9 @@
   "source": "emevd",
   "guaranteed": true,
   "enemyModel": "c4191",
-  "npcParamId": 41912090
+  "npcParamId": 41912090,
+  "defeatFlag": 2048460390,
+  "emevdEventId": 90005301
  },
  {
   "map": "m61_48_47_00",
@@ -911883,7 +912365,7 @@
   "gridZ": 47,
   "dispMask": "pad2_0",
   "itemLotId": 40910,
-  "eventFlag": 540910,
+  "eventFlag": 2048470500,
   "partName": "c6201_9000",
   "items": [
    {
@@ -911899,7 +912381,9 @@
   "source": "emevd",
   "guaranteed": true,
   "enemyModel": "c4191",
-  "npcParamId": 41912095
+  "npcParamId": 41912095,
+  "defeatFlag": 2048470500,
+  "emevdEventId": 90005301
  },
  {
   "map": "m61_48_47_00",
@@ -911911,7 +912395,7 @@
   "gridZ": 47,
   "dispMask": "pad2_0",
   "itemLotId": 40912,
-  "eventFlag": 540912,
+  "eventFlag": 2048470501,
   "partName": "c6201_9001",
   "items": [
    {
@@ -911927,7 +912411,9 @@
   "source": "emevd",
   "guaranteed": true,
   "enemyModel": "c4191",
-  "npcParamId": 41915095
+  "npcParamId": 41915095,
+  "defeatFlag": 2048470501,
+  "emevdEventId": 90005301
  },
  {
   "map": "m61_48_47_00",
@@ -911939,7 +912425,7 @@
   "gridZ": 47,
   "dispMask": "pad2_0",
   "itemLotId": 40914,
-  "eventFlag": 540914,
+  "eventFlag": 2048470502,
   "partName": "c6201_9002",
   "items": [
    {
@@ -911955,7 +912441,9 @@
   "source": "emevd",
   "guaranteed": true,
   "enemyModel": "c4191",
-  "npcParamId": 41915095
+  "npcParamId": 41915095,
+  "defeatFlag": 2048470502,
+  "emevdEventId": 90005301
  },
  {
   "map": "m61_49_41_00",
@@ -912073,7 +912561,9 @@
   "source": "emevd",
   "guaranteed": true,
   "enemyModel": "c5280",
-  "npcParamId": 52800086
+  "npcParamId": 52800086,
+  "defeatFlag": 2049420200,
+  "emevdEventId": 90005301
  },
  {
   "map": "m61_49_42_00",
@@ -912085,7 +912575,7 @@
   "gridZ": 42,
   "dispMask": "pad2_0",
   "itemLotId": 2049420700,
-  "eventFlag": 2049427700,
+  "eventFlag": 2049420200,
   "partName": "c5280_9000",
   "items": [
    {
@@ -912101,7 +912591,9 @@
   "source": "emevd",
   "guaranteed": true,
   "enemyModel": "c5280",
-  "npcParamId": 52800086
+  "npcParamId": 52800086,
+  "defeatFlag": 2049420200,
+  "emevdEventId": 90005301
  },
  {
   "map": "m61_49_42_00",
@@ -912129,7 +912621,9 @@
   "source": "emevd",
   "guaranteed": true,
   "enemyModel": "c5280",
-  "npcParamId": 52800086
+  "npcParamId": 52800086,
+  "defeatFlag": 2049420202,
+  "emevdEventId": 90005301
  },
  {
   "map": "m61_49_42_00",
@@ -912141,7 +912635,7 @@
   "gridZ": 42,
   "dispMask": "pad2_0",
   "itemLotId": 2049420720,
-  "eventFlag": 2049427720,
+  "eventFlag": 2049420202,
   "partName": "c5280_9002",
   "items": [
    {
@@ -912157,7 +912651,9 @@
   "source": "emevd",
   "guaranteed": true,
   "enemyModel": "c5280",
-  "npcParamId": 52800086
+  "npcParamId": 52800086,
+  "defeatFlag": 2049420202,
+  "emevdEventId": 90005301
  },
  {
   "map": "m61_49_43_00",
@@ -912395,7 +912891,9 @@
   "source": "emevd",
   "guaranteed": true,
   "enemyModel": "c5280",
-  "npcParamId": 52800086
+  "npcParamId": 52800086,
+  "defeatFlag": 2050410200,
+  "emevdEventId": 90005301
  },
  {
   "map": "m61_50_41_00",
@@ -912407,7 +912905,7 @@
   "gridZ": 41,
   "dispMask": "pad2_0",
   "itemLotId": 2050410700,
-  "eventFlag": 2050417700,
+  "eventFlag": 2050410200,
   "partName": "c5280_9000",
   "items": [
    {
@@ -912423,7 +912921,9 @@
   "source": "emevd",
   "guaranteed": true,
   "enemyModel": "c5280",
-  "npcParamId": 52800086
+  "npcParamId": 52800086,
+  "defeatFlag": 2050410200,
+  "emevdEventId": 90005301
  },
  {
   "map": "m61_50_42_00",
@@ -912451,7 +912951,9 @@
   "source": "emevd",
   "guaranteed": true,
   "enemyModel": "c5280",
-  "npcParamId": 52800086
+  "npcParamId": 52800086,
+  "defeatFlag": 2050420200,
+  "emevdEventId": 90005301
  },
  {
   "map": "m61_50_42_00",
@@ -912463,7 +912965,7 @@
   "gridZ": 42,
   "dispMask": "pad2_0",
   "itemLotId": 2050420700,
-  "eventFlag": 2050427700,
+  "eventFlag": 2050420200,
   "partName": "c5280_9000",
   "items": [
    {
@@ -912479,7 +912981,9 @@
   "source": "emevd",
   "guaranteed": true,
   "enemyModel": "c5280",
-  "npcParamId": 52800086
+  "npcParamId": 52800086,
+  "defeatFlag": 2050420200,
+  "emevdEventId": 90005301
  },
  {
   "map": "m61_50_44_00",
@@ -912491,7 +912995,7 @@
   "gridZ": 44,
   "dispMask": "pad2_0",
   "itemLotId": 2050440740,
-  "eventFlag": 2050447740,
+  "eventFlag": 2050440340,
   "partName": "c6201_9000",
   "items": [
    {
@@ -912507,7 +913011,9 @@
   "source": "emevd",
   "guaranteed": true,
   "enemyModel": "c4191",
-  "npcParamId": 41915091
+  "npcParamId": 41915091,
+  "defeatFlag": 2050440340,
+  "emevdEventId": 90005301
  },
  {
   "map": "m61_50_45_00",
@@ -912519,7 +913025,7 @@
   "gridZ": 45,
   "dispMask": "pad2_0",
   "itemLotId": 40900,
-  "eventFlag": 540900,
+  "eventFlag": 2050450390,
   "partName": "c6201_9000",
   "items": [
    {
@@ -912535,7 +913041,9 @@
   "source": "emevd",
   "guaranteed": true,
   "enemyModel": "c4191",
-  "npcParamId": 41913090
+  "npcParamId": 41913090,
+  "defeatFlag": 2050450390,
+  "emevdEventId": 90005300
  },
  {
   "map": "m61_12_11_02",
@@ -912563,7 +913071,9 @@
   "source": "emevd",
   "guaranteed": true,
   "enemyModel": "c5170",
-  "npcParamId": 51700091
+  "npcParamId": 51700091,
+  "defeatFlag": 2050460300,
+  "emevdEventId": 90005301
  },
  {
   "map": "m61_12_11_02",
@@ -912591,7 +913101,9 @@
   "source": "emevd",
   "guaranteed": true,
   "enemyModel": "c5170",
-  "npcParamId": 51700091
+  "npcParamId": 51700091,
+  "defeatFlag": 2050460300,
+  "emevdEventId": 90005301
  },
  {
   "map": "m61_12_11_02",
@@ -912603,7 +913115,7 @@
   "gridZ": 11,
   "dispMask": "pad2_0",
   "itemLotId": 2050460500,
-  "eventFlag": 2050467500,
+  "eventFlag": 2050460300,
   "partName": "m61_50_46_00-c5170_9000",
   "items": [
    {
@@ -912619,7 +913131,9 @@
   "source": "emevd",
   "guaranteed": true,
   "enemyModel": "c5170",
-  "npcParamId": 51700091
+  "npcParamId": 51700091,
+  "defeatFlag": 2050460300,
+  "emevdEventId": 90005301
  },
  {
   "map": "m61_12_11_02",
@@ -912647,7 +913161,9 @@
   "source": "emevd",
   "guaranteed": true,
   "enemyModel": "c5170",
-  "npcParamId": 51700091
+  "npcParamId": 51700091,
+  "defeatFlag": 2050460310,
+  "emevdEventId": 90005301
  },
  {
   "map": "m61_12_11_02",
@@ -912675,7 +913191,9 @@
   "source": "emevd",
   "guaranteed": true,
   "enemyModel": "c5170",
-  "npcParamId": 51700091
+  "npcParamId": 51700091,
+  "defeatFlag": 2050460310,
+  "emevdEventId": 90005301
  },
  {
   "map": "m61_12_11_02",
@@ -912687,7 +913205,7 @@
   "gridZ": 11,
   "dispMask": "pad2_0",
   "itemLotId": 2050460510,
-  "eventFlag": 2050467510,
+  "eventFlag": 2050460310,
   "partName": "m61_50_46_00-c5170_9001",
   "items": [
    {
@@ -912703,7 +913221,9 @@
   "source": "emevd",
   "guaranteed": true,
   "enemyModel": "c5170",
-  "npcParamId": 51700091
+  "npcParamId": 51700091,
+  "defeatFlag": 2050460310,
+  "emevdEventId": 90005301
  },
  {
   "map": "m61_51_41_00",
@@ -912715,7 +913235,7 @@
   "gridZ": 41,
   "dispMask": "pad2_0",
   "itemLotId": 2051410700,
-  "eventFlag": 2051417700,
+  "eventFlag": 2051410200,
   "partName": "c5280_9000",
   "items": [
    {
@@ -912731,7 +913251,9 @@
   "source": "emevd",
   "guaranteed": true,
   "enemyModel": "c5280",
-  "npcParamId": 52800086
+  "npcParamId": 52800086,
+  "defeatFlag": 2051410200,
+  "emevdEventId": 90005301
  },
  {
   "map": "m61_51_41_00",
@@ -912759,7 +913281,9 @@
   "source": "emevd",
   "guaranteed": true,
   "enemyModel": "c5280",
-  "npcParamId": 52800086
+  "npcParamId": 52800086,
+  "defeatFlag": 2051410201,
+  "emevdEventId": 90005301
  },
  {
   "map": "m61_51_41_00",
@@ -912771,7 +913295,7 @@
   "gridZ": 41,
   "dispMask": "pad2_0",
   "itemLotId": 2051410710,
-  "eventFlag": 2051417710,
+  "eventFlag": 2051410201,
   "partName": "c5280_9001",
   "items": [
    {
@@ -912787,7 +913311,9 @@
   "source": "emevd",
   "guaranteed": true,
   "enemyModel": "c5280",
-  "npcParamId": 52800086
+  "npcParamId": 52800086,
+  "defeatFlag": 2051410201,
+  "emevdEventId": 90005301
  },
  {
   "map": "m61_51_44_00",
@@ -912799,7 +913325,7 @@
   "gridZ": 44,
   "dispMask": "pad2_0",
   "itemLotId": 2051440500,
-  "eventFlag": 2051447500,
+  "eventFlag": 2051440300,
   "partName": "c5011_9000",
   "items": [
    {
@@ -912815,7 +913341,9 @@
   "source": "emevd",
   "guaranteed": true,
   "enemyModel": "c5011",
-  "npcParamId": 50110091
+  "npcParamId": 50110091,
+  "defeatFlag": 2051440300,
+  "emevdEventId": 90005301
  },
  {
   "map": "m61_51_44_00",
@@ -912827,7 +913355,7 @@
   "gridZ": 44,
   "dispMask": "pad2_0",
   "itemLotId": 2051440510,
-  "eventFlag": 2051447510,
+  "eventFlag": 2051440310,
   "partName": "c5011_9001",
   "items": [
    {
@@ -912843,7 +913371,9 @@
   "source": "emevd",
   "guaranteed": true,
   "enemyModel": "c5011",
-  "npcParamId": 50110091
+  "npcParamId": 50110091,
+  "defeatFlag": 2051440310,
+  "emevdEventId": 90005301
  },
  {
   "map": "m61_51_45_00",
@@ -912855,7 +913385,7 @@
   "gridZ": 45,
   "dispMask": "pad2_0",
   "itemLotId": 40906,
-  "eventFlag": 540906,
+  "eventFlag": 2051450390,
   "partName": "c6201_9000",
   "items": [
    {
@@ -912871,7 +913401,9 @@
   "source": "emevd",
   "guaranteed": true,
   "enemyModel": "c4191",
-  "npcParamId": 41912276
+  "npcParamId": 41912276,
+  "defeatFlag": 2051450390,
+  "emevdEventId": 90005300
  },
  {
   "map": "m61_52_40_00",
@@ -912989,7 +913521,9 @@
   "source": "emevd",
   "guaranteed": true,
   "enemyModel": "c0000",
-  "npcParamId": 524290086
+  "npcParamId": 524290086,
+  "defeatFlag": 2052420300,
+  "emevdEventId": 90005301
  },
  {
   "map": "m61_52_42_00",
@@ -913001,7 +913535,7 @@
   "gridZ": 42,
   "dispMask": "pad2_0",
   "itemLotId": 2052420500,
-  "eventFlag": 2052427500,
+  "eventFlag": 2052420300,
   "partName": "c0000_9000",
   "items": [
    {
@@ -913017,7 +913551,9 @@
   "source": "emevd",
   "guaranteed": true,
   "enemyModel": "c0000",
-  "npcParamId": 524290086
+  "npcParamId": 524290086,
+  "defeatFlag": 2052420300,
+  "emevdEventId": 90005301
  },
  {
   "map": "m61_52_48_00",
@@ -919171,16 +919707,744 @@
  },
  {
   "map": "m10_01_00_00",
-  "x": 0.0,
-  "y": 0.0,
-  "z": 0.0,
+  "x": -21.46,
+  "y": 39.34,
+  "z": -178.78,
   "areaNo": 10,
   "gridX": 1,
   "gridZ": 0,
   "dispMask": "dispMask00",
+  "itemLotId": 100330,
+  "eventFlag": 400033,
+  "partName": "c0000_9010",
+  "items": [
+   {
+    "id": 8155,
+    "category": 1,
+    "num": 1,
+    "name": "Lord of Blood's Favor",
+    "broad_category": "consumable",
+    "sub_category": "consumable"
+   }
+  ],
+  "primary_category": "consumable",
+  "source": "emevd",
+  "guaranteed": true,
+  "enemyModel": "c0000",
+  "npcParamId": 523380016
+ },
+ {
+  "map": "m12_01_00_00",
+  "x": -298.94,
+  "y": -280.43,
+  "z": 21.92,
+  "areaNo": 12,
+  "gridX": 1,
+  "gridZ": 0,
+  "dispMask": "dispMask01",
+  "itemLotId": 12010896,
+  "eventFlag": 1042617189,
+  "partName": "c2010_9000",
+  "items": [
+   {
+    "id": 800010,
+    "category": 1,
+    "num": 3,
+    "name": "Rune Piece",
+    "broad_category": "crafting_material",
+    "sub_category": "crafting_material"
+   }
+  ],
+  "primary_category": "crafting_material",
+  "source": "emevd",
+  "guaranteed": true,
+  "enemyModel": "c2010",
+  "npcParamId": 20108563
+ },
+ {
+  "map": "m12_02_00_00",
+  "x": 985.831,
+  "y": -671.176,
+  "z": 1351.528,
+  "areaNo": 12,
+  "gridX": 2,
+  "gridZ": 0,
+  "dispMask": "dispMask01",
+  "itemLotId": 30641,
+  "eventFlag": 1042617136,
+  "partName": "c3300_9102",
+  "items": [
+   {
+    "id": 800010,
+    "category": 1,
+    "num": 3,
+    "name": "Rune Piece",
+    "broad_category": "crafting_material",
+    "sub_category": "crafting_material"
+   }
+  ],
+  "primary_category": "crafting_material",
+  "source": "emevd",
+  "guaranteed": true,
+  "enemyModel": "c3300",
+  "npcParamId": 33002965
+ },
+ {
+  "map": "m12_02_00_00",
+  "x": 985.831,
+  "y": -671.176,
+  "z": 1351.528,
+  "areaNo": 12,
+  "gridX": 2,
+  "gridZ": 0,
+  "dispMask": "dispMask01",
+  "itemLotId": 30640,
+  "eventFlag": 530640,
+  "partName": "c3300_9102",
+  "items": [
+   {
+    "id": 1170000,
+    "category": 2,
+    "num": 1,
+    "name": "Night's Edge",
+    "broad_category": "armament",
+    "sub_category": "slash_sword"
+   }
+  ],
+  "primary_category": "armament",
+  "source": "emevd",
+  "guaranteed": true,
+  "enemyModel": "c3300",
+  "npcParamId": 33002965
+ },
+ {
+  "map": "m12_04_00_00",
+  "x": -98.12,
+  "y": -16.22,
+  "z": -132.37,
+  "areaNo": 12,
+  "gridX": 4,
+  "gridZ": 0,
+  "dispMask": "dispMask01",
+  "itemLotId": 12040000,
+  "eventFlag": 12047000,
+  "partName": "c1000_9001",
+  "items": [
+   {
+    "id": 4740,
+    "category": 1,
+    "num": 1,
+    "name": "Electromagnetic Discharge",
+    "broad_category": "key_item",
+    "sub_category": "key_item"
+   }
+  ],
+  "primary_category": "key_item",
+  "source": "emevd",
+  "guaranteed": true,
+  "enemyModel": "c1000",
+  "npcParamId": 10001000
+ },
+ {
+  "map": "m12_05_00_00",
+  "x": 1787.349,
+  "y": -619.838,
+  "z": 1383.491,
+  "areaNo": 12,
+  "gridX": 5,
+  "gridZ": 0,
+  "dispMask": "dispMask01",
+  "itemLotId": 12050790,
+  "eventFlag": 12057790,
+  "partName": "c3471_9000",
+  "items": [
+   {
+    "id": 5050,
+    "category": 1,
+    "num": 1,
+    "name": "Raving Rancor",
+    "broad_category": "key_item",
+    "sub_category": "key_item"
+   }
+  ],
+  "primary_category": "key_item",
+  "source": "emevd",
+  "guaranteed": true,
+  "enemyModel": "c3471",
+  "npcParamId": 34715268
+ },
+ {
+  "map": "m16_00_00_00",
+  "x": 93.684,
+  "y": -439.84,
+  "z": -116.081,
+  "areaNo": 16,
+  "gridX": 0,
+  "gridZ": 0,
+  "dispMask": "dispMask00",
+  "itemLotId": 16000950,
+  "eventFlag": 16007950,
+  "partName": "c1000_9000",
+  "items": [
+   {
+    "id": 7520,
+    "category": 1,
+    "num": 1,
+    "name": "Aspects of the Crucible: Breath",
+    "broad_category": "key_item",
+    "sub_category": "remembrance"
+   }
+  ],
+  "primary_category": "key_item",
+  "source": "emevd",
+  "guaranteed": true,
+  "enemyModel": "c1000",
+  "npcParamId": 10000000
+ },
+ {
+  "map": "m20_01_00_00",
+  "x": -343.13,
+  "y": 299.6,
+  "z": -115.81,
+  "areaNo": 20,
+  "gridX": 1,
+  "gridZ": 0,
+  "dispMask": "pad2_0",
+  "itemLotId": 20011981,
+  "eventFlag": 20017981,
+  "partName": "c5220_9000",
+  "items": [
+   {
+    "id": 5272000,
+    "category": 3,
+    "num": 1,
+    "name": "Circlet of Light",
+    "broad_category": "armour",
+    "sub_category": "armour"
+   }
+  ],
+  "primary_category": "armour",
+  "source": "emevd",
+  "guaranteed": true,
+  "enemyModel": "c5220",
+  "npcParamId": 52201089
+ },
+ {
+  "map": "m20_01_00_00",
+  "x": -340.608,
+  "y": 148.652,
+  "z": -199.58,
+  "areaNo": 20,
+  "gridX": 1,
+  "gridZ": 0,
+  "dispMask": "pad2_0",
+  "itemLotId": 20010921,
+  "eventFlag": 1042617555,
+  "partName": "c5250_9005",
+  "items": [
+   {
+    "id": 850010,
+    "category": 1,
+    "num": 3,
+    "name": "Ember Piece",
+    "broad_category": "crafting_material",
+    "sub_category": "crafting_material"
+   }
+  ],
+  "primary_category": "crafting_material",
+  "source": "emevd",
+  "guaranteed": true,
+  "enemyModel": "c5250",
+  "npcParamId": 52501589
+ },
+ {
+  "map": "m20_01_00_00",
+  "x": -340.608,
+  "y": 148.652,
+  "z": -199.58,
+  "areaNo": 20,
+  "gridX": 1,
+  "gridZ": 0,
+  "dispMask": "pad2_0",
+  "itemLotId": 20010920,
+  "eventFlag": 20017920,
+  "partName": "c5250_9005",
+  "items": [
+   {
+    "id": 8520000,
+    "category": 2,
+    "num": 1,
+    "name": "Horned Warrior's Greatsword",
+    "broad_category": "armament",
+    "sub_category": "flail"
+   }
+  ],
+  "primary_category": "armament",
+  "source": "emevd",
+  "guaranteed": true,
+  "enemyModel": "c5250",
+  "npcParamId": 52501589
+ },
+ {
+  "map": "m30_10_00_00",
+  "x": -111.441,
+  "y": 761.641,
+  "z": 330.426,
+  "areaNo": 30,
+  "gridX": 10,
+  "gridZ": 0,
+  "dispMask": "dispMask00",
+  "itemLotId": 30100100,
+  "eventFlag": 30107100,
+  "partName": "c1000_9001",
+  "items": [
+   {
+    "id": 70200,
+    "category": 5,
+    "num": 1,
+    "name": "Ash of War: Holy Ground",
+    "broad_category": "ash_of_war",
+    "sub_category": "ash_of_war"
+   }
+  ],
+  "primary_category": "ash_of_war",
+  "source": "emevd",
+  "guaranteed": true,
+  "enemyModel": "c1000",
+  "npcParamId": 10001000
+ },
+ {
+  "map": "m31_00_00_00",
+  "x": 24.835,
+  "y": 52.972,
+  "z": 54.042,
+  "areaNo": 31,
+  "gridX": 0,
+  "gridZ": 0,
+  "dispMask": "dispMask00",
+  "itemLotId": 101830,
+  "eventFlag": 400183,
+  "partName": "c0000_9000",
+  "items": [
+   {
+    "id": 2900,
+    "category": 1,
+    "num": 2,
+    "name": "Golden Rune [200]",
+    "broad_category": "consumable",
+    "sub_category": "consumable"
+   }
+  ],
+  "primary_category": "consumable",
+  "source": "emevd",
+  "guaranteed": true,
+  "enemyModel": "c0000",
+  "npcParamId": 523090010
+ },
+ {
+  "map": "m31_08_00_00",
+  "x": -66.379,
+  "y": 718.927,
+  "z": 69.183,
+  "areaNo": 31,
+  "gridX": 8,
+  "gridZ": 0,
+  "dispMask": "dispMask00",
+  "itemLotId": 31080410,
+  "eventFlag": 31087410,
+  "partName": "c4600_9000",
+  "items": [
+   {
+    "id": 8022,
+    "category": 1,
+    "num": 1,
+    "name": "Forsaken Rancorflame",
+    "broad_category": "consumable",
+    "sub_category": "consumable"
+   }
+  ],
+  "primary_category": "consumable",
+  "source": "emevd",
+  "guaranteed": true,
+  "enemyModel": "c4600",
+  "npcParamId": 46004238
+ },
+ {
+  "map": "m31_08_00_00",
+  "x": -130.134,
+  "y": 711.636,
+  "z": 153.102,
+  "areaNo": 31,
+  "gridX": 8,
+  "gridZ": 0,
+  "dispMask": "dispMask00",
+  "itemLotId": 31080420,
+  "eventFlag": 31087420,
+  "partName": "c3400_9000",
+  "items": [
+   {
+    "id": 8021,
+    "category": 1,
+    "num": 1,
+    "name": "Tortured Rancorflame",
+    "broad_category": "consumable",
+    "sub_category": "consumable"
+   }
+  ],
+  "primary_category": "consumable",
+  "source": "emevd",
+  "guaranteed": true,
+  "enemyModel": "c3400",
+  "npcParamId": 34000438
+ },
+ {
+  "map": "m31_08_00_00",
+  "x": -125.875,
+  "y": 711.534,
+  "z": 155.228,
+  "areaNo": 31,
+  "gridX": 8,
+  "gridZ": 0,
+  "dispMask": "dispMask00",
+  "itemLotId": 31080425,
+  "eventFlag": 31087425,
+  "partName": "c4140_9000",
+  "items": [
+   {
+    "id": 2270000,
+    "category": 2,
+    "num": 1,
+    "name": "Gladius of Ophidion",
+    "broad_category": "armament",
+    "sub_category": "greatsword"
+   }
+  ],
+  "primary_category": "armament",
+  "source": "emevd",
+  "guaranteed": true,
+  "enemyModel": "c4140",
+  "npcParamId": 41401038
+ },
+ {
+  "map": "m31_08_00_00",
+  "x": 19.76,
+  "y": 651.878,
+  "z": 195.374,
+  "areaNo": 31,
+  "gridX": 8,
+  "gridZ": 0,
+  "dispMask": "dispMask00",
+  "itemLotId": 31080430,
+  "eventFlag": 31087430,
+  "partName": "c4950_9000",
+  "items": [
+   {
+    "id": 8023,
+    "category": 1,
+    "num": 1,
+    "name": "Ancient Rancorflame",
+    "broad_category": "consumable",
+    "sub_category": "consumable"
+   }
+  ],
+  "primary_category": "consumable",
+  "source": "emevd",
+  "guaranteed": true,
+  "enemyModel": "c4950",
+  "npcParamId": 49500138
+ },
+ {
+  "map": "m31_08_00_00",
+  "x": -223.713,
+  "y": 529.231,
+  "z": -65.252,
+  "areaNo": 31,
+  "gridX": 8,
+  "gridZ": 0,
+  "dispMask": "dispMask00",
+  "itemLotId": 20501,
+  "eventFlag": 520500,
+  "partName": "c4390_1002",
+  "items": [
+   {
+    "id": 10105,
+    "category": 1,
+    "num": 1,
+    "name": "Smithing Stone [6]",
+    "broad_category": "crafting_material",
+    "sub_category": "crafting_material"
+   }
+  ],
+  "primary_category": "crafting_material",
+  "source": "emevd",
+  "guaranteed": true,
+  "enemyModel": "c4390",
+  "npcParamId": 43902038
+ },
+ {
+  "map": "m31_08_00_00",
+  "x": -223.713,
+  "y": 529.231,
+  "z": -65.252,
+  "areaNo": 31,
+  "gridX": 8,
+  "gridZ": 0,
+  "dispMask": "dispMask00",
+  "itemLotId": 20502,
+  "eventFlag": 1042617190,
+  "partName": "c4390_1002",
+  "items": [
+   {
+    "id": 800010,
+    "category": 1,
+    "num": 3,
+    "name": "Rune Piece",
+    "broad_category": "crafting_material",
+    "sub_category": "crafting_material"
+   }
+  ],
+  "primary_category": "crafting_material",
+  "source": "emevd",
+  "guaranteed": true,
+  "enemyModel": "c4390",
+  "npcParamId": 43902038
+ },
+ {
+  "map": "m31_08_00_00",
+  "x": -223.713,
+  "y": 529.231,
+  "z": -65.252,
+  "areaNo": 31,
+  "gridX": 8,
+  "gridZ": 0,
+  "dispMask": "dispMask00",
+  "itemLotId": 20500,
+  "eventFlag": 520500,
+  "partName": "c4390_1002",
+  "items": [
+   {
+    "id": 31200000,
+    "category": 2,
+    "num": 1,
+    "name": "Mad Sun Shield",
+    "broad_category": "armament",
+    "sub_category": "weapon"
+   }
+  ],
+  "primary_category": "armament",
+  "source": "emevd",
+  "guaranteed": true,
+  "enemyModel": "c4390",
+  "npcParamId": 43902038
+ },
+ {
+  "map": "m34_11_00_00",
+  "x": 432.434,
+  "y": 90.585,
+  "z": 76.284,
+  "areaNo": 34,
+  "gridX": 11,
+  "gridZ": 0,
+  "dispMask": "dispMask00",
+  "itemLotId": 34110801,
+  "eventFlag": 34117800,
+  "partName": "c3570_9000",
+  "items": [
+   {
+    "id": 530100,
+    "category": 3,
+    "num": 1,
+    "name": "Godskin Noble Robe",
+    "broad_category": "armour",
+    "sub_category": "armour"
+   }
+  ],
+  "primary_category": "armour",
+  "source": "emevd",
+  "guaranteed": true,
+  "enemyModel": "c3570",
+  "npcParamId": 35700228
+ },
+ {
+  "map": "m34_11_00_00",
+  "x": 432.434,
+  "y": 90.585,
+  "z": 76.284,
+  "areaNo": 34,
+  "gridX": 11,
+  "gridZ": 0,
+  "dispMask": "dispMask00",
+  "itemLotId": 34110802,
+  "eventFlag": 34117800,
+  "partName": "c3570_9000",
+  "items": [
+   {
+    "id": 530200,
+    "category": 3,
+    "num": 1,
+    "name": "Godskin Noble Bracelets",
+    "broad_category": "armour",
+    "sub_category": "armour"
+   }
+  ],
+  "primary_category": "armour",
+  "source": "emevd",
+  "guaranteed": true,
+  "enemyModel": "c3570",
+  "npcParamId": 35700228
+ },
+ {
+  "map": "m34_11_00_00",
+  "x": 432.434,
+  "y": 90.585,
+  "z": 76.284,
+  "areaNo": 34,
+  "gridX": 11,
+  "gridZ": 0,
+  "dispMask": "dispMask00",
+  "itemLotId": 34110803,
+  "eventFlag": 34117800,
+  "partName": "c3570_9000",
+  "items": [
+   {
+    "id": 530300,
+    "category": 3,
+    "num": 1,
+    "name": "Godskin Noble Trousers",
+    "broad_category": "armour",
+    "sub_category": "armour"
+   }
+  ],
+  "primary_category": "armour",
+  "source": "emevd",
+  "guaranteed": true,
+  "enemyModel": "c3570",
+  "npcParamId": 35700228
+ },
+ {
+  "map": "m34_11_00_00",
+  "x": 432.434,
+  "y": 90.585,
+  "z": 76.284,
+  "areaNo": 34,
+  "gridX": 11,
+  "gridZ": 0,
+  "dispMask": "dispMask00",
+  "itemLotId": 34110804,
+  "eventFlag": 34117800,
+  "partName": "c3570_9000",
+  "items": [
+   {
+    "id": 900238,
+    "category": 1,
+    "num": 1,
+    "name": "Fortune of the Godslayers",
+    "broad_category": "consumable",
+    "sub_category": "consumable"
+   }
+  ],
+  "primary_category": "consumable",
+  "source": "emevd",
+  "guaranteed": true,
+  "enemyModel": "c3570",
+  "npcParamId": 35700228
+ },
+ {
+  "map": "m34_11_00_00",
+  "x": 432.434,
+  "y": 90.585,
+  "z": 76.284,
+  "areaNo": 34,
+  "gridX": 11,
+  "gridZ": 0,
+  "dispMask": "dispMask00",
+  "itemLotId": 34110805,
+  "eventFlag": 1042617144,
+  "partName": "c3570_9000",
+  "items": [
+   {
+    "id": 800010,
+    "category": 1,
+    "num": 2,
+    "name": "Rune Piece",
+    "broad_category": "crafting_material",
+    "sub_category": "crafting_material"
+   }
+  ],
+  "primary_category": "crafting_material",
+  "source": "emevd",
+  "guaranteed": true,
+  "enemyModel": "c3570",
+  "npcParamId": 35700228
+ },
+ {
+  "map": "m34_11_00_00",
+  "x": 432.434,
+  "y": 90.585,
+  "z": 76.284,
+  "areaNo": 34,
+  "gridX": 11,
+  "gridZ": 0,
+  "dispMask": "dispMask00",
+  "itemLotId": 34110800,
+  "eventFlag": 34117800,
+  "partName": "c3570_9000",
+  "items": [
+   {
+    "id": 530000,
+    "category": 3,
+    "num": 1,
+    "name": "Godskin Noble Hood",
+    "broad_category": "armour",
+    "sub_category": "armour"
+   }
+  ],
+  "primary_category": "armour",
+  "source": "emevd",
+  "guaranteed": true,
+  "enemyModel": "c3570",
+  "npcParamId": 35700228
+ },
+ {
+  "map": "m60_34_48_00",
+  "x": 46.953,
+  "y": 252.197,
+  "z": 78.726,
+  "areaNo": 60,
+  "gridX": 34,
+  "gridZ": 48,
+  "dispMask": "dispMask00",
+  "itemLotId": 1034480801,
+  "eventFlag": 1042617145,
+  "partName": "c4020_9000",
+  "items": [
+   {
+    "id": 800010,
+    "category": 1,
+    "num": 1,
+    "name": "Rune Piece",
+    "broad_category": "crafting_material",
+    "sub_category": "crafting_material"
+   }
+  ],
+  "primary_category": "crafting_material",
+  "source": "emevd",
+  "guaranteed": true,
+  "enemyModel": "c4020",
+  "npcParamId": 40200920
+ },
+ {
+  "map": "m60_35_50_00",
+  "x": -31.85,
+  "y": 430.946,
+  "z": 100.612,
+  "areaNo": 60,
+  "gridX": 35,
+  "gridZ": 50,
+  "dispMask": "dispMask00",
   "itemLotId": 10010100,
   "eventFlag": 10017100,
-  "partName": "",
+  "partName": "c3252_9000",
   "items": [
    {
     "id": 2240,
@@ -919192,7 +920456,1186 @@
    }
   ],
   "primary_category": "talisman",
-  "from_fallback": true
+  "source": "emevd",
+  "guaranteed": true,
+  "enemyModel": "c3252",
+  "npcParamId": 32520921
+ },
+ {
+  "map": "m60_37_46_00",
+  "x": -44.238,
+  "y": 398.121,
+  "z": -0.01,
+  "areaNo": 60,
+  "gridX": 37,
+  "gridZ": 46,
+  "dispMask": "dispMask00",
+  "itemLotId": 1037460900,
+  "eventFlag": 1037467900,
+  "partName": "c6091_9000",
+  "items": [
+   {
+    "id": 7000000,
+    "category": 3,
+    "num": 1,
+    "name": "Chelonian Mitre",
+    "broad_category": "armour",
+    "sub_category": "armour"
+   }
+  ],
+  "primary_category": "armour",
+  "source": "emevd",
+  "guaranteed": true,
+  "enemyModel": "c6091",
+  "npcParamId": 60910020
+ },
+ {
+  "map": "m60_37_46_00",
+  "x": -44.238,
+  "y": 398.121,
+  "z": -0.01,
+  "areaNo": 60,
+  "gridX": 37,
+  "gridZ": 46,
+  "dispMask": "dispMask00",
+  "itemLotId": 1037460910,
+  "eventFlag": 1037467910,
+  "partName": "c6091_9000",
+  "items": [
+   {
+    "id": 7001000,
+    "category": 3,
+    "num": 1,
+    "name": "Pilfered Mitre",
+    "broad_category": "armour",
+    "sub_category": "armour"
+   }
+  ],
+  "primary_category": "armour",
+  "source": "emevd",
+  "guaranteed": true,
+  "enemyModel": "c6091",
+  "npcParamId": 60910020
+ },
+ {
+  "map": "m60_39_50_00",
+  "x": -45.619,
+  "y": 709.59,
+  "z": -86.067,
+  "areaNo": 60,
+  "gridX": 39,
+  "gridZ": 50,
+  "dispMask": "dispMask00",
+  "itemLotId": 1039500101,
+  "eventFlag": 1042617152,
+  "partName": "c4750_9000",
+  "items": [
+   {
+    "id": 800010,
+    "category": 1,
+    "num": 1,
+    "name": "Rune Piece",
+    "broad_category": "crafting_material",
+    "sub_category": "crafting_material"
+   }
+  ],
+  "primary_category": "crafting_material",
+  "source": "emevd",
+  "guaranteed": true,
+  "enemyModel": "c4750",
+  "npcParamId": 47500030
+ },
+ {
+  "map": "m60_39_50_00",
+  "x": -45.619,
+  "y": 709.59,
+  "z": -86.067,
+  "areaNo": 60,
+  "gridX": 39,
+  "gridZ": 50,
+  "dispMask": "dispMask00",
+  "itemLotId": 1039500100,
+  "eventFlag": 1039507100,
+  "partName": "c4750_9000",
+  "items": [
+   {
+    "id": 3090,
+    "category": 4,
+    "num": 1,
+    "name": "Godfrey Icon",
+    "broad_category": "talisman",
+    "sub_category": "talisman"
+   }
+  ],
+  "primary_category": "talisman",
+  "source": "emevd",
+  "guaranteed": true,
+  "enemyModel": "c4750",
+  "npcParamId": 47500030
+ },
+ {
+  "map": "m60_41_51_00",
+  "x": 91.089,
+  "y": 851.27,
+  "z": -31.347,
+  "areaNo": 60,
+  "gridX": 41,
+  "gridZ": 51,
+  "dispMask": "dispMask00",
+  "itemLotId": 30336,
+  "eventFlag": 530335,
+  "partName": "c3251_9000",
+  "items": [
+   {
+    "id": 24070000,
+    "category": 2,
+    "num": 1,
+    "name": "Sentry's Torch",
+    "broad_category": "armament",
+    "sub_category": "weapon"
+   }
+  ],
+  "primary_category": "armament",
+  "source": "emevd",
+  "guaranteed": true,
+  "enemyModel": "c3251",
+  "npcParamId": 32511030
+ },
+ {
+  "map": "m60_41_51_00",
+  "x": 91.089,
+  "y": 851.27,
+  "z": -31.347,
+  "areaNo": 60,
+  "gridX": 41,
+  "gridZ": 51,
+  "dispMask": "dispMask00",
+  "itemLotId": 30337,
+  "eventFlag": 1042617113,
+  "partName": "c3251_9000",
+  "items": [
+   {
+    "id": 800010,
+    "category": 1,
+    "num": 3,
+    "name": "Rune Piece",
+    "broad_category": "crafting_material",
+    "sub_category": "crafting_material"
+   }
+  ],
+  "primary_category": "crafting_material",
+  "source": "emevd",
+  "guaranteed": true,
+  "enemyModel": "c3251",
+  "npcParamId": 32511030
+ },
+ {
+  "map": "m60_41_51_00",
+  "x": 91.089,
+  "y": 851.27,
+  "z": -31.347,
+  "areaNo": 60,
+  "gridX": 41,
+  "gridZ": 51,
+  "dispMask": "dispMask00",
+  "itemLotId": 30335,
+  "eventFlag": 530335,
+  "partName": "c3251_9000",
+  "items": [
+   {
+    "id": 32080000,
+    "category": 2,
+    "num": 1,
+    "name": "Erdtree Greatshield",
+    "broad_category": "armament",
+    "sub_category": "weapon"
+   }
+  ],
+  "primary_category": "armament",
+  "source": "emevd",
+  "guaranteed": true,
+  "enemyModel": "c3251",
+  "npcParamId": 32511030
+ },
+ {
+  "map": "m60_44_34_00",
+  "x": 115.88,
+  "y": 44.967,
+  "z": 63.898,
+  "areaNo": 60,
+  "gridX": 44,
+  "gridZ": 34,
+  "dispMask": "dispMask00",
+  "itemLotId": 30161,
+  "eventFlag": 1042617186,
+  "partName": "c3260_9000",
+  "items": [
+   {
+    "id": 800010,
+    "category": 1,
+    "num": 1,
+    "name": "Rune Piece",
+    "broad_category": "crafting_material",
+    "sub_category": "crafting_material"
+   }
+  ],
+  "primary_category": "crafting_material",
+  "source": "emevd",
+  "guaranteed": true,
+  "enemyModel": "c3260",
+  "npcParamId": 32600012
+ },
+ {
+  "map": "m60_44_34_00",
+  "x": 115.88,
+  "y": 44.967,
+  "z": 63.898,
+  "areaNo": 60,
+  "gridX": 44,
+  "gridZ": 34,
+  "dispMask": "dispMask00",
+  "itemLotId": 30160,
+  "eventFlag": 530160,
+  "partName": "c3260_9000",
+  "items": [
+   {
+    "id": 6411,
+    "category": 1,
+    "num": 1,
+    "name": "Projection of Gold",
+    "broad_category": "key_item",
+    "sub_category": "remembrance"
+   }
+  ],
+  "primary_category": "key_item",
+  "source": "emevd",
+  "guaranteed": true,
+  "enemyModel": "c3260",
+  "npcParamId": 32600012
+ },
+ {
+  "map": "m60_44_36_00",
+  "x": 17.919,
+  "y": 80.799,
+  "z": 31.133,
+  "areaNo": 60,
+  "gridX": 44,
+  "gridZ": 36,
+  "dispMask": "dispMask00",
+  "itemLotId": 1044360801,
+  "eventFlag": 1042617163,
+  "partName": "c4340_9002",
+  "items": [
+   {
+    "id": 800010,
+    "category": 1,
+    "num": 1,
+    "name": "Rune Piece",
+    "broad_category": "crafting_material",
+    "sub_category": "crafting_material"
+   }
+  ],
+  "primary_category": "crafting_material",
+  "source": "emevd",
+  "guaranteed": true,
+  "enemyModel": "c4340",
+  "npcParamId": 43400910
+ },
+ {
+  "map": "m60_44_36_00",
+  "x": 17.919,
+  "y": 80.799,
+  "z": 31.133,
+  "areaNo": 60,
+  "gridX": 44,
+  "gridZ": 36,
+  "dispMask": "dispMask00",
+  "itemLotId": 1044360800,
+  "eventFlag": 1044367800,
+  "partName": "c4340_9002",
+  "items": [
+   {
+    "id": 10100,
+    "category": 1,
+    "num": 1,
+    "name": "Smithing Stone [1]",
+    "broad_category": "crafting_material",
+    "sub_category": "crafting_material"
+   }
+  ],
+  "primary_category": "crafting_material",
+  "source": "emevd",
+  "guaranteed": true,
+  "enemyModel": "c4340",
+  "npcParamId": 43400910
+ },
+ {
+  "map": "m60_46_36_00",
+  "x": -3.915,
+  "y": 71.0,
+  "z": 1.047,
+  "areaNo": 60,
+  "gridX": 46,
+  "gridZ": 36,
+  "dispMask": "dispMask00",
+  "itemLotId": 1046360700,
+  "eventFlag": 1046367700,
+  "partName": "c4351_9000",
+  "items": [
+   {
+    "id": 20400,
+    "category": 5,
+    "num": 1,
+    "name": "Ash of War: Bloody Slash",
+    "broad_category": "ash_of_war",
+    "sub_category": "ash_of_war"
+   }
+  ],
+  "primary_category": "ash_of_war",
+  "source": "emevd",
+  "guaranteed": true,
+  "enemyModel": "c4351",
+  "npcParamId": 43510110
+ },
+ {
+  "map": "m60_48_40_00",
+  "x": -119.157,
+  "y": 138.418,
+  "z": -95.785,
+  "areaNo": 60,
+  "gridX": 48,
+  "gridZ": 40,
+  "dispMask": "dispMask00",
+  "itemLotId": 1048400801,
+  "eventFlag": 1042617165,
+  "partName": "c4340_9000",
+  "items": [
+   {
+    "id": 800010,
+    "category": 1,
+    "num": 1,
+    "name": "Rune Piece",
+    "broad_category": "crafting_material",
+    "sub_category": "crafting_material"
+   }
+  ],
+  "primary_category": "crafting_material",
+  "source": "emevd",
+  "guaranteed": true,
+  "enemyModel": "c4340",
+  "npcParamId": 43401940
+ },
+ {
+  "map": "m60_48_51_00",
+  "x": -93.889,
+  "y": 973.956,
+  "z": 47.562,
+  "areaNo": 60,
+  "gridX": 48,
+  "gridZ": 51,
+  "dispMask": "dispMask00",
+  "itemLotId": 1048510701,
+  "eventFlag": 1042617167,
+  "partName": "c3150_9000",
+  "items": [
+   {
+    "id": 800010,
+    "category": 1,
+    "num": 1,
+    "name": "Rune Piece",
+    "broad_category": "crafting_material",
+    "sub_category": "crafting_material"
+   }
+  ],
+  "primary_category": "crafting_material",
+  "source": "emevd",
+  "guaranteed": true,
+  "enemyModel": "c3150",
+  "npcParamId": 31500050
+ },
+ {
+  "map": "m60_48_51_00",
+  "x": -93.889,
+  "y": 973.956,
+  "z": 47.562,
+  "areaNo": 60,
+  "gridX": 48,
+  "gridZ": 51,
+  "dispMask": "dispMask00",
+  "itemLotId": 1048510700,
+  "eventFlag": 1048517700,
+  "partName": "c3150_9000",
+  "items": [
+   {
+    "id": 22500,
+    "category": 5,
+    "num": 1,
+    "name": "Ash of War: Phantom Slash",
+    "broad_category": "ash_of_war",
+    "sub_category": "ash_of_war"
+   }
+  ],
+  "primary_category": "ash_of_war",
+  "source": "emevd",
+  "guaranteed": true,
+  "enemyModel": "c3150",
+  "npcParamId": 31500050
+ },
+ {
+  "map": "m60_49_39_00",
+  "x": 94.019,
+  "y": 83.522,
+  "z": 86.545,
+  "areaNo": 60,
+  "gridX": 49,
+  "gridZ": 39,
+  "dispMask": "dispMask00",
+  "itemLotId": 1049390801,
+  "eventFlag": 1042617184,
+  "partName": "c3300_9000",
+  "items": [
+   {
+    "id": 800010,
+    "category": 1,
+    "num": 1,
+    "name": "Rune Piece",
+    "broad_category": "crafting_material",
+    "sub_category": "crafting_material"
+   }
+  ],
+  "primary_category": "crafting_material",
+  "source": "emevd",
+  "guaranteed": true,
+  "enemyModel": "c3300",
+  "npcParamId": 33000940
+ },
+ {
+  "map": "m60_49_39_00",
+  "x": 94.019,
+  "y": 83.522,
+  "z": 86.545,
+  "areaNo": 60,
+  "gridX": 49,
+  "gridZ": 39,
+  "dispMask": "dispMask00",
+  "itemLotId": 1049390800,
+  "eventFlag": 1049397800,
+  "partName": "c3300_9000",
+  "items": [
+   {
+    "id": 2080000,
+    "category": 2,
+    "num": 1,
+    "name": "Nox Flowing Sword",
+    "broad_category": "armament",
+    "sub_category": "hammer"
+   }
+  ],
+  "primary_category": "armament",
+  "source": "emevd",
+  "guaranteed": true,
+  "enemyModel": "c3300",
+  "npcParamId": 33000940
+ },
+ {
+  "map": "m60_51_57_00",
+  "x": 117.505,
+  "y": 1620.933,
+  "z": 136.422,
+  "areaNo": 60,
+  "gridX": 51,
+  "gridZ": 57,
+  "dispMask": "dispMask00",
+  "itemLotId": 102500,
+  "eventFlag": 400250,
+  "partName": "c4602_9000",
+  "items": [
+   {
+    "id": 8951,
+    "category": 1,
+    "num": 1,
+    "name": "Sfyrix's Bell Bearing",
+    "broad_category": "consumable",
+    "sub_category": "consumable"
+   }
+  ],
+  "primary_category": "consumable",
+  "source": "emevd",
+  "guaranteed": true,
+  "enemyModel": "c4602",
+  "npcParamId": 46029251
+ },
+ {
+  "map": "m61_46_38_00",
+  "x": -22.869,
+  "y": 8.449,
+  "z": -96.832,
+  "areaNo": 61,
+  "gridX": 46,
+  "gridZ": 38,
+  "dispMask": "pad2_0",
+  "itemLotId": 30811,
+  "eventFlag": 530810,
+  "partName": "c0000_9001",
+  "items": [
+   {
+    "id": 5080000,
+    "category": 3,
+    "num": 1,
+    "name": "Dancer's Hood",
+    "broad_category": "armour",
+    "sub_category": "armour"
+   }
+  ],
+  "primary_category": "armour",
+  "source": "emevd",
+  "guaranteed": true,
+  "enemyModel": "c0000",
+  "npcParamId": 524220083
+ },
+ {
+  "map": "m61_46_38_00",
+  "x": -22.869,
+  "y": 8.449,
+  "z": -96.832,
+  "areaNo": 61,
+  "gridX": 46,
+  "gridZ": 38,
+  "dispMask": "pad2_0",
+  "itemLotId": 30812,
+  "eventFlag": 530810,
+  "partName": "c0000_9001",
+  "items": [
+   {
+    "id": 5080100,
+    "category": 3,
+    "num": 1,
+    "name": "Dancer's Dress",
+    "broad_category": "armour",
+    "sub_category": "armour"
+   }
+  ],
+  "primary_category": "armour",
+  "source": "emevd",
+  "guaranteed": true,
+  "enemyModel": "c0000",
+  "npcParamId": 524220083
+ },
+ {
+  "map": "m61_46_38_00",
+  "x": -22.869,
+  "y": 8.449,
+  "z": -96.832,
+  "areaNo": 61,
+  "gridX": 46,
+  "gridZ": 38,
+  "dispMask": "pad2_0",
+  "itemLotId": 30813,
+  "eventFlag": 530810,
+  "partName": "c0000_9001",
+  "items": [
+   {
+    "id": 5080200,
+    "category": 3,
+    "num": 1,
+    "name": "Dancer's Bracer",
+    "broad_category": "armour",
+    "sub_category": "armour"
+   }
+  ],
+  "primary_category": "armour",
+  "source": "emevd",
+  "guaranteed": true,
+  "enemyModel": "c0000",
+  "npcParamId": 524220083
+ },
+ {
+  "map": "m61_46_38_00",
+  "x": -22.869,
+  "y": 8.449,
+  "z": -96.832,
+  "areaNo": 61,
+  "gridX": 46,
+  "gridZ": 38,
+  "dispMask": "pad2_0",
+  "itemLotId": 30814,
+  "eventFlag": 530810,
+  "partName": "c0000_9001",
+  "items": [
+   {
+    "id": 5080300,
+    "category": 3,
+    "num": 1,
+    "name": "Dancer's Trousers",
+    "broad_category": "armour",
+    "sub_category": "armour"
+   }
+  ],
+  "primary_category": "armour",
+  "source": "emevd",
+  "guaranteed": true,
+  "enemyModel": "c0000",
+  "npcParamId": 524220083
+ },
+ {
+  "map": "m61_46_38_00",
+  "x": -22.869,
+  "y": 8.449,
+  "z": -96.832,
+  "areaNo": 61,
+  "gridX": 46,
+  "gridZ": 38,
+  "dispMask": "pad2_0",
+  "itemLotId": 30815,
+  "eventFlag": 1042617523,
+  "partName": "c0000_9001",
+  "items": [
+   {
+    "id": 850010,
+    "category": 1,
+    "num": 1,
+    "name": "Ember Piece",
+    "broad_category": "crafting_material",
+    "sub_category": "crafting_material"
+   }
+  ],
+  "primary_category": "crafting_material",
+  "source": "emevd",
+  "guaranteed": true,
+  "enemyModel": "c0000",
+  "npcParamId": 524220083
+ },
+ {
+  "map": "m61_46_38_00",
+  "x": -22.869,
+  "y": 8.449,
+  "z": -96.832,
+  "areaNo": 61,
+  "gridX": 46,
+  "gridZ": 38,
+  "dispMask": "pad2_0",
+  "itemLotId": 30810,
+  "eventFlag": 530810,
+  "partName": "c0000_9001",
+  "items": [
+   {
+    "id": 7520000,
+    "category": 2,
+    "num": 1,
+    "name": "Dancing Blades of Ranah",
+    "broad_category": "armament",
+    "sub_category": "hammer"
+   }
+  ],
+  "primary_category": "armament",
+  "source": "emevd",
+  "guaranteed": true,
+  "enemyModel": "c0000",
+  "npcParamId": 524220083
+ },
+ {
+  "map": "m61_46_41_00",
+  "x": -177.908,
+  "y": 317.649,
+  "z": 54.747,
+  "areaNo": 61,
+  "gridX": 46,
+  "gridZ": 41,
+  "dispMask": "pad2_0",
+  "itemLotId": 30821,
+  "eventFlag": 530820,
+  "partName": "c0000_9001",
+  "items": [
+   {
+    "id": 5130000,
+    "category": 3,
+    "num": 1,
+    "name": "Helm of Solitude",
+    "broad_category": "armour",
+    "sub_category": "armour"
+   }
+  ],
+  "primary_category": "armour",
+  "source": "emevd",
+  "guaranteed": true,
+  "enemyModel": "c0000",
+  "npcParamId": 524240080
+ },
+ {
+  "map": "m61_46_41_00",
+  "x": -177.908,
+  "y": 317.649,
+  "z": 54.747,
+  "areaNo": 61,
+  "gridX": 46,
+  "gridZ": 41,
+  "dispMask": "pad2_0",
+  "itemLotId": 30822,
+  "eventFlag": 530820,
+  "partName": "c0000_9001",
+  "items": [
+   {
+    "id": 5130100,
+    "category": 3,
+    "num": 1,
+    "name": "Armor of Solitude",
+    "broad_category": "armour",
+    "sub_category": "armour"
+   }
+  ],
+  "primary_category": "armour",
+  "source": "emevd",
+  "guaranteed": true,
+  "enemyModel": "c0000",
+  "npcParamId": 524240080
+ },
+ {
+  "map": "m61_46_41_00",
+  "x": -177.908,
+  "y": 317.649,
+  "z": 54.747,
+  "areaNo": 61,
+  "gridX": 46,
+  "gridZ": 41,
+  "dispMask": "pad2_0",
+  "itemLotId": 30823,
+  "eventFlag": 530820,
+  "partName": "c0000_9001",
+  "items": [
+   {
+    "id": 5130200,
+    "category": 3,
+    "num": 1,
+    "name": "Gauntlets of Solitude",
+    "broad_category": "armour",
+    "sub_category": "armour"
+   }
+  ],
+  "primary_category": "armour",
+  "source": "emevd",
+  "guaranteed": true,
+  "enemyModel": "c0000",
+  "npcParamId": 524240080
+ },
+ {
+  "map": "m61_46_41_00",
+  "x": -177.908,
+  "y": 317.649,
+  "z": 54.747,
+  "areaNo": 61,
+  "gridX": 46,
+  "gridZ": 41,
+  "dispMask": "pad2_0",
+  "itemLotId": 30824,
+  "eventFlag": 530820,
+  "partName": "c0000_9001",
+  "items": [
+   {
+    "id": 5130300,
+    "category": 3,
+    "num": 1,
+    "name": "Greaves of Solitude",
+    "broad_category": "armour",
+    "sub_category": "armour"
+   }
+  ],
+  "primary_category": "armour",
+  "source": "emevd",
+  "guaranteed": true,
+  "enemyModel": "c0000",
+  "npcParamId": 524240080
+ },
+ {
+  "map": "m61_46_41_00",
+  "x": -177.908,
+  "y": 317.649,
+  "z": 54.747,
+  "areaNo": 61,
+  "gridX": 46,
+  "gridZ": 41,
+  "dispMask": "pad2_0",
+  "itemLotId": 30825,
+  "eventFlag": 1042617524,
+  "partName": "c0000_9001",
+  "items": [
+   {
+    "id": 850010,
+    "category": 1,
+    "num": 1,
+    "name": "Ember Piece",
+    "broad_category": "crafting_material",
+    "sub_category": "crafting_material"
+   }
+  ],
+  "primary_category": "crafting_material",
+  "source": "emevd",
+  "guaranteed": true,
+  "enemyModel": "c0000",
+  "npcParamId": 524240080
+ },
+ {
+  "map": "m61_46_41_00",
+  "x": -177.908,
+  "y": 317.649,
+  "z": 54.747,
+  "areaNo": 61,
+  "gridX": 46,
+  "gridZ": 41,
+  "dispMask": "pad2_0",
+  "itemLotId": 30820,
+  "eventFlag": 530820,
+  "partName": "c0000_9001",
+  "items": [
+   {
+    "id": 3550000,
+    "category": 2,
+    "num": 1,
+    "name": "Greatsword of Solitude",
+    "broad_category": "armament",
+    "sub_category": "curved_sword"
+   }
+  ],
+  "primary_category": "armament",
+  "source": "emevd",
+  "guaranteed": true,
+  "enemyModel": "c0000",
+  "npcParamId": 524240080
+ },
+ {
+  "map": "m61_46_45_00",
+  "x": 108.487,
+  "y": 395.904,
+  "z": -80.286,
+  "areaNo": 61,
+  "gridX": 46,
+  "gridZ": 45,
+  "dispMask": "pad2_0",
+  "itemLotId": 30901,
+  "eventFlag": 530900,
+  "partName": "c0000_9000",
+  "items": [
+   {
+    "id": 5021000,
+    "category": 3,
+    "num": 1,
+    "name": "Fang Helm",
+    "broad_category": "armour",
+    "sub_category": "armour"
+   }
+  ],
+  "primary_category": "armour",
+  "source": "emevd",
+  "guaranteed": true,
+  "enemyModel": "c0000",
+  "npcParamId": 524210095
+ },
+ {
+  "map": "m61_46_45_00",
+  "x": 108.487,
+  "y": 395.904,
+  "z": -80.286,
+  "areaNo": 61,
+  "gridX": 46,
+  "gridZ": 45,
+  "dispMask": "pad2_0",
+  "itemLotId": 30902,
+  "eventFlag": 530900,
+  "partName": "c0000_9000",
+  "items": [
+   {
+    "id": 5020100,
+    "category": 3,
+    "num": 1,
+    "name": "Iron Rivet Armor",
+    "broad_category": "armour",
+    "sub_category": "armour"
+   }
+  ],
+  "primary_category": "armour",
+  "source": "emevd",
+  "guaranteed": true,
+  "enemyModel": "c0000",
+  "npcParamId": 524210095
+ },
+ {
+  "map": "m61_46_45_00",
+  "x": 108.487,
+  "y": 395.904,
+  "z": -80.286,
+  "areaNo": 61,
+  "gridX": 46,
+  "gridZ": 45,
+  "dispMask": "pad2_0",
+  "itemLotId": 30903,
+  "eventFlag": 530900,
+  "partName": "c0000_9000",
+  "items": [
+   {
+    "id": 5020200,
+    "category": 3,
+    "num": 1,
+    "name": "Iron Rivet Gauntlets",
+    "broad_category": "armour",
+    "sub_category": "armour"
+   }
+  ],
+  "primary_category": "armour",
+  "source": "emevd",
+  "guaranteed": true,
+  "enemyModel": "c0000",
+  "npcParamId": 524210095
+ },
+ {
+  "map": "m61_46_45_00",
+  "x": 108.487,
+  "y": 395.904,
+  "z": -80.286,
+  "areaNo": 61,
+  "gridX": 46,
+  "gridZ": 45,
+  "dispMask": "pad2_0",
+  "itemLotId": 30904,
+  "eventFlag": 530900,
+  "partName": "c0000_9000",
+  "items": [
+   {
+    "id": 5020300,
+    "category": 3,
+    "num": 1,
+    "name": "Iron Rivet Greaves",
+    "broad_category": "armour",
+    "sub_category": "armour"
+   }
+  ],
+  "primary_category": "armour",
+  "source": "emevd",
+  "guaranteed": true,
+  "enemyModel": "c0000",
+  "npcParamId": 524210095
+ },
+ {
+  "map": "m61_46_45_00",
+  "x": 108.487,
+  "y": 395.904,
+  "z": -80.286,
+  "areaNo": 61,
+  "gridX": 46,
+  "gridZ": 45,
+  "dispMask": "pad2_0",
+  "itemLotId": 30905,
+  "eventFlag": 1042617531,
+  "partName": "c0000_9000",
+  "items": [
+   {
+    "id": 850010,
+    "category": 1,
+    "num": 1,
+    "name": "Ember Piece",
+    "broad_category": "crafting_material",
+    "sub_category": "crafting_material"
+   }
+  ],
+  "primary_category": "crafting_material",
+  "source": "emevd",
+  "guaranteed": true,
+  "enemyModel": "c0000",
+  "npcParamId": 524210095
+ },
+ {
+  "map": "m61_46_45_00",
+  "x": 108.487,
+  "y": 395.904,
+  "z": -80.286,
+  "areaNo": 61,
+  "gridX": 46,
+  "gridZ": 45,
+  "dispMask": "pad2_0",
+  "itemLotId": 30900,
+  "eventFlag": 530900,
+  "partName": "c0000_9000",
+  "items": [
+   {
+    "id": 68510000,
+    "category": 2,
+    "num": 1,
+    "name": "Red Bear's Claw",
+    "broad_category": "armament",
+    "sub_category": "weapon"
+   }
+  ],
+  "primary_category": "armament",
+  "source": "emevd",
+  "guaranteed": true,
+  "enemyModel": "c0000",
+  "npcParamId": 524210095
+ },
+ {
+  "map": "m61_51_44_00",
+  "x": 2.973,
+  "y": 162.599,
+  "z": 93.062,
+  "areaNo": 61,
+  "gridX": 51,
+  "gridZ": 44,
+  "dispMask": "pad2_0",
+  "itemLotId": 30831,
+  "eventFlag": 530830,
+  "partName": "c0000_9002",
+  "items": [
+   {
+    "id": 5160000,
+    "category": 3,
+    "num": 1,
+    "name": "Rakshasa Helm",
+    "broad_category": "armour",
+    "sub_category": "armour"
+   }
+  ],
+  "primary_category": "armour",
+  "source": "emevd",
+  "guaranteed": true,
+  "enemyModel": "c0000",
+  "npcParamId": 524230091
+ },
+ {
+  "map": "m61_51_44_00",
+  "x": 2.973,
+  "y": 162.599,
+  "z": 93.062,
+  "areaNo": 61,
+  "gridX": 51,
+  "gridZ": 44,
+  "dispMask": "pad2_0",
+  "itemLotId": 30832,
+  "eventFlag": 530830,
+  "partName": "c0000_9002",
+  "items": [
+   {
+    "id": 5160100,
+    "category": 3,
+    "num": 1,
+    "name": "Rakshasa Armor",
+    "broad_category": "armour",
+    "sub_category": "armour"
+   }
+  ],
+  "primary_category": "armour",
+  "source": "emevd",
+  "guaranteed": true,
+  "enemyModel": "c0000",
+  "npcParamId": 524230091
+ },
+ {
+  "map": "m61_51_44_00",
+  "x": 2.973,
+  "y": 162.599,
+  "z": 93.062,
+  "areaNo": 61,
+  "gridX": 51,
+  "gridZ": 44,
+  "dispMask": "pad2_0",
+  "itemLotId": 30833,
+  "eventFlag": 530830,
+  "partName": "c0000_9002",
+  "items": [
+   {
+    "id": 5160200,
+    "category": 3,
+    "num": 1,
+    "name": "Rakshasa Gauntlets",
+    "broad_category": "armour",
+    "sub_category": "armour"
+   }
+  ],
+  "primary_category": "armour",
+  "source": "emevd",
+  "guaranteed": true,
+  "enemyModel": "c0000",
+  "npcParamId": 524230091
+ },
+ {
+  "map": "m61_51_44_00",
+  "x": 2.973,
+  "y": 162.599,
+  "z": 93.062,
+  "areaNo": 61,
+  "gridX": 51,
+  "gridZ": 44,
+  "dispMask": "pad2_0",
+  "itemLotId": 30834,
+  "eventFlag": 530830,
+  "partName": "c0000_9002",
+  "items": [
+   {
+    "id": 5160300,
+    "category": 3,
+    "num": 1,
+    "name": "Rakshasa Greaves",
+    "broad_category": "armour",
+    "sub_category": "armour"
+   }
+  ],
+  "primary_category": "armour",
+  "source": "emevd",
+  "guaranteed": true,
+  "enemyModel": "c0000",
+  "npcParamId": 524230091
+ },
+ {
+  "map": "m61_51_44_00",
+  "x": 2.973,
+  "y": 162.599,
+  "z": 93.062,
+  "areaNo": 61,
+  "gridX": 51,
+  "gridZ": 44,
+  "dispMask": "pad2_0",
+  "itemLotId": 30835,
+  "eventFlag": 1042617525,
+  "partName": "c0000_9002",
+  "items": [
+   {
+    "id": 850010,
+    "category": 1,
+    "num": 1,
+    "name": "Ember Piece",
+    "broad_category": "crafting_material",
+    "sub_category": "crafting_material"
+   }
+  ],
+  "primary_category": "crafting_material",
+  "source": "emevd",
+  "guaranteed": true,
+  "enemyModel": "c0000",
+  "npcParamId": 524230091
+ },
+ {
+  "map": "m61_51_44_00",
+  "x": 2.973,
+  "y": 162.599,
+  "z": 93.062,
+  "areaNo": 61,
+  "gridX": 51,
+  "gridZ": 44,
+  "dispMask": "pad2_0",
+  "itemLotId": 30830,
+  "eventFlag": 530830,
+  "partName": "c0000_9002",
+  "items": [
+   {
+    "id": 66520000,
+    "category": 2,
+    "num": 1,
+    "name": "Rakshasa's Great Katana",
+    "broad_category": "armament",
+    "sub_category": "weapon"
+   }
+  ],
+  "primary_category": "armament",
+  "source": "emevd",
+  "guaranteed": true,
+  "enemyModel": "c0000",
+  "npcParamId": 524230091
  },
  {
   "map": "m11_00_00_00",
@@ -919367,31 +921810,6 @@
    }
   ],
   "primary_category": "armament",
-  "from_fallback": true
- },
- {
-  "map": "m12_01_00_00",
-  "x": 0.0,
-  "y": 0.0,
-  "z": 0.0,
-  "areaNo": 12,
-  "gridX": 1,
-  "gridZ": 0,
-  "dispMask": "dispMask01",
-  "itemLotId": 12010896,
-  "eventFlag": 1042617189,
-  "partName": "",
-  "items": [
-   {
-    "id": 800010,
-    "category": 1,
-    "num": 3,
-    "name": "Rune Piece",
-    "broad_category": "crafting_material",
-    "sub_category": "crafting_material"
-   }
-  ],
-  "primary_category": "crafting_material",
   "from_fallback": true
  },
  {
@@ -919617,31 +922035,6 @@
    }
   ],
   "primary_category": "consumable",
-  "from_fallback": true
- },
- {
-  "map": "m12_04_00_00",
-  "x": 0.0,
-  "y": 0.0,
-  "z": 0.0,
-  "areaNo": 12,
-  "gridX": 4,
-  "gridZ": 0,
-  "dispMask": "dispMask01",
-  "itemLotId": 12040000,
-  "eventFlag": 12047000,
-  "partName": "",
-  "items": [
-   {
-    "id": 4740,
-    "category": 1,
-    "num": 1,
-    "name": "Electromagnetic Discharge",
-    "broad_category": "key_item",
-    "sub_category": "key_item"
-   }
-  ],
-  "primary_category": "key_item",
   "from_fallback": true
  },
  {
@@ -920495,31 +922888,6 @@
   "from_fallback": true
  },
  {
-  "map": "m12_05_00_00",
-  "x": 0.0,
-  "y": 0.0,
-  "z": 0.0,
-  "areaNo": 12,
-  "gridX": 5,
-  "gridZ": 0,
-  "dispMask": "dispMask01",
-  "itemLotId": 12050790,
-  "eventFlag": 12057790,
-  "partName": "",
-  "items": [
-   {
-    "id": 5050,
-    "category": 1,
-    "num": 1,
-    "name": "Raving Rancor",
-    "broad_category": "key_item",
-    "sub_category": "key_item"
-   }
-  ],
-  "primary_category": "key_item",
-  "from_fallback": true
- },
- {
   "map": "m12_07_00_00",
   "x": 0.0,
   "y": 0.0,
@@ -920971,31 +923339,6 @@
  },
  {
   "map": "m16_00_00_00",
-  "x": 0.0,
-  "y": 0.0,
-  "z": 0.0,
-  "areaNo": 16,
-  "gridX": 0,
-  "gridZ": 0,
-  "dispMask": "dispMask00",
-  "itemLotId": 16000950,
-  "eventFlag": 16007950,
-  "partName": "",
-  "items": [
-   {
-    "id": 7520,
-    "category": 1,
-    "num": 1,
-    "name": "Aspects of the Crucible: Breath",
-    "broad_category": "key_item",
-    "sub_category": "remembrance"
-   }
-  ],
-  "primary_category": "key_item",
-  "from_fallback": true
- },
- {
-  "map": "m16_00_00_00",
   "x": -55.970001220703125,
   "y": -9.720000267028809,
   "z": -101.73999786376953,
@@ -921317,81 +923660,6 @@
    }
   ],
   "primary_category": "consumable",
-  "from_fallback": true
- },
- {
-  "map": "m20_01_00_00",
-  "x": 0.0,
-  "y": 0.0,
-  "z": 0.0,
-  "areaNo": 20,
-  "gridX": 1,
-  "gridZ": 0,
-  "dispMask": "pad2_0",
-  "itemLotId": 20010920,
-  "eventFlag": 20017920,
-  "partName": "",
-  "items": [
-   {
-    "id": 8520000,
-    "category": 2,
-    "num": 1,
-    "name": "Horned Warrior's Greatsword",
-    "broad_category": "armament",
-    "sub_category": "flail"
-   }
-  ],
-  "primary_category": "armament",
-  "from_fallback": true
- },
- {
-  "map": "m20_01_00_00",
-  "x": 0.0,
-  "y": 0.0,
-  "z": 0.0,
-  "areaNo": 20,
-  "gridX": 1,
-  "gridZ": 0,
-  "dispMask": "pad2_0",
-  "itemLotId": 20010921,
-  "eventFlag": 1042617555,
-  "partName": "",
-  "items": [
-   {
-    "id": 850010,
-    "category": 1,
-    "num": 3,
-    "name": "Ember Piece",
-    "broad_category": "crafting_material",
-    "sub_category": "crafting_material"
-   }
-  ],
-  "primary_category": "crafting_material",
-  "from_fallback": true
- },
- {
-  "map": "m20_01_00_00",
-  "x": 0.0,
-  "y": 0.0,
-  "z": 0.0,
-  "areaNo": 20,
-  "gridX": 1,
-  "gridZ": 0,
-  "dispMask": "pad2_0",
-  "itemLotId": 20011981,
-  "eventFlag": 20017981,
-  "partName": "",
-  "items": [
-   {
-    "id": 5272000,
-    "category": 3,
-    "num": 1,
-    "name": "Circlet of Light",
-    "broad_category": "armour",
-    "sub_category": "armour"
-   }
-  ],
-  "primary_category": "armour",
   "from_fallback": true
  },
  {
@@ -922745,31 +925013,6 @@
   "from_fallback": true
  },
  {
-  "map": "m30_10_00_00",
-  "x": 0.0,
-  "y": 0.0,
-  "z": 0.0,
-  "areaNo": 30,
-  "gridX": 10,
-  "gridZ": 0,
-  "dispMask": "dispMask00",
-  "itemLotId": 30100100,
-  "eventFlag": 30107100,
-  "partName": "",
-  "items": [
-   {
-    "id": 70200,
-    "category": 5,
-    "num": 1,
-    "name": "Ash of War: Holy Ground",
-    "broad_category": "ash_of_war",
-    "sub_category": "ash_of_war"
-   }
-  ],
-  "primary_category": "ash_of_war",
-  "from_fallback": true
- },
- {
   "map": "m30_12_00_00",
   "x": 0.0,
   "y": 0.0,
@@ -923028,81 +925271,6 @@
   "gridX": 8,
   "gridZ": 0,
   "dispMask": "dispMask00",
-  "itemLotId": 31080410,
-  "eventFlag": 31087410,
-  "partName": "",
-  "items": [
-   {
-    "id": 8022,
-    "category": 1,
-    "num": 1,
-    "name": "Forsaken Rancorflame",
-    "broad_category": "consumable",
-    "sub_category": "consumable"
-   }
-  ],
-  "primary_category": "consumable",
-  "from_fallback": true
- },
- {
-  "map": "m31_08_00_00",
-  "x": 0.0,
-  "y": 0.0,
-  "z": 0.0,
-  "areaNo": 31,
-  "gridX": 8,
-  "gridZ": 0,
-  "dispMask": "dispMask00",
-  "itemLotId": 31080420,
-  "eventFlag": 31087420,
-  "partName": "",
-  "items": [
-   {
-    "id": 8021,
-    "category": 1,
-    "num": 1,
-    "name": "Tortured Rancorflame",
-    "broad_category": "consumable",
-    "sub_category": "consumable"
-   }
-  ],
-  "primary_category": "consumable",
-  "from_fallback": true
- },
- {
-  "map": "m31_08_00_00",
-  "x": 0.0,
-  "y": 0.0,
-  "z": 0.0,
-  "areaNo": 31,
-  "gridX": 8,
-  "gridZ": 0,
-  "dispMask": "dispMask00",
-  "itemLotId": 31080425,
-  "eventFlag": 31087425,
-  "partName": "",
-  "items": [
-   {
-    "id": 2270000,
-    "category": 2,
-    "num": 1,
-    "name": "Gladius of Ophidion",
-    "broad_category": "armament",
-    "sub_category": "greatsword"
-   }
-  ],
-  "primary_category": "armament",
-  "from_fallback": true
- },
- {
-  "map": "m31_08_00_00",
-  "x": 0.0,
-  "y": 0.0,
-  "z": 0.0,
-  "areaNo": 31,
-  "gridX": 8,
-  "gridZ": 0,
-  "dispMask": "dispMask00",
   "itemLotId": 31080428,
   "eventFlag": 31087428,
   "partName": "",
@@ -923117,31 +925285,6 @@
    }
   ],
   "primary_category": "armament",
-  "from_fallback": true
- },
- {
-  "map": "m31_08_00_00",
-  "x": 0.0,
-  "y": 0.0,
-  "z": 0.0,
-  "areaNo": 31,
-  "gridX": 8,
-  "gridZ": 0,
-  "dispMask": "dispMask00",
-  "itemLotId": 31080430,
-  "eventFlag": 31087430,
-  "partName": "",
-  "items": [
-   {
-    "id": 8023,
-    "category": 1,
-    "num": 1,
-    "name": "Ancient Rancorflame",
-    "broad_category": "consumable",
-    "sub_category": "consumable"
-   }
-  ],
-  "primary_category": "consumable",
   "from_fallback": true
  },
  {
@@ -923268,156 +925411,6 @@
   ],
   "primary_category": "crafting_material",
   "source": "emevd_treasure"
- },
- {
-  "map": "m34_11_00_00",
-  "x": 0.0,
-  "y": 0.0,
-  "z": 0.0,
-  "areaNo": 34,
-  "gridX": 11,
-  "gridZ": 0,
-  "dispMask": "dispMask00",
-  "itemLotId": 34110800,
-  "eventFlag": 34117800,
-  "partName": "",
-  "items": [
-   {
-    "id": 530000,
-    "category": 3,
-    "num": 1,
-    "name": "Godskin Noble Hood",
-    "broad_category": "armour",
-    "sub_category": "armour"
-   }
-  ],
-  "primary_category": "armour",
-  "from_fallback": true
- },
- {
-  "map": "m34_11_00_00",
-  "x": 0.0,
-  "y": 0.0,
-  "z": 0.0,
-  "areaNo": 34,
-  "gridX": 11,
-  "gridZ": 0,
-  "dispMask": "dispMask00",
-  "itemLotId": 34110801,
-  "eventFlag": 34117800,
-  "partName": "",
-  "items": [
-   {
-    "id": 530100,
-    "category": 3,
-    "num": 1,
-    "name": "Godskin Noble Robe",
-    "broad_category": "armour",
-    "sub_category": "armour"
-   }
-  ],
-  "primary_category": "armour",
-  "from_fallback": true
- },
- {
-  "map": "m34_11_00_00",
-  "x": 0.0,
-  "y": 0.0,
-  "z": 0.0,
-  "areaNo": 34,
-  "gridX": 11,
-  "gridZ": 0,
-  "dispMask": "dispMask00",
-  "itemLotId": 34110802,
-  "eventFlag": 34117800,
-  "partName": "",
-  "items": [
-   {
-    "id": 530200,
-    "category": 3,
-    "num": 1,
-    "name": "Godskin Noble Bracelets",
-    "broad_category": "armour",
-    "sub_category": "armour"
-   }
-  ],
-  "primary_category": "armour",
-  "from_fallback": true
- },
- {
-  "map": "m34_11_00_00",
-  "x": 0.0,
-  "y": 0.0,
-  "z": 0.0,
-  "areaNo": 34,
-  "gridX": 11,
-  "gridZ": 0,
-  "dispMask": "dispMask00",
-  "itemLotId": 34110803,
-  "eventFlag": 34117800,
-  "partName": "",
-  "items": [
-   {
-    "id": 530300,
-    "category": 3,
-    "num": 1,
-    "name": "Godskin Noble Trousers",
-    "broad_category": "armour",
-    "sub_category": "armour"
-   }
-  ],
-  "primary_category": "armour",
-  "from_fallback": true
- },
- {
-  "map": "m34_11_00_00",
-  "x": 0.0,
-  "y": 0.0,
-  "z": 0.0,
-  "areaNo": 34,
-  "gridX": 11,
-  "gridZ": 0,
-  "dispMask": "dispMask00",
-  "itemLotId": 34110804,
-  "eventFlag": 34117800,
-  "partName": "",
-  "items": [
-   {
-    "id": 900238,
-    "category": 1,
-    "num": 1,
-    "name": "Fortune of the Godslayers",
-    "broad_category": "consumable",
-    "sub_category": "consumable"
-   }
-  ],
-  "primary_category": "consumable",
-  "from_fallback": true
- },
- {
-  "map": "m34_11_00_00",
-  "x": 0.0,
-  "y": 0.0,
-  "z": 0.0,
-  "areaNo": 34,
-  "gridX": 11,
-  "gridZ": 0,
-  "dispMask": "dispMask00",
-  "itemLotId": 34110805,
-  "eventFlag": 1042617144,
-  "partName": "",
-  "items": [
-   {
-    "id": 800010,
-    "category": 1,
-    "num": 2,
-    "name": "Rune Piece",
-    "broad_category": "crafting_material",
-    "sub_category": "crafting_material"
-   }
-  ],
-  "primary_category": "crafting_material",
-  "from_fallback": true
  },
  {
   "map": "m34_12_00_00",
@@ -924296,31 +926289,6 @@
  },
  {
   "map": "m60_34_48_00",
-  "x": 0.0,
-  "y": 0.0,
-  "z": 0.0,
-  "areaNo": 60,
-  "gridX": 34,
-  "gridZ": 48,
-  "dispMask": "dispMask00",
-  "itemLotId": 1034480801,
-  "eventFlag": 1042617145,
-  "partName": "",
-  "items": [
-   {
-    "id": 800010,
-    "category": 1,
-    "num": 1,
-    "name": "Rune Piece",
-    "broad_category": "crafting_material",
-    "sub_category": "crafting_material"
-   }
-  ],
-  "primary_category": "crafting_material",
-  "from_fallback": true
- },
- {
-  "map": "m60_34_48_00",
   "x": 71.91914367675781,
   "y": 237.51300048828125,
   "z": -121.72931671142578,
@@ -924770,56 +926738,6 @@
   "from_fallback": true
  },
  {
-  "map": "m60_37_46_00",
-  "x": 0.0,
-  "y": 0.0,
-  "z": 0.0,
-  "areaNo": 60,
-  "gridX": 37,
-  "gridZ": 46,
-  "dispMask": "dispMask00",
-  "itemLotId": 1037460900,
-  "eventFlag": 1037467900,
-  "partName": "",
-  "items": [
-   {
-    "id": 7000000,
-    "category": 3,
-    "num": 1,
-    "name": "Chelonian Mitre",
-    "broad_category": "armour",
-    "sub_category": "armour"
-   }
-  ],
-  "primary_category": "armour",
-  "from_fallback": true
- },
- {
-  "map": "m60_37_46_00",
-  "x": 0.0,
-  "y": 0.0,
-  "z": 0.0,
-  "areaNo": 60,
-  "gridX": 37,
-  "gridZ": 46,
-  "dispMask": "dispMask00",
-  "itemLotId": 1037460910,
-  "eventFlag": 1037467910,
-  "partName": "",
-  "items": [
-   {
-    "id": 7001000,
-    "category": 3,
-    "num": 1,
-    "name": "Pilfered Mitre",
-    "broad_category": "armour",
-    "sub_category": "armour"
-   }
-  ],
-  "primary_category": "armour",
-  "from_fallback": true
- },
- {
   "map": "m60_37_48_00",
   "x": 0.0,
   "y": 0.0,
@@ -925118,56 +927036,6 @@
   ],
   "primary_category": "consumable",
   "source": "emevd_treasure"
- },
- {
-  "map": "m60_39_50_00",
-  "x": 0.0,
-  "y": 0.0,
-  "z": 0.0,
-  "areaNo": 60,
-  "gridX": 39,
-  "gridZ": 50,
-  "dispMask": "dispMask00",
-  "itemLotId": 1039500100,
-  "eventFlag": 1039507100,
-  "partName": "",
-  "items": [
-   {
-    "id": 3090,
-    "category": 4,
-    "num": 1,
-    "name": "Godfrey Icon",
-    "broad_category": "talisman",
-    "sub_category": "talisman"
-   }
-  ],
-  "primary_category": "talisman",
-  "from_fallback": true
- },
- {
-  "map": "m60_39_50_00",
-  "x": 0.0,
-  "y": 0.0,
-  "z": 0.0,
-  "areaNo": 60,
-  "gridX": 39,
-  "gridZ": 50,
-  "dispMask": "dispMask00",
-  "itemLotId": 1039500101,
-  "eventFlag": 1042617152,
-  "partName": "",
-  "items": [
-   {
-    "id": 800010,
-    "category": 1,
-    "num": 1,
-    "name": "Rune Piece",
-    "broad_category": "crafting_material",
-    "sub_category": "crafting_material"
-   }
-  ],
-  "primary_category": "crafting_material",
-  "from_fallback": true
  },
  {
   "map": "m60_39_52_00",
@@ -926392,56 +928260,6 @@
    }
   ],
   "primary_category": "armour",
-  "from_fallback": true
- },
- {
-  "map": "m60_44_36_00",
-  "x": 0.0,
-  "y": 0.0,
-  "z": 0.0,
-  "areaNo": 60,
-  "gridX": 44,
-  "gridZ": 36,
-  "dispMask": "dispMask00",
-  "itemLotId": 1044360800,
-  "eventFlag": 1044367800,
-  "partName": "",
-  "items": [
-   {
-    "id": 10100,
-    "category": 1,
-    "num": 1,
-    "name": "Smithing Stone [1]",
-    "broad_category": "crafting_material",
-    "sub_category": "crafting_material"
-   }
-  ],
-  "primary_category": "crafting_material",
-  "from_fallback": true
- },
- {
-  "map": "m60_44_36_00",
-  "x": 0.0,
-  "y": 0.0,
-  "z": 0.0,
-  "areaNo": 60,
-  "gridX": 44,
-  "gridZ": 36,
-  "dispMask": "dispMask00",
-  "itemLotId": 1044360801,
-  "eventFlag": 1042617163,
-  "partName": "",
-  "items": [
-   {
-    "id": 800010,
-    "category": 1,
-    "num": 1,
-    "name": "Rune Piece",
-    "broad_category": "crafting_material",
-    "sub_category": "crafting_material"
-   }
-  ],
-  "primary_category": "crafting_material",
   "from_fallback": true
  },
  {
@@ -934445,31 +936263,6 @@
   "from_fallback": true
  },
  {
-  "map": "m60_46_36_00",
-  "x": 0.0,
-  "y": 0.0,
-  "z": 0.0,
-  "areaNo": 60,
-  "gridX": 46,
-  "gridZ": 36,
-  "dispMask": "dispMask00",
-  "itemLotId": 1046360700,
-  "eventFlag": 1046367700,
-  "partName": "",
-  "items": [
-   {
-    "id": 20400,
-    "category": 5,
-    "num": 1,
-    "name": "Ash of War: Bloody Slash",
-    "broad_category": "ash_of_war",
-    "sub_category": "ash_of_war"
-   }
-  ],
-  "primary_category": "ash_of_war",
-  "from_fallback": true
- },
- {
   "map": "m60_47_37_00",
   "x": 105.78700256347656,
   "y": 131.0959930419922,
@@ -934542,81 +936335,6 @@
    }
   ],
   "primary_category": "spirit_ash",
-  "from_fallback": true
- },
- {
-  "map": "m60_48_40_00",
-  "x": 0.0,
-  "y": 0.0,
-  "z": 0.0,
-  "areaNo": 60,
-  "gridX": 48,
-  "gridZ": 40,
-  "dispMask": "dispMask00",
-  "itemLotId": 1048400801,
-  "eventFlag": 1042617165,
-  "partName": "",
-  "items": [
-   {
-    "id": 800010,
-    "category": 1,
-    "num": 1,
-    "name": "Rune Piece",
-    "broad_category": "crafting_material",
-    "sub_category": "crafting_material"
-   }
-  ],
-  "primary_category": "crafting_material",
-  "from_fallback": true
- },
- {
-  "map": "m60_48_51_00",
-  "x": -93.88899993896484,
-  "y": 973.9559936523438,
-  "z": 47.5620002746582,
-  "areaNo": 60,
-  "gridX": 48,
-  "gridZ": 51,
-  "dispMask": "dispMask00",
-  "itemLotId": 1048510700,
-  "eventFlag": 1048517700,
-  "partName": "c3150",
-  "items": [
-   {
-    "id": 22500,
-    "category": 5,
-    "num": 1,
-    "name": "Ash of War: Phantom Slash",
-    "broad_category": "ash_of_war",
-    "sub_category": "ash_of_war"
-   }
-  ],
-  "primary_category": "ash_of_war",
-  "source": "emevd_treasure"
- },
- {
-  "map": "m60_48_51_00",
-  "x": 0.0,
-  "y": 0.0,
-  "z": 0.0,
-  "areaNo": 60,
-  "gridX": 48,
-  "gridZ": 51,
-  "dispMask": "dispMask00",
-  "itemLotId": 1048510701,
-  "eventFlag": 1042617167,
-  "partName": "",
-  "items": [
-   {
-    "id": 800010,
-    "category": 1,
-    "num": 1,
-    "name": "Rune Piece",
-    "broad_category": "crafting_material",
-    "sub_category": "crafting_material"
-   }
-  ],
-  "primary_category": "crafting_material",
   "from_fallback": true
  },
  {
@@ -934761,56 +936479,6 @@
     "id": 800010,
     "category": 1,
     "num": 2,
-    "name": "Rune Piece",
-    "broad_category": "crafting_material",
-    "sub_category": "crafting_material"
-   }
-  ],
-  "primary_category": "crafting_material",
-  "from_fallback": true
- },
- {
-  "map": "m60_49_39_00",
-  "x": 0.0,
-  "y": 0.0,
-  "z": 0.0,
-  "areaNo": 60,
-  "gridX": 49,
-  "gridZ": 39,
-  "dispMask": "dispMask00",
-  "itemLotId": 1049390800,
-  "eventFlag": 1049397800,
-  "partName": "",
-  "items": [
-   {
-    "id": 2080000,
-    "category": 2,
-    "num": 1,
-    "name": "Nox Flowing Sword",
-    "broad_category": "armament",
-    "sub_category": "hammer"
-   }
-  ],
-  "primary_category": "armament",
-  "from_fallback": true
- },
- {
-  "map": "m60_49_39_00",
-  "x": 0.0,
-  "y": 0.0,
-  "z": 0.0,
-  "areaNo": 60,
-  "gridX": 49,
-  "gridZ": 39,
-  "dispMask": "dispMask00",
-  "itemLotId": 1049390801,
-  "eventFlag": 1042617184,
-  "partName": "",
-  "items": [
-   {
-    "id": 800010,
-    "category": 1,
-    "num": 1,
     "name": "Rune Piece",
     "broad_category": "crafting_material",
     "sub_category": "crafting_material"

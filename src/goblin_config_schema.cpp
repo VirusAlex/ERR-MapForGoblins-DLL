@@ -49,6 +49,12 @@ namespace goblin::config
          showSummoningPools = true, showKindlingSpirits = true,
          showInteractables = true, showWorldMaps = true, hideKilledBosses = false;
 
+    // World Map fragment markers ignore require_map_fragments (default ON): a map
+    // fragment marker is only useful BEFORE you own that fragment, but the gate would
+    // hide it until you do - so you'd never see where to find one. Independent of
+    // show_world_maps (the category on/off).
+    bool worldMapsIgnoreFragments = true;
+
     // Live-loot / randomizer-compat options default ON for the plain VANILLA
     // build only (that's what Item/Enemy Randomizer players use) and OFF for ERR
     // and Convergence (opt-in - they add memory/CPU with no benefit without a
@@ -196,6 +202,8 @@ namespace
                 B("show_interactables", showInteractables, "true",
                   "Interactive world objects & puzzles: blue seal puzzles (unlock hidden\ncellars), light-flame interacts (Sellia chalices, Snow Town statues, Siofra\nRiver lanterns), and Hero's Tomb direction statues."),
                 B("show_world_maps", showWorldMaps, "true", "World Map fragment locations"),
+                B("show_world_maps_ignore_fragments", worldMapsIgnoreFragments, "true",
+                  "Always show World Map fragment markers, even with require_map_fragments\non (otherwise you could never see where a map fragment is until you own it)."),
                 B("hide_killed_bosses", hideKilledBosses, "false", "Hide boss/invader/hawk markers after defeat (false = show green checkmark instead)"),
             }},
 

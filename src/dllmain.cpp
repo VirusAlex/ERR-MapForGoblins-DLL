@@ -103,7 +103,7 @@ static void init_from_params()      { from::params::initialize(); }
 static void init_collected()        { goblin::collected::initialize(); }
 static void init_kindling()         { goblin::kindling::initialize(); }
 static void init_inject_entries()   { goblin::inject_map_entries(); }
-static void init_apply_map_logic()  { goblin::apply_map_logic(); }
+static void init_apply_map_logic()  { goblin::apply_map_logic(); goblin::apply_worldmap_fragment_bypass(); }
 static void init_tutorial_popup()   { goblin::inject_tutorial_popup_rows(); }
 static void init_setup_messages()   { goblin::setup_messages(); }
 static void init_live_loot()        { goblin::refresh_loot_from_itemlot(); }
