@@ -46,6 +46,12 @@ vins_mod_dir =
 # Example: C:\Games\Reborn\Elden Ring Reborn\Mod Files
 reborn_mod_dir =
 
+# Optional: path to the Graceborne (Bloodborne-inspired) overhaul's ME3 'mod' overlay
+# dir, for the graceborne build profile (build.bat ... --graceborne). game_dir must
+# also be set and UXM-unpacked (overlay -> staged merged-over-vanilla, same as the
+# other overlays). Example: C:\Games\Graceborne\GRACEBORNE\mod
+graceborne_mod_dir =
+
 # Optional: path to SmithBox install (only needed by some research scripts
 # under tools/_*.py — not required by the core build pipeline).
 # Example: C:\Tools\Smithbox_2_1_2_2016_02_16_a

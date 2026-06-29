@@ -25,7 +25,7 @@ LOG = ROOT / 'scratch'
 LOG.mkdir(exist_ok=True)
 # convergence2 (Convergence 2.x / ME2) is unpublished/unsupported - excluded from the default
 # all-profiles build. Build it explicitly with --profiles convergence2 if ever needed.
-ALL = ['err', 'vanilla', 'convergence3', 'erte', 'goldenage', 'vins', 'reborn']
+ALL = ['err', 'vanilla', 'convergence3', 'erte', 'goldenage', 'vins', 'reborn', 'graceborne']
 GEN_SHARED = ['generate_logo.py', 'generate_map_icons.py', 'generate_overlay_icons.py', 'generate_i18n.py']
 
 

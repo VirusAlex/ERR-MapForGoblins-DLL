@@ -6,7 +6,7 @@
 namespace goblin::generated
 {
 
-const size_t ITEM_NAME_FALLBACK_COUNT = 2538;
+const size_t ITEM_NAME_FALLBACK_COUNT = 2536;
 
 const ItemNameFallback ITEM_NAME_FALLBACK[] = {
     {10000, L"Stormveil Castle"},
@@ -2428,7 +2428,6 @@ const ItemNameFallback ITEM_NAME_FALLBACK[] = {
     {700111100, L"Primeval Sorcerer Azur"},
     {700121600, L"Blaidd the Half-Wolf"},
     {700121900, L"Old Albus"},
-    {700122500, L"Blacksmith Sfyrix"},
     {700122800, L"Latenna the Albinauric"},
     {700123000, L"Tanith's Knight"},
     {700130100, L"White Mask Varr\u00e9"},
@@ -2446,7 +2445,6 @@ const ItemNameFallback ITEM_NAME_FALLBACK[] = {
     {700132700, L"Eleonora, Violet Bloody Finger"},
     {700133000, L"Miriel, Pastor of Vows"},
     {700133300, L"Sorcerer Thops"},
-    {700133800, L"Finger Maiden"},
     {700133900, L"Ensha of the Royal Remains"},
     {700134000, L"Bloody Finger Ravenmount Assassin"},
     {700134300, L"Bloody Finger Nerijus"},

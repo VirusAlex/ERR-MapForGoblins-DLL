@@ -53,8 +53,16 @@ def rfb(rm, data, suf='.bin'):
 # Seal types by entity ID suffix
 SEAL_SUFFIXES = {570, 575, 565, 611}
 
-# Actual imp statue seal models (the stone imp face you use keys on)
-SEAL_MODELS = {'AEG027_078', 'AEG027_079'}
+# Actual imp statue seal models (the stone imp face you use keys on).
+# AEG027_078/079 = the Stonesword-Key imp seals. AEG099_295 = the Four Belfries
+# "gargoyle statues" (3 in Liurnia + 1 in the DLC), opened with an IMBUED Sword Key
+# (Goods 8186) to warp - confirmed in m60_33_46 ev1033462611 (DisplayGenericDialog
+# 108186 + RemoveItemFromPlayer Goods 8186). Their entity suffix is 611 and the
+# used-flag is tile_base+611 (= the same activation_flag this script already computes).
+SEAL_MODELS = {'AEG027_078', 'AEG027_079', 'AEG099_295'}
+
+# Models opened with an Imbued Sword Key rather than a Stonesword Key.
+IMBUED_KEY_MODELS = {'AEG099_295'}
 
 
 def main():
@@ -113,7 +121,7 @@ def main():
             seals.append({
                 'area': area, 'gx': gx, 'gz': gz,
                 'x': x, 'y': y, 'z': z,
-                'eid': eid, 'suffix': suffix,
+                'eid': eid, 'suffix': suffix, 'model': model,
                 'flag': activation_flag,
             })
 
@@ -158,7 +166,8 @@ def main():
             lines.append(f'param WorldMapPointParam: id {row_id}: posY: = {s["y"]:.3f};')
         lines.append(f'param WorldMapPointParam: id {row_id}: posZ: = {s["z"]:.3f};')
         # Key type as first line: Stonesword Key or Imbued Sword Key
-        if s['suffix'] == 565:
+        imbued = s['suffix'] == 565 or s['model'] in IMBUED_KEY_MODELS
+        if imbued:
             lines.append(f'param WorldMapPointParam: id {row_id}: textId1: = 500008186;')  # Imbued Sword Key
         else:
             lines.append(f'param WorldMapPointParam: id {row_id}: textId1: = 500008000;')  # Stonesword Key

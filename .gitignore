@@ -19,6 +19,7 @@ data/erte/
 data/goldenage/
 data/vins/
 data/reborn/
+data/graceborne/
 src/generated_vanilla/
 src/generated_convergence/
 src/generated_convergence2/
@@ -27,6 +28,7 @@ src/generated_erte/
 src/generated_goldenage/
 src/generated_vins/
 src/generated_reborn/
+src/generated_graceborne/
 
 # Release + snapshot packages, zips, and the changelog all live under releases\
 releases/

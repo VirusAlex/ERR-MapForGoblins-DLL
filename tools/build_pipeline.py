@@ -25,7 +25,7 @@ def _parse_profile(argv):
 
 
 PROFILE = _parse_profile(sys.argv[1:])
-if PROFILE not in ('err', 'vanilla', 'convergence2', 'convergence3', 'erte', 'goldenage', 'vins', 'reborn'):
+if PROFILE not in ('err', 'vanilla', 'convergence2', 'convergence3', 'erte', 'goldenage', 'vins', 'reborn', 'graceborne'):
     PROFILE = 'err'
 os.environ['MFG_PROFILE'] = PROFILE  # propagate to every child subprocess
 os.environ['PYTHONUTF8'] = '1'       # child stages read/write text as UTF-8 (non-ASCII game data,
@@ -42,7 +42,7 @@ CACHE_FILE = DATA / '.build_cache.json'
 # The convergence source is a STAGED dir (built by the prepare_merged_src
 # stage below) - create it up front so require_err_mod_dir passes on the
 # very first run; the stage then populates it before anything reads it.
-if PROFILE in ('convergence2', 'convergence3', 'erte', 'goldenage', 'vins', 'reborn'):
+if PROFILE in ('convergence2', 'convergence3', 'erte', 'goldenage', 'vins', 'reborn', 'graceborne'):
     config.DATA_SRC_DIR.mkdir(parents=True, exist_ok=True)
 
 ERR_MOD = config.require_err_mod_dir()  # profile-aware: mod overlay / vanilla game / merged dir
@@ -495,7 +495,7 @@ def active_stages():
     """
     if PROFILE == 'vanilla':
         return VANILLA_BOOTSTRAP + [s for s in STAGES if s.name not in ERR_ONLY_STAGES]
-    if PROFILE in ('convergence2', 'convergence3', 'erte', 'goldenage', 'vins', 'reborn'):
+    if PROFILE in ('convergence2', 'convergence3', 'erte', 'goldenage', 'vins', 'reborn', 'graceborne'):
         return ([_overlay_prepare_stage()] + VANILLA_BOOTSTRAP
                 + [s for s in STAGES if s.name not in ERR_ONLY_STAGES])
     return STAGES

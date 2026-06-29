@@ -374317,7 +374317,7 @@
   "gridZ": 44,
   "dispMask": "dispMask00",
   "itemLotId": 449020001,
-  "eventFlag": 1039447980,
+  "eventFlag": 1039449278,
   "partName": "c4490_9001",
   "items": [
    {
@@ -374345,7 +374345,7 @@
   "gridZ": 44,
   "dispMask": "dispMask00",
   "itemLotId": 449020002,
-  "eventFlag": 1039447980,
+  "eventFlag": 1039449278,
   "partName": "c4490_9001",
   "items": [
    {
@@ -374373,7 +374373,7 @@
   "gridZ": 44,
   "dispMask": "dispMask00",
   "itemLotId": 449020004,
-  "eventFlag": 1034558980,
+  "eventFlag": 1039449278,
   "partName": "c4490_9001",
   "items": [
    {
@@ -374401,7 +374401,7 @@
   "gridZ": 44,
   "dispMask": "dispMask00",
   "itemLotId": 449020000,
-  "eventFlag": 0,
+  "eventFlag": 1039449278,
   "partName": "c4490_9001",
   "items": [
    {
@@ -374429,7 +374429,7 @@
   "gridZ": 44,
   "dispMask": "dispMask00",
   "itemLotId": 449020011,
-  "eventFlag": 1039447990,
+  "eventFlag": 1039449278,
   "partName": "c4490_9002",
   "items": [
    {
@@ -374457,7 +374457,7 @@
   "gridZ": 44,
   "dispMask": "dispMask00",
   "itemLotId": 449020012,
-  "eventFlag": 1039447990,
+  "eventFlag": 1039449278,
   "partName": "c4490_9002",
   "items": [
    {
@@ -374485,7 +374485,7 @@
   "gridZ": 44,
   "dispMask": "dispMask00",
   "itemLotId": 449020014,
-  "eventFlag": 1034558980,
+  "eventFlag": 1039449278,
   "partName": "c4490_9002",
   "items": [
    {
@@ -374513,7 +374513,7 @@
   "gridZ": 44,
   "dispMask": "dispMask00",
   "itemLotId": 449020010,
-  "eventFlag": 0,
+  "eventFlag": 1039449278,
   "partName": "c4490_9002",
   "items": [
    {
@@ -919729,9 +919729,7 @@
   ],
   "primary_category": "consumable",
   "source": "emevd",
-  "guaranteed": true,
-  "enemyModel": "c0000",
-  "npcParamId": 523380016
+  "guaranteed": true
  },
  {
   "map": "m12_01_00_00",
@@ -919841,9 +919839,7 @@
   ],
   "primary_category": "key_item",
   "source": "emevd",
-  "guaranteed": true,
-  "enemyModel": "c1000",
-  "npcParamId": 10001000
+  "guaranteed": true
  },
  {
   "map": "m12_05_00_00",
@@ -919897,9 +919893,7 @@
   ],
   "primary_category": "key_item",
   "source": "emevd",
-  "guaranteed": true,
-  "enemyModel": "c1000",
-  "npcParamId": 10000000
+  "guaranteed": true
  },
  {
   "map": "m20_01_00_00",
@@ -919925,9 +919919,7 @@
   ],
   "primary_category": "armour",
   "source": "emevd",
-  "guaranteed": true,
-  "enemyModel": "c5220",
-  "npcParamId": 52201089
+  "guaranteed": true
  },
  {
   "map": "m20_01_00_00",
@@ -920009,9 +920001,7 @@
   ],
   "primary_category": "ash_of_war",
   "source": "emevd",
-  "guaranteed": true,
-  "enemyModel": "c1000",
-  "npcParamId": 10001000
+  "guaranteed": true
  },
  {
   "map": "m31_00_00_00",
@@ -920457,9 +920447,7 @@
   ],
   "primary_category": "talisman",
   "source": "emevd",
-  "guaranteed": true,
-  "enemyModel": "c3252",
-  "npcParamId": 32520921
+  "guaranteed": true
  },
  {
   "map": "m60_37_46_00",
@@ -920541,9 +920529,7 @@
   ],
   "primary_category": "crafting_material",
   "source": "emevd",
-  "guaranteed": true,
-  "enemyModel": "c4750",
-  "npcParamId": 47500030
+  "guaranteed": true
  },
  {
   "map": "m60_39_50_00",
@@ -920569,9 +920555,7 @@
   ],
   "primary_category": "talisman",
   "source": "emevd",
-  "guaranteed": true,
-  "enemyModel": "c4750",
-  "npcParamId": 47500030
+  "guaranteed": true
  },
  {
   "map": "m60_41_51_00",
@@ -920597,9 +920581,7 @@
   ],
   "primary_category": "armament",
   "source": "emevd",
-  "guaranteed": true,
-  "enemyModel": "c3251",
-  "npcParamId": 32511030
+  "guaranteed": true
  },
  {
   "map": "m60_41_51_00",
@@ -920625,9 +920607,7 @@
   ],
   "primary_category": "crafting_material",
   "source": "emevd",
-  "guaranteed": true,
-  "enemyModel": "c3251",
-  "npcParamId": 32511030
+  "guaranteed": true
  },
  {
   "map": "m60_41_51_00",
@@ -920653,9 +920633,7 @@
   ],
   "primary_category": "armament",
   "source": "emevd",
-  "guaranteed": true,
-  "enemyModel": "c3251",
-  "npcParamId": 32511030
+  "guaranteed": true
  },
  {
   "map": "m60_44_34_00",
@@ -920849,9 +920827,7 @@
   ],
   "primary_category": "crafting_material",
   "source": "emevd",
-  "guaranteed": true,
-  "enemyModel": "c3150",
-  "npcParamId": 31500050
+  "guaranteed": true
  },
  {
   "map": "m60_48_51_00",
@@ -920877,9 +920853,7 @@
   ],
   "primary_category": "ash_of_war",
   "source": "emevd",
-  "guaranteed": true,
-  "enemyModel": "c3150",
-  "npcParamId": 31500050
+  "guaranteed": true
  },
  {
   "map": "m60_49_39_00",
@@ -920961,9 +920935,7 @@
   ],
   "primary_category": "consumable",
   "source": "emevd",
-  "guaranteed": true,
-  "enemyModel": "c4602",
-  "npcParamId": 46029251
+  "guaranteed": true
  },
  {
   "map": "m61_46_38_00",

@@ -826,9 +826,13 @@ void goblin::setup_messages()
     {
         auto fmg_find = [&](uint8_t *fmg, int32_t id) -> const wchar_t *
         {
+            if (!fmg) return nullptr;
             uint32_t grp_cnt = *reinterpret_cast<uint32_t *>(fmg + 0x0C);
             uint32_t str_cnt = *reinterpret_cast<uint32_t *>(fmg + 0x10);
             uint64_t raw_off = *reinterpret_cast<uint64_t *>(fmg + 0x18);
+            // Sanity-bound a possibly-stale slot (see fmg_lookup_in) before walking it.
+            if (grp_cnt == 0 || grp_cnt > 0x100000 || str_cnt > 0x200000 || raw_off == 0)
+                return nullptr;
             uint8_t *off_ptr = (raw_off > 0x1000000) ? reinterpret_cast<uint8_t *>(raw_off) : fmg + raw_off;
             auto *groups = reinterpret_cast<FmgGroup *>(fmg + 0x28);
             auto *str_offs = reinterpret_cast<uint64_t *>(off_ptr);
@@ -1166,6 +1170,14 @@ static const wchar_t *fmg_lookup_in(uint8_t *fmg, int32_t id)
     uint32_t group_cnt  = *reinterpret_cast<uint32_t *>(fmg + 0x0C);
     uint32_t string_cnt = *reinterpret_cast<uint32_t *>(fmg + 0x10);
     uint64_t raw        = *reinterpret_cast<uint64_t *>(fmg + 0x18);
+    // Sanity-bound the header before walking it. A stale/garbage FMG slot pointer
+    // (e.g. a DLC PlaceName layer that isn't actually loaded on some builds) reads
+    // an absurd group_cnt here and the loop below derefs far out of bounds - an
+    // access violation that, inside setup_messages, aborts the whole step (FMG never
+    // patched -> the game later crashes in its own FMG lookup). Matches the guard the
+    // DLC-whitelist block already uses. Garbage -> treat as "not found".
+    if (group_cnt == 0 || group_cnt > 0x100000 || string_cnt > 0x200000 || raw == 0)
+        return nullptr;
     uint64_t off_rel = (raw > 0x1000000)
                            ? static_cast<uint64_t>(reinterpret_cast<uint8_t *>(raw) - fmg)
                            : raw;

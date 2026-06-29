@@ -46,6 +46,7 @@ echo %*| findstr /i /c:"--erte" >nul && set "MFG_PROFILE=erte"
 echo %*| findstr /i /c:"--goldenage" >nul && set "MFG_PROFILE=goldenage"
 echo %*| findstr /i /c:"--vins" >nul && set "MFG_PROFILE=vins"
 echo %*| findstr /i /c:"--reborn" >nul && set "MFG_PROFILE=reborn"
+echo %*| findstr /i /c:"--graceborne" >nul && set "MFG_PROFILE=graceborne"
 REM Dashboard progress tracking: profile (err if blank) + mode, used by the :dash calls below.
 set "DASH_PROF=%MFG_PROFILE%"
 if "%DASH_PROF%"=="" set "DASH_PROF=err"
@@ -93,6 +94,12 @@ if "%MFG_PROFILE%"=="reborn" set "PKG_PREFIX=Reborn"
 if "%MFG_PROFILE%"=="reborn" set "SNAP_DIR=%SCRIPT_DIR%releases\pre-release-reborn"
 if "%MFG_PROFILE%"=="reborn" set "DISP_PROFILE=reborn"
 if "%MFG_PROFILE%"=="reborn" set "README_SRC=%SCRIPT_DIR%assets\README_reborn.txt"
+if "%MFG_PROFILE%"=="graceborne" set "BUILD_DIR=%SCRIPT_DIR%builds\build-graceborne"
+if "%MFG_PROFILE%"=="graceborne" set "GEN_SUBDIR=generated_graceborne"
+if "%MFG_PROFILE%"=="graceborne" set "PKG_PREFIX=Graceborne"
+if "%MFG_PROFILE%"=="graceborne" set "SNAP_DIR=%SCRIPT_DIR%releases\pre-release-graceborne"
+if "%MFG_PROFILE%"=="graceborne" set "DISP_PROFILE=graceborne"
+if "%MFG_PROFILE%"=="graceborne" set "README_SRC=%SCRIPT_DIR%assets\README_graceborne.txt"
 echo [PROFILE] %DISP_PROFILE%  build=%BUILD_DIR%  gen=%GEN_SUBDIR%
 REM --skip-shared: caller (tools\build_all.py orchestrator) already ran gen_shared
 REM once; skip it here so parallel per-profile builds don't race on src\generated_shared.

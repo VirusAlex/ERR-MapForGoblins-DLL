@@ -1078,6 +1078,17 @@ def main():
         pos = award_enemy_pos.get(chosen)
         if not pos:
             continue
+        # Only a DEATH-checked pairing (IFCharacterDeadAlive on the entity) is
+        # strong enough to attribute the drop to that enemy and label the marker
+        # with its name. A boss-like/single pairing means the entity was merely
+        # REFERENCED in the event (often as a prerequisite event-flag, since the
+        # boss-defeat flag id equals the entity id) - NOT necessarily the dropper.
+        # e.g. ERR's "Lunar Princess' Exultation" is collected from a Stone
+        # Astrolabe (IFActionButton) in the Royal Knight Loretta arena; the event
+        # only event-flag-checks Loretta as a prerequisite, so labeling it
+        # "Loretta" (and the wrong Loretta at that) was wrong. For non-death
+        # pairings keep the position but emit NO enemy name/model -> plain item marker.
+        is_death = chosen in set(death)
         for lot in set(lots):
             if lot in existing_lot_ids:
                 continue  # already harvested by a treasure/enemy/template pass
@@ -1089,14 +1100,17 @@ def main():
             if (chosen, lot) in seen_scripted:
                 continue
             seen_scripted.add((chosen, lot))
-            treasures.append({
+            rec = {
                 'map': pos['map'], 'areaNo': pos['areaNo'],
                 'p1': pos['p1'], 'p2': pos['p2'],
                 'x': pos['x'], 'y': pos['y'], 'z': pos['z'],
                 'itemLotId': lot, 'partName': pos['name'],
-                'source': 'emevd', 'enemyModel': pos['model'],
-                'npcParamId': pos.get('npcParam', 0),
-            })
+                'source': 'emevd',
+            }
+            if is_death:
+                rec['enemyModel'] = pos['model']
+                rec['npcParamId'] = pos.get('npcParam', 0)
+            treasures.append(rec)
             scripted_matched += 1
     print(f'  {scripted_matched} scripted literal-award drops matched to entities')
 
@@ -1319,6 +1333,31 @@ def main():
 
     print(f'  Added {fallback_count} fallback records')
     print(f'  Total: {len(database)} records')
+
+    # ── Friendly-NPC drops that despawn via a story massacre ──
+    # The Jarburg "Living Jar Warriors" (c4490_9001/9002, teamType 26) drop loot
+    # ONLY if you murder them while alive. The Diallos questline massacres Jarburg
+    # and DISABLES them (ChangeCharacterEnableState in m60_39_44 ev1039443728),
+    # leaving unlootable corpses. There is no per-jar death flag (the engine kills
+    # them, it isn't scripted), so the lot's getItemFlagId only fires on a real
+    # aggro-kill+loot - markers lingered on the corpses after the story.
+    # Hide them on the monotonic "Jarburg attacked" flag 1039449278 (final step of
+    # the massacre countdown ev1039443727, set once, never cleared): markers show
+    # while the village is intact (still lootable by aggro), hide once it falls.
+    # (The hostile c4490_9000 / npc 44909620 uses normal hostile-enemy handling and
+    # is intentionally NOT included.) Keyed by NpcParam id (globally unique).
+    FRIENDLY_DESPAWN_FLAG = {
+        44908320: 1039449278,  # c4490_9001 Living Jar Warrior (Jarburg)
+        44908420: 1039449278,  # c4490_9002 Living Jar Warrior (Jarburg)
+    }
+    despawn_overridden = 0
+    for rec in database:
+        f = FRIENDLY_DESPAWN_FLAG.get(rec.get('npcParamId', 0))
+        if f and rec.get('eventFlag', 0) != f:
+            rec['eventFlag'] = f
+            despawn_overridden += 1
+    if despawn_overridden:
+        print(f'  Re-flagged {despawn_overridden} friendly-despawn NPC drops to hide on the village-massacre flag')
 
     print('\n=== Category breakdown ===')
     cat_counts = {}
