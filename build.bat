@@ -27,19 +27,14 @@ if not defined VS_INSTALL (
 )
 set "VS_PATH=%VS_INSTALL%\Common7\Tools\VsDevCmd.bat"
 
-REM Build profile: default = ERR; pass "--vanilla", "--convergence2", "--convergence3",
-REM "--erte", "--goldenage", "--vins" or "--reborn" (any position).
-REM   ERR:          data/, src/generated, build/, pre-release/
-REM   vanilla:      data/vanilla, src/generated_vanilla, build-vanilla/, pre-release-vanilla/
-REM   convergence2: data/convergence2, src/generated_convergence2, build-convergence2/, ... (Convergence 2.x, ME2)
-REM   convergence3: data/convergence3, src/generated_convergence3, build-convergence3/, ... (Convergence 3.x, ME3)
-REM MFG_PROFILE is exported so build_pipeline.py + config.py pick the data source.
-set "GEN_SUBDIR=generated"
-set "PKG_PREFIX=ERR"
-set "SNAP_DIR=%SCRIPT_DIR%releases\pre-release-err"
-set "DISP_PROFILE=err"
-set "README_SRC=%SCRIPT_DIR%assets\README.txt"
+REM Build profile (flag may be in any position). Default = ERR when no flag.
+REM Flags: --vanilla --err --convergence2 --convergence3 --erte --goldenage
+REM        --vins --reborn --graceborne. Each profile scopes its own
+REM        data/<p>, src/generated_<p>, builds/build-<p>, releases/pre-release-<p>
+REM        (err uses the unsuffixed data/, src/generated, builds/build). MFG_PROFILE
+REM        is exported so build_pipeline.py + config.py pick the data source.
 echo %*| findstr /i /c:"--vanilla" >nul && set "MFG_PROFILE=vanilla"
+echo %*| findstr /i /c:"--err" >nul && set "MFG_PROFILE=err"
 echo %*| findstr /i /c:"--convergence2" >nul && set "MFG_PROFILE=convergence2"
 echo %*| findstr /i /c:"--convergence3" >nul && set "MFG_PROFILE=convergence3"
 echo %*| findstr /i /c:"--erte" >nul && set "MFG_PROFILE=erte"
@@ -47,17 +42,24 @@ echo %*| findstr /i /c:"--goldenage" >nul && set "MFG_PROFILE=goldenage"
 echo %*| findstr /i /c:"--vins" >nul && set "MFG_PROFILE=vins"
 echo %*| findstr /i /c:"--reborn" >nul && set "MFG_PROFILE=reborn"
 echo %*| findstr /i /c:"--graceborne" >nul && set "MFG_PROFILE=graceborne"
-REM Dashboard progress tracking: profile (err if blank) + mode, used by the :dash calls below.
+if not defined MFG_PROFILE set "MFG_PROFILE=err"
+REM Dashboard progress tracking: profile + mode, used by the :dash calls below.
 set "DASH_PROF=%MFG_PROFILE%"
-if "%DASH_PROF%"=="" set "DASH_PROF=err"
 set "DASH_MODE=%~1"
 if "%DASH_MODE%"=="" set "DASH_MODE=build"
+REM Per-profile output dirs / package names (vanilla first, then err, then overhauls).
 if "%MFG_PROFILE%"=="vanilla" set "BUILD_DIR=%SCRIPT_DIR%builds\build-vanilla"
 if "%MFG_PROFILE%"=="vanilla" set "GEN_SUBDIR=generated_vanilla"
 if "%MFG_PROFILE%"=="vanilla" set "PKG_PREFIX=Vanilla"
 if "%MFG_PROFILE%"=="vanilla" set "SNAP_DIR=%SCRIPT_DIR%releases\pre-release-vanilla"
 if "%MFG_PROFILE%"=="vanilla" set "DISP_PROFILE=vanilla"
 if "%MFG_PROFILE%"=="vanilla" set "README_SRC=%SCRIPT_DIR%assets\README_vanilla.txt"
+if "%MFG_PROFILE%"=="err" set "BUILD_DIR=%SCRIPT_DIR%builds\build"
+if "%MFG_PROFILE%"=="err" set "GEN_SUBDIR=generated"
+if "%MFG_PROFILE%"=="err" set "PKG_PREFIX=ERR"
+if "%MFG_PROFILE%"=="err" set "SNAP_DIR=%SCRIPT_DIR%releases\pre-release-err"
+if "%MFG_PROFILE%"=="err" set "DISP_PROFILE=err"
+if "%MFG_PROFILE%"=="err" set "README_SRC=%SCRIPT_DIR%assets\README.txt"
 if "%MFG_PROFILE%"=="convergence2" set "BUILD_DIR=%SCRIPT_DIR%builds\build-convergence2"
 if "%MFG_PROFILE%"=="convergence2" set "GEN_SUBDIR=generated_convergence2"
 if "%MFG_PROFILE%"=="convergence2" set "PKG_PREFIX=Convergence 2.x"

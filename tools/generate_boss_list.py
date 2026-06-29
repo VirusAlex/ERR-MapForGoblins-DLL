@@ -261,6 +261,27 @@ def main():
             except Exception:
                 continue
             for ev in em.Events:
+                # Custom (non-template) boss-death events: a bespoke per-map event
+                # that does HandleBossDefeatandDisplayBanner (2003:12) / Handle
+                # Miniboss Defeat (2003:15) on the boss entity, then SetEventFlag
+                # (2003:66/69) the real defeat flag. Overhauls (e.g. The Convergence's
+                # "Shabriri's Chosen", m31_82) use this instead of the 90005860/61/80
+                # templates, so the template scan below misses them and boss_list
+                # fell back to the entity-valued GameAreaParam field (a flag that is
+                # never set -> the marker never gets its checkmark / never hides).
+                # Map boss entity -> the FIRST flag set ON after the defeat banner.
+                pending_boss_ent = 0
+                for ins in ev.Instructions:
+                    b = int(ins.Bank); iid = int(ins.ID)
+                    a = bytes(ins.ArgData)
+                    if b == 2003 and iid in (12, 15) and len(a) >= 4:
+                        pending_boss_ent = _struct.unpack_from('<i', a, 0)[0]
+                    elif b == 2003 and iid in (66, 69) and pending_boss_ent > 0 and len(a) >= 12:
+                        fl = _struct.unpack_from('<i', a, 4)[0]
+                        st = _struct.unpack_from('<i', a, 8)[0]
+                        if st == 1 and fl > 0:
+                            emevd_defeat.setdefault(pending_boss_ent, fl)
+                            pending_boss_ent = 0  # only the first flag after the banner
                 for ins in ev.Instructions:
                     if int(ins.Bank) != 2000:
                         continue
