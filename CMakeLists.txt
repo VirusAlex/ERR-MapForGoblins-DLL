@@ -43,8 +43,8 @@ FetchContent_Declare(spdlog
   GIT_TAG               v1.13.0)
 
 # Dear ImGui (in-game config overlay). Source-only: we compile the core + the
-# DX12/Win32 backends into a small static lib below. Pinned tag with the stable
-# positional ImGui_ImplDX12_Init signature.
+# DX11/Win32 backends into the DLL below (the overlay renders in its own D3D11 +
+# DirectComposition window; the DX12 backend is also compiled but unused now).
 FetchContent_Declare(imgui
   GIT_REPOSITORY        https://github.com/ocornut/imgui.git
   GIT_TAG               v1.90.9
@@ -160,13 +160,14 @@ target_compile_definitions(MapForGoblins PRIVATE MINIZ_NO_ARCHIVE_APIS MINIZ_NO_
 
 set_target_properties(MapForGoblins PROPERTIES OUTPUT_NAME "MapForGoblins")
 
-# Dear ImGui (core + DX12/Win32 backends) compiled into the DLL for the in-game
-# config overlay. Same target => same /MT + _ITERATOR_DEBUG_LEVEL=0 + config.
+# Dear ImGui (core + DX11/DX12/Win32 backends) compiled into the DLL for the
+# in-game config overlay. Same target => same /MT + _ITERATOR_DEBUG_LEVEL=0 + config.
 target_sources(MapForGoblins PRIVATE
   ${imgui_SOURCE_DIR}/imgui.cpp
   ${imgui_SOURCE_DIR}/imgui_draw.cpp
   ${imgui_SOURCE_DIR}/imgui_tables.cpp
   ${imgui_SOURCE_DIR}/imgui_widgets.cpp
+  ${imgui_SOURCE_DIR}/backends/imgui_impl_dx11.cpp
   ${imgui_SOURCE_DIR}/backends/imgui_impl_dx12.cpp
   ${imgui_SOURCE_DIR}/backends/imgui_impl_win32.cpp)
 target_include_directories(MapForGoblins PRIVATE
@@ -174,12 +175,9 @@ target_include_directories(MapForGoblins PRIVATE
   ${CMAKE_SOURCE_DIR}/src
   ${CMAKE_SOURCE_DIR}/src/generated_shared)
 
-# Disable the Win32 backend's built-in XInput gamepad polling. We feed gamepad
-# ourselves in feed_input() from the HOOKED XInput (so the game is gated and we
-# control deadzone/repeat). Leaving the backend's polling on double-feeds nav:
-# our feed says button-DOWN (pre-NewFrame) and the backend reads our zeroed
-# XInput and feeds button-UP (in NewFrame) every frame -> a fresh press each
-# frame -> continuous/instant nav movement.
+# Disable the Win32 backend's built-in XInput gamepad polling. The overlay polls
+# XInput itself in feed_gamepad() and masks the menu-toggle combo out of the nav
+# feed; letting the backend also poll would double-feed nav and fight our masking.
 target_compile_definitions(MapForGoblins PRIVATE IMGUI_IMPL_WIN32_DISABLE_GAMEPAD)
 
 # Reproducible build: /Brepro makes the compiler emit deterministic object files
@@ -262,6 +260,8 @@ target_link_libraries( MapForGoblins
   pattern16
   mini
   spdlog
+  d3d11
   d3d12
   dxgi
+  dcomp
   comdlg32)

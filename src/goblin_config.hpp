@@ -147,6 +147,12 @@ namespace goblin
         extern std::string uiLanguage; // auto, english, schinese, tchinese
         extern float fontScale;        // overlay text size multiplier (live io.FontGlobalScale)
         extern bool enableOverlay;
+        extern float overlayOpacity;   // overlay menu panel opacity 0.3..1.0 (window bg alpha)
+        // Overlay menu window geometry, persisted across sessions. overlayWinX = window
+        // CENTER x as a fraction of screen width (0.5 = centered); overlayWinY = window
+        // TOP y as a fraction of screen height (0 = flush top). Fractions survive a
+        // resolution/aspect change; overlayWinW/H are pixels. Auto-saved on close.
+        extern float overlayWinX, overlayWinY, overlayWinW, overlayWinH;
 
         // Marker dump (hotkey → dump beacon/stamp coords to file)
         extern bool enableMarkerDump;

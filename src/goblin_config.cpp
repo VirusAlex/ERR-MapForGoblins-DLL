@@ -63,11 +63,14 @@ namespace
             break;
         case IniType::Float:
         {
+            // No generic range clamp here: different Float keys have different valid
+            // ranges (font_scale 0.8-3.0, overlay_opacity 0.3-1.0, overlay_window_x/y are
+            // 0..1 fractions, overlay_window_w/h are pixels). Each consumer clamps its own
+            // value. A hard [0.5,3.0] clamp here mangled everything else (e.g. it turned
+            // overlay_window_y=0.03 into 0.5). stof-failure falls back to a neutral 1.0.
             float val;
             try { val = std::stof(v); }
             catch (...) { val = 1.0f; }
-            if (val < 0.5f) val = 0.5f;
-            if (val > 3.0f) val = 3.0f;
             *static_cast<float *>(e.target) = val;
             break;
         }

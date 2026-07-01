@@ -55,9 +55,14 @@ mod is a plain DLL, it loads through EML like any other DLL mod.
 1. Install Elden Mod Loader: extract its files into your Game folder
    (next to eldenring.exe). It adds dinput8.dll, mod_loader_config.ini
    and a "mods" folder.
-2. Copy MapForGoblins.dll and MapForGoblins.ini into that "mods"
+2. Open mod_loader_config.ini and set  load_delay = 0
+   IMPORTANT: EML's default delay (e.g. load_delay = 5000 = 5 seconds)
+   loads the DLL after the world map has already been built, so the
+   icons will NOT appear. Setting it to 0 loads the DLL early enough
+   for the icons to inject.
+3. Copy MapForGoblins.dll and MapForGoblins.ini into that "mods"
    folder. EML loads every DLL in there at startup.
-3. Launch the game offline (EML does not bypass EAC, so play offline -
+4. Launch the game offline (EML does not bypass EAC, so play offline -
    e.g. start in offline mode from Steam).
 
 ============================================================

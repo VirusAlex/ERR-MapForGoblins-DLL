@@ -74,6 +74,12 @@ namespace goblin::config
     std::string uiLanguage = "auto";
     float fontScale = 1.0f;  // overlay text size multiplier (live io.FontGlobalScale)
     bool enableOverlay = true;
+    float overlayOpacity = 1.0f;                 // overlay menu panel opacity (window bg alpha)
+    // Menu window geometry. overlayWinX = the window's CENTER x as a fraction of screen
+    // width (0.5 = horizontally centered); overlayWinY = the window's TOP y as a fraction
+    // of screen height (0 = flush to the top). Stored as fractions so the position stays
+    // sensible after a resolution/aspect change. W/H are pixels.
+    float overlayWinX = 0.5f, overlayWinY = 0.03f, overlayWinW = 560.0f, overlayWinH = 680.0f;
     bool enableMarkerDump = false;
     uint32_t markerDumpKey = 0x78; // VK_F9
     bool enableToggleHotkey = true;
@@ -247,8 +253,19 @@ namespace
                          "Overlay language. auto follows the Steam game language; unrecognized languages\nfall back to English.", false, nullptr},
                 IniEntry{"overlay_font_scale", IniType::Float, &cfg::fontScale, "1.0",
                          "Overlay menu text size multiplier (1.0 = default). Raise on 4K / high-DPI\nscreens if the menu text is too small. Also adjustable live from the slider at\nthe top of the overlay's Settings tab.", false, nullptr},
+                IniEntry{"overlay_opacity", IniType::Float, &cfg::overlayOpacity, "1.0",
+                         "Overlay menu panel opacity, 0.3 to 1.0 (1.0 = solid). Lower it to see more\nof the map behind the menu. Also adjustable live from a slider in the Settings tab.", false, nullptr},
                 B("enable_overlay", enableOverlay, "true",
                   "In-game config overlay (Dear ImGui) opened with the toggle key below.\nSet false if a DX overlay conflict (Steam overlay/RTSS/GeForce Experience) or a\nGPU driver issue makes the game unstable."),
+                // Overlay menu window geometry - auto-managed (saved when you move/resize the
+                // menu and close it, restored on open). X = the window CENTER as a fraction of
+                // screen width (0.5 = centered); Y = the window TOP as a fraction of screen
+                // height (0 = flush top). Fractions keep the position sensible after a
+                // resolution/aspect change; W/H are in pixels (clamped to fit the screen).
+                IniEntry{"overlay_window_x", IniType::Float, &cfg::overlayWinX, "0.5", "Overlay menu horizontal CENTER, fraction of screen width (0.5 = centered). Auto-saved.", false, nullptr},
+                IniEntry{"overlay_window_y", IniType::Float, &cfg::overlayWinY, "0.03", "Overlay menu TOP edge, fraction of screen height (0.0 = top). Auto-saved.", false, nullptr},
+                IniEntry{"overlay_window_w", IniType::Float, &cfg::overlayWinW, "560", "Overlay menu window width in pixels (auto-saved, clamped to screen).", false, nullptr},
+                IniEntry{"overlay_window_h", IniType::Float, &cfg::overlayWinH, "680", "Overlay menu window height in pixels (auto-saved, clamped to screen).", false, nullptr},
                 B("enable_toggle_hotkey", enableToggleHotkey, "true",
                   "Enable toggle_key / toggle_gamepad_combo to switch ALL map icons on/off when\nthe overlay is DISABLED. (When the overlay is enabled, they open it instead.)"),
                 IniEntry{"toggle_key", IniType::VkKey, &cfg::toggleInjectionKey, "F10",

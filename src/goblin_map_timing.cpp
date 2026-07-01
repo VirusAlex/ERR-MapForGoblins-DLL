@@ -67,7 +67,7 @@ namespace
     }
 
     // Latch g_built after the first map build (a burst of build-site refreshes) so
-    // later opens skip the redundant relayout. Runs every frame from on_present.
+    // later opens skip the redundant relayout. Driven from the ce390 detour (game UI thread).
     void latch_built()
     {
         if (!g_built.load(std::memory_order_relaxed) &&
@@ -104,6 +104,19 @@ namespace
     {
         uintptr_t ret = (uintptr_t)_ReturnAddress();
         bool map_site = (ret == g_ce_gate[0] || ret == g_ce_gate[1] || ret == g_ce_gate[2]);
+        // Drive the first-open amortize replay + the build latch HERE, on the game's
+        // UI thread, once per map-layout pass. The overlay used to call on_present()
+        // from its swapchain Present hook every frame, but the overlay now renders in
+        // a separate window and never touches the game thread; this map dispatcher
+        // call (gate[0]) is the closest game-thread per-frame signal while the map is
+        // open, so the deferred relayout still drains across frames + the layout never
+        // runs on a foreign thread. Gate on the first ce390 site so it fires once per
+        // pass, not 3x. (latch only flips after the first build's refresh burst.)
+        if (map_site && ret == g_ce_gate[0])
+        {
+            amortize_pump();
+            latch_built();
+        }
         // Reuse on RE-open (structure already built); runs in-line on first open.
         if (goblin::config::fastMapOpen && g_built.load(std::memory_order_relaxed) && map_site)
             return nullptr;
@@ -120,12 +133,6 @@ namespace
         }
         return o_wmd_dtor(self);
     }
-}
-
-void goblin::map_timing::on_present()
-{
-    amortize_pump(); // replay deferred first-open relayout, a budget per frame
-    latch_built();   // enable the re-open skip after the first build
 }
 
 void goblin::map_timing::setup()

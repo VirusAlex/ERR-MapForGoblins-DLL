@@ -1,24 +1,34 @@
-// In-game config overlay: Dear ImGui drawn into the game's own DX12 swapchain.
+// In-game config overlay: Dear ImGui drawn in a SEPARATE, INDEPENDENT transparent
+// top-most window with its own D3D11 + DirectComposition device, on its own thread.
 //
-// Hook model (the standard UniversalHookX / EROverlay pattern for D3D12):
-//   - IDXGISwapChain::Present (vtable idx 8)   -> drive rendering + lazy init
-//   - ID3D12CommandQueue::ExecuteCommandLists  -> capture the game's graphics
-//     queue (the DX12 queue is NOT reachable from a Present-only hook)
-//   - IDXGISwapChain::ResizeBuffers (idx 13)   -> tear down our RTVs so the
-//     resize succeeds; we re-create them on the next Present
-// vtable pointers are grabbed once from a throwaway device+swapchain at setup,
-// so there is no game-specific RVA/AOB to maintain.
+// Why a separate window (not a swapchain hook): we no longer touch the game's DXGI
+// swapchain at all. That makes the overlay compatible with tools that wrap the
+// game's swapchain (Special K, NVIDIA Smooth Motion / driver frame-gen, ReShade) -
+// the old Present/ExecuteCommandLists hook fought those wrappers and crashed.
 //
-// PROTOTYPE SCOPE: renders the panel, edits the live config bools, and Saves to
-// the ini (effective next launch). Mouse + keyboard input via a WndProc detour.
-// Gamepad nav flag is set but the game's XInput is NOT yet gated, and per-toggle
-// live re-apply is a later phase (the expanded param table is filtered at init).
+// Architecture:
+//   - setup() spawns a detached overlay thread that creates the window + D3D11 +
+//     DComp + ImGui DX11 backend and runs the render loop. setup() returns fast.
+//   - The window is WS_POPUP + WS_EX_LAYERED|TRANSPARENT|TOPMOST|NOACTIVATE|
+//     TOOLWINDOW; transparency comes from DirectComposition (premultiplied alpha),
+//     NOT UpdateLayeredWindow.
+//   - Each loop iteration the overlay window is moved to exactly cover the game's
+//     client area, so it sits over the game like a HUD.
+//   - F10 (toggle key) + ESC are polled with GetAsyncKeyState (rising edge) to
+//     open/close the menu. While CLOSED the window is click-through (WS_EX_TRANSPARENT)
+//     and renders nothing; while OPEN it is interactive and ImGui draws the panel.
+//   - Input is our OWN WndProc -> ImGui_ImplWin32_WndProcHandler (mouse + keyboard).
+//     Optional gamepad nav is polled directly via XInputGetState (no hook).
+//
+// All UI drawing code (draw_settings_window / tabs / rebind / preview) is backend
+// -agnostic and reused verbatim; only the texture path is now D3D11 SRVs.
 
 #define WIN32_LEAN_AND_MEAN
 #define NOMINMAX
 #include <windows.h>
-#include <d3d12.h>
-#include <dxgi1_4.h>
+#include <d3d11.h>
+#include <dxgi1_3.h>
+#include <dcomp.h>
 #include <Xinput.h>
 
 #include "goblin_overlay.hpp"
@@ -30,14 +40,12 @@
 #include "miniz.h"              // zlib inflate to decode the tags
 #include "goblin_inject.hpp"
 #include "goblin_markers.hpp"
-#include "goblin_map_timing.hpp"
-#include "goblin_gfx_probe.hpp"
 #include "goblin_diag.hpp"
-#include "modutils.hpp"
+#include "modutils.hpp" // hook GetRawInputData (menu input-leak block)
 
 #include <spdlog/spdlog.h>
 #include <imgui.h>
-#include <backends/imgui_impl_dx12.h>
+#include <backends/imgui_impl_dx11.h>
 #include <backends/imgui_impl_win32.h>
 
 #include <atomic>
@@ -59,8 +67,9 @@
 
 #include "version.h" // PROJECT_VERSION (generated)
 
-#pragma comment(lib, "d3d12.lib")
+#pragma comment(lib, "d3d11.lib")
 #pragma comment(lib, "dxgi.lib")
+#pragma comment(lib, "dcomp.lib")
 #pragma comment(lib, "comdlg32.lib")
 
 // From imgui_impl_win32.cpp
@@ -69,74 +78,48 @@ extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg
 
 namespace
 {
-using Present_t = HRESULT(WINAPI *)(IDXGISwapChain3 *, UINT, UINT);
-using ResizeBuffers_t = HRESULT(WINAPI *)(IDXGISwapChain3 *, UINT, UINT, UINT, DXGI_FORMAT, UINT);
-using ExecuteCommandLists_t = void(WINAPI *)(ID3D12CommandQueue *, UINT, ID3D12CommandList *const *);
-using GetRawInputData_t = UINT(WINAPI *)(HRAWINPUT, UINT, LPVOID, PUINT, UINT);
 using XInputGetState_t = DWORD(WINAPI *)(DWORD, XINPUT_STATE *);
+XInputGetState_t pXInputGetState = nullptr; // resolved once on the overlay thread
+XInputGetState_t o_XInputGetState = nullptr; // trampoline: OUR poll reads the real pad
+                                             // through this; the hook feeds the GAME a
+                                             // disconnected pad while the menu is open.
 
-Present_t oPresent = nullptr;
-ResizeBuffers_t oResizeBuffers = nullptr;
-ExecuteCommandLists_t oExecuteCommandLists = nullptr;
-GetRawInputData_t oGetRawInputData = nullptr;
-XInputGetState_t oXInputGetState = nullptr;
+// ── Our own window + D3D11 + DirectComposition state (overlay thread only) ──
+const wchar_t *OVERLAY_CLASS = L"MFG_OverlayWindow";
+HWND g_hwnd = nullptr;          // our overlay window
+HWND g_game_hwnd = nullptr;     // tracked game main window (for cover + focus return)
 
-// Captured active-controller state for ImGui gamepad nav and overlay hotkeys.
-// The game may read only controller slot 0, so hkPresent also refreshes this from
-// every XInput slot before it evaluates menu inputs.
-XINPUT_GAMEPAD g_pad{};
-bool g_pad_ok = false;
-DWORD g_pad_index = 0;
+ID3D11Device *g_d3d_device = nullptr;
+ID3D11DeviceContext *g_d3d_ctx = nullptr;
+IDXGISwapChain1 *g_swapchain = nullptr; // composition swapchain (B8G8R8A8, premult alpha)
+ID3D11RenderTargetView *g_rtv = nullptr;
+IDCompositionDevice *g_dcomp_device = nullptr;
+IDCompositionTarget *g_dcomp_target = nullptr;
+IDCompositionVisual *g_dcomp_visual = nullptr;
+UINT g_back_w = 0, g_back_h = 0; // current swapchain back-buffer size
+// Proton/Wine fallback: DirectComposition (CreateSwapChainForComposition) returns
+// E_NOTIMPL under Wine, so there we present via a WS_EX_LAYERED window fed by
+// UpdateLayeredWindow (render ImGui to an offscreen RT -> CPU readback -> per-pixel
+// alpha blit). Windows keeps the DComp path unchanged. g_use_layered selects the path.
+bool g_use_layered = false;
+ID3D11Texture2D *g_ltex = nullptr;        // offscreen render target (B8G8R8A8)
+ID3D11RenderTargetView *g_lrtv = nullptr; // RTV for g_ltex
+ID3D11Texture2D *g_lstaging = nullptr;    // CPU-readable copy of g_ltex
+HDC g_lmemdc = nullptr;                    // memory DC holding g_ldib
+HBITMAP g_ldib = nullptr;                  // 32bpp top-down DIB for UpdateLayeredWindow
+void *g_ldibbits = nullptr;               // g_ldib pixel buffer
 
-// Raw-input capture (ER reads kbd/mouse via raw input, not legacy WM_* msgs).
-// The hook runs on the game's message thread; it only writes these atomics, and
-// render() (render thread) drains them into ImGui so all ImGui IO stays on one
-// thread.
-std::atomic<int> g_raw_dx{0};
-std::atomic<int> g_raw_dy{0};
-std::atomic<int> g_raw_wheel{0};
-std::atomic<uint32_t> g_raw_btn{0}; // bit0=L bit1=R bit2=M (current state)
-
-// Key-state table fed from input we ALREADY intercept (raw input in
-// hkGetRawInputData + WM_KEY* in hkWndProc). Lets hotkeys be read WITHOUT
-// GetAsyncKeyState (a keylogger-flavored USER32 import). Index = Win32 VK.
-std::atomic<bool> g_keystate[256]{};
-inline bool kd(int vk) { return (unsigned)vk < 256u && g_keystate[(unsigned)vk].load(std::memory_order_relaxed); }
-float g_mouse_x = 0.0f, g_mouse_y = 0.0f;
-bool g_need_center = true;
-bool g_os_cursor = false; // OS hardware cursor visible (e.g. in-game map open)
-
-// Raw keyboard -> ImGui (needed for InputText Ctrl+A / Ctrl+C in the dump box).
-// Captured on the message thread, drained in render thread (single-thread IO).
-struct KeyEv { ImGuiKey key; bool down; };
-std::mutex g_key_mtx;
-std::vector<KeyEv> g_key_events;
-
-struct FrameContext
-{
-    ID3D12CommandAllocator *allocator = nullptr;
-    ID3D12Resource *render_target = nullptr;
-    D3D12_CPU_DESCRIPTOR_HANDLE rtv_handle{};
-};
-
-ID3D12Device *g_device = nullptr;
-ID3D12DescriptorHeap *g_srv_heap = nullptr; // shader-visible, holds imgui font SRV
-ID3D12DescriptorHeap *g_rtv_heap = nullptr;
-ID3D12GraphicsCommandList *g_command_list = nullptr;
-ID3D12CommandQueue *g_command_queue = nullptr; // captured from ExecuteCommandLists
-FrameContext *g_frames = nullptr;
-UINT g_buffer_count = 0;
-
-ID3D12Resource *g_atlas_tex = nullptr;        // category-icon atlas texture
-D3D12_GPU_DESCRIPTOR_HANDLE g_atlas_gpu{};    // its SRV (g_srv_heap index 1)
-ID3D12Resource *g_logo_tex = nullptr;         // mod logo texture
-D3D12_GPU_DESCRIPTOR_HANDLE g_logo_gpu{};     // its SRV (g_srv_heap index 2)
+// Texture + SRV trio for each UI image. ImGui ImTextureID = the SRV pointer.
+ID3D11Texture2D *g_atlas_tex = nullptr;   // category-icon atlas
+ID3D11ShaderResourceView *g_atlas_srv = nullptr;
+ID3D11Texture2D *g_logo_tex = nullptr;    // mod logo
+ID3D11ShaderResourceView *g_logo_srv = nullptr;
 bool g_atlas_ready = false;
 
 // Dev "Icon Preview" (Debug tab): pick a PNG off disk, show it floating + centered with a transparent
 // background at a chosen on-map size, so icon art can be eyeballed against the live map without a rebuild.
-ID3D12Resource *g_preview_tex = nullptr;       // picked-png texture (g_srv_heap index 3)
-D3D12_GPU_DESCRIPTOR_HANDLE g_preview_gpu{};
+ID3D11Texture2D *g_preview_tex = nullptr;
+ID3D11ShaderResourceView *g_preview_srv = nullptr;
 int g_preview_w = 0, g_preview_h = 0;          // source png dimensions
 int g_preview_iw = 0, g_preview_ih = 0;        // normalized (fit-to-96 then cropped) dims, for proportional draw
 std::atomic<bool> g_preview_show{false};       // floating preview window visible
@@ -147,36 +130,34 @@ std::atomic<bool> g_preview_dirty{false};      // a new path is waiting to be de
 std::atomic<bool> g_preview_dialog_open{false}; // a file dialog is already up (avoid stacking)
 static void open_preview_dialog(); // defined below (opens the file dialog on a worker thread)
 
-// GPU sync: a fence we signal+wait after each submit so we never reuse the
-// command list/allocator (or free RTVs on resize) while the GPU is still using
-// them - the AMD/Steam-Deck "device removed" failure mode if omitted.
-ID3D12Fence *g_fence = nullptr;
-UINT64 g_fence_val = 0;
-HANDLE g_fence_event = nullptr;
-
-HWND g_hwnd = nullptr;
-WNDPROC g_orig_wndproc = nullptr;
-
+std::atomic<bool> g_running{false}; // overlay thread alive (teardown guard)
 std::atomic<bool> g_menu_open{false};
-// Buttons held at the moment the overlay closed (e.g. B used to close it). We
-// keep suppressing them in the game's XInput read until released, so the closing
-// press does not fall through into gameplay.
-std::atomic<WORD> g_pad_swallow[XUSER_MAX_COUNT]{};
-bool g_context_inited = false; // ImGui context + win32 backend + wndproc detour
-bool g_dx12_inited = false;    // DX12 device objects + ImGui dx12 backend
-std::vector<char> g_dump_buf;       // Tools tab: last marker-dump text (copyable)
+// Open/close + rebind use GetAsyncKeyState polling (the game keeps focus -> reliable +
+// symmetric). Key leak into the game while the menu is open is blocked by a hook on
+// GetRawInputData (see hk_GetRawInputData). We never steal the game's focus.
+bool g_context_inited = false; // ImGui context + win32 backend created
+bool g_d3d_inited = false;     // D3D11 + DComp + ImGui dx11 backend created
+std::vector<char> g_dump_buf;  // Tools tab: last marker-dump text (copyable)
+
+// Captured active-controller state for ImGui gamepad nav (polled, not hooked).
+XINPUT_GAMEPAD g_pad{};
+bool g_pad_ok = false;
 
 // In-overlay hotkey rebind. mode: 0=idle, 1=capturing a keyboard key, 2=capturing
-// a gamepad combo. While != 0, hkPresent ignores the open/close + ESC/B inputs so
-// binding those keys doesn't act on the menu.
+// a gamepad combo. While != 0, the open/close + ESC inputs are ignored so binding
+// those keys doesn't act on the menu.
 std::atomic<int> g_rebind_mode{0};
 void *g_rebind_target = nullptr;          // config var being rebound (render thread)
-std::atomic<uint32_t> g_captured_vk{0};   // first VK seen by the raw-input hook during rebind
+std::atomic<uint32_t> g_captured_vk{0};   // first VK seen during rebind
 std::atomic<bool> g_captured_up{false};   // that key was released -> safe to commit (no auto-trigger)
 uint16_t g_rebind_pad_accum = 0;          // gamepad buttons accumulated this rebind
 
 // Last input device, for control hints: 0 = keyboard/mouse, 1 = gamepad.
 std::atomic<int> g_last_input{0};
+
+// Hotkey state read straight from the OS (callers gate on window focus). Read
+// GetAsyncKeyState directly - it worked for years; a key-state table missed F10.
+inline bool kd(int vk) { return (GetAsyncKeyState(vk) & 0x8000) != 0; }
 
 // ── ER-flavored dark/gold theme ──
 void apply_er_style()
@@ -219,14 +200,13 @@ void draw_row_icon(const char *key)
     constexpr float ICON_SZ = 28.0f;
     using namespace goblin::overlay_icons;
     const IconCell *ic = g_atlas_ready ? find_icon_cell(key) : nullptr;
-    if (ic)
+    if (ic && g_atlas_srv)
     {
         const ImVec2 uv0((ic->col * CELL) / static_cast<float>(ATLAS_W),
                          (ic->row * CELL) / static_cast<float>(ATLAS_H));
         const ImVec2 uv1(((ic->col + 1) * CELL) / static_cast<float>(ATLAS_W),
                          ((ic->row + 1) * CELL) / static_cast<float>(ATLAS_H));
-        ImGui::Image(reinterpret_cast<ImTextureID>(static_cast<uintptr_t>(g_atlas_gpu.ptr)),
-                     ImVec2(ICON_SZ, ICON_SZ), uv0, uv1);
+        ImGui::Image(reinterpret_cast<ImTextureID>(g_atlas_srv), ImVec2(ICON_SZ, ICON_SZ), uv0, uv1);
     }
     else
     {
@@ -277,116 +257,6 @@ std::string fmt_gamepad(uint16_t m)
     return s.empty() ? "(none)" : s;
 }
 
-constexpr int PAD_ACTIVITY_DEADZONE = 12000;
-
-bool pad_has_activity(const XINPUT_GAMEPAD &pad)
-{
-    return pad.wButtons != 0 ||
-           pad.sThumbLX > PAD_ACTIVITY_DEADZONE || pad.sThumbLX < -PAD_ACTIVITY_DEADZONE ||
-           pad.sThumbLY > PAD_ACTIVITY_DEADZONE || pad.sThumbLY < -PAD_ACTIVITY_DEADZONE ||
-           pad.sThumbRX > PAD_ACTIVITY_DEADZONE || pad.sThumbRX < -PAD_ACTIVITY_DEADZONE ||
-           pad.sThumbRY > PAD_ACTIVITY_DEADZONE || pad.sThumbRY < -PAD_ACTIVITY_DEADZONE ||
-           pad.bLeftTrigger > XINPUT_GAMEPAD_TRIGGER_THRESHOLD ||
-           pad.bRightTrigger > XINPUT_GAMEPAD_TRIGGER_THRESHOLD;
-}
-
-bool pad_has_mask(const XINPUT_GAMEPAD &pad, uint16_t mask)
-{
-    return mask != 0 && (pad.wButtons & mask) == mask;
-}
-
-void set_active_gamepad(DWORD idx, const XINPUT_GAMEPAD &pad)
-{
-    g_pad = pad;
-    g_pad_ok = true;
-    g_pad_index = idx;
-}
-
-void refresh_gamepad_state()
-{
-    if (!oXInputGetState)
-        return;
-
-    const uint16_t toggle_mask = goblin::config::toggleGamepadMask;
-    const bool menu_open = g_menu_open.load();
-    bool have_first = false, have_current = false, have_active = false;
-    bool have_close = false, have_combo = false;
-    XINPUT_GAMEPAD first{}, current{}, active{}, close_pad{}, combo{};
-    DWORD first_idx = 0, current_idx = 0, active_idx = 0, close_idx = 0, combo_idx = 0;
-
-    for (DWORD idx = 0; idx < XUSER_MAX_COUNT; ++idx)
-    {
-        XINPUT_STATE state{};
-        if (oXInputGetState(idx, &state) != ERROR_SUCCESS)
-            continue;
-
-        const XINPUT_GAMEPAD &pad = state.Gamepad;
-        if (!have_first)
-        {
-            first = pad;
-            first_idx = idx;
-            have_first = true;
-        }
-        if (idx == g_pad_index)
-        {
-            current = pad;
-            current_idx = idx;
-            have_current = true;
-        }
-        if (!have_active && pad_has_activity(pad))
-        {
-            active = pad;
-            active_idx = idx;
-            have_active = true;
-        }
-        if (menu_open && (pad.wButtons & XINPUT_GAMEPAD_B))
-        {
-            close_pad = pad;
-            close_idx = idx;
-            have_close = true;
-        }
-        if (pad_has_mask(pad, toggle_mask))
-        {
-            combo = pad;
-            combo_idx = idx;
-            have_combo = true;
-            break;
-        }
-    }
-
-    if (have_combo)
-        set_active_gamepad(combo_idx, combo);
-    else if (have_close)
-        set_active_gamepad(close_idx, close_pad);
-    else if (have_active)
-        set_active_gamepad(active_idx, active);
-    else if (have_current)
-        set_active_gamepad(current_idx, current);
-    else if (have_first)
-        set_active_gamepad(first_idx, first);
-    else
-        g_pad_ok = false;
-}
-
-void capture_swallow_buttons()
-{
-    for (DWORD idx = 0; idx < XUSER_MAX_COUNT; ++idx)
-    {
-        WORD held = 0;
-        if (oXInputGetState)
-        {
-            XINPUT_STATE state{};
-            if (oXInputGetState(idx, &state) == ERROR_SUCCESS)
-                held = state.Gamepad.wButtons;
-        }
-        else if (g_pad_ok && idx == g_pad_index)
-        {
-            held = g_pad.wButtons;
-        }
-        g_pad_swallow[idx].store(held);
-    }
-}
-
 void reset_rebind_state()
 {
     g_rebind_mode.store(0);
@@ -394,6 +264,30 @@ void reset_rebind_state()
     g_captured_vk.store(0);
     g_captured_up.store(false);
     g_rebind_pad_accum = 0;
+}
+
+// Poll the keyboard for a rebind capture (render thread). Scans the VK range and
+// records the first key down, then flags it released - mirrors the old raw-input
+// capture but via GetAsyncKeyState so we keep one input path.
+void poll_rebind_keyboard()
+{
+    if (g_rebind_mode.load() != 1)
+        return;
+    const uint32_t cur = g_captured_vk.load();
+    if (cur == 0)
+    {
+        for (int vk = 0x08; vk <= 0xFE; ++vk)
+        {
+            if (vk == VK_LBUTTON || vk == VK_RBUTTON || vk == VK_MBUTTON ||
+                vk == VK_SPACE || vk == VK_RETURN) // Space/Enter activate the rebind button via nav
+                continue;
+            if (kd(vk)) { g_captured_vk.store(static_cast<uint32_t>(vk)); break; }
+        }
+    }
+    else if (!kd(static_cast<int>(cur)))
+    {
+        g_captured_up.store(true);
+    }
 }
 
 // Apply an in-progress hotkey rebind (render thread). Esc cancels. A keyboard key
@@ -475,8 +369,11 @@ void draw_section(const goblin::IniSection &sec, bool &changed)
         {
             if (goblin::profile_is_vanilla() && e.err_only)
                 continue;
-            if (std::strcmp(e.key, "overlay_font_scale") == 0)
-                continue; // shown as a prominent slider at the top of the Settings tab
+            if (std::strcmp(e.key, "overlay_font_scale") == 0 ||
+                std::strcmp(e.key, "overlay_opacity") == 0)
+                continue; // shown as prominent sliders at the top of the Settings tab
+            if (std::strncmp(e.key, "overlay_window_", 15) == 0)
+                continue; // auto-managed window geometry (saved on close) - not a UI control
             ImGui::PushID(e.key);
             if (std::strcmp(e.key, "fast_map_open") == 0)
             {
@@ -605,6 +502,13 @@ void draw_settings_tab()
                        "%.2fx", ImGuiSliderFlags_AlwaysClamp);
     if (ImGui::IsItemHovered(ImGuiHoveredFlags_ForTooltip))
         ImGui::SetTooltip("Scales the overlay menu text. Raise it on 4K / high-DPI screens.");
+
+    // Overlay panel opacity (window bg alpha). Persisted to overlay_opacity on close.
+    ImGui::SetNextItemWidth(ImGui::GetFontSize() * 9.0f);
+    ImGui::SliderFloat("Overlay opacity", &goblin::config::overlayOpacity, 0.3f, 1.0f,
+                       "%.2f", ImGuiSliderFlags_AlwaysClamp);
+    if (ImGui::IsItemHovered(ImGuiHoveredFlags_ForTooltip))
+        ImGui::SetTooltip("Menu panel transparency. Lower it to see more of the map behind the menu.");
     ImGui::Separator();
 
     bool changed = false;
@@ -696,7 +600,7 @@ void draw_debug_tab()
     if (!g_dump_buf.empty())
     {
         // Read-only, non-selectable view (Copy handles clipboard); scrolls both ways.
-        ImGui::BeginChild("##dump", ImVec2(-1, -1), true, ImGuiWindowFlags_HorizontalScrollbar);
+        ImGui::BeginChild("##exp", ImVec2(-1, -1), true, ImGuiWindowFlags_HorizontalScrollbar);
         ImGui::TextUnformatted(g_dump_buf.data());
         ImGui::EndChild();
     }
@@ -709,7 +613,7 @@ void draw_debug_tab()
                        "overlay over it to compare your art against the live icons.");
     if (ImGui::Button("Icon Preview..."))
         open_preview_dialog();
-    if (g_preview_tex)
+    if (g_preview_srv)
     {
         ImGui::SameLine();
         if (ImGui::Button("Close preview"))
@@ -729,13 +633,12 @@ void draw_about_tab()
     const tr::Language lang = tr::current_language();
 
     // Large logo on the left, title/version/description to its right.
-    if (g_atlas_ready && goblin::overlay_icons::LOGO_W > 0 && g_logo_gpu.ptr)
+    if (g_atlas_ready && goblin::overlay_icons::LOGO_W > 0 && g_logo_srv)
     {
         const float lh = 120.0f;
         const float lw = lh * goblin::overlay_icons::LOGO_W /
                          static_cast<float>(goblin::overlay_icons::LOGO_H);
-        ImGui::Image(reinterpret_cast<ImTextureID>(static_cast<uintptr_t>(g_logo_gpu.ptr)),
-                     ImVec2(lw, lh));
+        ImGui::Image(reinterpret_cast<ImTextureID>(g_logo_srv), ImVec2(lw, lh));
         ImGui::SameLine();
     }
     ImGui::BeginGroup();
@@ -783,7 +686,34 @@ void draw_settings_window()
     namespace tr = goblin::i18n;
     const tr::Language lang = tr::current_language();
 
-    ImGui::SetNextWindowSize(ImVec2(560, 680), ImGuiCond_FirstUseEver);
+    // Restore saved geometry (once per session, on first open). overlayWinW<=0 = unset
+    // -> fall back to the default size/position. Live moves/resizes are captured before
+    // End() below and persisted to the ini on close.
+    // Restore saved geometry (once per session, on first open). X = window CENTER as a
+    // fraction of screen width, Y = window TOP as a fraction of screen height -> convert
+    // to pixels here. A too-small W/H (stale/corrupt ini) falls back to the default size;
+    // then clamp size to the screen + keep the window on-screen (resolution/aspect change).
+    const ImVec2 disp = ImGui::GetIO().DisplaySize;
+    {
+        float w = goblin::config::overlayWinW, h = goblin::config::overlayWinH;
+        if (w < 350.0f) w = 560.0f; // implausibly small -> restore default
+        if (h < 250.0f) h = 680.0f;
+        if (disp.x > 0 && w > disp.x) w = disp.x;
+        if (disp.y > 0 && h > disp.y) h = disp.y;
+        float x = goblin::config::overlayWinX * disp.x - w * 0.5f; // center-fraction -> left px
+        float y = goblin::config::overlayWinY * disp.y;            // top-fraction -> top px
+        const float xmax = disp.x > w ? disp.x - w : 0.0f;         // keep fully on-screen
+        const float ymax = disp.y > 40.0f ? disp.y - 40.0f : 0.0f; // keep title bar reachable
+        x = x < 0 ? 0 : (x > xmax ? xmax : x);
+        y = y < 0 ? 0 : (y > ymax ? ymax : y);
+        ImGui::SetNextWindowPos(ImVec2(x, y), ImGuiCond_FirstUseEver);
+        ImGui::SetNextWindowSize(ImVec2(w, h), ImGuiCond_FirstUseEver);
+    }
+    // Menu panel opacity (window background alpha), user-adjustable + persisted. Floor at
+    // 0.1 so a hand-edited ini can never make the menu fully invisible/unclickable.
+    float op = goblin::config::overlayOpacity;
+    op = op < 0.1f ? 0.1f : (op > 1.0f ? 1.0f : op);
+    ImGui::SetNextWindowBgAlpha(op);
     if (!ImGui::Begin(tr::tr(tr::TextId::WindowTitle, lang), nullptr))
     {
         ImGui::End();
@@ -838,640 +768,39 @@ void draw_settings_window()
     ImGui::EndChild();
     forced_tab = -1;
     draw_control_hints();
+    // Capture the current geometry so the auto-save-on-close persists it. Store X as the
+    // window CENTER fraction, Y as the TOP fraction (resolution-independent); W/H in pixels.
+    const ImVec2 wpos = ImGui::GetWindowPos(), wsize = ImGui::GetWindowSize();
+    const ImVec2 d = ImGui::GetIO().DisplaySize;
+    if (d.x > 0.0f) goblin::config::overlayWinX = (wpos.x + wsize.x * 0.5f) / d.x;
+    if (d.y > 0.0f) goblin::config::overlayWinY = wpos.y / d.y;
+    goblin::config::overlayWinW = wsize.x;
+    goblin::config::overlayWinH = wsize.y;
     ImGui::End();
 }
 
-// ── Window proc detour: while the menu is open, swallow any LEGACY input msgs
-// (belt-and-suspenders; ER's real input path is raw input, blocked separately
-// in hkGetRawInputData). ImGui input itself is driven from raw input, so we do
-// NOT forward to ImGui_ImplWin32_WndProcHandler here (avoids double-feed).
-LRESULT CALLBACK hkWndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
+// ── Our own window proc: feed ImGui (mouse/keyboard/char), nothing else ──
+LRESULT CALLBACK overlay_wndproc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
-    // Fallback key-state tracking (raw input in hkGetRawInputData is the primary
-    // source). Release all keys on focus loss so an alt-tab mid-press can't leave a
-    // key stuck "down" in the table.
-    if ((msg == WM_KEYDOWN || msg == WM_SYSKEYDOWN) && wParam < 256)
-        g_keystate[wParam].store(true, std::memory_order_relaxed);
-    else if ((msg == WM_KEYUP || msg == WM_SYSKEYUP) && wParam < 256)
-        g_keystate[wParam].store(false, std::memory_order_relaxed);
-    else if (msg == WM_KILLFOCUS)
-        for (auto &k : g_keystate) k.store(false, std::memory_order_relaxed);
-
-    if (g_menu_open.load())
+    if (ImGui_ImplWin32_WndProcHandler(hWnd, msg, wParam, lParam))
+        return 0;
+    switch (msg)
     {
-        switch (msg)
+    case WM_SETCURSOR:
+        // Hide the OS cursor over our client area (we draw ImGui's software cursor). Our
+        // window is a background window - without this the OS shows the IDC_APPSTARTING
+        // "background busy" cursor next to it. Handling it ourselves suppresses that.
+        if (LOWORD(lParam) == HTCLIENT)
         {
-        case WM_KEYDOWN: case WM_KEYUP: case WM_CHAR:
-        case WM_SYSKEYDOWN: case WM_SYSKEYUP:
-        case WM_MOUSEMOVE:
-        case WM_LBUTTONDOWN: case WM_LBUTTONUP: case WM_LBUTTONDBLCLK:
-        case WM_RBUTTONDOWN: case WM_RBUTTONUP: case WM_RBUTTONDBLCLK:
-        case WM_MBUTTONDOWN: case WM_MBUTTONUP:
-        case WM_MOUSEWHEEL: case WM_MOUSEHWHEEL:
-        case WM_XBUTTONDOWN: case WM_XBUTTONUP:
-        case WM_INPUT:
-            return 0;
-        case WM_SETCURSOR:
+            SetCursor(nullptr);
             return TRUE;
-        default:
-            break;
         }
+        return DefWindowProcW(hWnd, msg, wParam, lParam);
+    case WM_DESTROY:
+        return 0;
+    default:
+        return DefWindowProcW(hWnd, msg, wParam, lParam);
     }
-    return CallWindowProcW(g_orig_wndproc, hWnd, msg, wParam, lParam);
-}
-
-// Map a Win32 virtual-key to an ImGuiKey (the subset the panel needs: text
-// nav + Ctrl/Shift for select-all/copy in the dump box). ImGuiKey_None = ignore.
-ImGuiKey vk_to_imgui(USHORT vk)
-{
-    if (vk >= 'A' && vk <= 'Z') return static_cast<ImGuiKey>(ImGuiKey_A + (vk - 'A'));
-    if (vk >= '0' && vk <= '9') return static_cast<ImGuiKey>(ImGuiKey_0 + (vk - '0'));
-    switch (vk)
-    {
-    case VK_CONTROL: case VK_LCONTROL: return ImGuiKey_LeftCtrl;
-    case VK_RCONTROL: return ImGuiKey_RightCtrl;
-    case VK_SHIFT: case VK_LSHIFT: return ImGuiKey_LeftShift;
-    case VK_RSHIFT: return ImGuiKey_RightShift;
-    case VK_MENU: case VK_LMENU: return ImGuiKey_LeftAlt;
-    case VK_RMENU: return ImGuiKey_RightAlt;
-    case VK_LEFT: return ImGuiKey_LeftArrow;
-    case VK_RIGHT: return ImGuiKey_RightArrow;
-    case VK_UP: return ImGuiKey_UpArrow;
-    case VK_DOWN: return ImGuiKey_DownArrow;
-    case VK_HOME: return ImGuiKey_Home;
-    case VK_END: return ImGuiKey_End;
-    case VK_PRIOR: return ImGuiKey_PageUp;
-    case VK_NEXT: return ImGuiKey_PageDown;
-    case VK_DELETE: return ImGuiKey_Delete;
-    case VK_BACK: return ImGuiKey_Backspace;
-    case VK_RETURN: return ImGuiKey_Enter;
-    case VK_TAB: return ImGuiKey_Tab;
-    case VK_SPACE: return ImGuiKey_Space;
-    case VK_ESCAPE: return ImGuiKey_Escape;
-    default: return ImGuiKey_None;
-    }
-}
-
-// True only while the game window is the foreground window. Used to suspend our
-// input capture + software cursor when the user alt-tabs away (otherwise a 2nd,
-// offset cursor appears and both click at once).
-static bool game_focused()
-{
-    return g_hwnd != nullptr && GetForegroundWindow() == g_hwnd;
-}
-
-// Raw-input detour: capture mouse + keyboard for ImGui + blank the data the GAME
-// reads while the menu is open (so the character doesn't move / camera doesn't turn).
-UINT WINAPI hkGetRawInputData(HRAWINPUT hri, UINT cmd, LPVOID data, PUINT size, UINT hdr)
-{
-    UINT res = oGetRawInputData(hri, cmd, data, size, hdr);
-    // Always-on key-state table (menu open OR closed) so hotkeys read it instead of
-    // GetAsyncKeyState. Reads only the data we already receive here; never blanks.
-    if (cmd == RID_INPUT && data != nullptr)
-    {
-        auto *rin = reinterpret_cast<RAWINPUT *>(data);
-        if (rin->header.dwType == RIM_TYPEKEYBOARD && rin->data.keyboard.VKey < 256)
-            g_keystate[rin->data.keyboard.VKey].store(
-                (rin->data.keyboard.Flags & RI_KEY_BREAK) == 0, std::memory_order_relaxed);
-    }
-    if (!g_menu_open.load() || cmd != RID_INPUT || data == nullptr || !game_focused())
-        return res;
-
-    auto *ri = reinterpret_cast<RAWINPUT *>(data);
-    if (ri->header.dwType == RIM_TYPEMOUSE)
-    {
-        g_last_input.store(0, std::memory_order_relaxed); // keyboard/mouse active
-        const RAWMOUSE &m = ri->data.mouse;
-        if (!(m.usFlags & MOUSE_MOVE_ABSOLUTE))
-        {
-            g_raw_dx.fetch_add(m.lLastX, std::memory_order_relaxed);
-            g_raw_dy.fetch_add(m.lLastY, std::memory_order_relaxed);
-        }
-        const USHORT bf = m.usButtonFlags;
-        if (bf & RI_MOUSE_LEFT_BUTTON_DOWN)   g_raw_btn.fetch_or(1u);
-        if (bf & RI_MOUSE_LEFT_BUTTON_UP)     g_raw_btn.fetch_and(~1u);
-        if (bf & RI_MOUSE_RIGHT_BUTTON_DOWN)  g_raw_btn.fetch_or(2u);
-        if (bf & RI_MOUSE_RIGHT_BUTTON_UP)    g_raw_btn.fetch_and(~2u);
-        if (bf & RI_MOUSE_MIDDLE_BUTTON_DOWN) g_raw_btn.fetch_or(4u);
-        if (bf & RI_MOUSE_MIDDLE_BUTTON_UP)   g_raw_btn.fetch_and(~4u);
-        if (bf & RI_MOUSE_WHEEL)
-            g_raw_wheel.fetch_add(static_cast<short>(m.usButtonData), std::memory_order_relaxed);
-        ri->data.mouse.lLastX = 0;
-        ri->data.mouse.lLastY = 0;
-        ri->data.mouse.usButtonFlags = 0;
-        ri->data.mouse.usButtonData = 0;
-    }
-    else if (ri->header.dwType == RIM_TYPEKEYBOARD)
-    {
-        const RAWKEYBOARD &kb = ri->data.keyboard;
-        g_last_input.store(0, std::memory_order_relaxed); // keyboard/mouse active
-        const bool down = (kb.Flags & RI_KEY_BREAK) == 0;
-        if (g_rebind_mode.load() != 0)
-        {
-            // Capture the FIRST key pressed (ignore Space/Enter - they activate the
-            // rebind button via nav), then commit when it's RELEASED (process_rebind),
-            // so the binding press doesn't also trigger the freshly-bound action.
-            if (down && kb.VKey != 0 && g_captured_vk.load() == 0 &&
-                kb.VKey != VK_SPACE && kb.VKey != VK_RETURN)
-                g_captured_vk.store(kb.VKey, std::memory_order_relaxed);
-            if (!down && kb.VKey != 0 && kb.VKey == g_captured_vk.load())
-                g_captured_up.store(true, std::memory_order_relaxed);
-        }
-        ImGuiKey k = vk_to_imgui(kb.VKey);
-        if (k != ImGuiKey_None)
-        {
-            std::lock_guard<std::mutex> lk(g_key_mtx);
-            g_key_events.push_back({k, down});
-        }
-        // blank for the game (block movement/menus while our menu is open)
-        ri->data.keyboard.VKey = 0;
-        ri->data.keyboard.MakeCode = 0;
-        ri->data.keyboard.Flags = 0;
-        ri->data.keyboard.Message = WM_NULL;
-    }
-    return res;
-}
-
-// XInput gate: snapshot whichever controller is currently active, not just slot 0.
-// While the menu is open, ZERO the state the game (and ImGui's own backend) read
-// so the player/camera don't move. The captured snapshot is fed to ImGui nav in
-// feed_input().
-DWORD WINAPI hkXInputGetState(DWORD idx, XINPUT_STATE *st)
-{
-    DWORD r = oXInputGetState(idx, st);
-    if (r == ERROR_SUCCESS && st)
-    {
-        if (!g_pad_ok || idx == g_pad_index || pad_has_activity(st->Gamepad))
-            set_active_gamepad(idx, st->Gamepad);
-    }
-    else if (idx == g_pad_index)
-    {
-        g_pad_ok = false;
-    }
-
-    if (st)
-    {
-        if (g_menu_open.load())
-            ZeroMemory(&st->Gamepad, sizeof(st->Gamepad));
-        else if (idx < XUSER_MAX_COUNT && g_pad_swallow[idx].load())
-        {
-            // Suppress buttons held at close until they are released (no fall-through).
-            WORD sw = g_pad_swallow[idx].load() & st->Gamepad.wButtons;
-            g_pad_swallow[idx].store(sw);
-            st->Gamepad.wButtons &= ~sw;
-        }
-    }
-    return r;
-}
-
-// Drain the raw-input atomics into ImGui (render thread, just before NewFrame).
-void feed_input()
-{
-    ImGuiIO &io = ImGui::GetIO();
-    // If the OS hardware cursor is visible (e.g. the in-game world map is open),
-    // track ITS position and suppress our software cursor - otherwise there are two
-    // mismatched cursors. In normal gameplay the OS cursor is hidden, so we drive a
-    // software cursor from raw-input deltas.
-    CURSORINFO ci{};
-    ci.cbSize = sizeof(ci);
-    g_os_cursor = GetCursorInfo(&ci) && (ci.flags & CURSOR_SHOWING) != 0;
-    if (g_os_cursor)
-    {
-        POINT p{};
-        if (GetCursorPos(&p) && g_hwnd)
-        {
-            ScreenToClient(g_hwnd, &p);
-            g_mouse_x = static_cast<float>(p.x);
-            g_mouse_y = static_cast<float>(p.y);
-        }
-        g_raw_dx.exchange(0, std::memory_order_relaxed); // consume; don't drift
-        g_raw_dy.exchange(0, std::memory_order_relaxed);
-        g_need_center = true; // re-seed the soft cursor if the OS cursor hides again
-    }
-    else
-    {
-        if (g_need_center)
-        {
-            g_mouse_x = io.DisplaySize.x * 0.5f;
-            g_mouse_y = io.DisplaySize.y * 0.5f;
-            g_need_center = false;
-        }
-        g_mouse_x += static_cast<float>(g_raw_dx.exchange(0, std::memory_order_relaxed));
-        g_mouse_y += static_cast<float>(g_raw_dy.exchange(0, std::memory_order_relaxed));
-        if (g_mouse_x < 0.0f) g_mouse_x = 0.0f;
-        if (g_mouse_y < 0.0f) g_mouse_y = 0.0f;
-        if (io.DisplaySize.x > 0 && g_mouse_x > io.DisplaySize.x) g_mouse_x = io.DisplaySize.x;
-        if (io.DisplaySize.y > 0 && g_mouse_y > io.DisplaySize.y) g_mouse_y = io.DisplaySize.y;
-    }
-    io.AddMousePosEvent(g_mouse_x, g_mouse_y);
-    const uint32_t b = g_raw_btn.load();
-    io.AddMouseButtonEvent(0, (b & 1u) != 0);
-    io.AddMouseButtonEvent(1, (b & 2u) != 0);
-    io.AddMouseButtonEvent(2, (b & 4u) != 0);
-    const int w = g_raw_wheel.exchange(0, std::memory_order_relaxed);
-    if (w != 0)
-        io.AddMouseWheelEvent(0.0f, static_cast<float>(w) / static_cast<float>(WHEEL_DELTA));
-
-    // keyboard events captured on the message thread (for Ctrl+A / Ctrl+C etc.)
-    {
-        std::lock_guard<std::mutex> lk(g_key_mtx);
-        for (const auto &e : g_key_events)
-            io.AddKeyEvent(e.key, e.down);
-        g_key_events.clear();
-    }
-
-    // gamepad -> ImGui nav (real state from the XInput hook; the game's own read
-    // is zeroed while the menu is open so the character doesn't move).
-    if (g_pad_ok)
-    {
-        // Tell ImGui a gamepad is present (the Win32 backend clears this each
-        // NewFrame and our XInput hook zeroes the state it polls, so without this
-        // gamepad nav never engages). Must be set AFTER ImGui_ImplWin32_NewFrame.
-        io.BackendFlags |= ImGuiBackendFlags_HasGamepad;
-        const WORD bt = g_pad.wButtons;
-        // Mark gamepad as the active input source (for control hints) on any button
-        // or a stick pushed past the deadzone.
-        if (bt != 0 || g_pad.sThumbLX > 12000 || g_pad.sThumbLX < -12000 ||
-            g_pad.sThumbLY > 12000 || g_pad.sThumbLY < -12000)
-            g_last_input.store(1, std::memory_order_relaxed);
-        // Mask the menu-toggle combo's buttons out of the ImGui nav feed: e.g. the
-        // default Y+R3 combo's Y is GamepadFaceUp -> ImGuiNavInput_Input, which
-        // ACTIVATES the focused widget (the master checkbox) while you press the
-        // combo to close the menu. Those buttons are reserved for toggling the
-        // menu, not for navigating it; tab-switch (LB/RB) reads g_pad directly.
-        const WORD nbt = bt & ~goblin::config::toggleGamepadMask;
-        io.AddKeyEvent(ImGuiKey_GamepadDpadUp,    (nbt & XINPUT_GAMEPAD_DPAD_UP) != 0);
-        io.AddKeyEvent(ImGuiKey_GamepadDpadDown,  (nbt & XINPUT_GAMEPAD_DPAD_DOWN) != 0);
-        io.AddKeyEvent(ImGuiKey_GamepadDpadLeft,  (nbt & XINPUT_GAMEPAD_DPAD_LEFT) != 0);
-        io.AddKeyEvent(ImGuiKey_GamepadDpadRight, (nbt & XINPUT_GAMEPAD_DPAD_RIGHT) != 0);
-        io.AddKeyEvent(ImGuiKey_GamepadFaceDown,  (nbt & XINPUT_GAMEPAD_A) != 0); // activate
-        io.AddKeyEvent(ImGuiKey_GamepadFaceRight, (nbt & XINPUT_GAMEPAD_B) != 0); // cancel
-        io.AddKeyEvent(ImGuiKey_GamepadFaceUp,    (nbt & XINPUT_GAMEPAD_Y) != 0);
-        io.AddKeyEvent(ImGuiKey_GamepadFaceLeft,  (nbt & XINPUT_GAMEPAD_X) != 0);
-        io.AddKeyEvent(ImGuiKey_GamepadL1,        (nbt & XINPUT_GAMEPAD_LEFT_SHOULDER) != 0);
-        io.AddKeyEvent(ImGuiKey_GamepadR1,        (nbt & XINPUT_GAMEPAD_RIGHT_SHOULDER) != 0);
-        io.AddKeyEvent(ImGuiKey_GamepadStart,     (nbt & XINPUT_GAMEPAD_START) != 0);
-        // Deadzone above XInput's own (~0.24) so stick drift on a Steam Deck does
-        // not continuously feed nav (which reads as endless/instant movement).
-        const float lx = g_pad.sThumbLX / 32767.0f;
-        const float ly = g_pad.sThumbLY / 32767.0f;
-        constexpr float DZ = 0.35f;
-        io.AddKeyAnalogEvent(ImGuiKey_GamepadLStickLeft,  lx < -DZ, lx < -DZ ? -lx : 0.0f);
-        io.AddKeyAnalogEvent(ImGuiKey_GamepadLStickRight, lx >  DZ, lx >  DZ ?  lx : 0.0f);
-        io.AddKeyAnalogEvent(ImGuiKey_GamepadLStickUp,    ly >  DZ, ly >  DZ ?  ly : 0.0f);
-        io.AddKeyAnalogEvent(ImGuiKey_GamepadLStickDown,  ly < -DZ, ly < -DZ ? -ly : 0.0f);
-    }
-}
-
-// ── DX12 device-object (re)creation ──
-void teardown_dx12()
-{
-    if (!g_dx12_inited)
-        return;
-    ImGui_ImplDX12_Shutdown();
-    if (g_fence) { g_fence->Release(); g_fence = nullptr; }
-    if (g_atlas_tex) { g_atlas_tex->Release(); g_atlas_tex = nullptr; }
-    if (g_logo_tex) { g_logo_tex->Release(); g_logo_tex = nullptr; }
-    if (g_preview_tex) { g_preview_tex->Release(); g_preview_tex = nullptr; }
-    g_atlas_ready = false;
-    g_atlas_gpu = D3D12_GPU_DESCRIPTOR_HANDLE{};
-    g_logo_gpu = D3D12_GPU_DESCRIPTOR_HANDLE{};
-    if (g_command_list) { g_command_list->Release(); g_command_list = nullptr; }
-    if (g_frames)
-    {
-        for (UINT i = 0; i < g_buffer_count; ++i)
-        {
-            if (g_frames[i].render_target) g_frames[i].render_target->Release();
-            if (g_frames[i].allocator) g_frames[i].allocator->Release();
-        }
-        delete[] g_frames;
-        g_frames = nullptr;
-    }
-    if (g_rtv_heap) { g_rtv_heap->Release(); g_rtv_heap = nullptr; }
-    if (g_srv_heap) { g_srv_heap->Release(); g_srv_heap = nullptr; }
-    if (g_device) { g_device->Release(); g_device = nullptr; }
-    g_dx12_inited = false;
-}
-
-bool init_dx12(IDXGISwapChain3 *sc)
-{
-    DXGI_SWAP_CHAIN_DESC desc{};
-    if (FAILED(sc->GetDesc(&desc)))
-        return false;
-    if (FAILED(sc->GetDevice(IID_PPV_ARGS(&g_device))))
-        return false;
-    g_hwnd = desc.OutputWindow;
-    g_buffer_count = desc.BufferCount;
-
-    D3D12_DESCRIPTOR_HEAP_DESC srv{};
-    srv.Type = D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;
-    srv.NumDescriptors = 4; // [0] imgui font, [1] category-icon atlas, [2] mod logo, [3] icon-preview
-    srv.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
-    if (FAILED(g_device->CreateDescriptorHeap(&srv, IID_PPV_ARGS(&g_srv_heap))))
-        return false;
-
-    D3D12_DESCRIPTOR_HEAP_DESC rtv{};
-    rtv.Type = D3D12_DESCRIPTOR_HEAP_TYPE_RTV;
-    rtv.NumDescriptors = g_buffer_count;
-    rtv.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_NONE;
-    if (FAILED(g_device->CreateDescriptorHeap(&rtv, IID_PPV_ARGS(&g_rtv_heap))))
-        return false;
-
-    const UINT rtv_size =
-        g_device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
-    D3D12_CPU_DESCRIPTOR_HANDLE h = g_rtv_heap->GetCPUDescriptorHandleForHeapStart();
-    g_frames = new FrameContext[g_buffer_count];
-    for (UINT i = 0; i < g_buffer_count; ++i)
-    {
-        g_frames[i] = FrameContext{};
-        g_frames[i].rtv_handle = h;
-        if (FAILED(g_device->CreateCommandAllocator(D3D12_COMMAND_LIST_TYPE_DIRECT,
-                                                    IID_PPV_ARGS(&g_frames[i].allocator))))
-            return false;
-        ID3D12Resource *back = nullptr;
-        if (SUCCEEDED(sc->GetBuffer(i, IID_PPV_ARGS(&back))) && back)
-        {
-            g_device->CreateRenderTargetView(back, nullptr, h);
-            g_frames[i].render_target = back;
-        }
-        h.ptr += rtv_size;
-    }
-
-    if (FAILED(g_device->CreateCommandList(0, D3D12_COMMAND_LIST_TYPE_DIRECT,
-                                           g_frames[0].allocator, nullptr,
-                                           IID_PPV_ARGS(&g_command_list))))
-        return false;
-    g_command_list->Close();
-
-    g_device->CreateFence(0, D3D12_FENCE_FLAG_NONE, IID_PPV_ARGS(&g_fence));
-    if (!g_fence_event)
-        g_fence_event = CreateEventA(nullptr, FALSE, FALSE, nullptr);
-    g_fence_val = 0;
-
-    if (!g_context_inited)
-    {
-        IMGUI_CHECKVERSION();
-        ImGui::CreateContext();
-        ImGuiIO &io = ImGui::GetIO();
-        io.IniFilename = nullptr; // don't drop an imgui.ini next to the game
-        io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard | ImGuiConfigFlags_NavEnableGamepad;
-        // Base font = Segoe UI (Latin + Cyrillic; the dump text can be Russian).
-        // A CJK font is merged on top ONLY when the active UI language is Chinese,
-        // so non-Chinese users don't load a CJK file or pay the larger atlas. The
-        // CJK merge carries only the glyphs the UI actually uses (font_glyph_seed).
-        {
-            const goblin::i18n::Language ui_lang = goblin::i18n::current_language();
-            const bool need_cjk = ui_lang == goblin::i18n::Language::SimplifiedChinese ||
-                                  ui_lang == goblin::i18n::Language::TraditionalChinese;
-
-            static ImVector<ImWchar> base_ranges;
-            {
-                ImFontGlyphRangesBuilder b;
-                b.AddRanges(io.Fonts->GetGlyphRangesDefault());
-                b.AddRanges(io.Fonts->GetGlyphRangesCyrillic());
-                b.BuildRanges(&base_ranges);
-            }
-            const char *base_fonts[] = {"C:\\Windows\\Fonts\\segoeui.ttf",
-                                        "C:\\Windows\\Fonts\\arial.ttf",
-                                        "C:\\Windows\\Fonts\\tahoma.ttf"};
-            ImFont *base = nullptr;
-            for (const char *fp : base_fonts)
-                if (GetFileAttributesA(fp) != INVALID_FILE_ATTRIBUTES &&
-                    (base = io.Fonts->AddFontFromFileTTF(fp, 18.0f, nullptr, base_ranges.Data)) != nullptr)
-                {
-                    spdlog::info("[OVERLAY] base font: {} (Latin + Cyrillic)", fp);
-                    break;
-                }
-            if (!base)
-            {
-                io.Fonts->AddFontDefault();
-                spdlog::warn("[OVERLAY] no base system font found; text may show as '?'");
-            }
-
-            if (need_cjk && base)
-            {
-                static ImVector<ImWchar> cjk_ranges;
-                {
-                    ImFontGlyphRangesBuilder b;
-                    b.AddText(goblin::i18n::font_glyph_seed_utf8()); // only glyphs the UI uses
-                    b.BuildRanges(&cjk_ranges);
-                }
-                ImFontConfig cfg;
-                cfg.MergeMode = true; // merge CJK glyphs into the Segoe UI base
-                // Prefer the matching script's font first (YaHei=SC, JhengHei=TC).
-                const char *cjk_sc[] = {"C:\\Windows\\Fonts\\msyh.ttc", "C:\\Windows\\Fonts\\msjh.ttc",
-                                        "C:\\Windows\\Fonts\\simhei.ttf", "C:\\Windows\\Fonts\\simsun.ttc"};
-                const char *cjk_tc[] = {"C:\\Windows\\Fonts\\msjh.ttc", "C:\\Windows\\Fonts\\msyh.ttc",
-                                        "C:\\Windows\\Fonts\\simsun.ttc", "C:\\Windows\\Fonts\\simhei.ttf"};
-                const char *const *cjk_fonts =
-                    ui_lang == goblin::i18n::Language::TraditionalChinese ? cjk_tc : cjk_sc;
-                bool merged = false;
-                for (int i = 0; i < 4; ++i)
-                {
-                    const char *fp = cjk_fonts[i];
-                    if (GetFileAttributesA(fp) != INVALID_FILE_ATTRIBUTES &&
-                        io.Fonts->AddFontFromFileTTF(fp, 18.0f, &cfg, cjk_ranges.Data))
-                    {
-                        merged = true;
-                        spdlog::info("[OVERLAY] merged CJK font: {}", fp);
-                        break;
-                    }
-                }
-                if (!merged)
-                    spdlog::warn("[OVERLAY] no CJK font found; Chinese UI may show as '?'");
-            }
-        }
-        apply_er_style();
-        ImGui_ImplWin32_Init(g_hwnd);
-        g_orig_wndproc = reinterpret_cast<WNDPROC>(
-            SetWindowLongPtrW(g_hwnd, GWLP_WNDPROC, reinterpret_cast<LONG_PTR>(hkWndProc)));
-        g_context_inited = true;
-    }
-
-    ImGui_ImplDX12_Init(g_device, g_buffer_count, desc.BufferDesc.Format, g_srv_heap,
-                        g_srv_heap->GetCPUDescriptorHandleForHeapStart(),
-                        g_srv_heap->GetGPUDescriptorHandleForHeapStart());
-    g_dx12_inited = true;
-    goblin::diag::set_overlay(goblin::diag::OverlayState::Active, "");
-    spdlog::info("[OVERLAY] DX12 backend ready ({} buffers, {}x{})", g_buffer_count,
-                 desc.BufferDesc.Width, desc.BufferDesc.Height);
-    return true;
-}
-
-// SEH wrapper: the swapchain/device queries + D3D object creation can AV on a torn swapchain state
-// (e.g. a G-Sync / fullscreen-flip transition mid-init). A failed init must never crash the game - we
-// just stay uninited and retry on the next Present. (POD-only locals so __try is legal.)
-static bool seh_init_dx12(IDXGISwapChain3 *sc)
-{
-    __try { return init_dx12(sc); }
-    __except (EXCEPTION_EXECUTE_HANDLER) { return false; }
-}
-
-// Block until the GPU finishes our submitted work, so we never reuse the
-// command list/allocator (or free RTVs on resize) mid-flight. Cheap here: the
-// overlay only renders while the menu is open, not during gameplay.
-void wait_gpu()
-{
-    if (!g_fence || !g_command_queue)
-        return;
-    const UINT64 v = ++g_fence_val;
-    if (FAILED(g_command_queue->Signal(g_fence, v)))
-        return;
-    if (g_fence->GetCompletedValue() < v && g_fence_event)
-    {
-        g_fence->SetEventOnCompletion(v, g_fence_event);
-        WaitForSingleObject(g_fence_event, 1000);
-    }
-}
-
-// Raw GPU submit, isolated so an SEH guard can wrap it (POD locals only).
-void submit_frame(IDXGISwapChain3 *sc)
-{
-    __try
-    {
-        const UINT idx = sc->GetCurrentBackBufferIndex();
-        if (idx >= g_buffer_count)
-            return;
-        FrameContext &f = g_frames[idx];
-        if (!f.allocator || !f.render_target)
-            return;
-        f.allocator->Reset();
-
-        D3D12_RESOURCE_BARRIER b{};
-        b.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
-        b.Flags = D3D12_RESOURCE_BARRIER_FLAG_NONE;
-        b.Transition.pResource = f.render_target;
-        b.Transition.Subresource = 0;
-        b.Transition.StateBefore = D3D12_RESOURCE_STATE_PRESENT;
-        b.Transition.StateAfter = D3D12_RESOURCE_STATE_RENDER_TARGET;
-
-        g_command_list->Reset(f.allocator, nullptr);
-        g_command_list->ResourceBarrier(1, &b);
-        g_command_list->OMSetRenderTargets(1, &f.rtv_handle, FALSE, nullptr);
-        ID3D12DescriptorHeap *heaps[] = {g_srv_heap};
-        g_command_list->SetDescriptorHeaps(1, heaps);
-        ImGui_ImplDX12_RenderDrawData(ImGui::GetDrawData(), g_command_list);
-        b.Transition.StateBefore = D3D12_RESOURCE_STATE_RENDER_TARGET;
-        b.Transition.StateAfter = D3D12_RESOURCE_STATE_PRESENT;
-        g_command_list->ResourceBarrier(1, &b);
-        g_command_list->Close();
-        ID3D12CommandList *lists[] = {g_command_list};
-        g_command_queue->ExecuteCommandLists(1, lists);
-        wait_gpu(); // serialize: GPU done before we reuse the list/allocator next frame
-    }
-    __except (EXCEPTION_EXECUTE_HANDLER)
-    {
-        // A bad frame must never take the whole game down.
-    }
-}
-
-// Upload one RGBA8 image to a DEFAULT texture and create its SRV at heap slot
-// `srv_index`. Fence-waits so it's ready before first draw. Returns false on a
-// hard allocation failure. Plain (no SEH) - the caller wraps it.
-static bool upload_rgba(const unsigned char *rgba, int w, int h, UINT srv_index,
-                        ID3D12Resource **out_tex, D3D12_GPU_DESCRIPTOR_HANDLE *out_gpu)
-{
-    const UINT inc =
-        g_device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
-    D3D12_HEAP_PROPERTIES hp_def{};
-    hp_def.Type = D3D12_HEAP_TYPE_DEFAULT;
-    D3D12_RESOURCE_DESC td{};
-    td.Dimension = D3D12_RESOURCE_DIMENSION_TEXTURE2D;
-    td.Width = static_cast<UINT64>(w);
-    td.Height = static_cast<UINT>(h);
-    td.DepthOrArraySize = 1;
-    td.MipLevels = 1;
-    td.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
-    td.SampleDesc.Count = 1;
-    td.Layout = D3D12_TEXTURE_LAYOUT_UNKNOWN;
-    if (FAILED(g_device->CreateCommittedResource(&hp_def, D3D12_HEAP_FLAG_NONE, &td,
-                                                 D3D12_RESOURCE_STATE_COPY_DEST, nullptr,
-                                                 IID_PPV_ARGS(out_tex))))
-        return false;
-
-    const UINT row = static_cast<UINT>(w) * 4;
-    const UINT arow = (row + 255u) & ~255u; // 256-byte row alignment
-    const UINT64 upsize = static_cast<UINT64>(arow) * h;
-    D3D12_HEAP_PROPERTIES hp_up{};
-    hp_up.Type = D3D12_HEAP_TYPE_UPLOAD;
-    D3D12_RESOURCE_DESC bd{};
-    bd.Dimension = D3D12_RESOURCE_DIMENSION_BUFFER;
-    bd.Width = upsize;
-    bd.Height = 1;
-    bd.DepthOrArraySize = 1;
-    bd.MipLevels = 1;
-    bd.Format = DXGI_FORMAT_UNKNOWN;
-    bd.SampleDesc.Count = 1;
-    bd.Layout = D3D12_TEXTURE_LAYOUT_ROW_MAJOR;
-    ID3D12Resource *upbuf = nullptr;
-    if (FAILED(g_device->CreateCommittedResource(&hp_up, D3D12_HEAP_FLAG_NONE, &bd,
-                                                 D3D12_RESOURCE_STATE_GENERIC_READ, nullptr,
-                                                 IID_PPV_ARGS(&upbuf))))
-        return false;
-
-    void *mapped = nullptr;
-    D3D12_RANGE no_read{0, 0};
-    if (SUCCEEDED(upbuf->Map(0, &no_read, &mapped)) && mapped)
-    {
-        for (int y = 0; y < h; ++y)
-            memcpy(static_cast<char *>(mapped) + static_cast<size_t>(y) * arow,
-                   rgba + static_cast<size_t>(y) * row, row);
-        upbuf->Unmap(0, nullptr);
-    }
-
-    g_frames[0].allocator->Reset();
-    g_command_list->Reset(g_frames[0].allocator, nullptr);
-    D3D12_TEXTURE_COPY_LOCATION dst{};
-    dst.pResource = *out_tex;
-    dst.Type = D3D12_TEXTURE_COPY_TYPE_SUBRESOURCE_INDEX;
-    dst.SubresourceIndex = 0;
-    D3D12_TEXTURE_COPY_LOCATION src{};
-    src.pResource = upbuf;
-    src.Type = D3D12_TEXTURE_COPY_TYPE_PLACED_FOOTPRINT;
-    src.PlacedFootprint.Offset = 0;
-    src.PlacedFootprint.Footprint.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
-    src.PlacedFootprint.Footprint.Width = static_cast<UINT>(w);
-    src.PlacedFootprint.Footprint.Height = static_cast<UINT>(h);
-    src.PlacedFootprint.Footprint.Depth = 1;
-    src.PlacedFootprint.Footprint.RowPitch = arow;
-    g_command_list->CopyTextureRegion(&dst, 0, 0, 0, &src, nullptr);
-    D3D12_RESOURCE_BARRIER b{};
-    b.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
-    b.Transition.pResource = *out_tex;
-    b.Transition.Subresource = 0;
-    b.Transition.StateBefore = D3D12_RESOURCE_STATE_COPY_DEST;
-    b.Transition.StateAfter = D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE;
-    g_command_list->ResourceBarrier(1, &b);
-    g_command_list->Close();
-    ID3D12CommandList *lists[] = {g_command_list};
-    g_command_queue->ExecuteCommandLists(1, lists);
-
-    ID3D12Fence *fence = nullptr;
-    if (SUCCEEDED(g_device->CreateFence(0, D3D12_FENCE_FLAG_NONE, IID_PPV_ARGS(&fence))))
-    {
-        HANDLE ev = CreateEventA(nullptr, FALSE, FALSE, nullptr);
-        g_command_queue->Signal(fence, 1);
-        if (ev && fence->GetCompletedValue() < 1)
-        {
-            fence->SetEventOnCompletion(1, ev);
-            WaitForSingleObject(ev, 1000);
-        }
-        if (ev) CloseHandle(ev);
-        fence->Release();
-    }
-    upbuf->Release();
-
-    D3D12_CPU_DESCRIPTOR_HANDLE cpu = g_srv_heap->GetCPUDescriptorHandleForHeapStart();
-    cpu.ptr += static_cast<SIZE_T>(inc) * srv_index;
-    D3D12_SHADER_RESOURCE_VIEW_DESC sd{};
-    sd.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
-    sd.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;
-    sd.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
-    sd.Texture2D.MipLevels = 1;
-    g_device->CreateShaderResourceView(*out_tex, &sd, cpu);
-    *out_gpu = g_srv_heap->GetGPUDescriptorHandleForHeapStart();
-    out_gpu->ptr += static_cast<SIZE_T>(inc) * srv_index;
-    return true;
 }
 
 // ── Dev Icon Preview helpers ──────────────────────────────────────────────
@@ -1532,7 +861,44 @@ static std::vector<unsigned char> to_map_icon(const unsigned char *src, int w, i
     return out;
 }
 
-// Render-thread: if a path was picked, read (wide path) + decode the PNG and (re)upload it to SRV slot 3.
+// Upload one RGBA8 image to an immutable D3D11 texture + create its SRV. Returns
+// false on a hard allocation failure. ImGui ImTextureID = the returned SRV ptr.
+static bool upload_rgba(const unsigned char *rgba, int w, int h,
+                        ID3D11Texture2D **out_tex, ID3D11ShaderResourceView **out_srv)
+{
+    if (!g_d3d_device || w <= 0 || h <= 0)
+        return false;
+    D3D11_TEXTURE2D_DESC td{};
+    td.Width = static_cast<UINT>(w);
+    td.Height = static_cast<UINT>(h);
+    td.MipLevels = 1;
+    td.ArraySize = 1;
+    td.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
+    td.SampleDesc.Count = 1;
+    td.Usage = D3D11_USAGE_IMMUTABLE;
+    td.BindFlags = D3D11_BIND_SHADER_RESOURCE;
+    D3D11_SUBRESOURCE_DATA srd{};
+    srd.pSysMem = rgba;
+    srd.SysMemPitch = static_cast<UINT>(w) * 4;
+    ID3D11Texture2D *tex = nullptr;
+    if (FAILED(g_d3d_device->CreateTexture2D(&td, &srd, &tex)) || !tex)
+        return false;
+    D3D11_SHADER_RESOURCE_VIEW_DESC sd{};
+    sd.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
+    sd.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
+    sd.Texture2D.MipLevels = 1;
+    ID3D11ShaderResourceView *srv = nullptr;
+    if (FAILED(g_d3d_device->CreateShaderResourceView(tex, &sd, &srv)) || !srv)
+    {
+        tex->Release();
+        return false;
+    }
+    *out_tex = tex;
+    *out_srv = srv;
+    return true;
+}
+
+// Render-thread: if a path was picked, read (wide path) + decode the PNG and (re)upload it.
 static void maybe_load_preview()
 {
     if (!g_preview_dirty.exchange(false))
@@ -1572,8 +938,9 @@ static void maybe_load_preview()
     constexpr int SIZE = 96; // must match generate_map_icons.SIZE (the on-map icon canvas-fit size)
     int iw = 0, ih = 0;
     std::vector<unsigned char> icon = to_map_icon(px, w, h, SIZE, &iw, &ih); // tight, variable iw x ih
+    if (g_preview_srv) { g_preview_srv->Release(); g_preview_srv = nullptr; }
     if (g_preview_tex) { g_preview_tex->Release(); g_preview_tex = nullptr; }
-    if (upload_rgba(icon.data(), iw, ih, 3, &g_preview_tex, &g_preview_gpu))
+    if (upload_rgba(icon.data(), iw, ih, &g_preview_tex, &g_preview_srv))
     {
         g_preview_w = w; g_preview_h = h;     // SOURCE dims (info line)
         g_preview_iw = iw; g_preview_ih = ih; // normalized dims (proportional draw)
@@ -1588,7 +955,7 @@ static void maybe_load_preview()
 // image captures the drag, since the image is otherwise an inert item).
 static void draw_preview_window()
 {
-    if (!g_preview_show.load() || !g_preview_tex || !g_preview_gpu.ptr)
+    if (!g_preview_show.load() || !g_preview_srv)
         return;
     const ImGuiIO &io = ImGui::GetIO();
     ImGui::SetNextWindowPos(ImVec2(io.DisplaySize.x * 0.5f, io.DisplaySize.y * 0.5f),
@@ -1606,7 +973,7 @@ static void draw_preview_window()
         const float sc = g_preview_px / 96.0f;
         const float dw = g_preview_iw * sc, dh = g_preview_ih * sc;
         const ImVec2 at = ImGui::GetCursorScreenPos();
-        ImGui::Image(reinterpret_cast<ImTextureID>(static_cast<uintptr_t>(g_preview_gpu.ptr)), ImVec2(dw, dh));
+        ImGui::Image(reinterpret_cast<ImTextureID>(g_preview_srv), ImVec2(dw, dh));
         ImGui::SetCursorScreenPos(at);
         ImGui::InvisibleButton("##pv_drag", ImVec2(dw, dh)); // catch drags over the image to move the window
         if (ImGui::IsItemActive())
@@ -1674,36 +1041,19 @@ static std::vector<unsigned char> build_atlas_rgba()
     return atlas;
 }
 
-// SEH-isolated D3D12 uploads (NO C++ objects here - __try forbids object unwinding). `atlas` may be
-// null (then only the logo is uploaded).
-static void upload_atlas_and_logo(const unsigned char *atlas)
-{
-    using namespace goblin::overlay_icons;
-    __try
-    {
-        if (atlas)
-            upload_rgba(atlas, ATLAS_W, ATLAS_H, 1, &g_atlas_tex, &g_atlas_gpu);
-        upload_rgba(LOGO_RGBA, LOGO_W, LOGO_H, 2, &g_logo_tex, &g_logo_gpu);
-        g_atlas_ready = true;
-    }
-    __except (EXCEPTION_EXECUTE_HANDLER)
-    {
-        g_atlas_ready = true; // give up rather than crash/retry
-    }
-}
-
-// One-time upload of the category-icon atlas (SRV index 1) + the mod logo (index 2). The atlas is built
-// at runtime from the shared lossless tags (build_atlas_rgba), so map + menu share one embedded source.
+// One-time upload of the category-icon atlas + the mod logo to D3D11 textures/SRVs.
+// The atlas is built at runtime from the shared lossless tags (build_atlas_rgba),
+// so map + menu share one embedded icon source.
 void try_upload_atlas()
 {
-    if (g_atlas_ready || !g_dx12_inited || !g_command_queue || !g_device || !g_srv_heap)
+    if (g_atlas_ready || !g_d3d_inited || !g_d3d_device)
         return;
-    std::vector<unsigned char> atlas = build_atlas_rgba(); // pure memory; no SEH needed
-    upload_atlas_and_logo(atlas.empty() ? nullptr : atlas.data());
-    spdlog::info("[OVERLAY] atlas {}x{} built from {} shared tags + logo {}x{}",
-                 goblin::overlay_icons::ATLAS_W, goblin::overlay_icons::ATLAS_H,
-                 goblin::overlay_icons::ATLAS_CELL_COUNT,
-                 goblin::overlay_icons::LOGO_W, goblin::overlay_icons::LOGO_H);
+    using namespace goblin::overlay_icons;
+    std::vector<unsigned char> atlas = build_atlas_rgba();
+    if (!atlas.empty())
+        upload_rgba(atlas.data(), ATLAS_W, ATLAS_H, &g_atlas_tex, &g_atlas_srv);
+    upload_rgba(LOGO_RGBA, LOGO_W, LOGO_H, &g_logo_tex, &g_logo_srv);
+    g_atlas_ready = true; // mark done even on partial failure (don't retry every frame)
 }
 
 const goblin::overlay_icons::IconCell *find_icon_cell(const char *key)
@@ -1715,217 +1065,718 @@ const goblin::overlay_icons::IconCell *find_icon_cell(const char *key)
     return nullptr;
 }
 
-void render(IDXGISwapChain3 *sc)
+// ── Gamepad nav: poll directly (no hook). Picks the first active controller. ──
+void poll_gamepad()
 {
-    const bool focused = game_focused();
-    try_upload_atlas();
-    maybe_load_preview(); // dev: decode + upload a freshly-picked preview PNG (before NewFrame)
-    ImGui_ImplDX12_NewFrame();
-    ImGui_ImplWin32_NewFrame();
-    if (focused)
-        feed_input(); // drain raw-input mouse into ImGui before NewFrame processes events
-    else
+    g_pad_ok = false;
+    // Read the REAL pad through the trampoline (o_) if we hooked XInputGetState; the hook
+    // returns "disconnected" to the GAME while the menu is open, but not through o_.
+    XInputGetState_t xget = o_XInputGetState ? o_XInputGetState : pXInputGetState;
+    if (!xget)
+        return;
+    for (DWORD idx = 0; idx < XUSER_MAX_COUNT; ++idx)
     {
-        // Alt-tabbed away: the OS shows its own cursor, so don't drive ours (a 2nd
-        // offset cursor that clicks too). Drop half-captured state; re-center on return.
-        g_raw_btn.store(0);
-        g_raw_dx.exchange(0, std::memory_order_relaxed);
-        g_raw_dy.exchange(0, std::memory_order_relaxed);
-        g_need_center = true;
+        XINPUT_STATE state{};
+        if (xget(idx, &state) == ERROR_SUCCESS)
+        {
+            g_pad = state.Gamepad;
+            g_pad_ok = true;
+            break;
+        }
     }
-    process_rebind(); // commit/cancel an in-progress hotkey rebind
-    ImGui::NewFrame();
-    // Live overlay text scaling (QoL for 4K / high-DPI). FontGlobalScale multiplies
-    // the baked font size each frame, so the slider on the Settings tab applies
-    // instantly; the value is persisted via the overlay_font_scale ini key.
-    ImGui::GetIO().FontGlobalScale = goblin::config::fontScale;
-    // Draw our software cursor only when focused AND the OS cursor isn't already
-    // showing (the in-game map shows the OS cursor -> avoid a double cursor).
-    ImGui::GetIO().MouseDrawCursor = focused && !g_os_cursor;
-    draw_settings_window();
-    draw_preview_window(); // dev: floating centered icon preview (transparent, passive)
-    ImGui::Render();
-    submit_frame(sc);
 }
 
-// ── Hooks ──
-HRESULT WINAPI hkPresent(IDXGISwapChain3 *sc, UINT sync, UINT flags)
+// Feed the polled gamepad to ImGui nav (mouse + keyboard come via the WndProc).
+void feed_gamepad()
 {
-    goblin::map_timing::on_present(); // diagnostic: render-thread sampling profiler (needs the present thread)
-    // (gfx_probe's self-heal + diagnostics moved to the background watcher thread - see gfx_probe::tick -
-    //  so they run regardless of enable_overlay; injection itself is load-hook driven, also independent.)
+    if (!g_pad_ok)
+        return;
+    ImGuiIO &io = ImGui::GetIO();
+    io.BackendFlags |= ImGuiBackendFlags_HasGamepad;
+    const WORD bt = g_pad.wButtons;
+    if (bt != 0 || g_pad.sThumbLX > 12000 || g_pad.sThumbLX < -12000 ||
+        g_pad.sThumbLY > 12000 || g_pad.sThumbLY < -12000)
+        g_last_input.store(1, std::memory_order_relaxed);
+    // Mask the menu-toggle combo's buttons out of the nav feed (so the closing
+    // press doesn't also activate the focused widget).
+    const WORD nbt = bt & ~goblin::config::toggleGamepadMask;
+    io.AddKeyEvent(ImGuiKey_GamepadDpadUp,    (nbt & XINPUT_GAMEPAD_DPAD_UP) != 0);
+    io.AddKeyEvent(ImGuiKey_GamepadDpadDown,  (nbt & XINPUT_GAMEPAD_DPAD_DOWN) != 0);
+    io.AddKeyEvent(ImGuiKey_GamepadDpadLeft,  (nbt & XINPUT_GAMEPAD_DPAD_LEFT) != 0);
+    io.AddKeyEvent(ImGuiKey_GamepadDpadRight, (nbt & XINPUT_GAMEPAD_DPAD_RIGHT) != 0);
+    io.AddKeyEvent(ImGuiKey_GamepadFaceDown,  (nbt & XINPUT_GAMEPAD_A) != 0); // activate
+    io.AddKeyEvent(ImGuiKey_GamepadFaceRight, (nbt & XINPUT_GAMEPAD_B) != 0); // cancel
+    io.AddKeyEvent(ImGuiKey_GamepadFaceUp,    (nbt & XINPUT_GAMEPAD_Y) != 0);
+    io.AddKeyEvent(ImGuiKey_GamepadFaceLeft,  (nbt & XINPUT_GAMEPAD_X) != 0);
+    io.AddKeyEvent(ImGuiKey_GamepadL1,        (nbt & XINPUT_GAMEPAD_LEFT_SHOULDER) != 0);
+    io.AddKeyEvent(ImGuiKey_GamepadR1,        (nbt & XINPUT_GAMEPAD_RIGHT_SHOULDER) != 0);
+    io.AddKeyEvent(ImGuiKey_GamepadStart,     (nbt & XINPUT_GAMEPAD_START) != 0);
+    const float lx = g_pad.sThumbLX / 32767.0f;
+    const float ly = g_pad.sThumbLY / 32767.0f;
+    constexpr float DZ = 0.35f;
+    io.AddKeyAnalogEvent(ImGuiKey_GamepadLStickLeft,  lx < -DZ, lx < -DZ ? -lx : 0.0f);
+    io.AddKeyAnalogEvent(ImGuiKey_GamepadLStickRight, lx >  DZ, lx >  DZ ?  lx : 0.0f);
+    io.AddKeyAnalogEvent(ImGuiKey_GamepadLStickUp,    ly >  DZ, ly >  DZ ?  ly : 0.0f);
+    io.AddKeyAnalogEvent(ImGuiKey_GamepadLStickDown,  ly < -DZ, ly < -DZ ? -ly : 0.0f);
+}
 
-    // Open/close on the toggle key (keyboard) OR the gamepad combo. (When the
-    // overlay is DISABLED these same inputs master-toggle icons instead, handled
-    // in goblin_inject's toggle_hotkey_loop - see its master_mode gate.)
-    // While rebinding a hotkey in the overlay, ignore these inputs so binding
-    // F10 / Y+R3 / Esc / B doesn't also open/close the menu.
-    // Only react to hotkeys when the game window is foreground. The key-state table
-    // is fed from focused input only, but gate here too so a stale held key can't
-    // open/toggle the menu while alt-tabbed away.
-    const bool focused = game_focused();
-    if (focused)
-        refresh_gamepad_state();
-    if (!g_menu_open.load() && g_rebind_mode.load() != 0)
+// Feed keyboard NAV keys to ImGui by polling (we never hold focus, so the Win32 backend
+// never receives WM_KEYDOWN). Covers arrows/Tab/Enter/Space/PageUp/Down for menu nav;
+// full text entry (chars) is not supported this way. These keys are also blocked from
+// the game by the raw-input hook while the menu is open, so they do not double-act.
+void feed_nav_keyboard()
+{
+    ImGuiIO &io = ImGui::GetIO();
+    struct Map { int vk; ImGuiKey key; };
+    static const Map maps[] = {
+        {VK_UP, ImGuiKey_UpArrow},     {VK_DOWN, ImGuiKey_DownArrow},
+        {VK_LEFT, ImGuiKey_LeftArrow}, {VK_RIGHT, ImGuiKey_RightArrow},
+        {VK_RETURN, ImGuiKey_Enter},   {VK_SPACE, ImGuiKey_Space},
+        {VK_TAB, ImGuiKey_Tab},        {VK_PRIOR, ImGuiKey_PageUp},
+        {VK_NEXT, ImGuiKey_PageDown},
+    };
+    static bool prev[sizeof(maps) / sizeof(maps[0])] = {};
+    for (size_t i = 0; i < sizeof(maps) / sizeof(maps[0]); ++i)
+    {
+        const bool down = kd(maps[i].vk);
+        if (down != prev[i])
+        {
+            io.AddKeyEvent(maps[i].key, down);
+            prev[i] = down;
+            if (down)
+                g_last_input.store(0, std::memory_order_relaxed); // keyboard active
+        }
+    }
+}
+
+// ── Game window tracking ──
+// Best-effort: pick the foreground window if it belongs to eldenring.exe (our own
+// process). Cache it so we keep covering it even after focus moves to our overlay.
+HWND find_game_window()
+{
+    HWND fg = GetForegroundWindow();
+    if (fg && fg != g_hwnd)
+    {
+        DWORD pid = 0;
+        GetWindowThreadProcessId(fg, &pid);
+        if (pid == GetCurrentProcessId())
+        {
+            // Skip tool windows (e.g. ours) - the game's main window is a normal top-level.
+            const LONG ex = GetWindowLongW(fg, GWL_EXSTYLE);
+            if (!(ex & WS_EX_TOOLWINDOW))
+                g_game_hwnd = fg;
+        }
+    }
+    return g_game_hwnd;
+}
+
+// Move/resize our overlay to exactly cover the game's client area. Returns the
+// client size so the caller can resize the swapchain on change.
+void cover_game_window(int &out_w, int &out_h)
+{
+    out_w = out_h = 0;
+    HWND game = find_game_window();
+    if (!game || !IsWindow(game))
+        return;
+    RECT cr{};
+    if (!GetClientRect(game, &cr))
+        return;
+    POINT tl{cr.left, cr.top};
+    ClientToScreen(game, &tl);
+    const int w = cr.right - cr.left, h = cr.bottom - cr.top;
+    if (w <= 0 || h <= 0)
+        return;
+    SetWindowPos(g_hwnd, HWND_TOPMOST, tl.x, tl.y, w, h, SWP_NOACTIVATE);
+    out_w = w;
+    out_h = h;
+}
+
+// ── Proton/Wine layered-window fallback helpers (used when DComp is E_NOTIMPL) ──
+static void release_layered_targets()
+{
+    if (g_lrtv) { g_lrtv->Release(); g_lrtv = nullptr; }
+    if (g_ltex) { g_ltex->Release(); g_ltex = nullptr; }
+    if (g_lstaging) { g_lstaging->Release(); g_lstaging = nullptr; }
+    if (g_lmemdc) { DeleteDC(g_lmemdc); g_lmemdc = nullptr; }
+    if (g_ldib) { DeleteObject(g_ldib); g_ldib = nullptr; }
+    g_ldibbits = nullptr;
+}
+
+// Offscreen RT (ImGui draws here) + a CPU-readable staging copy + a top-down 32bpp DIB
+// that UpdateLayeredWindow blits from. ImGui's blend over a transparent RT yields
+// PREMULTIPLIED BGRA, which is exactly what ULW_ALPHA wants -> a plain row copy, no math.
+static bool create_layered_targets(UINT w, UINT h)
+{
+    release_layered_targets();
+    if (!g_d3d_device || w == 0 || h == 0) return false;
+    D3D11_TEXTURE2D_DESC td{};
+    td.Width = w; td.Height = h; td.MipLevels = 1; td.ArraySize = 1;
+    td.Format = DXGI_FORMAT_B8G8R8A8_UNORM; td.SampleDesc.Count = 1;
+    td.Usage = D3D11_USAGE_DEFAULT; td.BindFlags = D3D11_BIND_RENDER_TARGET;
+    if (FAILED(g_d3d_device->CreateTexture2D(&td, nullptr, &g_ltex)) || !g_ltex) return false;
+    if (FAILED(g_d3d_device->CreateRenderTargetView(g_ltex, nullptr, &g_lrtv)) || !g_lrtv) return false;
+    td.Usage = D3D11_USAGE_STAGING; td.BindFlags = 0; td.CPUAccessFlags = D3D11_CPU_ACCESS_READ;
+    if (FAILED(g_d3d_device->CreateTexture2D(&td, nullptr, &g_lstaging)) || !g_lstaging) return false;
+    BITMAPINFO bi{};
+    bi.bmiHeader.biSize = sizeof(BITMAPINFOHEADER);
+    bi.bmiHeader.biWidth = static_cast<LONG>(w);
+    bi.bmiHeader.biHeight = -static_cast<LONG>(h); // negative = top-down
+    bi.bmiHeader.biPlanes = 1;
+    bi.bmiHeader.biBitCount = 32;
+    bi.bmiHeader.biCompression = BI_RGB;
+    HDC screen = GetDC(nullptr);
+    g_ldib = CreateDIBSection(screen, &bi, DIB_RGB_COLORS, &g_ldibbits, nullptr, 0);
+    g_lmemdc = CreateCompatibleDC(screen);
+    ReleaseDC(nullptr, screen);
+    if (!g_ldib || !g_lmemdc || !g_ldibbits) return false;
+    SelectObject(g_lmemdc, g_ldib);
+    g_back_w = w; g_back_h = h;
+    return true;
+}
+
+// DComp needs WS_EX_NOREDIRECTIONBITMAP (creation-only, cannot be removed); a layered
+// window needs WS_EX_LAYERED. So on the Proton fallback we swap the window for a LAYERED one.
+static void recreate_window_layered()
+{
+    if (g_hwnd) DestroyWindow(g_hwnd);
+    const DWORD ex = WS_EX_LAYERED | WS_EX_TOPMOST | WS_EX_NOACTIVATE | WS_EX_TOOLWINDOW;
+    g_hwnd = CreateWindowExW(ex, OVERLAY_CLASS, L"Map for Goblins overlay", WS_POPUP,
+                             0, 0, 100, 100, nullptr, nullptr, GetModuleHandleW(nullptr), nullptr);
+}
+
+// ── D3D11 + DirectComposition + ImGui dx11 backend creation ──
+// POD-only locals: this body is wrapped by an SEH guard (a torn GPU state can AV).
+static bool init_d3d()
+{
+    // 1) D3D11 device (BGRA support is required for DComp).
+    UINT flags = D3D11_CREATE_DEVICE_BGRA_SUPPORT;
+    D3D_FEATURE_LEVEL got{};
+    const D3D_FEATURE_LEVEL want[] = {D3D_FEATURE_LEVEL_11_1, D3D_FEATURE_LEVEL_11_0};
+    if (FAILED(D3D11CreateDevice(nullptr, D3D_DRIVER_TYPE_HARDWARE, nullptr, flags,
+                                 want, 2, D3D11_SDK_VERSION,
+                                 &g_d3d_device, &got, &g_d3d_ctx)))
+    {
+        spdlog::error("[OVERLAY] D3D11CreateDevice failed");
+        return false;
+    }
+
+    // 2) DXGI factory (via the device) + composition swapchain.
+    IDXGIDevice *dxgiDevice = nullptr;
+    if (FAILED(g_d3d_device->QueryInterface(IID_PPV_ARGS(&dxgiDevice))) || !dxgiDevice)
+        return false;
+    IDXGIAdapter *adapter = nullptr;
+    if (FAILED(dxgiDevice->GetAdapter(&adapter)) || !adapter)
+    {
+        dxgiDevice->Release();
+        return false;
+    }
+    IDXGIFactory2 *factory = nullptr;
+    if (FAILED(adapter->GetParent(IID_PPV_ARGS(&factory))) || !factory)
+    {
+        adapter->Release();
+        dxgiDevice->Release();
+        return false;
+    }
+
+    RECT cr{};
+    GetClientRect(g_hwnd, &cr);
+    UINT w = static_cast<UINT>(cr.right - cr.left), h = static_cast<UINT>(cr.bottom - cr.top);
+    if (w == 0) w = 1;
+    if (h == 0) h = 1;
+
+    DXGI_SWAP_CHAIN_DESC1 scd{};
+    scd.Width = w;
+    scd.Height = h;
+    scd.Format = DXGI_FORMAT_B8G8R8A8_UNORM;
+    scd.SampleDesc.Count = 1;
+    scd.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
+    scd.BufferCount = 2;
+    scd.SwapEffect = DXGI_SWAP_EFFECT_FLIP_SEQUENTIAL;
+    scd.AlphaMode = DXGI_ALPHA_MODE_PREMULTIPLIED; // composited transparency
+    scd.Scaling = DXGI_SCALING_STRETCH;
+    HRESULT hr = factory->CreateSwapChainForComposition(g_d3d_device, &scd, nullptr, &g_swapchain);
+    factory->Release();
+    adapter->Release();
+    if (SUCCEEDED(hr) && g_swapchain)
+    {
+        // ── Windows path: DirectComposition (device -> target(hwnd) -> visual -> content). ──
+        g_back_w = w;
+        g_back_h = h;
+        if (FAILED(DCompositionCreateDevice(dxgiDevice, IID_PPV_ARGS(&g_dcomp_device))) || !g_dcomp_device)
+        {
+            dxgiDevice->Release();
+            spdlog::error("[OVERLAY] DCompositionCreateDevice failed");
+            return false;
+        }
+        dxgiDevice->Release();
+        if (FAILED(g_dcomp_device->CreateTargetForHwnd(g_hwnd, TRUE, &g_dcomp_target)) || !g_dcomp_target)
+            return false;
+        if (FAILED(g_dcomp_device->CreateVisual(&g_dcomp_visual)) || !g_dcomp_visual)
+            return false;
+        g_dcomp_visual->SetContent(g_swapchain);
+        g_dcomp_target->SetRoot(g_dcomp_visual);
+        g_dcomp_device->Commit();
+        ID3D11Texture2D *back = nullptr;
+        if (FAILED(g_swapchain->GetBuffer(0, IID_PPV_ARGS(&back))) || !back)
+            return false;
+        hr = g_d3d_device->CreateRenderTargetView(back, nullptr, &g_rtv);
+        back->Release();
+        if (FAILED(hr) || !g_rtv)
+            return false;
+    }
+    else
+    {
+        // ── Proton/Wine path: composition swapchains are E_NOTIMPL -> layered window. ──
+        dxgiDevice->Release();
+        spdlog::info("[OVERLAY] composition swapchain unavailable (0x{:08X}); using layered-window fallback",
+                     static_cast<unsigned>(hr));
+        g_use_layered = true;
+        recreate_window_layered();
+        if (!g_hwnd) { spdlog::error("[OVERLAY] layered window creation failed"); return false; }
+        if (!create_layered_targets(w, h)) { spdlog::error("[OVERLAY] layered targets failed"); return false; }
+    }
+
+    // 5) ImGui context (once) + DX11 backend.
+    if (!g_context_inited)
+    {
+        IMGUI_CHECKVERSION();
+        ImGui::CreateContext();
+        ImGuiIO &io = ImGui::GetIO();
+        io.IniFilename = nullptr; // don't drop an imgui.ini next to the game
+        io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard | ImGuiConfigFlags_NavEnableGamepad;
+        // Draw our OWN software cursor (MouseDrawCursor below) but never touch the OS
+        // cursor: without this the backend calls SetCursor(NULL) to hide the OS cursor,
+        // which clobbers the global cursor image and leaves the game (and desktop)
+        // cursor-less after the menu closes. With this flag ImGui renders the cursor
+        // into our frame and the game keeps managing its own OS cursor untouched.
+        io.ConfigFlags |= ImGuiConfigFlags_NoMouseCursorChange;
+        // Base font = Segoe UI (Latin + Cyrillic; the dump text can be Russian).
+        // A CJK font is merged on top ONLY when the active UI language is Chinese,
+        // so non-Chinese users don't load a CJK file or pay the larger atlas. The
+        // CJK merge carries only the glyphs the UI actually uses (font_glyph_seed).
+        {
+            const goblin::i18n::Language ui_lang = goblin::i18n::current_language();
+            const bool need_cjk = ui_lang == goblin::i18n::Language::SimplifiedChinese ||
+                                  ui_lang == goblin::i18n::Language::TraditionalChinese;
+
+            static ImVector<ImWchar> base_ranges;
+            {
+                ImFontGlyphRangesBuilder b;
+                b.AddRanges(io.Fonts->GetGlyphRangesDefault());
+                b.AddRanges(io.Fonts->GetGlyphRangesCyrillic());
+                b.BuildRanges(&base_ranges);
+            }
+            const char *base_fonts[] = {"C:\\Windows\\Fonts\\segoeui.ttf",
+                                        "C:\\Windows\\Fonts\\arial.ttf",
+                                        "C:\\Windows\\Fonts\\tahoma.ttf"};
+            ImFont *base = nullptr;
+            for (const char *fp : base_fonts)
+                if (GetFileAttributesA(fp) != INVALID_FILE_ATTRIBUTES &&
+                    (base = io.Fonts->AddFontFromFileTTF(fp, 18.0f, nullptr, base_ranges.Data)) != nullptr)
+                    break;
+            if (!base)
+            {
+                io.Fonts->AddFontDefault();
+                spdlog::warn("[OVERLAY] no base system font found; text may show as '?'");
+            }
+
+            if (need_cjk && base)
+            {
+                static ImVector<ImWchar> cjk_ranges;
+                {
+                    ImFontGlyphRangesBuilder b;
+                    b.AddText(goblin::i18n::font_glyph_seed_utf8()); // only glyphs the UI uses
+                    b.BuildRanges(&cjk_ranges);
+                }
+                ImFontConfig cfg;
+                cfg.MergeMode = true; // merge CJK glyphs into the Segoe UI base
+                // Prefer the matching script's font first (YaHei=SC, JhengHei=TC).
+                const char *cjk_sc[] = {"C:\\Windows\\Fonts\\msyh.ttc", "C:\\Windows\\Fonts\\msjh.ttc",
+                                        "C:\\Windows\\Fonts\\simhei.ttf", "C:\\Windows\\Fonts\\simsun.ttc"};
+                const char *cjk_tc[] = {"C:\\Windows\\Fonts\\msjh.ttc", "C:\\Windows\\Fonts\\msyh.ttc",
+                                        "C:\\Windows\\Fonts\\simsun.ttc", "C:\\Windows\\Fonts\\simhei.ttf"};
+                const char *const *cjk_fonts =
+                    ui_lang == goblin::i18n::Language::TraditionalChinese ? cjk_tc : cjk_sc;
+                bool merged = false;
+                for (int i = 0; i < 4; ++i)
+                {
+                    const char *fp = cjk_fonts[i];
+                    if (GetFileAttributesA(fp) != INVALID_FILE_ATTRIBUTES &&
+                        io.Fonts->AddFontFromFileTTF(fp, 18.0f, &cfg, cjk_ranges.Data))
+                    {
+                        merged = true;
+                        break;
+                    }
+                }
+                if (!merged)
+                    spdlog::warn("[OVERLAY] no CJK font found; Chinese UI may show as '?'");
+            }
+        }
+        apply_er_style();
+        ImGui_ImplWin32_Init(g_hwnd);
+        g_context_inited = true;
+    }
+
+    if (!ImGui_ImplDX11_Init(g_d3d_device, g_d3d_ctx))
+    {
+        spdlog::error("[OVERLAY] ImGui_ImplDX11_Init failed");
+        return false;
+    }
+    g_d3d_inited = true;
+    goblin::diag::set_overlay(goblin::diag::OverlayState::Active, "");
+    return true;
+}
+
+static bool seh_init_d3d()
+{
+    __try { return init_d3d(); }
+    __except (EXCEPTION_EXECUTE_HANDLER) { return false; }
+}
+
+// Recreate the RTV + resize the composition swapchain when the game window changes
+// size. POD-only locals (SEH-wrapped by the caller).
+static void resize_swapchain(UINT w, UINT h)
+{
+    if (g_use_layered) { create_layered_targets(w, h); return; } // re-make RT+staging+DIB
+    if (!g_swapchain || w == 0 || h == 0)
+        return;
+    if (g_rtv) { g_rtv->Release(); g_rtv = nullptr; }
+    if (FAILED(g_swapchain->ResizeBuffers(0, w, h, DXGI_FORMAT_UNKNOWN, 0)))
+        return;
+    ID3D11Texture2D *back = nullptr;
+    if (SUCCEEDED(g_swapchain->GetBuffer(0, IID_PPV_ARGS(&back))) && back)
+    {
+        g_d3d_device->CreateRenderTargetView(back, nullptr, &g_rtv);
+        back->Release();
+    }
+    g_back_w = w;
+    g_back_h = h;
+}
+
+static void seh_resize(UINT w, UINT h)
+{
+    __try { resize_swapchain(w, h); }
+    __except (EXCEPTION_EXECUTE_HANDLER) {}
+}
+
+// One rendered frame (SEH-wrapped). Clears to transparent; draws ImGui only when
+// the menu is open; presents. POD-only locals.
+static void render_frame(bool draw)
+{
+    __try
+    {
+        const float clear[4] = {0.0f, 0.0f, 0.0f, 0.0f}; // fully transparent
+        if (g_use_layered)
+        {
+            // Proton/Wine: render to the offscreen RT, read back, blit via UpdateLayeredWindow.
+            if (!g_lrtv || !g_lstaging || !g_ltex || !g_ldib || !g_d3d_ctx)
+                return;
+            g_d3d_ctx->OMSetRenderTargets(1, &g_lrtv, nullptr);
+            g_d3d_ctx->ClearRenderTargetView(g_lrtv, clear);
+            if (draw)
+                ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
+            g_d3d_ctx->CopyResource(g_lstaging, g_ltex);
+            D3D11_MAPPED_SUBRESOURCE m{};
+            if (SUCCEEDED(g_d3d_ctx->Map(g_lstaging, 0, D3D11_MAP_READ, 0, &m)))
+            {
+                const size_t rowbytes = static_cast<size_t>(g_back_w) * 4;
+                for (UINT y = 0; y < g_back_h; ++y) // RT is already premultiplied BGRA
+                    memcpy(static_cast<uint8_t *>(g_ldibbits) + static_cast<size_t>(y) * rowbytes,
+                           static_cast<const uint8_t *>(m.pData) + static_cast<size_t>(y) * m.RowPitch,
+                           rowbytes);
+                g_d3d_ctx->Unmap(g_lstaging, 0);
+                SIZE sz{static_cast<LONG>(g_back_w), static_cast<LONG>(g_back_h)};
+                POINT src0{0, 0};
+                BLENDFUNCTION bf{AC_SRC_OVER, 0, 255, AC_SRC_ALPHA};
+                HDC screen = GetDC(nullptr);
+                // pptDst = null: cover_game_window owns position via SetWindowPos.
+                UpdateLayeredWindow(g_hwnd, screen, nullptr, &sz, g_lmemdc, &src0, 0, &bf, ULW_ALPHA);
+                ReleaseDC(nullptr, screen);
+            }
+            return;
+        }
+        // ── Windows DComp path (unchanged). ──
+        if (!g_rtv || !g_d3d_ctx || !g_swapchain)
+            return;
+        g_d3d_ctx->OMSetRenderTargets(1, &g_rtv, nullptr);
+        g_d3d_ctx->ClearRenderTargetView(g_rtv, clear);
+        if (draw)
+            ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
+        g_swapchain->Present(1, 0);
+    }
+    __except (EXCEPTION_EXECUTE_HANDLER)
+    {
+        // A bad frame must never take the whole game down.
+    }
+}
+
+// ── Raw-input hook: block the game's keyboard/mouse while the menu is open ──
+// We do NOT steal the game's focus (that caused cursor breakage, alt-tab-on-close, and a
+// GetAsyncKeyState focus asymmetry that made F10 close-then-reopen) and a low-level
+// keyboard hook does not get delivered in this game/loader. Instead we hook the game's
+// GetRawInputData (how the engine reads keyboard/mouse) and neutralize the payload while
+// the menu is open, so menu input never leaks into gameplay. Open/close + rebind still
+// use GetAsyncKeyState polling (the game keeps focus, so it is reliable and symmetric).
+// The menu's own mouse comes via our window's WM_MOUSE, independent of raw input.
+using GetRawInputData_t = UINT(WINAPI *)(HRAWINPUT, UINT, LPVOID, PUINT, UINT);
+GetRawInputData_t o_GetRawInputData = nullptr;
+
+UINT WINAPI hk_GetRawInputData(HRAWINPUT hri, UINT cmd, LPVOID data, PUINT size, UINT hsz)
+{
+    UINT r = o_GetRawInputData(hri, cmd, data, size, hsz);
+    // Only touch the actual data fetch (data != null); leave the size query alone.
+    if (g_menu_open.load() && data && cmd == RID_INPUT && r != static_cast<UINT>(-1))
+    {
+        RAWINPUT *ri = reinterpret_cast<RAWINPUT *>(data);
+        if (ri->header.dwType == RIM_TYPEMOUSE)
+        {
+            ri->data.mouse.lLastX = 0;
+            ri->data.mouse.lLastY = 0;
+            ri->data.mouse.usButtonFlags = 0;
+            ri->data.mouse.usButtonData = 0;
+            ri->data.mouse.ulRawButtons = 0;
+        }
+        else if (ri->header.dwType == RIM_TYPEKEYBOARD)
+        {
+            ri->data.keyboard.MakeCode = 0;
+            ri->data.keyboard.VKey = 0;
+            ri->data.keyboard.Message = WM_NULL;
+            ri->data.keyboard.Flags = RI_KEY_BREAK; // report as a no-op key-up
+        }
+    }
+    return r;
+}
+
+// The game's FPS camera recenters / confines the OS cursor every frame (SetCursorPos +
+// ClipCursor). While the menu is open we no-op those so the cursor moves freely and our
+// ImGui menu can use it (the game keeps focus; raw input is already neutralized above).
+using SetCursorPos_t = BOOL(WINAPI *)(int, int);
+SetCursorPos_t o_SetCursorPos = nullptr;
+BOOL WINAPI hk_SetCursorPos(int x, int y)
+{
+    if (g_menu_open.load())
+        return TRUE; // swallow the game's recenter so the cursor is not pinned to center
+    return o_SetCursorPos(x, y);
+}
+
+using ClipCursor_t = BOOL(WINAPI *)(const RECT *);
+ClipCursor_t o_ClipCursor = nullptr;
+BOOL WINAPI hk_ClipCursor(const RECT *r)
+{
+    if (g_menu_open.load())
+        return o_ClipCursor(nullptr); // unconfine the cursor while the menu is open
+    return o_ClipCursor(r);
+}
+
+// While the menu is open, feed the GAME a NEUTRAL pad (connected, nothing pressed) so its
+// buttons do not leak into gameplay. We keep the real connect status + packet number so
+// the game keeps polling the slot - returning ERROR_DEVICE_NOT_CONNECTED makes games drop
+// the pad and stop polling it, killing the gamepad even after the menu closes. Our own
+// poll_gamepad reads the real pad via the o_ trampoline.
+DWORD WINAPI hk_XInputGetState(DWORD idx, XINPUT_STATE *state)
+{
+    DWORD r = o_XInputGetState(idx, state);
+    if (g_menu_open.load() && r == ERROR_SUCCESS && state)
+        state->Gamepad = XINPUT_GAMEPAD{}; // zero buttons + centre sticks; keep connected
+    return r;
+}
+
+// ── Open/close edge detection + side effects (config reload/save, focus) ──
+void update_menu_toggle()
+{
+    if (g_rebind_mode.load() != 0 && !g_menu_open.load())
         reset_rebind_state();
     const bool rebinding = g_rebind_mode.load() != 0;
+
+    // Toggle on the configured key (default F10) or the gamepad combo, rising edge. We do
+    // NOT steal focus, so the GAME keeps focus and GetAsyncKeyState is reliable + symmetric
+    // (opens AND closes). Key leak into the game is blocked by the raw-input hook above.
     static bool prev_open_in = false;
-    const int open_key = static_cast<int>(goblin::config::toggleInjectionKey); // F10
-    const uint16_t pad_mask = goblin::config::toggleGamepadMask;               // Y+R3
-    const bool key = focused && kd(open_key);
-    const bool combo = focused && g_pad_ok && pad_mask && (g_pad.wButtons & pad_mask) == pad_mask;
-    const bool open_in = key || combo;
+    const int open_key = static_cast<int>(goblin::config::toggleInjectionKey);
+    const uint16_t pad_mask = goblin::config::toggleGamepadMask;
+    const bool combo = g_pad_ok && pad_mask && (g_pad.wButtons & pad_mask) == pad_mask;
+    const bool open_in = kd(open_key) || combo;
     if (open_in && !prev_open_in && !rebinding)
         g_menu_open.store(!g_menu_open.load());
     prev_open_in = open_in;
 
-    // Close-only shortcuts while the menu is open: ESC (keyboard) or B (gamepad).
+    // ESC (keyboard) or B (gamepad) close while the menu is open.
     static bool prev_esc = false, prev_padb = false;
-    const bool esc  = focused && kd(VK_ESCAPE);
-    const bool padb = focused && g_pad_ok && (g_pad.wButtons & XINPUT_GAMEPAD_B) != 0;
+    const bool esc = kd(VK_ESCAPE);
+    const bool padb = g_pad_ok && (g_pad.wButtons & XINPUT_GAMEPAD_B) != 0;
     if (g_menu_open.load() && !rebinding && ((esc && !prev_esc) || (padb && !prev_padb)))
         g_menu_open.store(false);
     prev_esc = esc;
     prev_padb = padb;
 
-    // Open/close side effects (also catches the in-panel Close button):
-    // reload settings from disk on open; auto-save on close.
+    // Open/close side effects: reload settings on open, auto-save on close, and SHOW the
+    // window on open / HIDE it on close. We do NOT steal foreground: the game keeps focus
+    // (mouse still drives the menu since our topmost window gets WM_MOUSE unfocused, and
+    // the keyboard hook blocks key leak). A hidden closed window touches neither input
+    // nor the cursor, so the game fully owns the cursor when the menu is down.
     static bool prev_open = false;
     const bool open_now = g_menu_open.load();
     if (open_now && !prev_open)
     {
-        g_need_center = true;
         goblin::load_config(goblin::g_ini_path);
         goblin::reapply_live_settings();
+        ShowWindow(g_hwnd, SW_SHOWNOACTIVATE); // show without taking focus from the game
+        SetWindowPos(g_hwnd, HWND_TOPMOST, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_NOACTIVATE);
     }
     else if (!open_now && prev_open)
     {
-        // Swallow whatever gamepad buttons are held right now (the close press,
-        // e.g. B, or the toggle combo) until released, so it doesn't reach the game.
-        capture_swallow_buttons();
         reset_rebind_state();
         goblin::save_config(goblin::g_ini_path);
+        ShowWindow(g_hwnd, SW_HIDE);
     }
     prev_open = open_now;
-
-    if (!g_dx12_inited)
-    {
-        if (!seh_init_dx12(sc))
-            return oPresent(sc, sync, flags);
-    }
-    if (g_menu_open.load() && g_command_queue)
-        render(sc); // its GPU submit (submit_frame) is SEH-guarded; ImGui CPU draw runs on a consistent
-                    // inited state (init/teardown are serial on this same thread)
-
-    return oPresent(sc, sync, flags);
 }
 
-// SEH-isolated teardown (POD-only; releasing D3D objects can AV if the swapchain/device is mid-transition,
-// e.g. G-Sync / fullscreen-flip). Must never crash the game - on fault we just drop our state.
-static void seh_resize_teardown()
+// ── The overlay thread: window + D3D11 + DComp + ImGui + render loop ──
+void overlay_thread()
 {
-    __try
+    pXInputGetState = nullptr;
     {
-        wait_gpu();      // flush our in-flight work so freeing the RTVs is safe (AMD/Deck)
-        teardown_dx12(); // drop our RTV refs so the resize can free the buffers
+        const char *xdlls[] = {"xinput1_4.dll", "xinput1_3.dll", "xinput9_1_0.dll"};
+        for (const char *d : xdlls)
+            if (HMODULE h = GetModuleHandleA(d))
+                if (auto p = reinterpret_cast<XInputGetState_t>(GetProcAddress(h, "XInputGetState")))
+                { pXInputGetState = p; break; }
+        if (!pXInputGetState)
+            if (HMODULE h = LoadLibraryA("xinput1_4.dll"))
+                pXInputGetState = reinterpret_cast<XInputGetState_t>(GetProcAddress(h, "XInputGetState"));
     }
-    __except (EXCEPTION_EXECUTE_HANDLER)
+    // Hook XInputGetState so the game sees a disconnected pad while the menu is open (no
+    // gamepad leak). Done here (not in setup) because the xinput DLL is resolved above;
+    // enable_hooks re-applies the queue (dllmain already applied the earlier hooks).
+    if (pXInputGetState)
     {
-        g_dx12_inited = false; // force a clean re-init on the next Present
-    }
-}
-
-HRESULT WINAPI hkResizeBuffers(IDXGISwapChain3 *sc, UINT bc, UINT w, UINT h,
-                               DXGI_FORMAT fmt, UINT flags)
-{
-    seh_resize_teardown();
-    HRESULT hr = oResizeBuffers(sc, bc, w, h, fmt, flags);
-    // next Present re-inits the DX12 objects against the resized swapchain
-    return hr;
-}
-
-void WINAPI hkExecuteCommandLists(ID3D12CommandQueue *q, UINT n, ID3D12CommandList *const *l)
-{
-    if (!g_command_queue && q)
-    {
-        const D3D12_COMMAND_QUEUE_DESC d = q->GetDesc();
-        if (d.Type == D3D12_COMMAND_LIST_TYPE_DIRECT)
-            g_command_queue = q; // the graphics queue that presents
-    }
-    oExecuteCommandLists(q, n, l);
-}
-
-// Throwaway device + swapchain just to read the vtable function pointers.
-bool capture_vtables(void *&present, void *&resize, void *&execcl)
-{
-    HMODULE hd3d12 = GetModuleHandleA("d3d12.dll");
-    if (!hd3d12) hd3d12 = LoadLibraryA("d3d12.dll");
-    HMODULE hdxgi = GetModuleHandleA("dxgi.dll");
-    if (!hdxgi) hdxgi = LoadLibraryA("dxgi.dll");
-    if (!hd3d12 || !hdxgi)
-        return false;
-
-    auto pD3D12CreateDevice =
-        reinterpret_cast<decltype(&D3D12CreateDevice)>(GetProcAddress(hd3d12, "D3D12CreateDevice"));
-    auto pCreateDXGIFactory1 =
-        reinterpret_cast<decltype(&CreateDXGIFactory1)>(GetProcAddress(hdxgi, "CreateDXGIFactory1"));
-    if (!pD3D12CreateDevice || !pCreateDXGIFactory1)
-        return false;
-
-    ID3D12Device *dev = nullptr;
-    if (FAILED(pD3D12CreateDevice(nullptr, D3D_FEATURE_LEVEL_11_0, IID_PPV_ARGS(&dev))) || !dev)
-        return false;
-
-    ID3D12CommandQueue *queue = nullptr;
-    D3D12_COMMAND_QUEUE_DESC qd{};
-    qd.Type = D3D12_COMMAND_LIST_TYPE_DIRECT;
-    if (FAILED(dev->CreateCommandQueue(&qd, IID_PPV_ARGS(&queue))) || !queue)
-    {
-        dev->Release();
-        return false;
+        try
+        {
+            modutils::hook(reinterpret_cast<void *>(pXInputGetState),
+                           reinterpret_cast<void *>(&hk_XInputGetState),
+                           reinterpret_cast<void **>(&o_XInputGetState));
+            modutils::enable_hooks();
+        }
+        catch (const std::exception &e) { spdlog::warn("[OVERLAY] gamepad route unavailable: {}", e.what()); }
     }
 
-    // hidden dummy window for the dummy swapchain
+    // Register our window class + create the transparent, click-through, top-most window.
     WNDCLASSEXW wc{};
     wc.cbSize = sizeof(wc);
-    wc.lpfnWndProc = DefWindowProcW;
+    wc.lpfnWndProc = overlay_wndproc;
     wc.hInstance = GetModuleHandleW(nullptr);
-    wc.lpszClassName = L"MFG_OverlayDummy";
+    wc.lpszClassName = OVERLAY_CLASS;
+    wc.hCursor = nullptr; // no class cursor: we draw ImGui's software cursor and never
+                          // impose the OS arrow over the game (game keeps its own cursor)
     RegisterClassExW(&wc);
-    HWND dummy = CreateWindowExW(0, wc.lpszClassName, L"", WS_OVERLAPPEDWINDOW, 0, 0, 100, 100,
-                                 nullptr, nullptr, wc.hInstance, nullptr);
 
-    IDXGIFactory2 *factory = nullptr;
-    bool ok = false;
-    if (dummy && SUCCEEDED(pCreateDXGIFactory1(IID_PPV_ARGS(&factory))) && factory)
+    // WS_EX_NOREDIRECTIONBITMAP (NOT WS_EX_LAYERED): the window content is composited
+    // by DirectComposition, so we must suppress the DWM redirection surface. The window
+    // is SHOWN only while the menu is open and HIDDEN when closed (a hidden window can
+    // touch neither input nor the cursor), so we do not need WS_EX_TRANSPARENT
+    // click-through at all - hide/show is the cleaner, race-free model.
+    const DWORD ex = WS_EX_NOREDIRECTIONBITMAP | WS_EX_TOPMOST |
+                     WS_EX_NOACTIVATE | WS_EX_TOOLWINDOW;
+    g_hwnd = CreateWindowExW(ex, OVERLAY_CLASS, L"Map for Goblins overlay", WS_POPUP,
+                             0, 0, 100, 100, nullptr, nullptr, wc.hInstance, nullptr);
+    if (!g_hwnd)
     {
-        DXGI_SWAP_CHAIN_DESC1 scd{};
-        scd.BufferCount = 2;
-        scd.Width = 100;
-        scd.Height = 100;
-        scd.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
-        scd.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
-        scd.SwapEffect = DXGI_SWAP_EFFECT_FLIP_DISCARD;
-        scd.SampleDesc.Count = 1;
-        IDXGISwapChain1 *sc1 = nullptr;
-        if (SUCCEEDED(factory->CreateSwapChainForHwnd(queue, dummy, &scd, nullptr, nullptr, &sc1)) && sc1)
-        {
-            void **sc_vtbl = *reinterpret_cast<void ***>(sc1);
-            void **cq_vtbl = *reinterpret_cast<void ***>(queue);
-            present = sc_vtbl[8];  // IDXGISwapChain::Present
-            resize = sc_vtbl[13];  // IDXGISwapChain::ResizeBuffers
-            execcl = cq_vtbl[10];  // ID3D12CommandQueue::ExecuteCommandLists
-            ok = present && resize && execcl;
-            sc1->Release();
-        }
-        factory->Release();
+        spdlog::error("[OVERLAY] CreateWindowExW failed; overlay disabled");
+        goblin::diag::set_overlay(goblin::diag::OverlayState::Failed, "window creation failed");
+        return;
+    }
+    ShowWindow(g_hwnd, SW_SHOWNOACTIVATE);
+
+    if (!seh_init_d3d())
+    {
+        goblin::diag::set_overlay(goblin::diag::OverlayState::Failed, "D3D11/DComp init failed");
+        DestroyWindow(g_hwnd);
+        g_hwnd = nullptr;
+        return;
     }
 
-    if (dummy) DestroyWindow(dummy);
-    UnregisterClassW(wc.lpszClassName, wc.hInstance);
-    queue->Release();
-    dev->Release();
-    return ok;
+    ShowWindow(g_hwnd, SW_HIDE); // menu starts closed -> window hidden (zero interference)
+
+    // Render loop: pump our own messages, track the game window, poll hotkeys, draw.
+    while (g_running.load())
+    {
+        MSG msg;
+        while (PeekMessageW(&msg, nullptr, 0, 0, PM_REMOVE))
+        {
+            TranslateMessage(&msg);
+            DispatchMessageW(&msg);
+        }
+
+        // Cover the game's client area; resize our swapchain if it changed.
+        int gw = 0, gh = 0;
+        cover_game_window(gw, gh);
+        if (gw > 0 && gh > 0 &&
+            (static_cast<UINT>(gw) != g_back_w || static_cast<UINT>(gh) != g_back_h))
+            seh_resize(static_cast<UINT>(gw), static_cast<UINT>(gh));
+
+        poll_gamepad();
+        update_menu_toggle();
+
+        const bool open = g_menu_open.load();
+        if (open)
+        {
+            try_upload_atlas();
+            maybe_load_preview();
+            poll_rebind_keyboard();
+            process_rebind();
+
+            ImGui_ImplDX11_NewFrame();
+            ImGui_ImplWin32_NewFrame();
+            feed_gamepad(); // after NewFrame (the backend clears HasGamepad each frame)
+            feed_nav_keyboard(); // polled keyboard nav (we never hold focus)
+            ImGui::NewFrame();
+            {
+                float fs = goblin::config::fontScale; // clamp defensively (ini no longer clamps)
+                ImGui::GetIO().FontGlobalScale = fs < 0.8f ? 0.8f : (fs > 3.0f ? 3.0f : fs);
+            }
+            ImGui::GetIO().MouseDrawCursor = true; // our window has no system cursor over the game
+            draw_settings_window();
+            draw_preview_window();
+            ImGui::Render();
+            render_frame(true);
+        }
+        else
+        {
+            // Menu closed: present a fully-transparent frame so the game shows through.
+            render_frame(false);
+            Sleep(16); // idle pacing while closed (no vsync wait from a cleared present)
+        }
+    }
+}
+
+// ── Best-effort teardown (the process usually just exits). ──
+void teardown()
+{
+    if (g_d3d_inited)
+    {
+        __try { ImGui_ImplDX11_Shutdown(); } __except (EXCEPTION_EXECUTE_HANDLER) {}
+    }
+    if (g_context_inited)
+    {
+        __try { ImGui_ImplWin32_Shutdown(); ImGui::DestroyContext(); }
+        __except (EXCEPTION_EXECUTE_HANDLER) {}
+    }
+    if (g_atlas_srv) { g_atlas_srv->Release(); g_atlas_srv = nullptr; }
+    if (g_atlas_tex) { g_atlas_tex->Release(); g_atlas_tex = nullptr; }
+    if (g_logo_srv) { g_logo_srv->Release(); g_logo_srv = nullptr; }
+    if (g_logo_tex) { g_logo_tex->Release(); g_logo_tex = nullptr; }
+    if (g_preview_srv) { g_preview_srv->Release(); g_preview_srv = nullptr; }
+    if (g_preview_tex) { g_preview_tex->Release(); g_preview_tex = nullptr; }
+    if (g_rtv) { g_rtv->Release(); g_rtv = nullptr; }
+    if (g_dcomp_visual) { g_dcomp_visual->Release(); g_dcomp_visual = nullptr; }
+    if (g_dcomp_target) { g_dcomp_target->Release(); g_dcomp_target = nullptr; }
+    if (g_dcomp_device) { g_dcomp_device->Release(); g_dcomp_device = nullptr; }
+    if (g_swapchain) { g_swapchain->Release(); g_swapchain = nullptr; }
+    release_layered_targets(); // Proton fallback RT/staging/DIB
+    if (g_d3d_ctx) { g_d3d_ctx->Release(); g_d3d_ctx = nullptr; }
+    if (g_d3d_device) { g_d3d_device->Release(); g_d3d_device = nullptr; }
+    if (g_hwnd) { DestroyWindow(g_hwnd); g_hwnd = nullptr; }
 }
 } // namespace
 
@@ -1939,59 +1790,36 @@ void goblin::overlay::setup()
         goblin::diag::set_overlay(goblin::diag::OverlayState::OffByConfig, "");
         return;
     }
-    void *present = nullptr, *resize = nullptr, *execcl = nullptr;
-    if (!capture_vtables(present, resize, execcl))
-    {
-        spdlog::error("[OVERLAY] could not read DX12 view tables; overlay disabled");
-        goblin::diag::set_overlay(goblin::diag::OverlayState::Failed, "DX12 view tables not found");
-        return;
-    }
-    spdlog::info("[OVERLAY] render entries: {:p} {:p} {:p}", present, resize, execcl);
+    if (g_running.exchange(true))
+        return; // already running
 
-    // Queue the hooks; modutils::enable_hooks() (called by setup_mod) applies them.
-    modutils::hook(present, reinterpret_cast<void *>(&hkPresent),
-                   reinterpret_cast<void **>(&oPresent));
-    modutils::hook(resize, reinterpret_cast<void *>(&hkResizeBuffers),
-                   reinterpret_cast<void **>(&oResizeBuffers));
-    modutils::hook(execcl, reinterpret_cast<void *>(&hkExecuteCommandLists),
-                   reinterpret_cast<void **>(&oExecuteCommandLists));
+    // Spawn the dedicated overlay thread (window + D3D11 + DComp + ImGui + loop).
+    // setup() returns immediately; the thread owns all overlay state.
+    std::thread([] {
+        overlay_thread();
+        teardown();
+        g_running.store(false);
+    }).detach();
 
-    // Raw-input handler: ER reads keyboard/mouse via raw input, so this is how we
-    // route the mouse to ImGui and pause the game while the menu is open.
-    if (HMODULE u32 = GetModuleHandleA("user32.dll"))
+    // Hook user32 input APIs so that, while the menu is open, we neutralize the game's
+    // keyboard/mouse (no input leak) AND stop it from recentering/confining the cursor
+    // (so our mouse works) - all WITHOUT stealing focus. Queued here; dllmain applies
+    // them via modutils::enable_hooks() right after this setup returns. None of this
+    // touches the swapchain, so it is safe under frame-gen / Smooth Motion / Special K.
+    if (HMODULE u32 = GetModuleHandleW(L"user32.dll"))
     {
-        if (void *grid = reinterpret_cast<void *>(GetProcAddress(u32, "GetRawInputData")))
-        {
-            modutils::hook(grid, reinterpret_cast<void *>(&hkGetRawInputData),
-                           reinterpret_cast<void **>(&oGetRawInputData));
-            spdlog::info("[OVERLAY] raw input handler ready (menu input routing)");
-        }
-        else
-            spdlog::warn("[OVERLAY] raw input hook unavailable; menu input limited");
+        auto hook_api = [u32](const char *name, void *detour, void **tramp) {
+            if (void *p = reinterpret_cast<void *>(GetProcAddress(u32, name)))
+            {
+                try { modutils::hook(p, detour, tramp); }
+                catch (const std::exception &e) { spdlog::warn("[OVERLAY] input route unavailable: {}", e.what()); }
+            }
+        };
+        hook_api("GetRawInputData", reinterpret_cast<void *>(&hk_GetRawInputData),
+                 reinterpret_cast<void **>(&o_GetRawInputData));
+        hook_api("SetCursorPos", reinterpret_cast<void *>(&hk_SetCursorPos),
+                 reinterpret_cast<void **>(&o_SetCursorPos));
+        hook_api("ClipCursor", reinterpret_cast<void *>(&hk_ClipCursor),
+                 reinterpret_cast<void **>(&o_ClipCursor));
     }
-
-    // XInput hook: gate the game's gamepad while the menu is open (so the
-    // character/camera don't move) and capture it for ImGui nav. Hook whichever
-    // xinput DLL the game already loaded.
-    {
-        const char *xdlls[] = {"xinput1_4.dll", "xinput1_3.dll", "xinput9_1_0.dll"};
-        void *xfn = nullptr;
-        for (const char *d : xdlls)
-        {
-            HMODULE h = GetModuleHandleA(d);
-            if (h) { xfn = reinterpret_cast<void *>(GetProcAddress(h, "XInputGetState")); if (xfn) break; }
-        }
-        if (!xfn) // none loaded yet - pull one in
-            if (HMODULE h = LoadLibraryA("xinput1_4.dll"))
-                xfn = reinterpret_cast<void *>(GetProcAddress(h, "XInputGetState"));
-        if (xfn)
-        {
-            modutils::hook(xfn, reinterpret_cast<void *>(&hkXInputGetState),
-                           reinterpret_cast<void **>(&oXInputGetState));
-            spdlog::info("[OVERLAY] gamepad handler ready (gamepad menu nav)");
-        }
-        else
-            spdlog::warn("[OVERLAY] gamepad hook unavailable; gamepad not gated");
-    }
-    spdlog::info("[OVERLAY] handlers queued (open/close: configured toggle key, default F10)");
 }

@@ -96,6 +96,7 @@ path = 'MapForGoblins.dll'[/code]
 This mod is a plain DLL, so it loads through Elden Mod Loader like any other DLL mod.
 [list=1]
 [*]Install Elden Mod Loader (by techiew): extract its files into your [b]Game[/b] folder (next to eldenring.exe) - it adds dinput8.dll, mod_loader_config.ini and a [b]mods[/b] folder[/*]
+[*][b]Open mod_loader_config.ini and set [color=#ff0000]load_delay = 0[/color][/b] - EML's default delay (e.g. 5000 = 5s) loads the DLL after the world map is already built, so the icons will not appear. Setting it to 0 loads the DLL early enough to inject the icons[/*]
 [*]Copy [b]MapForGoblins.dll[/b] and [b]MapForGoblins.ini[/b] into that [b]mods[/b] folder (EML loads every DLL in there at startup)[/*]
 [*]Launch the game offline (EML does not bypass EAC, so play offline)[/*]
 [/list]

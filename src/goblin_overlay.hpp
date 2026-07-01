@@ -1,19 +1,21 @@
 #pragma once
 
-// In-game config overlay (Dear ImGui on a DX12 swapchain hook). Lets the player
-// open a settings panel from inside the running game and flip the show_* / other
-// options, then Save them back to MapForGoblins.ini. Prototype: changes apply on
-// next launch (live in-session re-apply is a later phase). Open/close: F8.
+// In-game config overlay (Dear ImGui in a SEPARATE transparent top-most window
+// with its own D3D11 + DirectComposition device, rendered on its own thread). It
+// does NOT touch the game's swapchain, so it is compatible with tools that wrap
+// the game's swapchain (Special K, NVIDIA Smooth Motion / frame-gen, ReShade).
+// Lets the player open a settings panel from inside the running game and flip the
+// show_* / other options; changes auto-save to MapForGoblins.ini on close and
+// auto-reload on open. Open/close: the configured toggle key (default F10) or ESC.
 namespace goblin::overlay
 {
-    // Capture the DXGI swapchain + D3D12 command-queue vtables (via a throwaway
-    // device/swapchain) and QUEUE MinHook hooks on Present / ResizeBuffers /
-    // ExecuteCommandLists. The hooks are applied by modutils::enable_hooks().
-    // Safe no-op (logs) if D3D12 init fails. Call before enable_hooks().
+    // Spawn the dedicated overlay thread (creates the window + D3D11 + DComp +
+    // ImGui and runs the render loop). Returns immediately. Safe no-op (logs) if
+    // enable_overlay is false or window/D3D creation fails. Call from setup_mod.
     void setup();
 
-    // True while Win32 virtual-key `vk` is currently held. Read from a key-state
-    // table fed by our input hooks (raw input + WM_KEY*), so callers avoid the
-    // GetAsyncKeyState import. Foreground-only (the hooks only see focused input).
+    // True while Win32 virtual-key `vk` is currently held. Reads GetAsyncKeyState
+    // directly (foreground-only). Used by the marker-dump + icon master-toggle
+    // hotkey loops in goblin_markers / goblin_inject.
     bool key_down(int vk);
 }
