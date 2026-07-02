@@ -12,8 +12,10 @@ Template call signature (params, byte-offset N in args block):
   X12_4  activated flag (set ON when the player presses the action btn 9260)
   X16_4  duplicate of X12_4 in the templates we've seen
 
-We mark the statue at its MSB position, hide the marker once activated
-(textDisableFlagId = activated flag).
+We mark the statue at its MSB position and hide the marker on X0_4 (the flag
+that DELETES the statue in-world once its content is resolved). NOT X12_4: that
+"activated" flag is set on examine but the same X0_4 branch clears it back OFF,
+so a marker keyed on X12_4 would linger after the statue is gone.
 
 The same model (AEG099_055) can also appear as non-interactive decoration
 in DLC/world - those instances are NOT in the EMEVD scan so they don't
@@ -92,7 +94,12 @@ def main():
                 params = [struct.unpack_from('<I', ab, off)[0]
                           for off in range(8, len(ab) - 3, 4)]
                 if len(params) < 4: continue
-                entity, flag = params[1], params[3]
+                # Hide on X0_4 (params[0]), NOT X12_4 (params[3]). Decompiling template
+                # 90005683 shows the statue is DELETED in-world when X0_4 turns ON, and
+                # that same branch SetEventFlag(X12_4, OFF) - so once the statue's content
+                # resolves the "activated" flag is cleared and a marker keyed on X12_4
+                # would linger forever. X0_4 tracks the statue's actual presence.
+                entity, flag = params[1], params[0]
                 if entity in seen: continue
                 seen.add(entity)
                 calls.append((src_tile, entity, flag))

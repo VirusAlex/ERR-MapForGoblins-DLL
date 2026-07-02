@@ -40,6 +40,7 @@
 #include "miniz.h"              // zlib inflate to decode the tags
 #include "goblin_inject.hpp"
 #include "goblin_markers.hpp"
+#include "goblin_progress.hpp"
 #include "goblin_diag.hpp"
 #include "modutils.hpp" // hook GetRawInputData (menu input-leak block)
 
@@ -666,6 +667,167 @@ void draw_about_tab()
     }
 }
 
+// Progress-bar fill: dark yellow (menu-frame tone), dark green at 100%.
+static const ImVec4 kBarYellow(0.60f, 0.48f, 0.16f, 1.0f);
+static const ImVec4 kBarGreen(0.28f, 0.46f, 0.20f, 1.0f);
+static inline ImVec4 progress_bar_color(float frac)
+{
+    return frac >= 1.0f ? kBarGreen : kBarYellow;
+}
+
+// One clickable category row: full-width bar (dark-yellow / dark-green at 100%)
+// with the category name on the left and "collected/total" on the right, drawn
+// over a Selectable so the WHOLE bar is clickable. Clicking toggles map "focus"
+// on that category (show only its uncollected markers). Returns true if clicked.
+static bool draw_category_bar(const char *name, int collected, int total,
+                              bool focused, const char *tooltip)
+{
+    const float frac = total ? static_cast<float>(collected) / total : 0.0f;
+    const float w = ImGui::GetContentRegionAvail().x;
+    const float h = ImGui::GetFrameHeight();
+    const ImVec2 p0 = ImGui::GetCursorScreenPos();
+    const ImVec2 p1(p0.x + w, p0.y + h);
+
+    // Invisible full-row hit target (no default bg; we paint our own).
+    ImGui::PushStyleColor(ImGuiCol_Header, ImVec4(0, 0, 0, 0));
+    ImGui::PushStyleColor(ImGuiCol_HeaderHovered, ImVec4(0, 0, 0, 0));
+    ImGui::PushStyleColor(ImGuiCol_HeaderActive, ImVec4(0, 0, 0, 0));
+    const bool clicked = ImGui::Selectable("##catbar", false, ImGuiSelectableFlags_None, ImVec2(w, h));
+    ImGui::PopStyleColor(3);
+    const bool hovered = ImGui::IsItemHovered();
+    if (hovered && tooltip) ImGui::SetTooltip("%s", tooltip);
+
+    ImDrawList *dl = ImGui::GetWindowDrawList();
+    const float rounding = 3.0f;
+    // Track background + fill.
+    dl->AddRectFilled(p0, p1, ImGui::GetColorU32(ImGuiCol_FrameBg), rounding);
+    if (frac > 0.0f)
+    {
+        ImVec4 fc = progress_bar_color(frac);
+        if (hovered) { fc.x *= 1.25f; fc.y *= 1.25f; fc.z *= 1.25f; }  // brighten on hover
+        dl->AddRectFilled(p0, ImVec2(p0.x + w * frac, p1.y), ImGui::GetColorU32(fc), rounding);
+    }
+    // Border: brighter/gold when this category is the active map focus.
+    const ImU32 border = focused ? ImGui::GetColorU32(ImVec4(0.90f, 0.78f, 0.35f, 1.0f))
+                                  : ImGui::GetColorU32(ImGuiCol_Border);
+    dl->AddRect(p0, p1, border, rounding, 0, focused ? 2.0f : 1.0f);
+
+    // Labels: name left, count right, vertically centred.
+    const ImU32 txt = ImGui::GetColorU32(ImGuiCol_Text);
+    const float ty = p0.y + (h - ImGui::GetFontSize()) * 0.5f;
+    dl->AddText(ImVec2(p0.x + 6.0f, ty), txt, name);
+    char cnt[32];
+    std::snprintf(cnt, sizeof(cnt), "%d/%d", collected, total);
+    const float cw = ImGui::CalcTextSize(cnt).x;
+    dl->AddText(ImVec2(p1.x - cw - 6.0f, ty), txt, cnt);
+    return clicked;
+}
+
+// ── Progress tab: per-region collected/total, broken down by category ──
+// Groups every baked marker into ~22 coarse regions (goblin_progress) and shows
+// an overall bar per region + a clickable bar per enabled category. Clicking a
+// category isolates its uncollected markers on the live map (goblin focus mode).
+void draw_progress_tab()
+{
+    namespace tr = goblin::i18n;
+    const tr::Language lang = tr::current_language();
+    namespace prog = goblin::progress;
+
+    prog::rebuild_if_stale(ImGui::GetTime());
+    const auto &regions = prog::snapshot();
+
+    ImGui::TextDisabled("%s", tr::tr(tr::TextId::ProgressHint, lang));
+    ImGui::TextDisabled("%s", tr::tr(tr::TextId::ProgressClickHint, lang));
+
+    // Active focus is a (category, region) pair.
+    const int focusCat = goblin::focus_category();
+    const int32_t focusReg = goblin::focus_region();
+    // Active-focus banner: which category+region the map is currently isolating.
+    if (focusCat >= 0)
+    {
+        const char *regName = "?";
+        for (const auto &r : regions)
+            if (r.place_name_id == focusReg) { regName = r.name.c_str(); break; }
+        ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(0.90f, 0.78f, 0.35f, 1.0f));
+        ImGui::TextWrapped("%s %s - %s", tr::tr(tr::TextId::ProgressShowingOnly, lang),
+                           goblin::markers::category_name(
+                               static_cast<goblin::generated::Category>(focusCat)),
+                           regName);
+        ImGui::PopStyleColor();
+        if (ImGui::SmallButton(tr::tr(tr::TextId::ProgressFocusClear, lang)))
+        {
+            goblin::set_focus_category(-1);
+            goblin::reapply_live_settings();
+        }
+    }
+    ImGui::Separator();
+
+    // Clicking a category defers the focus change until after the draw loop.
+    int toggle_cat = -2;         // -2 = no change this frame
+    int32_t toggle_reg = -1;
+
+    ImGui::BeginChild("##progscroll", ImVec2(0, 0), ImGuiChildFlags_NavFlattened);
+    bool any = false;
+    for (const auto &rp : regions)
+    {
+        // Region-wide visible totals: only categories currently shown (enabled)
+        // and present in this region. Toggling a category needs no recompute.
+        int vis_coll = 0, vis_tot = 0;
+        for (int ci = 0; ci < prog::kCategoryCount; ++ci)
+        {
+            if (rp.cats[ci].total <= 0) continue;
+            if (!goblin::category_enabled(static_cast<goblin::generated::Category>(ci)))
+                continue;
+            vis_coll += rp.cats[ci].collected;
+            vis_tot += rp.cats[ci].total;
+        }
+        if (vis_tot == 0) continue;  // nothing enabled here
+        any = true;
+
+        // ###id keeps the collapse state stable as the counts in the label change.
+        char header[256];
+        std::snprintf(header, sizeof(header), "%s  (%d/%d)###reg_%d",
+                      rp.name.c_str(), vis_coll, vis_tot, rp.place_name_id);
+        if (!ImGui::CollapsingHeader(header))
+            continue;
+
+        const float rfrac = vis_tot ? static_cast<float>(vis_coll) / vis_tot : 0.0f;
+        ImGui::PushStyleColor(ImGuiCol_PlotHistogram, progress_bar_color(rfrac));
+        ImGui::ProgressBar(rfrac, ImVec2(-1.0f, 0.0f));
+        ImGui::PopStyleColor();
+        ImGui::Spacing();
+        for (int ci = 0; ci < prog::kCategoryCount; ++ci)
+        {
+            const auto cat = static_cast<goblin::generated::Category>(ci);
+            if (rp.cats[ci].total <= 0 || !goblin::category_enabled(cat))
+                continue;
+            const bool focused = (focusCat == ci && focusReg == rp.place_name_id);
+            ImGui::PushID(rp.place_name_id * 128 + ci);
+            if (draw_category_bar(goblin::markers::category_name(cat),
+                                  rp.cats[ci].collected, rp.cats[ci].total,
+                                  focused, tr::tr(tr::TextId::ProgressClickHint, lang)))
+            {
+                toggle_cat = ci;
+                toggle_reg = rp.place_name_id;
+            }
+            ImGui::PopID();
+        }
+    }
+    if (!any)
+        ImGui::TextDisabled("(no markers to show - enable a category on the Settings tab)");
+    ImGui::EndChild();
+
+    if (toggle_cat != -2)
+    {
+        const bool same = (focusCat == toggle_cat && focusReg == toggle_reg);
+        if (same)
+            goblin::set_focus_category(-1);
+        else
+            goblin::set_focus_category(toggle_cat, toggle_reg);
+        goblin::reapply_live_settings();  // apply the isolate/restore on the live map
+    }
+}
+
 // ── Bottom-of-window control hints, auto-switched by the last input device ──
 void draw_control_hints()
 {
@@ -742,8 +904,8 @@ void draw_settings_window()
     {
         const bool lb = (g_pad.wButtons & XINPUT_GAMEPAD_LEFT_SHOULDER) != 0;
         const bool rb = (g_pad.wButtons & XINPUT_GAMEPAD_RIGHT_SHOULDER) != 0;
-        if (rb && !prev_rb) { cur_tab = (cur_tab + 1) % 3; forced_tab = cur_tab; }
-        if (lb && !prev_lb) { cur_tab = (cur_tab + 2) % 3; forced_tab = cur_tab; }
+        if (rb && !prev_rb) { cur_tab = (cur_tab + 1) % 4; forced_tab = cur_tab; }
+        if (lb && !prev_lb) { cur_tab = (cur_tab + 3) % 4; forced_tab = cur_tab; }
         prev_lb = lb; prev_rb = rb;
     }
     auto tab_flag = [&](int i) {
@@ -760,8 +922,9 @@ void draw_settings_window()
     if (ImGui::BeginTabBar("##tabs"))
     {
         if (ImGui::BeginTabItem(tr::tr(tr::TextId::TabSettings, lang), nullptr, tab_flag(0))) { draw_settings_tab(); ImGui::EndTabItem(); }
-        if (ImGui::BeginTabItem(tr::tr(tr::TextId::TabDebug, lang),    nullptr, tab_flag(1))) { draw_debug_tab();    ImGui::EndTabItem(); }
-        if (ImGui::BeginTabItem(tr::tr(tr::TextId::TabAbout, lang),    nullptr, tab_flag(2))) { draw_about_tab();    ImGui::EndTabItem(); }
+        if (ImGui::BeginTabItem(tr::tr(tr::TextId::TabProgress, lang), nullptr, tab_flag(1))) { draw_progress_tab(); ImGui::EndTabItem(); }
+        if (ImGui::BeginTabItem(tr::tr(tr::TextId::TabDebug, lang),    nullptr, tab_flag(2))) { draw_debug_tab();    ImGui::EndTabItem(); }
+        if (ImGui::BeginTabItem(tr::tr(tr::TextId::TabAbout, lang),    nullptr, tab_flag(3))) { draw_about_tab();    ImGui::EndTabItem(); }
 
         ImGui::EndTabBar();
     }

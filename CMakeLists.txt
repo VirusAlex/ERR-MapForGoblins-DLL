@@ -114,6 +114,8 @@ add_library( MapForGoblins SHARED
   ${GEN_DIR}/goblin_location_alt.cpp
   ${GEN_DIR}/goblin_geof_models.hpp
   ${GEN_DIR}/goblin_geof_models.cpp
+  ${GEN_DIR}/goblin_region_map.hpp
+  ${GEN_DIR}/goblin_region_map.cpp
   src/goblin_config_schema.hpp
   src/goblin_config_schema.cpp
   src/goblin_i18n.hpp
@@ -133,6 +135,8 @@ add_library( MapForGoblins SHARED
   src/goblin_logic.cpp
   src/goblin_markers.hpp
   src/goblin_markers.cpp
+  src/goblin_progress.hpp
+  src/goblin_progress.cpp
   src/goblin_messages.hpp
   src/goblin_messages.cpp
   src/goblin_overlay.hpp

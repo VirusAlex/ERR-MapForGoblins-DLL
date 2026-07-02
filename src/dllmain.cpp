@@ -66,6 +66,7 @@ static void safe_apply_category_visibility_seh()
     __try
     {
         goblin::apply_category_visibility();
+        goblin::apply_focus_highlight();  // keep focus glow/labels in sync as the collected set changes
     }
     __except (EXCEPTION_EXECUTE_HANDLER)
     {

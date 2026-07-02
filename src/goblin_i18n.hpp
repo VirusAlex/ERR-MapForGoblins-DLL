@@ -50,6 +50,11 @@ namespace goblin::i18n
         TabSettings,
         TabDebug,
         TabAbout,
+        TabProgress,
+        ProgressHint,
+        ProgressClickHint,
+        ProgressShowingOnly,
+        ProgressFocusClear,
     };
 
     enum class ToastId

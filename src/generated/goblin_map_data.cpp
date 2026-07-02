@@ -128183,7 +128183,7 @@ const MapEntry MAP_ENTRIES[] = {
         .posY = 279.886f,
         .posZ = -80.507f,
         .textId1 = 800007041,
-        .textDisableFlagId1 = 78292,
+        .textDisableFlagId1 = 62202,
         .selectMinZoomStep = 1,
     }, Category::WorldInteractables, -1, -1, nullptr, 0u, 0, -39.907f, -80.507f},
     // Row ID 6500001
@@ -128197,7 +128197,7 @@ const MapEntry MAP_ENTRIES[] = {
         .posY = 672.527f,
         .posZ = 72.470f,
         .textId1 = 800007041,
-        .textDisableFlagId1 = 78390,
+        .textDisableFlagId1 = 62313,
         .selectMinZoomStep = 1,
     }, Category::WorldInteractables, -1, -1, nullptr, 0u, 0, -17.805f, 72.470f},
     // Row ID 6500002
@@ -128211,7 +128211,7 @@ const MapEntry MAP_ENTRIES[] = {
         .posY = 460.094f,
         .posZ = 98.893f,
         .textId1 = 800007041,
-        .textDisableFlagId1 = 78290,
+        .textDisableFlagId1 = 62201,
         .selectMinZoomStep = 1,
     }, Category::WorldInteractables, -1, -1, nullptr, 0u, 0, 86.223f, 98.893f},
     // Row ID 6500003
@@ -128225,7 +128225,7 @@ const MapEntry MAP_ENTRIES[] = {
         .posY = 800.153f,
         .posZ = -35.949f,
         .textId1 = 800007041,
-        .textDisableFlagId1 = 78392,
+        .textDisableFlagId1 = 62314,
         .selectMinZoomStep = 1,
     }, Category::WorldInteractables, -1, -1, nullptr, 0u, 0, 45.830f, -35.949f},
     // Row ID 6500004
@@ -128239,7 +128239,7 @@ const MapEntry MAP_ENTRIES[] = {
         .posY = 275.227f,
         .posZ = 19.087f,
         .textId1 = 800007041,
-        .textDisableFlagId1 = 78294,
+        .textDisableFlagId1 = 62203,
         .selectMinZoomStep = 1,
     }, Category::WorldInteractables, -1, -1, nullptr, 0u, 0, 78.972f, 19.087f},
     // Row ID 6500005
@@ -128253,7 +128253,7 @@ const MapEntry MAP_ENTRIES[] = {
         .posY = 115.447f,
         .posZ = 113.471f,
         .textId1 = 800007041,
-        .textDisableFlagId1 = 78190,
+        .textDisableFlagId1 = 62103,
         .selectMinZoomStep = 1,
     }, Category::WorldInteractables, -1, -1, nullptr, 0u, 0, -126.177f, 117.597f},
     // Row ID 6500006
@@ -128267,7 +128267,7 @@ const MapEntry MAP_ENTRIES[] = {
         .posY = 74.034f,
         .posZ = -78.360f,
         .textId1 = 800007041,
-        .textDisableFlagId1 = 78196,
+        .textDisableFlagId1 = 62150,
         .selectMinZoomStep = 1,
     }, Category::WorldInteractables, -1, -1, nullptr, 0u, 0, -125.223f, -78.360f},
     // Row ID 6500007
@@ -128281,7 +128281,7 @@ const MapEntry MAP_ENTRIES[] = {
         .posY = 102.353f,
         .posZ = 34.570f,
         .textId1 = 800007041,
-        .textDisableFlagId1 = 78194,
+        .textDisableFlagId1 = 62105,
         .selectMinZoomStep = 1,
     }, Category::WorldInteractables, -1, -1, nullptr, 0u, 0, 137.233f, 34.570f},
     // Row ID 6500008
@@ -128295,7 +128295,7 @@ const MapEntry MAP_ENTRIES[] = {
         .posY = 196.505f,
         .posZ = -31.763f,
         .textId1 = 800007041,
-        .textDisableFlagId1 = 78192,
+        .textDisableFlagId1 = 62104,
         .selectMinZoomStep = 1,
     }, Category::WorldInteractables, -1, -1, nullptr, 0u, 0, -75.722f, -31.763f},
     // Row ID 6500009
@@ -128309,7 +128309,7 @@ const MapEntry MAP_ENTRIES[] = {
         .posY = 85.963f,
         .posZ = -49.000f,
         .textId1 = 800007041,
-        .textDisableFlagId1 = 78198,
+        .textDisableFlagId1 = 62151,
         .selectMinZoomStep = 1,
     }, Category::WorldInteractables, -1, -1, nullptr, 0u, 0, -90.009f, -49.000f},
     // Row ID 6500010
@@ -128323,7 +128323,7 @@ const MapEntry MAP_ENTRIES[] = {
         .posY = 1025.453f,
         .posZ = 24.713f,
         .textId1 = 800007041,
-        .textDisableFlagId1 = 78394,
+        .textDisableFlagId1 = 62315,
         .selectMinZoomStep = 1,
     }, Category::WorldInteractables, -1, -1, nullptr, 0u, 0, 99.168f, 24.713f},
     // Row ID 6500011
@@ -128337,7 +128337,7 @@ const MapEntry MAP_ENTRIES[] = {
         .posY = 166.458f,
         .posZ = 80.119f,
         .textId1 = 800007041,
-        .textDisableFlagId1 = 78490,
+        .textDisableFlagId1 = 62410,
         .selectMinZoomStep = 1,
     }, Category::WorldInteractables, -1, -1, nullptr, 0u, 0, -84.078f, 80.119f},
     // Row ID 6500012
@@ -128351,7 +128351,7 @@ const MapEntry MAP_ENTRIES[] = {
         .posY = 56.733f,
         .posZ = -7.780f,
         .textId1 = 800007041,
-        .textDisableFlagId1 = 78492,
+        .textDisableFlagId1 = 62411,
         .selectMinZoomStep = 1,
     }, Category::WorldInteractables, -1, -1, nullptr, 0u, 0, -25.402f, -7.780f},
     // Row ID 6500013
@@ -128365,7 +128365,7 @@ const MapEntry MAP_ENTRIES[] = {
         .posY = 1314.660f,
         .posZ = -47.044f,
         .textId1 = 800007041,
-        .textDisableFlagId1 = 78594,
+        .textDisableFlagId1 = 62512,
         .selectMinZoomStep = 1,
     }, Category::WorldInteractables, -1, -1, nullptr, 0u, 0, 12.580f, -47.044f},
     // Row ID 6500014
@@ -128379,7 +128379,7 @@ const MapEntry MAP_ENTRIES[] = {
         .posY = 1576.178f,
         .posZ = -42.596f,
         .textId1 = 800007041,
-        .textDisableFlagId1 = 78592,
+        .textDisableFlagId1 = 62511,
         .selectMinZoomStep = 1,
     }, Category::WorldInteractables, -1, -1, nullptr, 0u, 0, -5.430f, -42.596f},
     // Row ID 6500015
@@ -128393,7 +128393,7 @@ const MapEntry MAP_ENTRIES[] = {
         .posY = 165.174f,
         .posZ = -64.790f,
         .textId1 = 800007041,
-        .textDisableFlagId1 = 78494,
+        .textDisableFlagId1 = 62412,
         .selectMinZoomStep = 1,
     }, Category::WorldInteractables, -1, -1, nullptr, 0u, 0, -110.310f, -64.790f},
 };

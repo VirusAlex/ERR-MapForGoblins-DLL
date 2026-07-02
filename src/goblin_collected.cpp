@@ -9,6 +9,7 @@
 #include <cstdlib>
 #include <cstring>
 #include <map>
+#include <mutex>
 #include <set>
 #include <spdlog/spdlog.h>
 #include <string>
@@ -62,6 +63,11 @@ static uint32_t model_id_from_prefix(const std::string &prefix)
 static std::set<uint64_t> g_collected_rows;
 static int g_collected_count = 0;
 static int g_unmatched_count = 0;
+// Guards g_collected_rows against the refresh thread's reassignment while other
+// threads query it (e.g. the overlay's Progress tab iterating MAP_ENTRIES on the
+// render thread). refresh() builds a local set and only takes the lock for the
+// swap; the query helpers take it for the lookup. Leaf-only, no reentrancy.
+static std::mutex g_collected_mutex;
 
 struct ParamRef {
     uint8_t *ptr;
@@ -265,7 +271,8 @@ struct WGMSnapshot
     // g_tile_slot_to_row directly - immune to de-overlap display-coord shifts. px/pz kept
     // only to disambiguate twins (same slot). suffix_slot = slot from the MSB name, for
     // a live cross-check of the geom_idx->slot formula.
-    struct SlotInst { bool alive; float px, pz; int suffix_slot; };
+    struct SlotInst { bool alive; float px, pz; int suffix_slot;
+                      uint8_t f263, f26B; uint32_t model_id, gidx; };  // raw flags + engine id (diag)
     std::map<std::string, std::map<int, std::vector<SlotInst>>> slot_insts;
 };
 
@@ -433,7 +440,8 @@ static std::map<uint32_t, WGMSnapshot> read_wgm_snapshot()
                             int suffix_slot = -1;
                             const char *us = strrchr(narrow, '_');
                             if (us && us[1]) suffix_slot = atoi(us + 1) - 9000;
-                            snap.slot_insts[mprefix][slot].push_back({alive, px, pz, suffix_slot});
+                            snap.slot_insts[mprefix][slot].push_back(
+                                {alive, px, pz, suffix_slot, f263, f26B, model_id, gidx});
                         }
                     }
                 }
@@ -857,6 +865,56 @@ int goblin::collected::refresh()
     if (carried > 0)
         spdlog::debug("[COLLECTED] Sticky carry-forward kept {} row(s) hidden", carried);
 
+    // ── DIAGNOSTIC (debug_logging only): log WGM instance alive-flag TRANSITIONS
+    //    + the slot->row match outcome, so a live pickup can be traced end to end:
+    //      * does the flag we read (+0x263 bit1 / +0x26B bit4) actually flip?
+    //      * does the flipped slot map to a row (g_tile_slot_to_row), or NO-MATCH?
+    //      * did that row land in new_collected (→ will be hidden) or stay SHOWN?
+    //    On-change only (no first-seen spam). Runs BEFORE the unchanged-early-return
+    //    below so it still fires when a flip failed to produce a row-level change
+    //    (the exact blind spot: flag flipped but match missed → nothing hidden).
+    if (goblin::config::debugLogging)
+    {
+        static std::map<std::string, int> dbg_prev_alive;
+        for (auto &[tile_id, snap] : wgm)
+        {
+            const int a = (tile_id >> 24) & 0xFF, gx = (tile_id >> 16) & 0xFF, gz = (tile_id >> 8) & 0xFF;
+            for (auto &[prefix, slot_map] : snap.slot_insts)
+                for (auto &[slot, insts] : slot_map)
+                    for (auto &in : insts)
+                    {
+                        std::string key = std::to_string(tile_id) + ":" + prefix + ":" +
+                                          std::to_string(slot) + ":" + std::to_string((int)in.px) +
+                                          ":" + std::to_string((int)in.pz);
+                        const int cur = in.alive ? 1 : 0;
+                        auto it = dbg_prev_alive.find(key);
+                        if (it != dbg_prev_alive.end() && it->second != cur)
+                        {
+                            std::string rows;
+                            auto ti = g_tile_slot_to_row.find(tile_id);
+                            if (ti != g_tile_slot_to_row.end())
+                            {
+                                auto pi = ti->second.find(prefix);
+                                if (pi != ti->second.end())
+                                {
+                                    auto ri = pi->second.find(slot);
+                                    if (ri != pi->second.end())
+                                        for (uint64_t r : ri->second)
+                                            rows += " row=" + std::to_string(r) +
+                                                    (new_collected.count(r) ? "(hidden)" : "(SHOWN)");
+                                }
+                            }
+                            if (rows.empty()) rows = " NO-ROW-MATCH(slot absent in g_tile_slot_to_row)";
+                            spdlog::info("[GEOFDBG] m{:02d}_{:02d}_{:02d} {} slot={} model={} gidx={} "
+                                         "f263=0x{:02X} f26B=0x{:02X} alive {}->{}{}",
+                                         a, gx, gz, prefix, slot, in.model_id, in.gidx,
+                                         (unsigned)in.f263, (unsigned)in.f26B, it->second, cur, rows);
+                        }
+                        dbg_prev_alive[key] = cur;
+                    }
+        }
+    }
+
     if (new_collected == g_collected_rows)
         return 0;
     // Log which rows were added/removed (for small deltas only)
@@ -914,9 +972,13 @@ int goblin::collected::refresh()
     if (missed > 0)
         spdlog::warn("[COLLECTED] {} row IDs NOT in param_ptrs (out of {} collected)", missed, new_collected.size());
 
-    int delta = (int)new_collected.size() - (int)g_collected_rows.size();
-    g_collected_rows = std::move(new_collected);
-    g_collected_count = (int)g_collected_rows.size();
+    int delta;
+    {
+        std::lock_guard<std::mutex> lk(g_collected_mutex);
+        delta = (int)new_collected.size() - (int)g_collected_rows.size();
+        g_collected_rows = std::move(new_collected);
+        g_collected_count = (int)g_collected_rows.size();
+    }
 
     spdlog::info("[COLLECTED] Refresh: {} hidden (delta {:+d}), {} GEOF entries, {} WGM tiles",
                  g_collected_count, delta, geof.size(), wgm_tiles.size());
@@ -928,6 +990,7 @@ int goblin::collected::refresh()
 
 bool goblin::collected::is_row_collected(uint64_t row_id)
 {
+    std::lock_guard<std::mutex> lk(g_collected_mutex);
     return g_collected_rows.count(row_id) > 0;
 }
 
@@ -935,6 +998,7 @@ bool goblin::collected::is_original_row_collected(uint64_t original_row_id)
 {
     auto it = g_original_to_dynamic.find(original_row_id);
     uint64_t id = (it != g_original_to_dynamic.end()) ? it->second : original_row_id;
+    std::lock_guard<std::mutex> lk(g_collected_mutex);
     return g_collected_rows.count(id) > 0;
 }
 

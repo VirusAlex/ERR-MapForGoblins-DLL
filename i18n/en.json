@@ -35,7 +35,12 @@
     "Close": "Close",
     "TabSettings": "Settings",
     "TabDebug": "Debug",
-    "TabAbout": "About"
+    "TabAbout": "About",
+    "TabProgress": "Progress",
+    "ProgressHint": "Collected vs total per region. Hidden categories are excluded; some hard-to-track pickups may lag.",
+    "ProgressClickHint": "Click a category to show ONLY its uncollected markers on the map (click again to clear).",
+    "ProgressShowingOnly": "Map showing only uncollected:",
+    "ProgressFocusClear": "Show all"
   },
   "toasts": {
     "MapIconsOn": "Map icons: ON",

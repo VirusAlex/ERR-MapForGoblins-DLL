@@ -106,6 +106,9 @@ echo [PROFILE] %DISP_PROFILE%  build=%BUILD_DIR%  gen=%GEN_SUBDIR%
 REM --skip-shared: caller (tools\build_all.py orchestrator) already ran gen_shared
 REM once; skip it here so parallel per-profile builds don't race on src\generated_shared.
 echo %*| findstr /i /c:"--skip-shared" >nul && set "SKIP_SHARED=1"
+REM --skip-aob-check: skip the eldenring.exe AOB signature check (offline/CI builds
+REM without the game exe, or build_all which runs it ONCE up front, exe-independent).
+echo %*| findstr /i /c:"--skip-aob-check" >nul && set "SKIP_AOB=1"
 
 if /i "%~1"=="clean" goto :clean
 if /i "%~1"=="configure" goto :configure
@@ -136,6 +139,9 @@ if errorlevel 1 (
     echo [FAILED] build_pipeline.py
     exit /b 1
 )
+
+call :aob_check
+if errorlevel 1 exit /b 1
 
 echo.
 echo Building MapForGoblins...
@@ -179,6 +185,21 @@ if errorlevel 1 exit /b 1
 REM Bake + validate the localization bundles (fails the build if a key is missing in any locale).
 py "%SCRIPT_DIR%tools\generate_i18n.py"
 if errorlevel 1 exit /b 1
+exit /b 0
+
+:aob_check
+REM Validate every runtime AOB signature resolves UNIQUELY in the target
+REM eldenring.exe (one vanilla exe backs all profiles). A game update that
+REM shifts code silently breaks our scans; catch it here, before the DLL is
+REM built. Skipped by --skip-aob-check (offline/CI, or build_all runs it once).
+if defined SKIP_AOB exit /b 0
+echo.
+echo Checking eldenring.exe AOB signatures...
+py "%SCRIPT_DIR%tools\check_aobs.py"
+if errorlevel 1 (
+    echo [FAILED] AOB signature check - see message above.
+    exit /b 1
+)
 exit /b 0
 
 :ensure_configured
@@ -243,6 +264,9 @@ if not defined SKIP_SHARED (
     if errorlevel 1 exit /b 1
 )
 
+call :aob_check
+if errorlevel 1 exit /b 1
+
 call :ensure_configured
 if errorlevel 1 exit /b 1
 
@@ -295,6 +319,9 @@ if errorlevel 1 (
 )
 
 call :gen_shared
+if errorlevel 1 exit /b 1
+
+call :aob_check
 if errorlevel 1 exit /b 1
 
 REM Self-heal a relocated build tree before the explicit reconfigure below.

@@ -10,6 +10,8 @@
 #include "goblin_location_alt.hpp"
 #include "goblin_gfx_probe.hpp"
 #include "goblin_overlay.hpp"
+#include "goblin_progress.hpp"   // region_place_id (tag each CategoryRow for focus)
+#include "goblin_map_icons.hpp"  // MAP_ICON_GLOW_OFFSET (focus-highlight glow frame)
 #include "goblin_diag.hpp"
 #include "goblin/goblin_map_flags.hpp"
 #include "from/params.hpp"
@@ -73,6 +75,14 @@ struct CategoryRow
     unsigned baked_cleared;  // clearedEventFlagId as baked (for live hide_killed_bosses)
     unsigned baked_dis1;     // textDisableFlagId1 as baked
     unsigned baked_dis2;     // textDisableFlagId2 as baked
+    uint16_t src_icon;       // baked source iconId (pre-remap) - for the focus-highlight glow swap
+    int32_t region_id;       // progress region PlaceName id (goblin::progress::region_place_id) for focus
+    int32_t baked_text1;     // textId1 as baked (restored when focus removes a fabricated label)
+    bool baked_notext;       // isEnableNoText as baked (restored after focus force-show)
+    bool focus_text;         // true while focus fabricated a label on a textless row
+    bool glowing;            // true while focus swapped this row's icon to the glow variant
+    uint16_t pre_glow_icon;  // iconId before the glow swap (restored on un-focus; exact, so it
+                             // preserves whatever live_loot/anonymous_loot had set)
 };
 
 // textEnableFlagId1..8 of a row, as a pointer array (the paramdef has them as
@@ -86,6 +96,13 @@ static inline void enable_flag_ptrs(from::paramdef::WORLD_MAP_POINT_PARAM_ST *p,
     out[6] = &p->textEnableFlagId7; out[7] = &p->textEnableFlagId8;
 }
 static std::vector<CategoryRow> g_category_rows;
+// Progress-tab focus: g_focus_category = -1 (none) or a Category value; paired
+// with g_focus_region (a region PlaceName id, or -1 for the "Other" bucket).
+// When active, the live map shows ONLY that category's uncollected markers IN
+// that region, swapped to the glow-highlight icon (see apply_category_visibility
+// + apply_focus_highlight).
+static int g_focus_category = -1;
+static int32_t g_focus_region = -1;
 
 // Live-loot: lot-backed injected rows. refresh_loot_from_itemlot() reads the
 // LIVE ItemLotParam getItemFlagId for each and rewrites textDisableFlagId1 so
@@ -268,6 +285,89 @@ static bool is_category_enabled(Category cat)
     case Category::WorldInteractables:   return goblin::config::showInteractables;
     default:                             return true;
     }
+}
+
+// Public wrapper over the file-static is_category_enabled (declared in the
+// header for the overlay's Progress tab).
+bool goblin::category_enabled(generated::Category cat)
+{
+    return is_category_enabled(cat);
+}
+
+void goblin::set_focus_category(int category_or_negative, int32_t region_place_id)
+{
+    g_focus_category = category_or_negative;
+    g_focus_region = (category_or_negative < 0) ? -1 : region_place_id;
+    spdlog::info("[focus] set category={} region={}", g_focus_category, g_focus_region);
+}
+
+int goblin::focus_category() { return g_focus_category; }
+int32_t goblin::focus_region() { return g_focus_region; }
+
+// Focus-highlight pass. For the focused (category, region) UNCOLLECTED rows:
+//   - swap the icon to the glow-plate variant (injected_iconid(src + GLOW_OFFSET)),
+//     SAVING the pre-swap iconId so un-focus restores exactly what was there
+//     (works even under live_loot_icons / anonymous_loot, which set their own icon);
+//   - give TEXTLESS markers a "?" label + isEnableNoText and force the line on
+//     (a point with no text is dropped by the game), so none are missing.
+// Only touches focused rows and rows it previously glowed - never other rows'
+// icons - so it can run after apply_loot_settings without clobbering it.
+// Frame ids are stable across map reopens (compute_safe_base is constant), so the
+// saved pre_glow_icon stays valid.
+void goblin::apply_focus_highlight()
+{
+    const int focus = g_focus_category;
+    int n_cat = 0, n_region = 0, n_shown = 0, n_glow = 0, n_forced = 0;
+    for (auto &cr : g_category_rows)
+    {
+        if (!cr.p) continue;
+        if (focus >= 0 && static_cast<int>(cr.cat) == focus) ++n_cat;
+        const bool focused = focus >= 0 && static_cast<int>(cr.cat) == focus &&
+                             cr.region_id == g_focus_region;
+        if (focused) ++n_region;
+        const bool shown = focused && !collected::is_row_collected(cr.row_id) &&
+                           !kindling::is_row_collected(cr.row_id);
+
+        if (shown)
+        {
+            ++n_shown;
+            // Icon -> glow plate (save the current icon first so un-focus restores it exactly).
+            uint32_t glow = goblin::gfx_probe::injected_iconid(
+                cr.src_icon + goblin::generated::MAP_ICON_GLOW_OFFSET);
+            if (glow)
+            {
+                if (!cr.glowing) { cr.pre_glow_icon = cr.p->iconId; cr.glowing = true; }
+                cr.p->iconId = static_cast<decltype(cr.p->iconId)>(glow);
+                ++n_glow;
+            }
+            // Textless rows: fabricate a "?" label + force the line on (textEnableFlagId
+            // 0 = treated as On; NOT flag::AlwaysOn=6001, which is a real flag that must
+            // be set, so it would HIDE the line). Text-having rows keep their baked gating.
+            if (cr.p->textId1 <= 0 && cr.p->textId2 <= 0 && cr.p->textId3 <= 0)
+            {
+                ++n_forced;
+                cr.p->textId1 = goblin::remap_textid(ANON_LABEL_TEXTID);
+                cr.p->isEnableNoText = true;
+                cr.p->textEnableFlagId1 = 0;
+                cr.focus_text = true;
+            }
+        }
+        else
+        {
+            if (cr.glowing) { cr.p->iconId = cr.pre_glow_icon; cr.glowing = false; }
+            if (cr.focus_text)
+            {
+                cr.p->textId1 = cr.baked_text1;
+                cr.p->isEnableNoText = cr.baked_notext;
+                cr.focus_text = false;
+            }
+        }
+    }
+    if (focus >= 0)
+        spdlog::info("[focus] apply: cat={} region={} | catrows={} regionmatch={} "
+                     "shown={} glow={} forced={} (total category rows={})",
+                     focus, g_focus_region, n_cat, n_region, n_shown, n_glow, n_forced,
+                     g_category_rows.size());
 }
 
 void goblin::inject_map_entries()
@@ -514,6 +614,12 @@ void goblin::inject_map_entries()
             cr.baked_cleared = wp->clearedEventFlagId;
             cr.baked_dis1 = wp->textDisableFlagId1;
             cr.baked_dis2 = wp->textDisableFlagId2;
+            cr.src_icon = wp->iconId;  // baked source icon (pre-remap); glow = injected_iconid(src+OFFSET)
+            cr.region_id = goblin::progress::region_place_id(*wp);  // for region-scoped focus
+            cr.baked_text1 = wp->textId1;
+            cr.baked_notext = wp->isEnableNoText;
+            cr.focus_text = false;
+            cr.glowing = false;
             unsigned *en[8];
             enable_flag_ptrs(wp, en);
             for (int k = 0; k < 8; ++k) cr.baked_enable[k] = *en[k];
@@ -968,9 +1074,17 @@ static bool gamepad_combo_held()
 // from the refresh thread when the collected set changes. Idempotent.
 void goblin::apply_category_visibility()
 {
+    const int focus = g_focus_category;
     for (auto &cr : g_category_rows)
     {
-        bool show = is_category_enabled(cr.cat) &&
+        // In focus mode only the focused category IN the focused region is
+        // eligible (ignoring its show_* toggle); otherwise the normal per-category
+        // toggle applies. Both paths still hide collected rows, so what remains
+        // visible is the uncollected markers of that category in that region.
+        const bool eligible =
+            (focus >= 0) ? (static_cast<int>(cr.cat) == focus && cr.region_id == g_focus_region)
+                         : is_category_enabled(cr.cat);
+        bool show = eligible &&
                     !collected::is_row_collected(cr.row_id) &&
                     !kindling::is_row_collected(cr.row_id);
         unsigned *en[8];
@@ -1122,11 +1236,14 @@ static void apply_loot_settings()
 // the next world-map (re)open.
 void goblin::reapply_live_settings()
 {
-    apply_category_visibility();           // show_* categories
+    apply_category_visibility();           // show_* categories (+ focus isolation)
     apply_kill_display();                  // hide_killed_bosses
     apply_loot_settings();                 // anonymous_loot + live_loot_icons/labels/flags
     goblin::apply_map_logic();             // require_map_fragments + ERR patch_* markers
     goblin::apply_worldmap_fragment_bypass(); // after map logic (it re-gates eventFlagId)
+    apply_focus_highlight();               // LAST: focus glow-icon + force-visible must win over
+                                           // apply_loot_settings (which rewrites loot iconId) and the
+                                           // category/fragment enable-flag gating above.
 }
 
 void goblin::set_icons_hidden(bool hidden) { g_icons_user_disabled.store(hidden); }
@@ -1308,6 +1425,14 @@ static bool orp_flag_set(uint32_t flag_id)
     return g_orp_is_flag(event_man, &id);
 }
 
+// Public event-flag query (Progress tab). Guards flag 0, which the game treats
+// as always-on - a marker with no pickup flag must NOT count as collected.
+bool goblin::flag_is_set(uint32_t flag_id)
+{
+    if (flag_id == 0) return false;
+    return orp_flag_set(flag_id);
+}
+
 struct FlagOrPair { uint32_t primary; uint32_t alt; };
 static constexpr FlagOrPair FLAG_OR_PAIRS[] = {
     {7608, 7609},  // Sellen/Jerren academy battle
@@ -1367,6 +1492,7 @@ void goblin::remap_injected_icons()
         spdlog::warn("[icons] {} markers already in the new frame range [{},{}] (duplicate pass = "
                      "possibly two copies active).", already, iid_lo, iid_hi);
     spdlog::info("[icons] mapped {} markers to new frame ids.", n);
+    apply_focus_highlight();  // re-apply any active focus glow after the frames are (re)mapped
     goblin::diag::set_remap(n);
 }
 

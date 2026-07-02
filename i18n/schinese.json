@@ -35,7 +35,12 @@
     "Close": "关闭",
     "TabSettings": "设置",
     "TabDebug": "调试",
-    "TabAbout": "关于"
+    "TabAbout": "关于",
+    "TabProgress": "进度",
+    "ProgressHint": "各区域的已收集/总数。隐藏的类别不计入；部分难以追踪的拾取可能会延迟更新。",
+    "ProgressClickHint": "点击某个类别，仅在地图上显示该类别未收集的标记（再次点击取消）。",
+    "ProgressShowingOnly": "地图仅显示未收集：",
+    "ProgressFocusClear": "显示全部"
   },
   "toasts": {
     "MapIconsOn": "地图图标：开启",

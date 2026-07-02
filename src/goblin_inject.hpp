@@ -3,9 +3,40 @@
 #include <cstdint>
 #include <vector>
 
+// Forward-declare the generated Category enum instead of pulling the full
+// (profile-scoped) goblin_map_data.hpp here: some TUs (goblin_gfx_probe.cpp)
+// also include the err-path "generated/..." header explicitly, and having both
+// the bare and the generated/ map-data header in one TU is a redefinition.
+namespace goblin::generated { enum class Category : uint8_t; }
+
 namespace goblin
 {
     void inject_map_entries();
+
+    // Public accessor: is this marker category currently shown (its show_*
+    // config toggle on)? Used by the overlay's Progress tab. Named distinctly
+    // from the internal is_category_enabled() to avoid a lookup clash.
+    bool category_enabled(generated::Category cat);
+
+    // Is a game event flag currently set? Reads the live EventFlagMan (resolves
+    // the flag API by AOB on first use). Used by the Progress tab to count
+    // flag-based pickups/kills (loot, bosses) that GEOF tracking doesn't cover.
+    // Returns false if the flag id is 0 or the flag API isn't resolved yet.
+    bool flag_is_set(uint32_t flag_id);
+
+    // Progress-tab "focus" mode: when set, the live map shows ONLY the focused
+    // category's UNCOLLECTED markers IN the focused region (everything else
+    // hidden), swapped to the glow-highlight icon, so the player sees where its
+    // remaining items are. Pass a generated::Category cast to int + the region's
+    // PlaceName id (goblin::progress::region_place_id), or category = -1 to clear.
+    // Stores the state; call reapply_live_settings() to apply.
+    void set_focus_category(int category_or_negative, int32_t region_place_id = -1);
+    int focus_category();
+    int32_t focus_region();
+
+    // Swap focused rows to the glow-highlight icon (and others back to normal).
+    // Called by reapply_live_settings() and after remap_injected_icons().
+    void apply_focus_highlight();
 
     // Data pointers of MFG-injected WorldMapPointParam rows in the expanded
     // table. Populated by inject_map_entries(); consumed by

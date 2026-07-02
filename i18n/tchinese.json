@@ -35,7 +35,12 @@
     "Close": "關閉",
     "TabSettings": "設定",
     "TabDebug": "偵錯",
-    "TabAbout": "關於"
+    "TabAbout": "關於",
+    "TabProgress": "進度",
+    "ProgressHint": "各區域的已收集/總數。隱藏的類別不計入；部分難以追蹤的拾取可能會延遲更新。",
+    "ProgressClickHint": "點擊某個類別，僅在地圖上顯示該類別未收集的標記（再次點擊取消）。",
+    "ProgressShowingOnly": "地圖僅顯示未收集：",
+    "ProgressFocusClear": "顯示全部"
   },
   "toasts": {
     "MapIconsOn": "地圖圖示：開啟",

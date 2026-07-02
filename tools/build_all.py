@@ -11,7 +11,7 @@ LTCG linking is RAM-heavy, so concurrency is capped by --jobs (default 4). Each
 build.bat still uses msbuild /m internally, so don't set --jobs too high.
 
 Usage:
-  py tools/build_all.py [snapshot|release] [--force-all] [--scan] [--jobs N] [--profiles a,b,c]
+  py tools/build_all.py [snapshot|release] [--force-all] [--scan] [--jobs N] [--profiles a,b,c] [--skip-aob-check]
 
 --scan VT-scans each profile's DLL the moment ITS build finishes (via
 dashboard/vt_runner.py), so scans overlap with the still-running builds instead
@@ -61,6 +61,7 @@ def main():
     mode = 'release' if 'release' in args else 'snapshot'
     force_all = '--force-all' in args
     scan = '--scan' in args   # VT-scan each DLL the moment its build finishes (overlaps scans with builds)
+    skip_aob = '--skip-aob-check' in args  # skip the one-time exe AOB signature check (offline/no-exe)
     jobs = 4  # Ryzen 5800X 8C/16T + 32GB: LTCG is RAM-light here, CPU-bound; 4-6 is the sweet spot
     profiles = ALL
     for i, a in enumerate(args):
@@ -76,6 +77,17 @@ def main():
     print(f'=== build_all: mode={mode} force_all={force_all} scan={scan} jobs={jobs} '
           f'profiles={",".join(profiles)} ===')
     wall0 = time.time()
+
+    # ---- AOB signature check ONCE (exe-independent of profile: one vanilla exe
+    # backs every profile). Per-profile build.bat runs are passed --skip-aob-check
+    # so this doesn't repeat N times. A critical miss aborts before any build.
+    if not skip_aob:
+        print('\n[0] eldenring.exe AOB signature check (once)')
+        rc = subprocess.run([sys.executable, str(TOOLS / 'check_aobs.py')], cwd=str(ROOT)).returncode
+        if rc != 0:
+            print('AOB signature check FAILED - aborting build_all. '
+                  '(Pass --skip-aob-check to build without the game exe.)')
+            sys.exit(1)
 
     # Version (for the VT scan rows) read straight from CMakeLists - no bump happened here.
     vt_ver = ''
@@ -106,7 +118,8 @@ def main():
         # --no-bump to ALL profiles here and bump ONCE manually after build_all
         # (the /release skill Step 6 fallback). Snapshot mode never bumps.
         no_bump = ['--no-bump'] if mode == 'release' else []
-        cmd = ['cmd', '/c', str(ROOT / 'build.bat'), mode, '--skip-shared'] \
+        # --skip-aob-check: the exe check already ran once above (phase [0]).
+        cmd = ['cmd', '/c', str(ROOT / 'build.bat'), mode, '--skip-shared', '--skip-aob-check'] \
             + (['--force-all'] if force_all else []) + no_bump + flag
         logp = LOG / f'ba_{p}.log'
         t0 = time.time()

@@ -403,6 +403,16 @@ STAGES = [
           also_scripts=['icon_registry.py', 'map_categories.py'],  # ANON_ICON_ID = iconid("anon")
           args=['--massedit-dir', str(MASSEDIT_OUT)]),
 
+    # Tile -> game-zone (PlaceName id) map for the Progress tab, from tile_region_map.json
+    # (only err ships one today; other profiles emit an empty map and fall back to the
+    # fragment grouping). Cheap; reads config.DATA_DIR/tile_region_map.json if present.
+    Stage('generate_region_map',
+          inputs=[DATA / 'tile_region_map.json'],
+          outputs=[GENERATED_CPP / 'goblin_region_map.cpp',
+                   GENERATED_CPP / 'goblin_region_map.hpp'],
+          script='generate_region_map.py',
+          also_scripts=['config.py']),
+
     # Per-row ACTUAL gather-asset models (ERR substitutes some assets with DLC-era models
     # in the MSB: part NAME stays vanilla, ModelName differs; GEOF save entries carry the
     # actual model's hash) - used by collected-tracking. Runs AFTER generate_data.
