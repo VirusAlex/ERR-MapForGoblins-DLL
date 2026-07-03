@@ -8,7 +8,7 @@
   <a href="LICENSE.txt"><img src="https://img.shields.io/badge/license-MIT--style-blue" alt="License"></a>
 </p>
 
-A DLL mod for Elden Ring that adds thousands of icons to the world map: weapons, armor, spells, quest items, bosses, NPCs, gathering nodes, etc. Nine builds, each generated from that game/mod's own data: [ERR](https://www.nexusmods.com/eldenring/mods/541) (~9000 icons, including ERR-specific content like Rune Pieces), the vanilla game + Shadow of the Erdtree (~6700 icons), [The Convergence](https://www.nexusmods.com/eldenring/mods/3419) 2.x and 3.x (~7200 each; separate builds because 2.x runs on ModEngine2 and 3.x on ModEngine3), [ERTE](https://www.nexusmods.com/eldenring/mods/2747) (~7600), [Elden Ring Golden Age](https://soulsmods.com/mods/cmkst0a23000009jlzm0f1jvs/elden-ring-golden-age-overhaul-mod) (~6700), [ELDEN VINS](https://www.nexusmods.com/eldenring/mods/4709) (~7100), [Elden Ring Reborn](https://www.nexusmods.com/eldenring/mods/2202) (~6900), and [Graceborne](https://www.nexusmods.com/eldenring/mods/5207) (Bloodborne-inspired, ~7100).
+A DLL mod for Elden Ring that adds thousands of icons to the world map: weapons, armor, spells, quest items, bosses, NPCs, gathering nodes, etc. Nine builds, each generated from that game/mod's own data: [ERR](https://www.nexusmods.com/eldenring/mods/541) (~9000 icons, including ERR-specific content like Rune Pieces), the vanilla game + Shadow of the Erdtree (~6700 icons), [The Convergence](https://www.nexusmods.com/eldenring/mods/3419) 2.x and 3.x (~7200 each; separate builds because 2.x runs on ModEngine2 and 3.x on ModEngine3), [ERTE](https://www.nexusmods.com/eldenring/mods/2747) (~8000), [Elden Ring Golden Age](https://soulsmods.com/mods/cmkst0a23000009jlzm0f1jvs/elden-ring-golden-age-overhaul-mod) (~6700), [ELDEN VINS](https://www.nexusmods.com/eldenring/mods/4709) (~7500), [Elden Ring Reborn](https://www.nexusmods.com/eldenring/mods/2202) (~6900), and [Graceborne](https://www.nexusmods.com/eldenring/mods/5207) (Bloodborne-inspired, ~7100).
 
 **Download:** [Nexus Mods](https://www.nexusmods.com/eldenring/mods/10062) · **Community:** [Elden Ring - DLL Mods Discord](https://discord.gg/JvTMwPCygB)
 
@@ -170,10 +170,11 @@ This project builds on the work of many people and projects:
 ### Contributors
 
 - **[yun-wulian](https://github.com/yun-wulian)** - Chinese (Simplified & Traditional) overlay localization and an in-menu multi-controller gamepad fix.
+- **[yeousherang](https://github.com/yeousherang)** - Korean overlay localization.
 
 ### Community
 
-Thanks to the ERR Discord for testing and bug reports, especially **AngryPhilosopher** and **Spiswel** for early testing of the DLL version.
+Thanks to the ERR Discord for testing and bug reports, especially **AngryPhilosopher** and **Spiswel** for early testing of the DLL version, and **darksucklet** for help debugging the geom-object (collected-piece) tracking.
 
 ## License
 
