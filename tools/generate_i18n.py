@@ -23,7 +23,7 @@ HPP = ROOT / "src" / "goblin_i18n.hpp"
 OUT = ROOT / "src" / "generated_shared" / "goblin_i18n_strings.cpp"
 
 LOCALES = [("English", "en.json"), ("SimplifiedChinese", "schinese.json"),
-           ("TraditionalChinese", "tchinese.json")]
+           ("TraditionalChinese", "tchinese.json"), ("Korean", "korean.json")]
 CATEGORIES = ["texts", "toasts", "section_labels", "section_comments",
               "entry_labels", "entry_comments"]
 
@@ -74,15 +74,17 @@ for lang, fn in LOCALES:
 # ── validation ──
 hpp_src = HPP.read_text(encoding="utf-8")
 text_ids = parse_enum(hpp_src, "TextId")
+text_ids_set = set(text_ids)
 toast_ids = parse_enum(hpp_src, "ToastId")
+toast_ids_set = set(toast_ids)
 
 en = bundles["English"]
 errors = []
 
 # 1) en.json texts/toasts must match the enums exactly.
-for cat, ids in (("texts", text_ids), ("toasts", toast_ids)):
+for cat, ids_set in (("texts", text_ids_set), ("toasts", toast_ids_set)):
     have = set(en[cat])
-    want = set(ids)
+    want = ids_set
     for k in want - have:
         errors.append(f"en.json[{cat}] is MISSING enum key '{k}' (UI would show an empty string)")
     for k in have - want:
@@ -134,9 +136,9 @@ parts.append("{")
 parts.append("namespace")
 parts.append("{")
 
-# texts + toasts per locale (all three), names only for SC/TC.
+# texts + toasts per locale (all locales), names only for non-English locales.
 for lang, _ in LOCALES:
-    suffix = {"English": "EN", "SimplifiedChinese": "SC", "TraditionalChinese": "TC"}[lang]
+    suffix = {"English": "EN", "SimplifiedChinese": "SC", "TraditionalChinese": "TC", "Korean": "KO"}[lang]
     parts.append(text_array(f"TEXT_{suffix}", lang, text_ids, "TextId"))
     parts.append(toast_array(f"TOAST_{suffix}", lang, toast_ids))
     if lang != "English":
@@ -156,6 +158,9 @@ parts.append("    ENTRY_LABELS_SC, cnt(ENTRY_LABELS_SC), ENTRY_COMMENTS_SC, cnt(
 parts.append("const LocaleBundle BUNDLE_TC{TEXT_TC, cnt(TEXT_TC), TOAST_TC, cnt(TOAST_TC),")
 parts.append("    SECT_LABELS_TC, cnt(SECT_LABELS_TC), SECT_COMMENTS_TC, cnt(SECT_COMMENTS_TC),")
 parts.append("    ENTRY_LABELS_TC, cnt(ENTRY_LABELS_TC), ENTRY_COMMENTS_TC, cnt(ENTRY_COMMENTS_TC)};")
+parts.append("const LocaleBundle BUNDLE_KO{TEXT_KO, cnt(TEXT_KO), TOAST_KO, cnt(TOAST_KO),")
+parts.append("    SECT_LABELS_KO, cnt(SECT_LABELS_KO), SECT_COMMENTS_KO, cnt(SECT_COMMENTS_KO),")
+parts.append("    ENTRY_LABELS_KO, cnt(ENTRY_LABELS_KO), ENTRY_COMMENTS_KO, cnt(ENTRY_COMMENTS_KO)};")
 parts.append("}  // namespace")
 parts.append("")
 parts.append("const LocaleBundle &bundle(Language language)")
@@ -164,6 +169,7 @@ parts.append("    switch (language)")
 parts.append("    {")
 parts.append("    case Language::SimplifiedChinese: return BUNDLE_SC;")
 parts.append("    case Language::TraditionalChinese: return BUNDLE_TC;")
+parts.append("    case Language::Korean: return BUNDLE_KO;")
 parts.append("    default: return BUNDLE_EN;")
 parts.append("    }")
 parts.append("}")

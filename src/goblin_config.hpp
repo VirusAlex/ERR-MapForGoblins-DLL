@@ -144,7 +144,7 @@ namespace goblin
         // In-game config overlay (Dear ImGui on a DX12 hook). Opens with the
         // toggle key. Set false if a DX-hook conflict (Steam overlay/RTSS/etc.)
         // or a GPU driver issue makes the game unstable.
-        extern std::string uiLanguage; // auto, english, schinese, tchinese
+        extern std::string uiLanguage; // auto, english, schinese, tchinese, korean
         extern float fontScale;        // overlay text size multiplier (live io.FontGlobalScale)
         extern bool enableOverlay;
         extern float overlayOpacity;   // overlay menu panel opacity 0.3..1.0 (window bg alpha)

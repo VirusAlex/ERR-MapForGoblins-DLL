@@ -10,6 +10,7 @@ namespace goblin::i18n
         English,
         SimplifiedChinese,
         TraditionalChinese,
+        Korean,
     };
 
     enum class TextId
