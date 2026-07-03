@@ -127,40 +127,35 @@ def main():
         return p, time.time() - t0, rc, logp
 
     results = {}
-    scan_procs = {}  # profile -> (Popen, logpath) for the per-DLL VT scan kicked off on build completion
     with concurrent.futures.ThreadPoolExecutor(max_workers=jobs) as ex:
         futs = {ex.submit(build_one, p): p for p in profiles}
         for fut in concurrent.futures.as_completed(futs):
             p, dt, rc, logp = fut.result()
             results[p] = (dt, rc, parse_log(logp))
             print(f'    {p:14} {dt:6.1f}s  {"OK" if rc == 0 else f"FAIL({rc})"}')
-            # Kick the VT scan for THIS DLL now (don't wait for the other builds). Best-effort:
-            # a scan launch failure never affects the build result.
-            if scan and rc == 0:
-                vlog = LOG / f'ba_vt_{p}.log'
-                cmd = [sys.executable, str(VT_RUNNER), '--profiles', p,
-                       '--version', vt_ver, '--change', f'v{vt_ver} release']
-                try:
-                    scan_procs[p] = (subprocess.Popen(
-                        cmd, cwd=str(ROOT), stdout=open(vlog, 'w', encoding='utf-8', errors='replace'),
-                        stderr=subprocess.STDOUT), vlog)
-                    print(f'    {p:14}         -> VT scan started')
-                except Exception as e:
-                    print(f'    {p:14}         -> VT scan launch failed: {e}')
 
-    # Drain the per-DLL scans (they ran concurrently with the remaining builds).
-    if scan_procs:
-        print(f'\n[2b] VirusTotal: waiting on {len(scan_procs)} scan(s)...')
-        for p, (proc, vlog) in scan_procs.items():
-            proc.wait()
-            verdict = '?'
+    # ---- Phase 2b: VirusTotal scan (ONE process, sequential + rate-limited) ----
+    # Gate on the PARSED "[SUCCESS]" flag, NOT build.bat's exit code: invoking build.bat
+    # via `cmd /c` can surface a spurious non-zero rc even on a packaged build, which
+    # previously skipped the scan of good DLLs. And run ONE vt_runner for all built
+    # profiles (not one process per profile) so a single sqlite connection + the
+    # in-process VT rate-limiter apply - concurrent per-profile scans used to race on
+    # the DB (lost rows) and blow VirusTotal's request budget (timeouts).
+    if scan:
+        built = [p for p in profiles if results[p][2]['success']]
+        if built:
+            print(f'\n[2b] VirusTotal: scanning {len(built)} built profile(s) sequentially...')
+            vlog = LOG / 'ba_vt_all.log'
+            run_to_log([sys.executable, str(VT_RUNNER), '--profiles', ','.join(built),
+                        '--version', vt_ver, '--change', f'v{vt_ver} release'], vlog)
             try:
                 for ln in vlog.read_text(encoding='utf-8', errors='replace').splitlines():
-                    if ln.startswith(f'{p}:'):
-                        verdict = ln.split(':', 1)[1].strip()
+                    if any(t in ln for t in (': done', ': cached', ': timeout', ': ERROR', ': missing')):
+                        print('    ' + ln.strip())
             except Exception:
                 pass
-            print(f'    {p:14} {verdict}')
+        else:
+            print('\n[2b] VirusTotal: no successfully-built DLLs to scan')
 
     wall = time.time() - wall0
 

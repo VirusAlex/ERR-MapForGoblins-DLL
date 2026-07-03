@@ -139,6 +139,13 @@ FIELD_MAP = {
     "unkD4": ("textEnableFlag2Id6", "i32"),
     "unkD8": ("textEnableFlag2Id7", "i32"),
     "unkDC": ("textEnableFlag2Id8", "i32"),
+    # Group-2 gate flags addressed by their real paramdef names (what
+    # generate_loot_massedit emits for switched chests). Group1 is the DLL's
+    # category/live-loot lane; group2 is baked straight through (see memcpy in
+    # inject_map_entries) so a marker's icon can be gated on a world-state flag.
+    # textDisableFlag2Id1 had NO mapping before, so it was silently dropped.
+    "textEnableFlag2Id1": ("textEnableFlag2Id1", "i32"),
+    "textDisableFlag2Id1": ("textDisableFlag2Id1", "i32"),
 }
 
 # C++ struct field order (must match WORLD_MAP_POINT_PARAM_ST declaration)

@@ -5,6 +5,7 @@ import json
 import sys
 import io
 import os
+import math
 import tempfile
 from collections import defaultdict
 
@@ -28,6 +29,21 @@ def _safe_unlink(path):
         os.unlink(path)
     except PermissionError:
         pass
+
+
+def _bossclass_enemy_near(enemies_by_map, map_name, x, y, z, radius=15.0):
+    """True if a boss-class enemy sits within `radius` of (x,y,z) in map_name.
+    Boss-class = dynamically-spawned (EntityID 0) or a boss/mini-boss entity suffix
+    (700-899). Used to tell a boss the overhaul REMAPPED/REMODELLED (still present, keep)
+    from one it REMOVED (drop) when the vanilla boss EntityID is absent from the build MSB.
+    e.g. Convergence keeps Lansseax as c4353 / Senessax as c3661 (both EntityID 0) at the
+    vanilla spot, but deleted Beastman of Farum Azula's c3970 in m31_03 (only a c4071 beast
+    remains) - so its GameAreaParam-coord fallback would be a phantom marker."""
+    for eid, model, ex, ey, ez in enemies_by_map.get(map_name, ()):
+        if (eid == 0 or 700 <= eid % 1000 <= 899) and \
+           math.dist((x, y, z), (ex, ey, ez)) <= radius:
+            return True
+    return False
 
 
 ERR_MOD_DIR = config.require_err_mod_dir()
@@ -84,6 +100,9 @@ def main():
     print("Scanning MSB entities...")
     MSB_DIR = ERR_MOD_DIR / 'map' / 'MapStudio'
     all_entities = {}
+    # ALL enabled enemies per map (incl. EntityID 0 dynamically-spawned bosses, which
+    # all_entities omits) - used to verify a fallback boss still exists in the build.
+    enemies_by_map = defaultdict(list)
     for msb_path in sorted(MSB_DIR.glob('*.msb.dcx')):
         map_name = msb_path.name.replace('.msb.dcx', '')
         try:
@@ -103,6 +122,9 @@ def main():
             if int(getattr(p, 'GameEditionDisable', 0) or 0) == 1:
                 continue
             eid = int(p.EntityID)
+            enemies_by_map[map_name].append(
+                (eid, str(p.ModelName), round(float(p.Position.X), 3),
+                 round(float(p.Position.Y), 3), round(float(p.Position.Z), 3)))
             if eid > 0:
                 groups = set()
                 if p.EntityGroupIDs:
@@ -304,6 +326,7 @@ def main():
         result = []
         seen_flags = set()
         matched = 0
+        phantom_dropped = 0
         for rid, row in sorted(ga_data.items()):
             flag = int(row.get('defeatBossFlagId', 0) or 0)
             if rid < 10000000 or flag <= 0:
@@ -344,6 +367,12 @@ def main():
                 z = round(float(row.get('bossPosZ', 0) or 0), 3)
                 map_name = f'm{area:02d}_{gx:02d}_{gz:02d}_00'
                 model, npc = '', 0
+                # Boss EntityID absent from this build's MSB: keep the (vanilla-coord)
+                # marker ONLY if a boss-class enemy still sits at the spot (boss remapped/
+                # remodelled). Otherwise the overhaul removed the boss -> drop the phantom.
+                if not _bossclass_enemy_near(enemies_by_map, map_name, x, y, z):
+                    phantom_dropped += 1
+                    continue
 
             # Name resolution: NpcParam.nameId when set; else the EMEVD
             # boss-bar assignment (DisplayBossHealthBar scan); else the
@@ -373,7 +402,8 @@ def main():
             json.dump(result, f, ensure_ascii=False, indent=2)
         named = sum(1 for b in result if b['npcNameId'] > 0)
         print(f"Vanilla bosses: {len(result)} (entity matched: {matched}, "
-              f"named via NpcName: {named}, unnamed: {len(result) - named})")
+              f"named via NpcName: {named}, unnamed: {len(result) - named}"
+              f"{f', dropped {phantom_dropped} removed-boss phantoms' if phantom_dropped else ''})")
         for b in result:
             if b['npcNameId'] <= 0:
                 print(f"  unnamed: entity-row flag={b['clearedEventFlagId']} "

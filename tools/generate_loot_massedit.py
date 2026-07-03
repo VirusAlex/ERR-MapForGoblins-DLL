@@ -16,7 +16,14 @@ import config
 from massedit_common import (DATA_DIR, OUT_DIR, UNDERGROUND_AREAS, DLC_AREAS,
                              OVERWORLD_AREAS, VALID_LOCATION_IDS, resolve_location_id,
                              resolve_location_id_at, get_disp_mask, is_dlc_plane)
+from switched_chests import build_switch_gate_map
 DB_PATH = DATA_DIR / 'items_database.json'
+
+# {(map, partName): (flag, show_when_on)} for same-position switched-chest loot pairs
+# (e.g. Patches' m31_00 Cloth chest vs Glass Shard chest on flag 3691). Populated in
+# main() and applied per-marker in write_massedit as group-2 gate flags so a switched
+# chest's marker only shows in the world-state where that chest is actually present.
+SWITCH_GATE = {}
 
 # Goods sortGroupId lookup (goodsType=0 items only) for consumable filtering
 _sort_groups_path = DATA_DIR / 'goods_sort_groups.json'
@@ -865,6 +872,18 @@ def write_massedit(records, filepath, icon_id, start_id, lot_linkage=None):
         if flag > 0:
             lines.append(f'param WorldMapPointParam: id {row_id}: textDisableFlagId1: = {flag};')
 
+        # Switched-chest gate (group-2 flag on the primary line = the icon). Only fires
+        # for two loot assets stacked at one spot that the EMEVD toggles XOR by a flag
+        # (Patches' m31_00 chest today). Group-2 is untouched by the DLL's category/
+        # live-loot logic, and the engine requires group1 AND group2 per slot, so this
+        # composes cleanly: the icon appears ONLY in the world-state where its chest is
+        # actually present, and still hides on pickup via textDisableFlagId1 above.
+        sw = SWITCH_GATE.get((rec.get('map', ''), rec.get('partName', '')))
+        if sw:
+            s_flag, show_when_on = sw
+            s_field = 'textEnableFlag2Id1' if show_when_on else 'textDisableFlag2Id1'
+            lines.append(f'param WorldMapPointParam: id {row_id}: {s_field}: = {s_flag};')
+
         # Text slot order:
         #   1 = item name (above)
         #   2 = NPC name for named-NPC drops (Millicent, Vyke, ...) so the
@@ -939,6 +958,15 @@ def main():
     with open(DB_PATH, encoding='utf-8') as f:
         db = json.load(f)
     print(f'  {len(db)} records')
+
+    # Switched-chest gating: derive from the FULL record set (positions/pairs must be
+    # complete, before the eventFlag/source filters below).
+    global SWITCH_GATE
+    SWITCH_GATE = build_switch_gate_map(db)
+    if SWITCH_GATE:
+        print(f'  {len(SWITCH_GATE)} switched-chest markers gated (group-2 flags): '
+              + ', '.join(f'{pn}@{mp}->{("show" if v[1] else "hide")}-on-{v[0]}'
+                          for (mp, pn), v in sorted(SWITCH_GATE.items())))
 
     # Skip fallback records (no coordinates) and respawning enemy drops (no event flag)
     db = [r for r in db if not r.get('from_fallback')]

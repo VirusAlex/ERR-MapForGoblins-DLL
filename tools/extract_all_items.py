@@ -737,13 +737,23 @@ def main():
     print(f'  {len(emevd_calls)} template event calls with lot IDs')
 
     # Match EntityIDs to MSB positions (already collected in part_positions per MSB)
-    # Re-scan MSBs for EntityID → position mapping
+    # Re-scan MSBs for EntityID -> position mapping.
+    #   entity_to_pos          : global first-match (fallback)
+    #   entity_to_pos_by_tile  : (msb_stem, eid) -> pos, so a template drop can be
+    #                            resolved in the tile that OWNS its emevd event.
+    # Some overhauls REUSE one EntityID across two legacy-dungeon tiles that never load
+    # together (e.g. Convergence 32110301 = Onyx Lord in m32_08 AND Starcaller Dumpy in
+    # m32_11). The award event is scoped to one tile's emevd, so a global first-match
+    # index attaches the drop to the wrong tile's enemy (marker on the wrong monster in
+    # the wrong region). The resolution loop below prefers the owning tile.
     entity_to_pos = {}
+    entity_to_pos_by_tile = {}
     emevd_entity_ids = {e[0] for e in emevd_calls}
     for msb_path in sorted(MSB_DIR.glob('*.msb.dcx')):
         map_info = parse_map_name(msb_path.name)
         if not map_info or map_info['p3'] == 99:
             continue
+        msb_stem = msb_path.name.replace('.msb.dcx', '')
         try:
             tmp2 = os.path.join(tempfile.gettempdir(), str(os.getpid()) + '_mfg_msb2.tmp')
             SysFile.WriteAllBytes(tmp2, SoulsFormats.DCX.Decompress(str(msb_path)).ToArray())
@@ -754,21 +764,40 @@ def main():
             if int(getattr(p, 'GameEditionDisable', 0) or 0) == 1:
                 continue
             eid = int(p.EntityID)
-            if eid in emevd_entity_ids and eid not in entity_to_pos:
-                entity_to_pos[eid] = {
-                    'x': float(p.Position.X), 'y': float(p.Position.Y), 'z': float(p.Position.Z),
-                    'map': map_info['map'], 'areaNo': map_info['areaNo'],
-                    'p1': map_info['p1'], 'p2': map_info['p2'],
-                    'name': str(p.Name), 'model': str(p.ModelName),
-                    'npcParam': int(p.NPCParamID),
-                }
+            if eid not in emevd_entity_ids:
+                continue
+            pos = {
+                'x': float(p.Position.X), 'y': float(p.Position.Y), 'z': float(p.Position.Z),
+                'map': map_info['map'], 'areaNo': map_info['areaNo'],
+                'p1': map_info['p1'], 'p2': map_info['p2'],
+                'name': str(p.Name), 'model': str(p.ModelName),
+                'npcParam': int(p.NPCParamID),
+            }
+            entity_to_pos_by_tile.setdefault((msb_stem, eid), pos)
+            entity_to_pos.setdefault(eid, pos)
+
+    def _home_tile(eid):
+        # Legacy-dungeon EntityIDs encode their home tile as the AABB prefix
+        # (m32_11 -> 3211xxxx). Used to prefer the owning tile for reused ids when
+        # the InitializeCommonEvent call lives in common.emevd (no per-tile emevd_map).
+        s = str(eid)
+        return f'm{s[0:2]}_{s[2:4]}_00_00' if len(s) == 8 else None
 
     emevd_matched = 0
+    reattributed = 0
     seen_emevd = set()
     for entity_id, lot_id, emevd_map, event_id, defeat_flag in emevd_calls:
-        pos = entity_to_pos.get(entity_id)
+        # Prefer the placement in the tile that OWNS this emevd event, then the tile
+        # encoded by the EntityID prefix, then any global match. This keeps a reused
+        # EntityID (same number in two never-co-loaded tiles) attached to the enemy
+        # the award event actually fires on. See entity_to_pos_by_tile above.
+        pos = (entity_to_pos_by_tile.get((emevd_map, entity_id))
+               or entity_to_pos_by_tile.get((_home_tile(entity_id), entity_id))
+               or entity_to_pos.get(entity_id))
         if not pos:
             continue
+        if pos is not entity_to_pos.get(entity_id):
+            reattributed += 1
         dedup_key = (entity_id, lot_id)
         if dedup_key in seen_emevd:
             continue
@@ -787,7 +816,8 @@ def main():
         treasures.append(entry)
         emevd_matched += 1
 
-    print(f'  {emevd_matched} EMEVD drops matched to positions ({len(entity_to_pos)}/{len(emevd_entity_ids)} entities found)')
+    print(f'  {emevd_matched} EMEVD drops matched to positions ({len(entity_to_pos)}/{len(emevd_entity_ids)} entities found)'
+          f'{f", {reattributed} re-attributed to owning tile (reused EntityID)" if reattributed else ""}')
 
     # ── EMEVD: Event-flag-driven unique drops (common.emevd event 1200 template) ──
     #
