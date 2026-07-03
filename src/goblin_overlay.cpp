@@ -425,7 +425,7 @@ void draw_section(const goblin::IniSection &sec, bool &changed)
                 const char *preview = tr::language_preview_label(value, lang);
                 if (ImGui::BeginCombo(label, preview))
                 {
-                    const char *options[] = {"auto", "english", "schinese", "tchinese"};
+                    const char *options[] = {"auto", "english", "schinese", "tchinese", "korean"};
                     const std::string normalized = tr::normalize_language_config(value);
                     const std::string selected_language = normalized == "auto"
                         ? tr::language_code(tr::current_language())
@@ -1520,7 +1520,8 @@ static bool init_d3d()
         {
             const goblin::i18n::Language ui_lang = goblin::i18n::current_language();
             const bool need_cjk = ui_lang == goblin::i18n::Language::SimplifiedChinese ||
-                                  ui_lang == goblin::i18n::Language::TraditionalChinese;
+                                  ui_lang == goblin::i18n::Language::TraditionalChinese ||
+                                  ui_lang == goblin::i18n::Language::Korean;
 
             static ImVector<ImWchar> base_ranges;
             {
@@ -1553,13 +1554,20 @@ static bool init_d3d()
                 }
                 ImFontConfig cfg;
                 cfg.MergeMode = true; // merge CJK glyphs into the Segoe UI base
-                // Prefer the matching script's font first (YaHei=SC, JhengHei=TC).
+                // Prefer the matching script's font first (YaHei=SC, JhengHei=TC, Malgun=KO).
                 const char *cjk_sc[] = {"C:\\Windows\\Fonts\\msyh.ttc", "C:\\Windows\\Fonts\\msjh.ttc",
                                         "C:\\Windows\\Fonts\\simhei.ttf", "C:\\Windows\\Fonts\\simsun.ttc"};
                 const char *cjk_tc[] = {"C:\\Windows\\Fonts\\msjh.ttc", "C:\\Windows\\Fonts\\msyh.ttc",
                                         "C:\\Windows\\Fonts\\simsun.ttc", "C:\\Windows\\Fonts\\simhei.ttf"};
-                const char *const *cjk_fonts =
-                    ui_lang == goblin::i18n::Language::TraditionalChinese ? cjk_tc : cjk_sc;
+                const char *cjk_ko[] = {"C:\Windows\Fonts\malgun.ttf", "C:\Windows\Fonts\malgun.ttc",
+                                        "C:\Windows\Fonts\msyh.ttc", "C:\Windows\Fonts\msjh.ttc"};
+                const char *const *cjk_fonts = nullptr;
+                if (ui_lang == goblin::i18n::Language::TraditionalChinese)
+                    cjk_fonts = cjk_tc;
+                else if (ui_lang == goblin::i18n::Language::Korean)
+                    cjk_fonts = cjk_ko;
+                else
+                    cjk_fonts = cjk_sc;
                 bool merged = false;
                 for (int i = 0; i < 4; ++i)
                 {

@@ -33,12 +33,13 @@ namespace
         return out;
     }
 
-    const char *pick(Language language, const char *en, const char *sc, const char *tc)
+    const char *pick(Language language, const char *en, const char *sc, const char *tc, const char *ko = nullptr)
     {
         switch (language)
         {
         case Language::SimplifiedChinese: return (sc && sc[0]) ? sc : en;
         case Language::TraditionalChinese: return (tc && tc[0]) ? tc : en;
+        case Language::Korean: return (ko && ko[0]) ? ko : en;
         default: return en;
         }
     }
@@ -107,6 +108,8 @@ Language goblin::i18n::language_from_steam(std::string_view steam_language)
         return Language::SimplifiedChinese;
     if (s == "tchinese" || s == "zhotw" || s == "zh-tw" || s == "zh_hant")
         return Language::TraditionalChinese;
+    if (s == "korean" || s == "koreana" || s == "ko" || s == "kr" || s == "ko-kr" || s == "ko_kr")
+        return Language::Korean;
     return Language::English;
 }
 
@@ -120,6 +123,7 @@ std::string goblin::i18n::normalize_language_config(std::string_view config_valu
         s == "zhocn" || s == "zh-cn" || s == "zh_hans") return "schinese";
     if (s == "tchinese" || s == "traditional" || s == "traditional_chinese" ||
         s == "zhotw" || s == "zh-tw" || s == "zh_hant") return "tchinese";
+    if (s == "korean" || s == "ko" || s == "kor" || s == "korean_language") return "korean";
     return "english";
 }
 
@@ -128,6 +132,7 @@ Language goblin::i18n::language_from_config(std::string_view config_value)
     std::string s = normalize_language_config(config_value);
     if (s == "schinese") return Language::SimplifiedChinese;
     if (s == "tchinese") return Language::TraditionalChinese;
+    if (s == "korean") return Language::Korean;
     if (s == "auto") return cached_auto_language();
     return Language::English;
 }
@@ -143,6 +148,7 @@ const char *goblin::i18n::language_code(Language language)
     {
     case Language::SimplifiedChinese: return "schinese";
     case Language::TraditionalChinese: return "tchinese";
+    case Language::Korean: return "korean";
     default: return "english";
     }
 }
@@ -151,11 +157,13 @@ const char *goblin::i18n::language_option_label(std::string_view config_value, L
 {
     std::string s = normalize_language_config(config_value);
     if (s == "auto")
-        return pick(language, "Auto", "自动", "自動");
+        return pick(language, "Auto", "自动", "自動", "자동");
     if (s == "schinese")
-        return pick(language, "Simplified Chinese", "简体中文", "簡體中文");
+        return pick(language, "Simplified Chinese", "简体中文", "簡體中文", "중국어 간체");
     if (s == "tchinese")
-        return pick(language, "Traditional Chinese", "繁體中文", "繁體中文");
+        return pick(language, "Traditional Chinese", "繁體中文", "繁體中文", "중국어 번체");
+    if (s == "korean")
+        return pick(language, "Korean", "韩语", "韓語", "한국어");
     return "English";
 }
 
@@ -167,11 +175,13 @@ const char *goblin::i18n::language_preview_label(std::string_view config_value, 
     switch (language_from_config(config_value))
     {
     case Language::SimplifiedChinese:
-        return pick(language, "Auto: Simplified Chinese", "自动：简体中文", "自動：簡體中文");
+        return pick(language, "Auto: Simplified Chinese", "自动：简体中文", "自動：簡體中文", "자동: 중국어 간체");
     case Language::TraditionalChinese:
-        return pick(language, "Auto: Traditional Chinese", "自动：繁體中文", "自動：繁體中文");
+        return pick(language, "Auto: Traditional Chinese", "自动：繁體中文", "自動：繁體中文", "자동: 중국어 번체");
+    case Language::Korean:
+        return pick(language, "Auto: Korean", "自动：韩语", "自動：韓語", "자동: 한국어");
     default:
-        return pick(language, "Auto: English", "自动：English", "自動：English");
+        return pick(language, "Auto: English", "自动：English", "自動：English", "자동: English");
     }
 }
 
@@ -227,8 +237,8 @@ const char *goblin::i18n::font_glyph_seed_utf8()
     auto add = [](const char *t) { if (t && t[0]) seed += t; };
     // Language-dropdown labels live inline in language_option_label/preview_label,
     // not in the bundles, so seed their glyphs explicitly.
-    add("自动自動简体中文繁體中文");
-    for (Language lang : {Language::SimplifiedChinese, Language::TraditionalChinese})
+    add("自动自動简体中文繁體中文한국어자동중국어간체번체");
+    for (Language lang : {Language::SimplifiedChinese, Language::TraditionalChinese, Language::Korean})
     {
         const LocaleBundle &b = bundle(lang);
         for (size_t i = 0; i < b.n_texts; ++i) add(b.texts[i].s);
