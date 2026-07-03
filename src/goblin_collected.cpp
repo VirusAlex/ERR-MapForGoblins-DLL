@@ -186,7 +186,11 @@ static void read_singleton_entries(uintptr_t slot,
         }
         consecutive_empty = 0;
 
-        uint32_t tile_id = (uint32_t)id_val;
+        // Normalise to (area,gx,gz): the raw key's low byte is the 4th map component
+        // (DD - e.g. the _10 in m60_44_37_10), which encode_tile (area<<24|gx<<16|gz<<8)
+        // does not carry. A geom recorded under a DD!=0 block would otherwise never match
+        // its marker keyed at DD=0. Masking here keeps GEOF tile keys aligned with markers.
+        uint32_t tile_id = (uint32_t)id_val & 0xFFFFFF00u;
         uint8_t area = (tile_id >> 24) & 0xFF;
         if (area < 0x0A || area > 0x3D)
         {
@@ -397,7 +401,11 @@ static std::map<uint32_t, WGMSnapshot> read_wgm_snapshot()
                     safe_read((char *)msb_part_ptr + 0x20 + 4, &py, 4);
                     safe_read((char *)msb_part_ptr + 0x20 + 8, &pz, 4);
 
-                    auto &snap = result[block_id];
+                    // Normalise the live block key to (area,gx,gz) - drop the 4th map
+                    // component (DD) in the low byte (e.g. m60_44_37_10) so geoms loaded
+                    // from a DD!=0 block match their marker keyed via encode_tile (DD=0).
+                    // This is why some tiles' collected nodes never hid (NO-ROW-MATCH).
+                    auto &snap = result[block_id & 0xFFFFFF00u];
 
                     // Record occupancy for position-based replacement detection
                     snap.occupied.emplace_back(px, py, pz, narrow_str);
@@ -733,7 +741,6 @@ int goblin::collected::refresh()
     // identity (slot). The previous position-based "occupied/replacement" heuristic was
     // broken by the de-overlap pass shifting display coords; matching by slot reads each
     // instance's real collected flag directly, so display coords are irrelevant.
-    int slot_ok = 0, slot_bad = 0;  // geom_idx->slot vs name-suffix cross-check
     for (auto &[tile_id, snap] : wgm)
     {
         wgm_tiles.insert(tile_id);
@@ -742,34 +749,27 @@ int goblin::collected::refresh()
         if (tile_it == g_tile_slot_to_row.end())
             continue;
 
+        // Position-based match within (tile, model), NOT slot-keyed. The engine's live
+        // geom_idx (slot = geom_idx - 0x2328) does NOT always equal the MSB name-suffix
+        // our geom_slot was baked from, so slot-keyed matching left collected nodes as
+        // NO-ROW-MATCH and they never hid (the vanilla "gathered lily stays on the map"
+        // report). Instead flatten every row and every live instance of this model in the
+        // tile, and match each row to its nearest instance by REAL (pre-de-overlap) coords.
+        // g_entry_positions holds real_posX/posZ, so the de-overlap display shift - which
+        // broke the ORIGINAL position heuristic and prompted the slot rewrite - is moot.
         for (auto &[prefix, slot_map] : tile_it->second)
         {
             auto pref_it = snap.slot_insts.find(prefix);
             if (pref_it == snap.slot_insts.end())
-                continue;  // no live instance of this model on the tile → undetermined
+                continue;  // no live instance of this model on the tile → GEOF/sticky handle
+
+            std::vector<const WGMSnapshot::SlotInst *> insts;
+            for (auto &[slot, sv] : pref_it->second)
+                for (auto &in : sv) insts.push_back(&in);
+            if (insts.empty())
+                continue;
 
             for (auto &[slot, row_ids] : slot_map)
-            {
-                auto si = pref_it->second.find(slot);
-                if (si == pref_it->second.end() || si->second.empty())
-                    continue;  // not spawned yet (lazy) or despawned → GEOF/sticky handle
-                const auto &insts = si->second;
-
-                for (auto &in : insts)
-                    if (in.suffix_slot >= 0) (in.suffix_slot == slot ? slot_ok : slot_bad)++;
-
-                // Single row + single instance: read its flag directly.
-                if (row_ids.size() == 1 && insts.size() == 1)
-                {
-                    if (insts[0].alive) demonstrably_alive_rows.insert(row_ids[0]);
-                    else                new_collected.insert(row_ids[0]);
-                    continue;
-                }
-
-                // Twins share a slot (ERR copy-pastes / multiple instances): the engine
-                // still flags each live instance separately, so match each row to the
-                // nearest instance by REAL coords (g_entry_positions is the pre-de-overlap
-                // position) and read THAT instance's flag.
                 for (uint64_t row_id : row_ids)
                 {
                     auto pt = g_entry_positions.find(row_id);
@@ -777,22 +777,21 @@ int goblin::collected::refresh()
                     auto [ex, ey, ez] = pt->second;
                     const WGMSnapshot::SlotInst *best = nullptr;
                     float best_d2 = 1e18f;
-                    for (auto &in : insts)
+                    for (auto *in : insts)
                     {
-                        float dx = in.px - ex, dz = in.pz - ez;
+                        float dx = in->px - ex, dz = in->pz - ez;
                         float d2 = dx * dx + dz * dz;
-                        if (d2 < best_d2) { best_d2 = d2; best = &in; }
+                        if (d2 < best_d2) { best_d2 = d2; best = in; }
                     }
-                    if (!best) continue;
+                    // Same physical node: baked real coords match the live MsbPart
+                    // position to well under 1u. Reject a far "nearest" (the row's own
+                    // instance hasn't spawned - don't cross-match to another node's).
+                    if (!best || best_d2 > 16.0f) continue;
                     if (best->alive) demonstrably_alive_rows.insert(row_id);
                     else             new_collected.insert(row_id);
                 }
-            }
         }
     }
-    if (slot_bad > 0)
-        spdlog::warn("[COLLECTED] geom_idx->slot mismatch: {} ok, {} BAD (model-family encoding?)",
-                     slot_ok, slot_bad);
 
     // ── GEOF: for unloaded tiles ──
     for (auto &[tid, prefix_slots] : geof_tile_prefix_slots)

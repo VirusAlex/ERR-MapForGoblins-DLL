@@ -20,13 +20,55 @@ of waiting for all eight; a per-profile MS-verdict summary prints at the end.
 Prints a profiling summary: gen_shared per-script, per-profile pipeline vs compile,
 slowest pipeline stages, and wall-clock vs sequential-sum (the parallel saving).
 """
-import sys, os, time, re, subprocess, concurrent.futures
+import sys, os, time, re, subprocess, concurrent.futures, urllib.request
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
 TOOLS = ROOT / 'tools'
 LOG = ROOT / 'scratch'
 LOG.mkdir(exist_ok=True)
+
+# The dashboard owns scanning: it maintains a queue + one rate-limited worker (one process,
+# one sqlite connection). build_all just POSTs each finished DLL to it, so scans overlap
+# with the remaining builds without racing them or the DB / VirusTotal's request budget.
+DASH_PORT = 8765
+DASH = f'http://127.0.0.1:{DASH_PORT}'
+
+
+def _dash_up():
+    try:
+        urllib.request.urlopen(DASH + '/api/state', timeout=2)
+        return True
+    except Exception:
+        return False
+
+
+def ensure_dashboard():
+    """Ensure the dashboard is running (it owns the scan queue/worker); start it detached
+    if not. Returns True once reachable."""
+    if _dash_up():
+        return True
+    try:
+        subprocess.Popen([sys.executable, str(TOOLS / 'dashboard' / 'app.py'), '--no-reload'],
+                         cwd=str(ROOT), stdout=subprocess.DEVNULL, stderr=subprocess.STDOUT)
+    except Exception as e:
+        print(f'    could not start dashboard: {e}')
+        return False
+    for _ in range(20):
+        time.sleep(0.5)
+        if _dash_up():
+            return True
+    return False
+
+
+def enqueue_scan(profile):
+    """Tell the dashboard to queue a VT scan for this profile (non-blocking).
+    data=b'' makes this a POST - /api/scan is POST-only (a GET 404s)."""
+    try:
+        urllib.request.urlopen(f'{DASH}/api/scan?profiles={profile}', data=b'', timeout=3)
+        return True
+    except Exception:
+        return False
 # convergence2 (Convergence 2.x / ME2) is unpublished/unsupported - excluded from the default
 # all-profiles build. Build it explicitly with --profiles convergence2 if ever needed.
 ALL = ['vanilla', 'err', 'convergence3', 'erte', 'goldenage', 'vins', 'reborn', 'graceborne']
@@ -126,36 +168,44 @@ def main():
         rc = run_to_log(cmd, logp)
         return p, time.time() - t0, rc, logp
 
+    dash_ok = ensure_dashboard() if scan else False
+    if scan and not dash_ok:
+        print('    WARNING: dashboard not reachable - scans will NOT be queued')
+
     results = {}
+
+    def queue_scan(p):
+        # Enqueue on the dashboard the moment a DLL is packaged. Gate on the PARSED
+        # "[SUCCESS]" flag, NOT build.bat's exit code (`cmd /c` can return non-zero on a
+        # good build). The dashboard's single worker scans it while other builds run.
+        if scan and dash_ok and results[p][2]['success']:
+            print(f'    {p:14}         -> scan queued'
+                  if enqueue_scan(p) else f'    {p:14}         -> scan enqueue FAILED')
+
     with concurrent.futures.ThreadPoolExecutor(max_workers=jobs) as ex:
         futs = {ex.submit(build_one, p): p for p in profiles}
         for fut in concurrent.futures.as_completed(futs):
             p, dt, rc, logp = fut.result()
             results[p] = (dt, rc, parse_log(logp))
             print(f'    {p:14} {dt:6.1f}s  {"OK" if rc == 0 else f"FAIL({rc})"}')
+            queue_scan(p)
 
-    # ---- Phase 2b: VirusTotal scan (ONE process, sequential + rate-limited) ----
-    # Gate on the PARSED "[SUCCESS]" flag, NOT build.bat's exit code: invoking build.bat
-    # via `cmd /c` can surface a spurious non-zero rc even on a packaged build, which
-    # previously skipped the scan of good DLLs. And run ONE vt_runner for all built
-    # profiles (not one process per profile) so a single sqlite connection + the
-    # in-process VT rate-limiter apply - concurrent per-profile scans used to race on
-    # the DB (lost rows) and blow VirusTotal's request budget (timeouts).
-    if scan:
-        built = [p for p in profiles if results[p][2]['success']]
-        if built:
-            print(f'\n[2b] VirusTotal: scanning {len(built)} built profile(s) sequentially...')
-            vlog = LOG / 'ba_vt_all.log'
-            run_to_log([sys.executable, str(VT_RUNNER), '--profiles', ','.join(built),
-                        '--version', vt_ver, '--change', f'v{vt_ver} release'], vlog)
-            try:
-                for ln in vlog.read_text(encoding='utf-8', errors='replace').splitlines():
-                    if any(t in ln for t in (': done', ': cached', ': timeout', ': ERROR', ': missing')):
-                        print('    ' + ln.strip())
-            except Exception:
-                pass
-        else:
-            print('\n[2b] VirusTotal: no successfully-built DLLs to scan')
+    # ---- Phase 2r: serial retry of failed builds ----
+    # jobs>1 sporadically loses a profile to the CMake FetchContent / CMakeDetermineSystem
+    # race (concurrent first-time dependency populate). Retry the failures ONE at a time
+    # so a full parallel build still finishes clean.
+    failed = [p for p in profiles if not results[p][2]['success']]
+    if failed:
+        print(f'\n[2r] retrying {len(failed)} failed build(s) serially: {", ".join(failed)}')
+        for p in failed:
+            _, dt, rc, logp = build_one(p)
+            results[p] = (dt, rc, parse_log(logp))
+            print(f'    {p:14} {dt:6.1f}s  {"OK" if results[p][2]["success"] else "FAIL"} (retry)')
+            queue_scan(p)
+
+    if scan and dash_ok:
+        print(f'\n[2b] scans queued on the dashboard ({DASH}); they run there (one worker,'
+              f' rate-limited), overlapping remaining work. Watch progress on the dashboard.')
 
     wall = time.time() - wall0
 
@@ -174,7 +224,7 @@ def main():
         compe = comp if comp is not None else (dt - pipe if pipe is not None else None)
         print(f'{p:14} {dt:6.1f}s {("%.1fs"%pipe) if pipe is not None else "  -  ":>9} '
               f'{("%.1fs"%compe) if compe is not None else "  -  ":>8}  '
-              f'{"OK" if rc == 0 and info["success"] else "FAIL"}')
+              f'{"OK" if info["success"] else "FAIL"}')
 
     # slowest pipeline stages across all profiles (useful for --force-all)
     agg = {}
@@ -188,7 +238,7 @@ def main():
 
     print(f'\nwall-clock: {wall:.1f}s   |   sequential-sum: {seq_sum:.1f}s   |   '
           f'parallel saved ~{seq_sum - wall:.1f}s')
-    if any(r[1] != 0 or not r[2]['success'] for r in results.values()):
+    if any(not r[2]['success'] for r in results.values()):
         print('\nWARNING: some builds FAILED - check scratch/ba_<profile>.log')
         sys.exit(1)
 
