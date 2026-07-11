@@ -872,17 +872,23 @@ def write_massedit(records, filepath, icon_id, start_id, lot_linkage=None):
         if flag > 0:
             lines.append(f'param WorldMapPointParam: id {row_id}: textDisableFlagId1: = {flag};')
 
-        # Switched-chest gate (group-2 flag on the primary line = the icon). Only fires
-        # for two loot assets stacked at one spot that the EMEVD toggles XOR by a flag
-        # (Patches' m31_00 chest today). Group-2 is untouched by the DLL's category/
-        # live-loot logic, and the engine requires group1 AND group2 per slot, so this
-        # composes cleanly: the icon appears ONLY in the world-state where its chest is
-        # actually present, and still hides on pickup via textDisableFlagId1 above.
+        # Switched-chest ENABLE gate (group-2). Only fires for the chest that the
+        # EMEVD enables when the switch flag is ON (Patches' m31_00 Glass Shard chest
+        # today; the Cloth twin, enabled when the flag is OFF, is intentionally NOT
+        # here - see switched_chests.py). sw is that flag: show this marker's icon
+        # ONLY while the flag is ON (its chest is present). It still hides on pickup
+        # via textDisableFlagId* (group-1). We MUST use an ENABLE flag, not a DISABLE
+        # one: the engine hides a slot only when group1 AND group2 DISABLE flags BOTH
+        # fire, so a group-2 disable would break the marker's own pickup-hide.
+        # IMPORTANT: apply to EVERY populated text slot, not just slot 1 - the engine
+        # drops the icon only once ALL its text lines are hidden, so gating only the
+        # item line would leave the location/enemy line (and the icon) visible. Slot 1
+        # is written here; slots 2/3 gate at their write sites.
         sw = SWITCH_GATE.get((rec.get('map', ''), rec.get('partName', '')))
         if sw:
-            s_flag, show_when_on = sw
-            s_field = 'textEnableFlag2Id1' if show_when_on else 'textDisableFlag2Id1'
-            lines.append(f'param WorldMapPointParam: id {row_id}: {s_field}: = {s_flag};')
+            s_flag = sw
+            s_field = 'textEnableFlag2Id'
+            lines.append(f'param WorldMapPointParam: id {row_id}: {s_field}1: = {s_flag};')
 
         # Text slot order:
         #   1 = item name (above)
@@ -902,6 +908,8 @@ def write_massedit(records, filepath, icon_id, start_id, lot_linkage=None):
             lines.append(f'param WorldMapPointParam: id {row_id}: textId{next_text_slot}: = {npc_text_id};')
             if flag > 0:
                 lines.append(f'param WorldMapPointParam: id {row_id}: textDisableFlagId{next_text_slot}: = {flag};')
+            if sw:
+                lines.append(f'param WorldMapPointParam: id {row_id}: {s_field}{next_text_slot}: = {s_flag};')
             next_text_slot += 1
 
         # Location subtitle (for non-overworld). Becomes slot 2 for treasures
@@ -917,6 +925,8 @@ def write_massedit(records, filepath, icon_id, start_id, lot_linkage=None):
                 lines.append(f'param WorldMapPointParam: id {row_id}: textId{next_text_slot}: = {loc_id};')
                 if flag > 0:
                     lines.append(f'param WorldMapPointParam: id {row_id}: textDisableFlagId{next_text_slot}: = {flag};')
+                if sw:
+                    lines.append(f'param WorldMapPointParam: id {row_id}: {s_field}{next_text_slot}: = {s_flag};')
                 next_text_slot += 1
 
         # Generic enemy name - only when we don't have a specific named-NPC
@@ -937,6 +947,8 @@ def write_massedit(records, filepath, icon_id, start_id, lot_linkage=None):
                 lines.append(f'param WorldMapPointParam: id {row_id}: textId{next_text_slot}: = {enemy_text_id};')
                 if flag > 0:
                     lines.append(f'param WorldMapPointParam: id {row_id}: textDisableFlagId{next_text_slot}: = {flag};')
+                if sw:
+                    lines.append(f'param WorldMapPointParam: id {row_id}: {s_field}{next_text_slot}: = {s_flag};')
 
         lines.append(f'param WorldMapPointParam: id {row_id}: selectMinZoomStep: = 1;')
 
@@ -964,8 +976,8 @@ def main():
     global SWITCH_GATE
     SWITCH_GATE = build_switch_gate_map(db)
     if SWITCH_GATE:
-        print(f'  {len(SWITCH_GATE)} switched-chest markers gated (group-2 flags): '
-              + ', '.join(f'{pn}@{mp}->{("show" if v[1] else "hide")}-on-{v[0]}'
+        print(f'  {len(SWITCH_GATE)} switched-chest markers enable-gated (show only when flag ON): '
+              + ', '.join(f'{pn}@{mp}->show-on-{v}'
                           for (mp, pn), v in sorted(SWITCH_GATE.items())))
 
     # Skip fallback records (no coordinates) and respawning enemy drops (no event flag)

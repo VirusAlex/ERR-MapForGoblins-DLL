@@ -72,7 +72,7 @@ namespace goblin::config
          hideDungeonIconsOnClear = false;
 
     std::string uiLanguage = "auto";
-    std::string overlayRenderMode = "layered";
+    std::string overlayRenderMode = "surface";
     float fontScale = 1.0f;  // overlay text size multiplier (live io.FontGlobalScale)
     bool enableOverlay = true;
     float overlayOpacity = 1.0f;                 // overlay menu panel opacity (window bg alpha)
@@ -263,7 +263,7 @@ namespace
                 // screen width (0.5 = centered); Y = the window TOP as a fraction of screen
                 // height (0 = flush top). Fractions keep the position sensible after a
                 // resolution/aspect change; W/H are in pixels (clamped to fit the screen).
-                IniEntry{"overlay_render_mode", IniType::Text, &cfg::overlayRenderMode, "layered", "How the overlay is drawn: layered (default, most compatible with screen-recording and monitoring utilities), surface (GPU, also compatible), or swapchain (lightest, but some external utilities may not read it correctly). Change needs a game restart.", false, nullptr},
+                IniEntry{"overlay_render_mode", IniType::Text, &cfg::overlayRenderMode, "surface", "How the overlay is drawn: surface (default, GPU-composited, low overhead, compatible with screen-recording and monitoring utilities), layered (CPU-composited, maximum compatibility but higher CPU/FPS cost), or swapchain (lightest, but some external utilities may not read it correctly). Change needs a game restart.", false, nullptr},
                 IniEntry{"overlay_window_x", IniType::Float, &cfg::overlayWinX, "0.5", "Overlay menu horizontal CENTER, fraction of screen width (0.5 = centered). Auto-saved.", false, nullptr},
                 IniEntry{"overlay_window_y", IniType::Float, &cfg::overlayWinY, "0.03", "Overlay menu TOP edge, fraction of screen height (0.0 = top). Auto-saved.", false, nullptr},
                 IniEntry{"overlay_window_w", IniType::Float, &cfg::overlayWinW, "560", "Overlay menu window width in pixels (auto-saved, clamped to screen).", false, nullptr},

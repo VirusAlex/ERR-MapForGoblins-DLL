@@ -144,8 +144,25 @@ FIELD_MAP = {
     # category/live-loot lane; group2 is baked straight through (see memcpy in
     # inject_map_entries) so a marker's icon can be gated on a world-state flag.
     # textDisableFlag2Id1 had NO mapping before, so it was silently dropped.
+    # Slots 2-8 likewise need explicit massedit-name mappings: a switched-chest
+    # marker gates EVERY populated text line (item + location + enemy), not just
+    # slot 1, so the engine hides the whole icon in the wrong world-state.
     "textEnableFlag2Id1": ("textEnableFlag2Id1", "i32"),
+    "textEnableFlag2Id2": ("textEnableFlag2Id2", "i32"),
+    "textEnableFlag2Id3": ("textEnableFlag2Id3", "i32"),
+    "textEnableFlag2Id4": ("textEnableFlag2Id4", "i32"),
+    "textEnableFlag2Id5": ("textEnableFlag2Id5", "i32"),
+    "textEnableFlag2Id6": ("textEnableFlag2Id6", "i32"),
+    "textEnableFlag2Id7": ("textEnableFlag2Id7", "i32"),
+    "textEnableFlag2Id8": ("textEnableFlag2Id8", "i32"),
     "textDisableFlag2Id1": ("textDisableFlag2Id1", "i32"),
+    "textDisableFlag2Id2": ("textDisableFlag2Id2", "i32"),
+    "textDisableFlag2Id3": ("textDisableFlag2Id3", "i32"),
+    "textDisableFlag2Id4": ("textDisableFlag2Id4", "i32"),
+    "textDisableFlag2Id5": ("textDisableFlag2Id5", "i32"),
+    "textDisableFlag2Id6": ("textDisableFlag2Id6", "i32"),
+    "textDisableFlag2Id7": ("textDisableFlag2Id7", "i32"),
+    "textDisableFlag2Id8": ("textDisableFlag2Id8", "i32"),
 }
 
 # C++ struct field order (must match WORLD_MAP_POINT_PARAM_ST declaration)

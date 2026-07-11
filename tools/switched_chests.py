@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Detect same-position switched-chest loot pairs and the flag that gates each marker.
+"""Detect same-position switched-chest loot pairs and cross-hide them on pickup.
 
 A tiny, self-limiting rule (NOT hardcoded to any map): two DIFFERENT loot assets
 stacked at the SAME world position whose EMEVD toggles them mutually-exclusively via
@@ -10,12 +10,16 @@ nothing else. Single-asset map-state toggles (e.g. Leyndell/Ashen Capital on fla
 are NOT stacked pairs, so they are excluded. A future build adding such a stack is
 picked up automatically.
 
-Returns {(map, partName): (flag, show_when_on)} so the loot generator can gate the
-marker's primary line (slot 1) via the group-2 flags the DLL never manages:
-  show_when_on=True  -> textEnableFlag2Id1  = flag  (icon shown ONLY when flag ON)
-  show_when_on=False -> textDisableFlag2Id1 = flag  (icon HIDDEN when flag ON)
-Group 1 (textEnableFlagId1/textDisableFlagId1) stays free for the DLL's category-
-visibility and live-loot logic; the engine ANDs group1 AND group2 per slot.
+We ENABLE-gate only the chest that is present when the switch flag is ON (group-2
+textEnableFlag2Id*): its marker shows only while that chest exists, and still hides on
+pickup via its group-1 pickup flag. The engine hides a slot only when its group-1 AND
+group-2 DISABLE flags BOTH fire (an AND - verified live), so a group-2 DISABLE switch
+flag would break the sibling's pickup-hide; the enabled-when-OFF sibling is therefore
+left ungated (group-1 pickup only). See build_switch_gate_map for the full rationale.
+
+Returns {(map, partName): show_on_flag} so the loot generator writes textEnableFlag2Id*
+= flag on every populated slot (icon shows only when the flag is ON). Group 1
+(textDisableFlagId*) stays free for the DLL's category-visibility / live-loot logic.
 """
 import os, tempfile, struct
 from collections import defaultdict
@@ -80,7 +84,28 @@ def _switches_in_event(evt):
 
 
 def build_switch_gate_map(records):
-    """{(map, partName): (flag, show_when_on)} for same-position switched loot pairs."""
+    """{(map, partName): show_on_flag} for switched-chest markers ENABLED when a
+    flag is ON.
+
+    Two DIFFERENT loot assets stacked at one spot that the EMEVD toggles
+    mutually-exclusively (ChangeAssetEnableState XOR on a flag). We gate ONLY the
+    chest that is enabled-when-flag-ON, via a group-2 ENABLE flag
+    (textEnableFlag2Id*): its marker shows only while that chest is physically
+    present (flag ON), and still hides on pickup via group-1.
+
+    We deliberately do NOT gate the enabled-when-flag-OFF sibling. The engine hides
+    a text slot only when its group-1 AND group-2 DISABLE flags BOTH fire (an AND,
+    not an OR - verified live on m31_00: cloth with textDisableFlag2Id=3691 stayed
+    visible after pickup because 3691 was OFF, so only ONE of the two disable flags
+    fired). A textDisableFlag2Id switch flag on that sibling would therefore break
+    its own pickup-hide: it would need BOTH its pickup flag AND the switch flag set
+    to disappear. Leaving it with just its group-1 pickup flag keeps pickup-hide
+    working; the only cost is it can linger after the switch flips to the other
+    chest without the player looting it (rare; once looted it stays hidden).
+
+    Returns {(map, partName): flag} -> the loot generator writes textEnableFlag2Id*
+    = flag on every populated slot (icon shows only when the flag is ON).
+    """
     root = config.require_err_mod_dir()
     msb_dir = root / 'map' / 'MapStudio'
     ev_dir = root / 'event'
@@ -100,6 +125,9 @@ def build_switch_gate_map(records):
     if not stacked:
         return {}
 
+    # 2. confirm the XOR-switch via EMEVD; keep ONLY the enabled-when-flag-ON parts
+    #    (safe to ENABLE-gate). Enabled-when-flag-OFF parts are left ungated so their
+    #    own group-1 pickup flag keeps working (see docstring - AND-disable engine).
     result = {}
     for tile in sorted({k[0] for k in stacked}):
         ev_path = ev_dir / f'{tile}.emevd.dcx'
@@ -116,7 +144,6 @@ def build_switch_gate_map(records):
                 sw.setdefault(asset, fe)
         if not sw:
             continue
-        # only the parts that ARE stacked in this tile
         stacked_parts = set()
         for k, parts in stacked.items():
             if k[0] == tile:
@@ -129,5 +156,7 @@ def build_switch_gate_map(records):
             nm = str(a.Name)
             e = int(getattr(a, 'EntityID', 0) or 0)
             if e in sw and nm in stacked_parts:
-                result[(tile, nm)] = sw[e]  # (flag, show_when_on)
+                flag, enabled_when_on = sw[e]
+                if enabled_when_on:  # safe textEnableFlag2Id gate; skip the OFF twin
+                    result[(tile, nm)] = flag
     return result

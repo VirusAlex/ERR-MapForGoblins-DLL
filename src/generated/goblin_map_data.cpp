@@ -45442,7 +45442,6 @@ const MapEntry MAP_ENTRIES[] = {
         .textId2 = 31000,
         .textDisableFlagId2 = 31007010,
         .selectMinZoomStep = 1,
-        .textDisableFlag2Id1 = 3691,
     }, Category::EquipArmour, -1, -1, nullptr, 31000011u, 1, 46.072f, 70.980f},
     // Row ID 2500099
     {2500099ull, {
@@ -45457,7 +45456,6 @@ const MapEntry MAP_ENTRIES[] = {
         .textId2 = 31000,
         .textDisableFlagId2 = 31007010,
         .selectMinZoomStep = 1,
-        .textDisableFlag2Id1 = 3691,
     }, Category::EquipArmour, -1, -1, nullptr, 31000010u, 1, 46.072f, 70.980f},
     // Row ID 2500100
     {2500100ull, {
@@ -86495,6 +86493,7 @@ const MapEntry MAP_ENTRIES[] = {
         .textDisableFlagId2 = 31007030,
         .selectMinZoomStep = 1,
         .textEnableFlag2Id1 = 3691,
+        .textEnableFlag2Id2 = 3691,
     }, Category::LootUtilities, -1, -1, nullptr, 31000030u, 1, 46.072f, 70.980f},
     // Row ID 5500009
     {5500009ull, {

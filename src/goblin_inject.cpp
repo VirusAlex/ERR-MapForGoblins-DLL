@@ -450,10 +450,15 @@ void goblin::inject_map_entries()
         }
 
         // Inject EVERY category's rows. Per-category visibility is applied as a
-        // dispMask00 gate during the write loop below and stays live-toggleable
-        // from the in-game config overlay (goblin::apply_category_visibility).
-        (void)gate_cat;
-        entries.push_back({0, e.row_id, &e.data, is_piece, is_kindling, e.category, lotId, lotType});
+        // live text-flag gate (goblin::apply_category_visibility) and stays
+        // toggleable from the in-game config overlay. Carry gate_cat, NOT the
+        // baked e.category: when live-loot icons re-icon a randomized drop,
+        // gate_cat is the LIVE item's category, so the marker is gated under the
+        // SAME category its icon shows. Using the baked category here desynced
+        // the two - hiding e.g. Armaments missed randomized weapons and hid
+        // unrelated markers whose baked category happened to be Armaments.
+        // (Spoiler-free and non-lot rows leave gate_cat == e.category.)
+        entries.push_back({0, e.row_id, &e.data, is_piece, is_kindling, gate_cat, lotId, lotType});
     }
 
     spdlog::info("Adding {} map entries ({} skipped by config, {} live-recategorized)",
