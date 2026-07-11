@@ -25,7 +25,8 @@ namespace goblin
         U8,          // -> uint8_t*
         VkKey,       // -> uint32_t*  (parsed via parse_vk_code)
         GamepadMask, // -> uint16_t*  (parsed via parse_gamepad_combo)
-        String,      // -> std::string*
+        Language,    // -> std::string*  (normalized as a language via normalize_language_config)
+        Text,        // -> std::string*  (raw string, verbatim - no normalization)
         Float,       // -> float*  (parsed via std::stof, clamped)
     };
 

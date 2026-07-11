@@ -47,7 +47,7 @@ PROJECT_DIR = TOOLS_DIR.parent
 #                    overhaul's mod overlay over vanilla (same staging as convergence3;
 #                    ME3 mod - launch.me3 [[natives]]; fully localized incl. engus/rusru)
 PROFILE = os.environ.get("MFG_PROFILE", "err").strip().lower()
-if PROFILE not in ("err", "vanilla", "convergence2", "convergence3", "erte", "goldenage", "vins", "reborn", "graceborne"):
+if PROFILE not in ("err", "vanilla", "convergence2", "convergence3", "erte", "goldenage", "goldenage363", "vins", "reborn", "graceborne"):
     PROFILE = "err"
 
 # Profile-scoped intermediate/generated data dir.
@@ -80,6 +80,7 @@ CONVERGENCE2_MOD_DIR = None  # The Convergence 2.x ME2 'mod' overlay dir
 CONVERGENCE3_MOD_DIR = None  # The Convergence 3.x ME3 'mod' overlay dir
 ERTE_MOD_DIR = None         # ERTE overhaul's mod overlay dir
 GOLDENAGE_MOD_DIR = None    # Golden Age overhaul's ME2 'mod' overlay dir
+GOLDENAGE363_MOD_DIR = None # Golden Age 3.6.3 overhaul's ME2 'mod' overlay dir
 VINS_MOD_DIR = None         # Elden Vins overhaul's ME2 'mod' overlay dir
 REBORN_MOD_DIR = None       # Elden Ring Reborn overhaul's ME2 'mod' overlay dir
 GRACEBORNE_MOD_DIR = None   # Graceborne overhaul's ME3 'mod' overlay dir
@@ -116,6 +117,10 @@ if _config_path.exists():
     if _ga:
         GOLDENAGE_MOD_DIR = Path(_ga)
 
+    _ga363 = _cfg.get("paths", "goldenage363_mod_dir", fallback="").strip()
+    if _ga363:
+        GOLDENAGE363_MOD_DIR = Path(_ga363)
+
     _vins = _cfg.get("paths", "vins_mod_dir", fallback="").strip()
     if _vins:
         VINS_MOD_DIR = Path(_vins)
@@ -146,7 +151,7 @@ if GAME_DIR:
 # (overlay-over-vanilla, built by tools/prepare_merged_src.py as the first stage).
 if PROFILE == "vanilla":
     DATA_SRC_DIR = GAME_DIR
-elif PROFILE in ("convergence2", "convergence3", "erte", "goldenage", "vins", "reborn", "graceborne"):
+elif PROFILE in ("convergence2", "convergence3", "erte", "goldenage", "goldenage363", "vins", "reborn", "graceborne"):
     DATA_SRC_DIR = DATA_DIR / "merged_src"
 else:
     DATA_SRC_DIR = ERR_MOD_DIR
@@ -169,7 +174,7 @@ def require_data_src_dir():
     if PROFILE == "vanilla":
         print("ERROR: vanilla profile needs a UXM-unpacked game_dir.")
         print(f"  Set game_dir in {_config_path} (must contain loose regulation.bin, map/, event/, msg/).")
-    elif PROFILE in ("convergence2", "convergence3", "erte", "goldenage", "vins", "reborn", "graceborne"):
+    elif PROFILE in ("convergence2", "convergence3", "erte", "goldenage", "goldenage363", "vins", "reborn", "graceborne"):
         key = PROFILE + "_mod_dir"
         print(f"ERROR: {PROFILE} merged source dir not staged yet.")
         print(f"  Set {key} in {_config_path}, then run tools/prepare_merged_src.py")

@@ -17,6 +17,7 @@ data/convergence2/
 data/convergence3/
 data/erte/
 data/goldenage/
+data/goldenage363/
 data/vins/
 data/reborn/
 data/graceborne/
@@ -26,6 +27,7 @@ src/generated_convergence2/
 src/generated_convergence3/
 src/generated_erte/
 src/generated_goldenage/
+src/generated_goldenage363/
 src/generated_vins/
 src/generated_reborn/
 src/generated_graceborne/

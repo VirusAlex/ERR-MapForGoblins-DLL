@@ -103,6 +103,20 @@ UINT g_back_w = 0, g_back_h = 0; // current swapchain back-buffer size
 // UpdateLayeredWindow (render ImGui to an offscreen RT -> CPU readback -> per-pixel
 // alpha blit). Windows keeps the DComp path unchanged. g_use_layered selects the path.
 bool g_use_layered = false;
+// Render mode is chosen by ini `overlay_render_mode`:
+//   layered  = WS_EX_LAYERED + UpdateLayeredWindow (GDI, NO DXGI swapchain -> invisible to
+//              swapchain hooks: OBS Game Capture / ReShade / RivaTuner-RTSS / Special K). Default.
+//   surface  = DirectComposition SURFACE (GPU-composited, still NO swapchain -> same compat, no
+//              CPU readback). Uses g_dcomp_surface + an intermediate full-size RT (g_surf_tex).
+//   swapchain= DirectComposition composition SWAPCHAIN (lightest, but that swapchain gets grabbed
+//              by those tools -> capture/FPS-limit/transparency conflicts). g_swapchain path.
+// A GPU path that fails at init (e.g. Wine E_NOTIMPL) falls back to layered.
+enum class RenderMode { Layered, Surface, Swapchain };
+RenderMode g_render_mode = RenderMode::Layered;
+bool g_use_surface = false;                        // surface mode active (post-init)
+IDCompositionSurface *g_dcomp_surface = nullptr;   // 'surface' mode content (no swapchain)
+ID3D11Texture2D *g_surf_tex = nullptr;             // surface mode: intermediate full-size RT
+ID3D11RenderTargetView *g_surf_rtv = nullptr;      // surface mode: RTV for g_surf_tex
 ID3D11Texture2D *g_ltex = nullptr;        // offscreen render target (B8G8R8A8)
 ID3D11RenderTargetView *g_lrtv = nullptr; // RTV for g_ltex
 ID3D11Texture2D *g_lstaging = nullptr;    // CPU-readable copy of g_ltex
@@ -419,7 +433,7 @@ void draw_section(const goblin::IniSection &sec, bool &changed)
                 }
                 hovered = ImGui::IsItemHovered(ImGuiHoveredFlags_ForTooltip);
             }
-            else if (e.type == goblin::IniType::String)
+            else if (e.type == goblin::IniType::Language)
             {
                 std::string &value = *static_cast<std::string *>(e.target);
                 const char *preview = tr::language_preview_label(value, lang);
@@ -1407,6 +1421,35 @@ static void recreate_window_layered()
                              0, 0, 100, 100, nullptr, nullptr, GetModuleHandleW(nullptr), nullptr);
 }
 
+// ── 'surface' mode helpers: a DComp SURFACE (no swapchain) + an intermediate full-size RT we
+// render ImGui into, then blit into the surface via CopySubresourceRegion each frame (BeginDraw
+// hands back an atlas texture + offset, so we copy rather than render directly at the offset). ──
+static void release_surface_targets()
+{
+    if (g_surf_rtv) { g_surf_rtv->Release(); g_surf_rtv = nullptr; }
+    if (g_surf_tex) { g_surf_tex->Release(); g_surf_tex = nullptr; }
+    if (g_dcomp_surface) { g_dcomp_surface->Release(); g_dcomp_surface = nullptr; }
+}
+static bool create_surface_targets(UINT w, UINT h)
+{
+    release_surface_targets();
+    if (!g_dcomp_device || !g_dcomp_visual || !g_dcomp_target || !g_d3d_device || !w || !h) return false;
+    if (FAILED(g_dcomp_device->CreateSurface(w, h, DXGI_FORMAT_B8G8R8A8_UNORM,
+                                             DXGI_ALPHA_MODE_PREMULTIPLIED, &g_dcomp_surface)) || !g_dcomp_surface)
+        return false;
+    D3D11_TEXTURE2D_DESC td{};
+    td.Width = w; td.Height = h; td.MipLevels = 1; td.ArraySize = 1;
+    td.Format = DXGI_FORMAT_B8G8R8A8_UNORM; td.SampleDesc.Count = 1;
+    td.Usage = D3D11_USAGE_DEFAULT; td.BindFlags = D3D11_BIND_RENDER_TARGET;
+    if (FAILED(g_d3d_device->CreateTexture2D(&td, nullptr, &g_surf_tex)) || !g_surf_tex) return false;
+    if (FAILED(g_d3d_device->CreateRenderTargetView(g_surf_tex, nullptr, &g_surf_rtv)) || !g_surf_rtv) return false;
+    g_dcomp_visual->SetContent(g_dcomp_surface);
+    g_dcomp_target->SetRoot(g_dcomp_visual);
+    g_dcomp_device->Commit();
+    g_back_w = w; g_back_h = h;
+    return true;
+}
+
 // ── D3D11 + DirectComposition + ImGui dx11 backend creation ──
 // POD-only locals: this body is wrapped by an SEH guard (a torn GPU state can AV).
 static bool init_d3d()
@@ -1423,22 +1466,12 @@ static bool init_d3d()
         return false;
     }
 
-    // 2) DXGI factory (via the device) + composition swapchain.
-    IDXGIDevice *dxgiDevice = nullptr;
-    if (FAILED(g_d3d_device->QueryInterface(IID_PPV_ARGS(&dxgiDevice))) || !dxgiDevice)
-        return false;
-    IDXGIAdapter *adapter = nullptr;
-    if (FAILED(dxgiDevice->GetAdapter(&adapter)) || !adapter)
+    // 2) Render mode from ini: layered (default) / surface / swapchain (see RenderMode notes above).
     {
-        dxgiDevice->Release();
-        return false;
-    }
-    IDXGIFactory2 *factory = nullptr;
-    if (FAILED(adapter->GetParent(IID_PPV_ARGS(&factory))) || !factory)
-    {
-        adapter->Release();
-        dxgiDevice->Release();
-        return false;
+        const std::string &mstr = goblin::config::overlayRenderMode;
+        g_render_mode = (mstr == "swapchain") ? RenderMode::Swapchain
+                      : (mstr == "surface")   ? RenderMode::Surface
+                                              : RenderMode::Layered;
     }
 
     RECT cr{};
@@ -1446,57 +1479,88 @@ static bool init_d3d()
     UINT w = static_cast<UINT>(cr.right - cr.left), h = static_cast<UINT>(cr.bottom - cr.top);
     if (w == 0) w = 1;
     if (h == 0) h = 1;
+    g_back_w = w;
+    g_back_h = h;
 
-    DXGI_SWAP_CHAIN_DESC1 scd{};
-    scd.Width = w;
-    scd.Height = h;
-    scd.Format = DXGI_FORMAT_B8G8R8A8_UNORM;
-    scd.SampleDesc.Count = 1;
-    scd.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
-    scd.BufferCount = 2;
-    scd.SwapEffect = DXGI_SWAP_EFFECT_FLIP_SEQUENTIAL;
-    scd.AlphaMode = DXGI_ALPHA_MODE_PREMULTIPLIED; // composited transparency
-    scd.Scaling = DXGI_SCALING_STRETCH;
-    HRESULT hr = factory->CreateSwapChainForComposition(g_d3d_device, &scd, nullptr, &g_swapchain);
-    factory->Release();
-    adapter->Release();
-    if (SUCCEEDED(hr) && g_swapchain)
+    if (g_render_mode == RenderMode::Layered)
     {
-        // ── Windows path: DirectComposition (device -> target(hwnd) -> visual -> content). ──
-        g_back_w = w;
-        g_back_h = h;
-        if (FAILED(DCompositionCreateDevice(dxgiDevice, IID_PPV_ARGS(&g_dcomp_device))) || !g_dcomp_device)
-        {
-            dxgiDevice->Release();
-            spdlog::error("[OVERLAY] DCompositionCreateDevice failed");
-            return false;
-        }
-        dxgiDevice->Release();
-        if (FAILED(g_dcomp_device->CreateTargetForHwnd(g_hwnd, TRUE, &g_dcomp_target)) || !g_dcomp_target)
-            return false;
-        if (FAILED(g_dcomp_device->CreateVisual(&g_dcomp_visual)) || !g_dcomp_visual)
-            return false;
-        g_dcomp_visual->SetContent(g_swapchain);
-        g_dcomp_target->SetRoot(g_dcomp_visual);
-        g_dcomp_device->Commit();
-        ID3D11Texture2D *back = nullptr;
-        if (FAILED(g_swapchain->GetBuffer(0, IID_PPV_ARGS(&back))) || !back)
-            return false;
-        hr = g_d3d_device->CreateRenderTargetView(back, nullptr, &g_rtv);
-        back->Release();
-        if (FAILED(hr) || !g_rtv)
-            return false;
-    }
-    else
-    {
-        // ── Proton/Wine path: composition swapchains are E_NOTIMPL -> layered window. ──
-        dxgiDevice->Release();
-        spdlog::info("[OVERLAY] composition swapchain unavailable (0x{:08X}); using layered-window fallback",
-                     static_cast<unsigned>(hr));
         g_use_layered = true;
         recreate_window_layered();
         if (!g_hwnd) { spdlog::error("[OVERLAY] layered window creation failed"); return false; }
         if (!create_layered_targets(w, h)) { spdlog::error("[OVERLAY] layered targets failed"); return false; }
+        spdlog::info("[OVERLAY] render mode: layered (GDI, max compatibility)");
+    }
+    else
+    {
+        // GPU paths (surface / swapchain) need a DXGI device + a DComp device/target/visual.
+        IDXGIDevice *dxgiDevice = nullptr;
+        HRESULT hr = E_FAIL;
+        bool ok = false;
+        if (SUCCEEDED(g_d3d_device->QueryInterface(IID_PPV_ARGS(&dxgiDevice))) && dxgiDevice)
+        {
+            if (SUCCEEDED(DCompositionCreateDevice(dxgiDevice, IID_PPV_ARGS(&g_dcomp_device))) && g_dcomp_device &&
+                SUCCEEDED(g_dcomp_device->CreateTargetForHwnd(g_hwnd, TRUE, &g_dcomp_target)) && g_dcomp_target &&
+                SUCCEEDED(g_dcomp_device->CreateVisual(&g_dcomp_visual)) && g_dcomp_visual)
+            {
+                if (g_render_mode == RenderMode::Surface)
+                {
+                    ok = create_surface_targets(w, h);
+                    g_use_surface = ok;
+                    if (ok) spdlog::info("[OVERLAY] render mode: surface (DComp surface, no swapchain)");
+                }
+                else // Swapchain
+                {
+                    IDXGIAdapter *adapter = nullptr;
+                    IDXGIFactory2 *factory = nullptr;
+                    if (SUCCEEDED(dxgiDevice->GetAdapter(&adapter)) && adapter &&
+                        SUCCEEDED(adapter->GetParent(IID_PPV_ARGS(&factory))) && factory)
+                    {
+                        DXGI_SWAP_CHAIN_DESC1 scd{};
+                        scd.Width = w; scd.Height = h;
+                        scd.Format = DXGI_FORMAT_B8G8R8A8_UNORM;
+                        scd.SampleDesc.Count = 1;
+                        scd.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
+                        scd.BufferCount = 2;
+                        scd.SwapEffect = DXGI_SWAP_EFFECT_FLIP_SEQUENTIAL;
+                        scd.AlphaMode = DXGI_ALPHA_MODE_PREMULTIPLIED;
+                        scd.Scaling = DXGI_SCALING_STRETCH;
+                        hr = factory->CreateSwapChainForComposition(g_d3d_device, &scd, nullptr, &g_swapchain);
+                        if (SUCCEEDED(hr) && g_swapchain)
+                        {
+                            g_dcomp_visual->SetContent(g_swapchain);
+                            g_dcomp_target->SetRoot(g_dcomp_visual);
+                            g_dcomp_device->Commit();
+                            ID3D11Texture2D *back = nullptr;
+                            if (SUCCEEDED(g_swapchain->GetBuffer(0, IID_PPV_ARGS(&back))) && back)
+                            {
+                                ok = SUCCEEDED(g_d3d_device->CreateRenderTargetView(back, nullptr, &g_rtv)) && g_rtv;
+                                back->Release();
+                            }
+                        }
+                    }
+                    if (factory) factory->Release();
+                    if (adapter) adapter->Release();
+                    if (ok) spdlog::info("[OVERLAY] render mode: swapchain (DComp swapchain)");
+                }
+            }
+        }
+        if (dxgiDevice) dxgiDevice->Release();
+        if (!ok)
+        {
+            spdlog::info("[OVERLAY] GPU render mode unavailable (0x{:08X}); using layered fallback",
+                         static_cast<unsigned>(hr));
+            if (g_rtv) { g_rtv->Release(); g_rtv = nullptr; }
+            if (g_swapchain) { g_swapchain->Release(); g_swapchain = nullptr; }
+            release_surface_targets();
+            if (g_dcomp_visual) { g_dcomp_visual->Release(); g_dcomp_visual = nullptr; }
+            if (g_dcomp_target) { g_dcomp_target->Release(); g_dcomp_target = nullptr; }
+            if (g_dcomp_device) { g_dcomp_device->Release(); g_dcomp_device = nullptr; }
+            g_render_mode = RenderMode::Layered;
+            g_use_surface = false;
+            g_use_layered = true;
+            recreate_window_layered();
+            if (!g_hwnd || !create_layered_targets(w, h)) { spdlog::error("[OVERLAY] layered fallback failed"); return false; }
+        }
     }
 
     // 5) ImGui context (once) + DX11 backend.
@@ -1609,6 +1673,7 @@ static bool seh_init_d3d()
 static void resize_swapchain(UINT w, UINT h)
 {
     if (g_use_layered) { create_layered_targets(w, h); return; } // re-make RT+staging+DIB
+    if (g_use_surface) { create_surface_targets(w, h); return; } // re-make DComp surface + intermediate RT
     if (!g_swapchain || w == 0 || h == 0)
         return;
     if (g_rtv) { g_rtv->Release(); g_rtv = nullptr; }
@@ -1664,6 +1729,29 @@ static void render_frame(bool draw)
                 UpdateLayeredWindow(g_hwnd, screen, nullptr, &sz, g_lmemdc, &src0, 0, &bf, ULW_ALPHA);
                 ReleaseDC(nullptr, screen);
             }
+            return;
+        }
+        if (g_use_surface)
+        {
+            // GPU 'surface' path: render into the intermediate RT, then blit into the DComp surface.
+            // BeginDraw hands back an atlas texture + offset, so we CopySubresourceRegion at that offset.
+            if (!g_surf_rtv || !g_surf_tex || !g_dcomp_surface || !g_dcomp_device || !g_d3d_ctx)
+                return;
+            g_d3d_ctx->OMSetRenderTargets(1, &g_surf_rtv, nullptr);
+            g_d3d_ctx->ClearRenderTargetView(g_surf_rtv, clear);
+            if (draw)
+                ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
+            POINT off{};
+            ID3D11Texture2D *dst = nullptr;
+            if (SUCCEEDED(g_dcomp_surface->BeginDraw(nullptr, IID_PPV_ARGS(&dst), &off)) && dst)
+            {
+                D3D11_BOX box{0, 0, 0, g_back_w, g_back_h, 1};
+                g_d3d_ctx->CopySubresourceRegion(dst, 0, static_cast<UINT>(off.x), static_cast<UINT>(off.y), 0,
+                                                 g_surf_tex, 0, &box);
+                dst->Release();
+            }
+            g_dcomp_surface->EndDraw();
+            g_dcomp_device->Commit();
             return;
         }
         // ── Windows DComp path (unchanged). ──
@@ -1945,6 +2033,7 @@ void teardown()
     if (g_dcomp_device) { g_dcomp_device->Release(); g_dcomp_device = nullptr; }
     if (g_swapchain) { g_swapchain->Release(); g_swapchain = nullptr; }
     release_layered_targets(); // Proton fallback RT/staging/DIB
+    release_surface_targets(); // 'surface' mode DComp surface + intermediate RT
     if (g_d3d_ctx) { g_d3d_ctx->Release(); g_d3d_ctx = nullptr; }
     if (g_d3d_device) { g_d3d_device->Release(); g_d3d_device = nullptr; }
     if (g_hwnd) { DestroyWindow(g_hwnd); g_hwnd = nullptr; }

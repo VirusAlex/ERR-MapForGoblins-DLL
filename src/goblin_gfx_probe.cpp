@@ -149,6 +149,44 @@ namespace
     std::atomic<uint32_t> g_iid_lo{0};
     std::atomic<uint32_t> g_iid_hi{0};
 
+    // ---- Heap-safe allocation for Scaleform-OWNED buffers ----
+    // The frame array, per-frame tag-pointer arrays, and synthesized tags we append into the live
+    // DefineSprite are OWNED by Scaleform: it FREES them (CRT free -> _free_base) when it tears the
+    // worldmap movie down. The game statically links its CRT, so a buffer we made with VirtualAlloc (or
+    // our own /MT malloc) that _free_base later releases lands on the wrong heap -> heap corruption ->
+    // crashes (the v2.0.4 crash reports). So these buffers MUST come from the GAME's own _malloc_base
+    // (same _crtheap _free_base uses), resolved by AOB. If it can't be resolved, gfx_alloc returns null
+    // and the caller aborts injection (no icons) rather than corrupt the heap.
+    using GameMallocFn = void *(*)(size_t);
+    std::atomic<uint64_t> g_game_malloc{0};
+
+    void resolve_game_malloc()
+    {
+        if (g_game_malloc.load(std::memory_order_relaxed)) return;
+        try
+        {
+            void *m = modutils::scan<void>(
+                {.aob = "40 53 48 83 EC 20 48 8B D9 48 83 F9 E0 77 ?? 48 85 C9 B8 01 00 00 00 48 0F 44 D8 EB ?? E8 ?? ?? ?? ?? 85 C0 74 ?? 48 8B CB E8 ?? ?? ?? ?? 85 C0"});
+            g_game_malloc.store((uint64_t)m, std::memory_order_relaxed);
+            spdlog::info("[icons] frame buffer source ready @ 0x{:X}", (uint64_t)m);
+        }
+        catch (const std::exception &e)
+        {
+            spdlog::error("[icons] frame buffer source unavailable ({}); icon setup skipped", e.what());
+        }
+    }
+
+    // Allocate a Scaleform-owned buffer on the GAME's CRT heap (zeroed, matching the old VirtualAlloc
+    // behaviour). Returns null if the game allocator is unresolved -> caller must abort injection.
+    void *gfx_alloc(size_t n)
+    {
+        uint64_t m = g_game_malloc.load(std::memory_order_relaxed);
+        if (!m) return nullptr;
+        void *p = reinterpret_cast<GameMallocFn>(m)(n);
+        if (p) memset(p, 0, n);
+        return p;
+    }
+
     // On-map MapForGoblins logo. The gfx baked it into the decorative-plaque sprite 246 (re-pointing its
     // char-10 PlaceObject to a logo bitmap-fill shape, scale 0.38 / translate -243). At runtime we instead
     // register the logo bitmap at charId = inject_base()+MAP_ICON_TAG_COUNT (right after the icons, at the
@@ -283,7 +321,7 @@ namespace
         for (unsigned off = 0; off < 0x60; off += 8)
         {
             uint64_t v = rq(node + off);
-            spdlog::debug("[cmp]     +0x{:02X}: {:016X}{}", off, v, looks_heap(v) ? " <heap>" : "");
+            spdlog::debug("[cmp]     +0x{:02X}: {:016X}{}", off, v, looks_heap(v) ? " <mem>" : "");
         }
     }
 #endif // MFG_DUMP_FRAMES
@@ -712,10 +750,10 @@ namespace
         if (rm2_d1) tags[tagCount++] = rm2_d1;
         if (rm2_d2) tags[tagCount++] = rm2_d2;
         tags[tagCount++] = placeTag;
-        uint64_t *tagsArr = (uint64_t *)VirtualAlloc(nullptr, (size_t)tagCount * 8, MEM_COMMIT | MEM_RESERVE, PAGE_READWRITE);
+        uint64_t *tagsArr = (uint64_t *)gfx_alloc((size_t)tagCount * 8);
         if (!tagsArr)
         {
-            spdlog::warn("[icons] tags array alloc failed; abort.");
+            spdlog::warn("[icons] tags array setup failed; skip.");
             return 0;
         }
         for (uint32_t j = 0; j < tagCount; ++j)
@@ -729,7 +767,7 @@ namespace
         if (target > fcap)
         {
             uint32_t newcap = target + 64;
-            void *buf = VirtualAlloc(nullptr, (size_t)newcap * FRAME_STRIDE, MEM_COMMIT | MEM_RESERVE, PAGE_READWRITE);
+            void *buf = gfx_alloc((size_t)newcap * FRAME_STRIDE);
             if (!buf || !safe_copy(buf, (void *)fdata, (size_t)fcnt * FRAME_STRIDE))
             {
                 spdlog::warn("[icons] frame grow failed; abort.");
@@ -800,7 +838,7 @@ namespace
             for (unsigned off = 0; off < 0x60; off += 8)
             {
                 uint64_t v = rq(nn + off);
-                const char *t = looks_heap(v) ? " <heap>" : "";
+                const char *t = looks_heap(v) ? " <mem>" : "";
                 spdlog::debug("[dictdump]     +0x{:02X}: {:016X}{}", off, v, t);
             }
         }
@@ -855,7 +893,7 @@ namespace
     // tag runs identically to a native one (same proven mechanism as build_remove_tag for RemoveObject2).
     uint64_t build_clean_place_tag(uint16_t charId, uint16_t depth, const unsigned char *matrix, unsigned matLen)
     {
-        void *t = VirtualAlloc(nullptr, 0x40, MEM_COMMIT | MEM_RESERVE, PAGE_READWRITE);
+        void *t = gfx_alloc(0x40);
         if (!t)
             return 0;
         uint64_t vt = po3_vtable();                            // captured-live (RVA fallback)
@@ -940,7 +978,7 @@ namespace
             uint16_t cid = (uint16_t)(rd32(srcTag + 0xc) & 0xFFFF);
             if (cid != LOGO_PLAQUE_CHAR)
                 continue;
-            void *t = VirtualAlloc(nullptr, 0x80, MEM_COMMIT | MEM_RESERVE, PAGE_READWRITE);
+            void *t = gfx_alloc(0x80);
             if (!t || !safe_copy(t, (void *)srcTag, 0x80))
                 return false;
             uint8_t flags1 = 0;
@@ -1012,7 +1050,7 @@ namespace
     // to find/clone a real RM2. Removing a depth that holds nothing is a harmless no-op. Returns 0 on fail.
     uint64_t build_remove_tag(uint16_t depth)
     {
-        void *t = VirtualAlloc(nullptr, 0x10, MEM_COMMIT | MEM_RESERVE, PAGE_READWRITE);
+        void *t = gfx_alloc(0x10);
         if (!t)
             return 0;
         uint64_t vt = rm2_vtable();                          // captured-live (RVA fallback)
@@ -1152,6 +1190,10 @@ void goblin::gfx_probe::setup()
     // hooks below are ALWAYS armed. Only the read-only RM2::Execute trace is dev-only (debug_logging).
     try
     {
+        // Resolve the game's own CRT allocator FIRST: every buffer we hand to Scaleform (frame array,
+        // tag arrays, tags) must be freeable by the game's _free_base, or its teardown corrupts the heap.
+        resolve_game_malloc();
+
         modutils::hook<CtorFn>(
             {.aob = "45 33 C0 48 8D 05 ?? ?? ?? ?? 48 89 01 48 8D 05 ?? ?? ?? ?? "
                     "C7 41 08 01 00 00 00 4C 89 41 10"},

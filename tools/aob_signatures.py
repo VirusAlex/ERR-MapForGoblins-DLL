@@ -139,6 +139,14 @@ SIGNATURES = [
         "critical": True,
         "refs": ["goblin_gfx_probe.cpp:1180"],
     },
+    {
+        "name": "game_crt_malloc",
+        "pattern": "40 53 48 83 EC 20 48 8B D9 48 83 F9 E0 77 ?? 48 85 C9 B8 01 00 00 00 48 0F 44 D8 EB ?? E8 ?? ?? ?? ?? 85 C0 74 ?? 48 8B CB E8 ?? ?? ?? ?? 85 C0",
+        "slot": None,
+        "critical": True,
+        "refs": ["goblin_gfx_probe.cpp:169"],
+        "note": "_malloc_base (game static-CRT malloc). We allocate Scaleform-owned buffers (frame array/tag arrays/tags) here so the game's _free_base frees them on the same _crtheap; a foreign heap there = corruption (v2.0.4 crashes).",
+    },
     # ---- Toast fallback (cosmetic on-screen popup) - non-critical ----
     {
         "name": "show_tutorial_popup",

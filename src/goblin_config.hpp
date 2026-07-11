@@ -147,6 +147,7 @@ namespace goblin
         extern std::string uiLanguage; // auto, english, schinese, tchinese, korean
         extern float fontScale;        // overlay text size multiplier (live io.FontGlobalScale)
         extern bool enableOverlay;
+        extern std::string overlayRenderMode; // layered | surface | swapchain (ini overlay_render_mode)
         extern float overlayOpacity;   // overlay menu panel opacity 0.3..1.0 (window bg alpha)
         // Overlay menu window geometry, persisted across sessions. overlayWinX = window
         // CENTER x as a fraction of screen width (0.5 = centered); overlayWinY = window

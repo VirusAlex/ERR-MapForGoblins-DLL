@@ -28,7 +28,7 @@ if not defined VS_INSTALL (
 set "VS_PATH=%VS_INSTALL%\Common7\Tools\VsDevCmd.bat"
 
 REM Build profile (flag may be in any position). Default = ERR when no flag.
-REM Flags: --vanilla --err --convergence2 --convergence3 --erte --goldenage
+REM Flags: --vanilla --err --convergence2 --convergence3 --erte --goldenage --goldenage363
 REM        --vins --reborn --graceborne. Each profile scopes its own
 REM        data/<p>, src/generated_<p>, builds/build-<p>, releases/pre-release-<p>
 REM        (err uses the unsuffixed data/, src/generated, builds/build). MFG_PROFILE
@@ -42,6 +42,9 @@ echo %*| findstr /i /c:"--goldenage" >nul && set "MFG_PROFILE=goldenage"
 echo %*| findstr /i /c:"--vins" >nul && set "MFG_PROFILE=vins"
 echo %*| findstr /i /c:"--reborn" >nul && set "MFG_PROFILE=reborn"
 echo %*| findstr /i /c:"--graceborne" >nul && set "MFG_PROFILE=graceborne"
+REM --goldenage363 must come LAST: findstr /c:"--goldenage" above also matches it,
+REM so this line overwrites MFG_PROFILE=goldenage back to goldenage363 when 363 is passed.
+echo %*| findstr /i /c:"--goldenage363" >nul && set "MFG_PROFILE=goldenage363"
 if not defined MFG_PROFILE set "MFG_PROFILE=err"
 REM Dashboard progress tracking: profile + mode, used by the :dash calls below.
 set "DASH_PROF=%MFG_PROFILE%"
@@ -84,6 +87,12 @@ if "%MFG_PROFILE%"=="goldenage" set "PKG_PREFIX=GoldenAge"
 if "%MFG_PROFILE%"=="goldenage" set "SNAP_DIR=%SCRIPT_DIR%releases\pre-release-goldenage"
 if "%MFG_PROFILE%"=="goldenage" set "DISP_PROFILE=goldenage"
 if "%MFG_PROFILE%"=="goldenage" set "README_SRC=%SCRIPT_DIR%assets\README_goldenage.txt"
+if "%MFG_PROFILE%"=="goldenage363" set "BUILD_DIR=%SCRIPT_DIR%builds\build-goldenage363"
+if "%MFG_PROFILE%"=="goldenage363" set "GEN_SUBDIR=generated_goldenage363"
+if "%MFG_PROFILE%"=="goldenage363" set "PKG_PREFIX=GoldenAge363"
+if "%MFG_PROFILE%"=="goldenage363" set "SNAP_DIR=%SCRIPT_DIR%releases\pre-release-goldenage363"
+if "%MFG_PROFILE%"=="goldenage363" set "DISP_PROFILE=goldenage363"
+if "%MFG_PROFILE%"=="goldenage363" set "README_SRC=%SCRIPT_DIR%assets\README_goldenage363.txt"
 if "%MFG_PROFILE%"=="vins" set "BUILD_DIR=%SCRIPT_DIR%builds\build-vins"
 if "%MFG_PROFILE%"=="vins" set "GEN_SUBDIR=generated_vins"
 if "%MFG_PROFILE%"=="vins" set "PKG_PREFIX=Vins"

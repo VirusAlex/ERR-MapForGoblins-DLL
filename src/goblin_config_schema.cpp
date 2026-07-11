@@ -72,6 +72,7 @@ namespace goblin::config
          hideDungeonIconsOnClear = false;
 
     std::string uiLanguage = "auto";
+    std::string overlayRenderMode = "layered";
     float fontScale = 1.0f;  // overlay text size multiplier (live io.FontGlobalScale)
     bool enableOverlay = true;
     float overlayOpacity = 1.0f;                 // overlay menu panel opacity (window bg alpha)
@@ -249,7 +250,7 @@ namespace
             {"Overlay & Hotkeys",
              "The in-game config overlay and the key/button that opens it. toggle_key\n(keyboard) / toggle_gamepad_combo (gamepad) OPEN the overlay when enable_overlay\nis on, or toggle ALL map icons on/off when it's off. Key names: F1-F24, A-Z,\n0-9, Space, Escape, Tab, Enter, Backspace, Home, End, PageUp, PageDown, Insert,\nDelete, arrows.",
              false, {
-                IniEntry{"ui_language", IniType::String, &cfg::uiLanguage, "auto",
+                IniEntry{"ui_language", IniType::Language, &cfg::uiLanguage, "auto",
                          "Overlay language. auto follows the Steam game language; unrecognized languages\nfall back to English.", false, nullptr},
                 IniEntry{"overlay_font_scale", IniType::Float, &cfg::fontScale, "1.0",
                          "Overlay menu text size multiplier (1.0 = default). Raise on 4K / high-DPI\nscreens if the menu text is too small. Also adjustable live from the slider at\nthe top of the overlay's Settings tab.", false, nullptr},
@@ -262,6 +263,7 @@ namespace
                 // screen width (0.5 = centered); Y = the window TOP as a fraction of screen
                 // height (0 = flush top). Fractions keep the position sensible after a
                 // resolution/aspect change; W/H are in pixels (clamped to fit the screen).
+                IniEntry{"overlay_render_mode", IniType::Text, &cfg::overlayRenderMode, "layered", "How the overlay is drawn: layered (default, most compatible with screen-recording and monitoring utilities), surface (GPU, also compatible), or swapchain (lightest, but some external utilities may not read it correctly). Change needs a game restart.", false, nullptr},
                 IniEntry{"overlay_window_x", IniType::Float, &cfg::overlayWinX, "0.5", "Overlay menu horizontal CENTER, fraction of screen width (0.5 = centered). Auto-saved.", false, nullptr},
                 IniEntry{"overlay_window_y", IniType::Float, &cfg::overlayWinY, "0.03", "Overlay menu TOP edge, fraction of screen height (0.0 = top). Auto-saved.", false, nullptr},
                 IniEntry{"overlay_window_w", IniType::Float, &cfg::overlayWinW, "560", "Overlay menu window width in pixels (auto-saved, clamped to screen).", false, nullptr},

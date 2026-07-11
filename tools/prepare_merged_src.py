@@ -93,7 +93,7 @@ def collect_plan(overlay: Path, base: Path):
 
 def main():
     base = config.GAME_DIR
-    if config.PROFILE not in ("convergence2", "convergence3", "erte", "goldenage", "vins", "reborn", "graceborne"):
+    if config.PROFILE not in ("convergence2", "convergence3", "erte", "goldenage", "goldenage363", "vins", "reborn", "graceborne"):
         print(f"NOTE: profile is '{config.PROFILE}' - merged staging only applies "
               f"to overlay profiles; nothing to do.")
         return 0

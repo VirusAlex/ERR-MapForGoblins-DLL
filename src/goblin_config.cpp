@@ -58,8 +58,11 @@ namespace
             if (m) *static_cast<uint16_t *>(e.target) = m;
             break;
         }
-        case IniType::String:
+        case IniType::Language:
             *static_cast<std::string *>(e.target) = goblin::i18n::normalize_language_config(v);
+            break;
+        case IniType::Text:
+            *static_cast<std::string *>(e.target) = v;
             break;
         case IniType::Float:
         {
@@ -235,8 +238,11 @@ void goblin::save_config(const std::filesystem::path &ini_path)
         case IniType::GamepadMask:
             out = format_gamepad_combo(*static_cast<uint16_t *>(e.target));
             return true;
-        case IniType::String:
+        case IniType::Language:
             out = goblin::i18n::normalize_language_config(*static_cast<std::string *>(e.target));
+            return true;
+        case IniType::Text:
+            out = *static_cast<std::string *>(e.target);
             return true;
         case IniType::Float:
         {
