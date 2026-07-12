@@ -40,7 +40,14 @@
     "ProgressHint": "지역별 수집/전체 개수입니다. 숨긴 카테고리는 제외됩니다. 추적이 어려운 일부 획득물은 갱신이 지연될 수 있습니다.",
     "ProgressShowingOnly": "지도에 미수집만 표시 중:",
     "ProgressClickHint": "카테고리를 클릭하면 해당 카테고리의 미수집 마커만 지도에 표시됩니다 (다시 클릭하면 해제).",
-    "ProgressFocusClear": "모두 표시"
+    "ProgressFocusClear": "모두 표시",
+    "HiddenMarkers": "숨긴 표식",
+    "HiddenMarkersNone": "없음. 지도에서 표식에 커서를 올리고 숨김 키를 누르면 숨길 수 있습니다.",
+    "Unhide": "숨김 해제",
+    "UnhideAll": "모두 해제",
+    "HoverLevel": "당신과 거의 같은 높이",
+    "HoverAbove": "당신보다 약 %.0f 유닛 위",
+    "HoverBelow": "당신보다 약 %.0f 유닛 아래"
   },
   "toasts": {
     "MapIconsOn": "지도 아이콘: 켬",

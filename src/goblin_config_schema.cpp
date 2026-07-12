@@ -83,6 +83,9 @@ namespace goblin::config
     float overlayWinX = 0.5f, overlayWinY = 0.03f, overlayWinW = 560.0f, overlayWinH = 680.0f;
     bool enableMarkerDump = false;
     uint32_t markerDumpKey = 0x78; // VK_F9
+    bool enableManualHide = true;
+    uint32_t hideMarkerKey = 0x2E; // VK_DELETE
+    bool enableHoverInfo = true;
     bool enableToggleHotkey = true;
     uint32_t toggleInjectionKey = 0x79; // VK_F10
     uint16_t toggleGamepadMask = 0x8000 | 0x0080; // Y + R3
@@ -251,7 +254,7 @@ namespace
              "The in-game config overlay and the key/button that opens it. toggle_key\n(keyboard) / toggle_gamepad_combo (gamepad) OPEN the overlay when enable_overlay\nis on, or toggle ALL map icons on/off when it's off. Key names: F1-F24, A-Z,\n0-9, Space, Escape, Tab, Enter, Backspace, Home, End, PageUp, PageDown, Insert,\nDelete, arrows.",
              false, {
                 IniEntry{"ui_language", IniType::Language, &cfg::uiLanguage, "auto",
-                         "Overlay language. auto follows the Steam game language; unrecognized languages\nfall back to English.", false, nullptr},
+                         "Overlay language: auto, english, schinese, tchinese, korean, russian, german,\nfrench, spanish. auto follows the Steam game language; unrecognized languages\nfall back to English.", false, nullptr},
                 IniEntry{"overlay_font_scale", IniType::Float, &cfg::fontScale, "1.0",
                          "Overlay menu text size multiplier (1.0 = default). Raise on 4K / high-DPI\nscreens if the menu text is too small. Also adjustable live from the slider at\nthe top of the overlay's Settings tab.", false, nullptr},
                 IniEntry{"overlay_opacity", IniType::Float, &cfg::overlayOpacity, "1.0",
@@ -284,6 +287,12 @@ namespace
                 B("enable_marker_dump", enableMarkerDump, "false", "Master switch for the marker dump hotkey"),
                 IniEntry{"marker_dump_key", IniType::VkKey, &cfg::markerDumpKey, "F9",
                          "Key to dump decoded markers to logs/MapForGoblins_markers.log. Default: F9.", false, nullptr},
+                B("enable_manual_hide", enableManualHide, "true",
+                  "Let you hide individual markers: hover a marker on the world map and press\nhide_marker_key to hide it. Hidden markers persist across sessions; un-hide them\nfrom the in-game menu (Hidden markers section)."),
+                IniEntry{"hide_marker_key", IniType::VkKey, &cfg::hideMarkerKey, "Delete",
+                         "Key that hides the map marker currently under the cursor. Default: Delete.", false, nullptr},
+                B("hover_info", enableHoverInfo, "true",
+                  "Show a small passive panel (top-left) while the world map is open and the\ncursor is over a marker: the marker's name and its height relative to you\n(\"N units above/below\"). Never captures input."),
             }},
         };
     }

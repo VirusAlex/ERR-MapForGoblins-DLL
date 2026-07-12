@@ -145,6 +145,8 @@ add_library( MapForGoblins SHARED
   src/goblin_map_timing.cpp
   src/goblin_gfx_probe.hpp
   src/goblin_gfx_probe.cpp
+  src/goblin_maphover.hpp
+  src/goblin_maphover.cpp
   src/generated_shared/goblin_overlay_icons.hpp
   src/generated_shared/goblin_overlay_icons.cpp
   src/generated_shared/goblin_map_icons.hpp

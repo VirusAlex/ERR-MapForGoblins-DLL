@@ -11,6 +11,10 @@ namespace goblin::i18n
         SimplifiedChinese,
         TraditionalChinese,
         Korean,
+        Russian,
+        German,
+        French,
+        Spanish,
     };
 
     enum class TextId
@@ -56,6 +60,13 @@ namespace goblin::i18n
         ProgressClickHint,
         ProgressShowingOnly,
         ProgressFocusClear,
+        HiddenMarkers,
+        HiddenMarkersNone,
+        Unhide,
+        UnhideAll,
+        HoverLevel,
+        HoverAbove,
+        HoverBelow,
     };
 
     enum class ToastId

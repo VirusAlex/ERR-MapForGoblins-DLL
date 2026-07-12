@@ -40,7 +40,14 @@
     "ProgressHint": "Collected vs total per region. Hidden categories are excluded; some hard-to-track pickups may lag.",
     "ProgressClickHint": "Click a category to show ONLY its uncollected markers on the map (click again to clear).",
     "ProgressShowingOnly": "Map showing only uncollected:",
-    "ProgressFocusClear": "Show all"
+    "ProgressFocusClear": "Show all",
+    "HiddenMarkers": "Hidden markers",
+    "HiddenMarkersNone": "None. On the map, hover a marker and press the hide key to hide it.",
+    "Unhide": "Unhide",
+    "UnhideAll": "Unhide all",
+    "HoverLevel": "about level with you",
+    "HoverAbove": "~%.0f units above you",
+    "HoverBelow": "~%.0f units below you"
   },
   "toasts": {
     "MapIconsOn": "Map icons: ON",

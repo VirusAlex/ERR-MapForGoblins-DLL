@@ -6,7 +6,7 @@
 namespace goblin::generated
 {
 
-const size_t LOCATION_ALT_COUNT = 570;
+const size_t LOCATION_ALT_COUNT = 571;
 
 const LocationAlt LOCATION_ALT[] = {
     {200077ull, 2, 11104},
@@ -93,6 +93,7 @@ const LocationAlt LOCATION_ALT[] = {
     {200381ull, 2, 31081},
     {200441ull, 2, 63003},
     {201117ull, 2, 12011},
+    {201118ull, 2, 6614700},
     {201119ull, 2, 12020},
     {201120ull, 2, 12070},
     {300012ull, 2, 6880800},

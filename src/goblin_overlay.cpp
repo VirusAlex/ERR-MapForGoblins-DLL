@@ -40,6 +40,9 @@
 #include "miniz.h"              // zlib inflate to decode the tags
 #include "goblin_inject.hpp"
 #include "goblin_markers.hpp"
+#include "goblin_maphover.hpp"   // hovered_row() for the passive hover-info panel
+#include "goblin_messages.hpp"   // lookup_text() for the hovered marker's name
+#include "goblin_collected.hpp"  // read_player_pos() for the height readout
 #include "goblin_progress.hpp"
 #include "goblin_diag.hpp"
 #include "modutils.hpp" // hook GetRawInputData (menu input-leak block)
@@ -439,7 +442,8 @@ void draw_section(const goblin::IniSection &sec, bool &changed)
                 const char *preview = tr::language_preview_label(value, lang);
                 if (ImGui::BeginCombo(label, preview))
                 {
-                    const char *options[] = {"auto", "english", "schinese", "tchinese", "korean"};
+                    const char *options[] = {"auto", "english", "schinese", "tchinese", "korean",
+                                             "russian", "german", "french", "spanish"};
                     const std::string normalized = tr::normalize_language_config(value);
                     const std::string selected_language = normalized == "auto"
                         ? tr::language_code(tr::current_language())
@@ -741,6 +745,51 @@ static bool draw_category_bar(const char *name, int collected, int total,
 // Groups every baked marker into ~22 coarse regions (goblin_progress) and shows
 // an overall bar per region + a clickable bar per enabled category. Clicking a
 // category isolates its uncollected markers on the live map (goblin focus mode).
+// Manager for markers the user hid manually (hover a marker + press hide_marker_key).
+// Lists them with per-item Unhide + an Unhide-all button; changes apply live + persist.
+static void draw_hidden_markers_section()
+{
+    if (!goblin::config::enableManualHide)
+        return;
+    namespace tr = goblin::i18n;
+    const tr::Language lang = tr::current_language();
+    const auto hidden = goblin::manual_hidden_snapshot();
+    char hdr[96];
+    std::snprintf(hdr, sizeof hdr, "%s (%zu)###hiddenmarkers",
+                  tr::tr(tr::TextId::HiddenMarkers, lang), hidden.size());
+    if (!ImGui::CollapsingHeader(hdr))
+        return;
+    if (hidden.empty())
+    {
+        ImGui::TextDisabled("%s", tr::tr(tr::TextId::HiddenMarkersNone, lang));
+        return;
+    }
+    if (ImGui::Button(tr::tr(tr::TextId::UnhideAll, lang)))
+    {
+        goblin::clear_manual_hidden();
+        goblin::persist_manual_hidden();
+        goblin::reapply_live_settings();
+        return;  // snapshot is now stale; refresh next frame
+    }
+    ImGui::Separator();
+    int idx = 0;
+    for (const auto &h : hidden)
+    {
+        ImGui::PushID(idx++);
+        if (ImGui::SmallButton(tr::tr(tr::TextId::Unhide, lang)))
+        {
+            goblin::unhide_marker(h.key);
+            goblin::persist_manual_hidden();
+            goblin::reapply_live_settings();
+        }
+        ImGui::SameLine();
+        const char *catn = goblin::markers::category_name(
+            static_cast<goblin::generated::Category>(h.cat));
+        ImGui::Text("%s  (icon %u)", catn ? catn : "?", static_cast<unsigned>(h.iconId));
+        ImGui::PopID();
+    }
+}
+
 void draw_progress_tab()
 {
     namespace tr = goblin::i18n;
@@ -752,6 +801,8 @@ void draw_progress_tab()
 
     ImGui::TextDisabled("%s", tr::tr(tr::TextId::ProgressHint, lang));
     ImGui::TextDisabled("%s", tr::tr(tr::TextId::ProgressClickHint, lang));
+
+    draw_hidden_markers_section();
 
     // Active focus is a (category, region) pair.
     const int focusCat = goblin::focus_category();
@@ -1623,8 +1674,8 @@ static bool init_d3d()
                                         "C:\\Windows\\Fonts\\simhei.ttf", "C:\\Windows\\Fonts\\simsun.ttc"};
                 const char *cjk_tc[] = {"C:\\Windows\\Fonts\\msjh.ttc", "C:\\Windows\\Fonts\\msyh.ttc",
                                         "C:\\Windows\\Fonts\\simsun.ttc", "C:\\Windows\\Fonts\\simhei.ttf"};
-                const char *cjk_ko[] = {"C:\Windows\Fonts\malgun.ttf", "C:\Windows\Fonts\malgun.ttc",
-                                        "C:\Windows\Fonts\msyh.ttc", "C:\Windows\Fonts\msjh.ttc"};
+                const char *cjk_ko[] = {"C:\\Windows\\Fonts\\malgun.ttf", "C:\\Windows\\Fonts\\malgun.ttc",
+                                        "C:\\Windows\\Fonts\\msyh.ttc", "C:\\Windows\\Fonts\\msjh.ttc"};
                 const char *const *cjk_fonts = nullptr;
                 if (ui_lang == goblin::i18n::Language::TraditionalChinese)
                     cjk_fonts = cjk_tc;
@@ -1697,6 +1748,51 @@ static void seh_resize(UINT w, UINT h)
 
 // One rendered frame (SEH-wrapped). Clears to transparent; draws ImGui only when
 // the menu is open; presents. POD-only locals.
+// Passive hover-info panel (plan_3 Step 1). While the world map is open and the
+// cursor is over one of OUR markers, show a small fixed top-left panel with the
+// marker's name + its height relative to the player. Never captures input; renders
+// in the menu-closed path so it coexists with normal play.
+static void draw_hover_tooltip()
+{
+    void *row = goblin::maphover::hovered_row();
+    if (!row) return;
+    goblin::HoveredMarker hm = goblin::hovered_marker(row);
+    if (!hm.matched) return;
+
+    char name[256] = "?";
+    const wchar_t *w = goblin::lookup_text(hm.textId);
+    if (w && *w)
+        WideCharToMultiByte(CP_UTF8, 0, w, -1, name, sizeof name, nullptr, nullptr);
+
+    const ImGuiIO &io = ImGui::GetIO();
+    // Just right of and below screen centre (near the reticle, not covering it).
+    ImGui::SetNextWindowPos(ImVec2(io.DisplaySize.x * 0.5f + 28.0f, io.DisplaySize.y * 0.5f + 28.0f),
+                            ImGuiCond_Always);
+    ImGui::SetNextWindowBgAlpha(0.72f);
+    const ImGuiWindowFlags fl =
+        ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_AlwaysAutoResize |
+        ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoInputs | ImGuiWindowFlags_NoNav |
+        ImGuiWindowFlags_NoFocusOnAppearing | ImGuiWindowFlags_NoSavedSettings;
+    if (ImGui::Begin("##goblin_hover_info", nullptr, fl))
+    {
+        namespace tr = goblin::i18n;
+        const tr::Language lang = tr::current_language();
+        ImGui::TextUnformatted(name);
+        float px = 0, pz = 0, py = 0;
+        bool have_player = goblin::collected::read_player_pos(px, pz, py);
+        if (hm.posY != 0.0f && have_player)
+        {
+            float dy = hm.posY - py;
+            float ad = dy < 0 ? -dy : dy;
+            if (ad < 1.5f)
+                ImGui::TextDisabled("%s", tr::tr(tr::TextId::HoverLevel, lang));
+            else
+                ImGui::Text(tr::tr(dy > 0 ? tr::TextId::HoverAbove : tr::TextId::HoverBelow, lang), ad);
+        }
+    }
+    ImGui::End();
+}
+
 static void render_frame(bool draw)
 {
     __try
@@ -1879,14 +1975,13 @@ void update_menu_toggle()
     {
         goblin::load_config(goblin::g_ini_path);
         goblin::reapply_live_settings();
-        ShowWindow(g_hwnd, SW_SHOWNOACTIVATE); // show without taking focus from the game
-        SetWindowPos(g_hwnd, HWND_TOPMOST, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_NOACTIVATE);
+        // Window show/topmost is handled per-frame in the render loop (it must also
+        // show for the passive hover panel while the menu is closed).
     }
     else if (!open_now && prev_open)
     {
         reset_rebind_state();
         goblin::save_config(goblin::g_ini_path);
-        ShowWindow(g_hwnd, SW_HIDE);
     }
     prev_open = open_now;
 }
@@ -1978,7 +2073,33 @@ void overlay_thread()
         update_menu_toggle();
 
         const bool open = g_menu_open.load();
-        if (open)
+        const bool hovering = !open && goblin::config::enableHoverInfo &&
+                              goblin::maphover::hovered_row() != nullptr;
+        // Only paint while the game (a window in our own process) is the foreground
+        // app. Our window is HWND_TOPMOST, so without this an alt-tab to another app
+        // would leave the menu/hover panel drawn over whatever is now in front, with
+        // no cursor. On focus loss we just hide (menu stays "open"); on return the
+        // panel/cursor come back on their own - no need to close and reopen.
+        DWORD fg_pid = 0;
+        GetWindowThreadProcessId(GetForegroundWindow(), &fg_pid);
+        const bool game_focused = (fg_pid == GetCurrentProcessId());
+        // Window visibility is driven here (not the menu-toggle edge handler): the
+        // overlay window must also be shown for the passive hover-info panel, which
+        // appears while the menu is CLOSED. Shown = (menu open OR marker hovered) AND
+        // the game is focused.
+        {
+            static bool win_shown = false;
+            const bool want = (open || hovering) && game_focused;
+            if (want != win_shown)
+            {
+                ShowWindow(g_hwnd, want ? SW_SHOWNOACTIVATE : SW_HIDE);
+                if (want)
+                    SetWindowPos(g_hwnd, HWND_TOPMOST, 0, 0, 0, 0,
+                                 SWP_NOMOVE | SWP_NOSIZE | SWP_NOACTIVATE);
+                win_shown = want;
+            }
+        }
+        if (open && game_focused)
         {
             try_upload_atlas();
             maybe_load_preview();
@@ -2000,9 +2121,21 @@ void overlay_thread()
             ImGui::Render();
             render_frame(true);
         }
+        else if (hovering && game_focused)
+        {
+            // Menu closed but a marker is hovered on the open map: draw the passive
+            // hover-info panel. No input hook, no cursor - purely informational.
+            ImGui_ImplDX11_NewFrame();
+            ImGui_ImplWin32_NewFrame();
+            ImGui::NewFrame();
+            ImGui::GetIO().MouseDrawCursor = false;
+            draw_hover_tooltip();
+            ImGui::Render();
+            render_frame(true);
+        }
         else
         {
-            // Menu closed: present a fully-transparent frame so the game shows through.
+            // Menu closed, nothing hovered: present a fully-transparent frame.
             render_frame(false);
             Sleep(16); // idle pacing while closed (no vsync wait from a cleared present)
         }

@@ -17,6 +17,11 @@
 #include "from/params.hpp"
 #include "from/paramdef/WORLD_MAP_POINT_PARAM_ST.hpp"
 
+#include <cmath>
+#include <fstream>
+#include <map>
+#include <mutex>
+
 #include <algorithm>
 #include <atomic>
 #include <chrono>
@@ -103,6 +108,41 @@ static std::vector<CategoryRow> g_category_rows;
 // + apply_focus_highlight).
 static int g_focus_category = -1;
 static int32_t g_focus_region = -1;
+
+// ---- Manual per-marker hide (hover + hotkey; managed in the overlay) --------
+// A user can hide an individual marker by hovering it on the map and pressing the
+// hide key. The hidden set persists across sessions keyed by a STABLE hash of the
+// marker's deterministic fields (position + area/grid + textId + iconId), NOT the
+// dynamic row id. apply_category_visibility() ANDs this in, so a hidden marker's
+// icon disappears live and stays hidden on reload. Unhide/clear via the overlay.
+struct HiddenMeta { int32_t textId; uint16_t iconId; int32_t region; uint8_t cat; };
+static std::map<uint64_t, HiddenMeta> g_manual_hidden;
+static std::mutex g_manual_hidden_mtx;
+static std::filesystem::path g_hidden_file;  // where the set persists (set at init)
+
+static uint64_t marker_key(const from::paramdef::WORLD_MAP_POINT_PARAM_ST *p)
+{
+    if (!p) return 0;
+    // quantise position to 1/8u so tiny float noise can't change the key
+    auto q = [](float f) { return static_cast<int64_t>(std::llround(f * 8.0f)); };
+    uint64_t h = 1469598103934665603ull;  // FNV-1a
+    auto mix = [&](uint64_t v) { h = (h ^ v) * 1099511628211ull; };
+    mix(static_cast<uint64_t>(p->areaNo));
+    mix(static_cast<uint64_t>(p->gridXNo));
+    mix(static_cast<uint64_t>(p->gridZNo));
+    mix(static_cast<uint64_t>(q(p->posX)));
+    mix(static_cast<uint64_t>(q(p->posZ)));
+    mix(static_cast<uint64_t>(static_cast<uint32_t>(p->textId1)));
+    mix(static_cast<uint64_t>(p->iconId));
+    return h;
+}
+
+static bool is_manually_hidden(const from::paramdef::WORLD_MAP_POINT_PARAM_ST *p)
+{
+    if (!p) return false;
+    std::lock_guard<std::mutex> lk(g_manual_hidden_mtx);
+    return g_manual_hidden.find(marker_key(p)) != g_manual_hidden.end();
+}
 
 // Live-loot: lot-backed injected rows. refresh_loot_from_itemlot() reads the
 // LIVE ItemLotParam getItemFlagId for each and rewrites textDisableFlagId1 so
@@ -1091,7 +1131,8 @@ void goblin::apply_category_visibility()
                          : is_category_enabled(cr.cat);
         bool show = eligible &&
                     !collected::is_row_collected(cr.row_id) &&
-                    !kindling::is_row_collected(cr.row_id);
+                    !kindling::is_row_collected(cr.row_id) &&
+                    !is_manually_hidden(cr.p);  // user-hidden markers stay hidden
         unsigned *en[8];
         enable_flag_ptrs(cr.p, en);
         for (int k = 0; k < 8; ++k)
@@ -1099,6 +1140,104 @@ void goblin::apply_category_visibility()
                           : static_cast<unsigned>(goblin::flag::AlwaysOff);
     }
 }
+
+// ---- Manual per-marker hide: public API ------------------------------------
+goblin::ManualHideResult goblin::toggle_hovered_marker(void *rowptr)
+{
+    ManualHideResult r{};
+    if (!rowptr) return r;
+    for (auto &cr : g_category_rows)
+    {
+        if (cr.p != rowptr) continue;
+        r.matched = true;
+        r.textId = cr.p->textId1;
+        uint64_t k = marker_key(cr.p);
+        std::lock_guard<std::mutex> lk(g_manual_hidden_mtx);
+        auto it = g_manual_hidden.find(k);
+        if (it != g_manual_hidden.end()) { g_manual_hidden.erase(it); r.now_hidden = false; }
+        else
+        {
+            g_manual_hidden[k] = HiddenMeta{cr.p->textId1, cr.p->iconId, cr.region_id,
+                                            static_cast<uint8_t>(cr.cat)};
+            r.now_hidden = true;
+        }
+        return r;
+    }
+    return r;  // hovered pin is not one of our injected markers (a vanilla point)
+}
+
+goblin::HoveredMarker goblin::hovered_marker(void *rowptr)
+{
+    HoveredMarker r{};
+    if (!rowptr) return r;
+    for (const auto &cr : g_category_rows)
+        if (cr.p == rowptr)
+        {
+            r.matched = true;
+            r.textId = cr.p->textId1;
+            r.posY = cr.p->posY;
+            return r;
+        }
+    return r;
+}
+
+size_t goblin::manual_hidden_count()
+{
+    std::lock_guard<std::mutex> lk(g_manual_hidden_mtx);
+    return g_manual_hidden.size();
+}
+
+std::vector<goblin::HiddenMarkerInfo> goblin::manual_hidden_snapshot()
+{
+    std::vector<HiddenMarkerInfo> out;
+    std::lock_guard<std::mutex> lk(g_manual_hidden_mtx);
+    out.reserve(g_manual_hidden.size());
+    for (const auto &[k, m] : g_manual_hidden)
+        out.push_back(HiddenMarkerInfo{k, m.textId, m.iconId, m.region, m.cat});
+    return out;
+}
+
+void goblin::unhide_marker(uint64_t key)
+{
+    std::lock_guard<std::mutex> lk(g_manual_hidden_mtx);
+    g_manual_hidden.erase(key);
+}
+
+void goblin::clear_manual_hidden()
+{
+    std::lock_guard<std::mutex> lk(g_manual_hidden_mtx);
+    g_manual_hidden.clear();
+}
+
+void goblin::save_manual_hidden(const std::filesystem::path &path)
+{
+    std::lock_guard<std::mutex> lk(g_manual_hidden_mtx);
+    try
+    {
+        std::ofstream f(path, std::ios::trunc);
+        for (const auto &[k, m] : g_manual_hidden)
+            f << k << ' ' << m.textId << ' ' << m.iconId << ' ' << m.region << ' '
+              << static_cast<int>(m.cat) << '\n';
+    }
+    catch (...) {}
+}
+
+void goblin::load_manual_hidden(const std::filesystem::path &path)
+{
+    std::lock_guard<std::mutex> lk(g_manual_hidden_mtx);
+    try
+    {
+        std::ifstream f(path);
+        uint64_t k; long tid, icon, region, cat;
+        while (f >> k >> tid >> icon >> region >> cat)
+            g_manual_hidden[k] = HiddenMeta{static_cast<int32_t>(tid), static_cast<uint16_t>(icon),
+                                            static_cast<int32_t>(region), static_cast<uint8_t>(cat)};
+    }
+    catch (...) {}
+}
+
+void goblin::set_hidden_file(const std::filesystem::path &path) { g_hidden_file = path; }
+void goblin::persist_manual_hidden() { if (!g_hidden_file.empty()) save_manual_hidden(g_hidden_file); }
 
 // World Map fragment markers are only useful BEFORE you own that fragment, but the
 // require_map_fragments gate (apply_map_logic sets eventFlagId = the area's fragment

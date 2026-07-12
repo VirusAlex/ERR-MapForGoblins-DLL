@@ -130,6 +130,15 @@ static uintptr_t world_geom_man_slot()  // CSWorldGeomMan (was RVA 0x3D69BA8)
         "48 8B 0D ?? ?? ?? ?? 48 8D 53 10 E8 ?? ?? ?? ?? 4C 8B E8");
     return s;
 }
+// WorldChrMan .data slot (was RVA 0x3D65F88). Pinned by the "load slot, null-check,
+// deref +0x1E508 (LocalPlayer)" idiom - +0x1E508 is the distinctive LocalPlayer
+// field offset, so the signature stays anchored even as the slot RVA moves.
+static uintptr_t world_chr_man_slot()
+{
+    static uintptr_t s = resolve_slot(
+        "48 8B 05 ?? ?? ?? ?? 48 85 C0 0F 84 ?? ?? ?? ?? 48 8B 98 08 E5 01 00");
+    return s;
+}
 
 static bool safe_read(void *addr, void *out, size_t count)
 {
@@ -142,6 +151,28 @@ static bool safe_read(void *addr, void *out, size_t count)
     {
         return false;
     }
+}
+
+// Player world position from the local ChrIns physics block. Chain:
+//   WorldChrMan (AOB slot) -> LocalPlayer (+0x1E508)
+//   -> physics vector at +0x6C0 = (X, Y, Z) as floats.
+// X/Z are block-local (small, per-tile origin) so they are NOT directly
+// comparable to a marker's world posX/posZ; Y is the true world height
+// (the vertical axis is not tiled), which is all the hover-height readout
+// needs. The slot RVA moves each patch, so it is AOB-resolved; the two
+// struct offsets (+0x1E508, +0x6C0) are stable layout fields.
+bool goblin::collected::read_player_pos(float &x, float &z, float &y)
+{
+    uintptr_t slot = world_chr_man_slot();
+    if (!slot) return false;
+    uintptr_t wcm = 0;
+    if (!safe_read((void *)slot, &wcm, 8) || !wcm) return false;
+    uintptr_t lp = 0;
+    if (!safe_read((void *)(wcm + 0x1E508), &lp, 8) || !lp) return false;
+    float v[3] = {0, 0, 0};
+    if (!safe_read((void *)(lp + 0x6C0), v, sizeof v)) return false;  // +0x6C0 X, +0x6C4 Y, +0x6C8 Z
+    x = v[0]; y = v[1]; z = v[2];
+    return true;
 }
 
 // SEH-guarded single byte write. Returns true on success, false if the

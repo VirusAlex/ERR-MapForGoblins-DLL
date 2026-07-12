@@ -26,4 +26,9 @@ namespace goblin::collected
 
     int collected_count();
     int skipped_count();
+
+    /// Live player world position (block-local): CSWorldGeomMan + 0x70/0x74/0x78 =
+    /// X/Z/Y. Returns false if the manager isn't resolved/available. Used by the
+    /// map hover-info overlay for the "height vs player" readout.
+    bool read_player_pos(float &x, float &z, float &y);
 };

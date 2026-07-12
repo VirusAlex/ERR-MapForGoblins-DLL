@@ -1,6 +1,7 @@
 #pragma once
 
 #include <cstdint>
+#include <filesystem>
 #include <vector>
 
 // Forward-declare the generated Category enum instead of pulling the full
@@ -73,6 +74,27 @@ namespace goblin
     // changes a toggle, and from the refresh thread when the collected set
     // changes. Idempotent.
     void apply_category_visibility();
+
+    // ---- Manual per-marker hide (hover + hotkey; overlay-managed) ----------
+    // Toggle the hidden state of the marker whose live WorldMapPointParam row is
+    // `rowptr` (the pin under the cursor, from goblin::maphover::hovered_row()).
+    struct ManualHideResult { bool matched = false; bool now_hidden = false; int32_t textId = 0; };
+    ManualHideResult toggle_hovered_marker(void *rowptr);
+    // Read-only lookup of the hovered marker (for the passive hover-info overlay):
+    // matches the live row ptr to one of our injected rows and returns its name
+    // textId + source world Y (WorldMapPointParam.posY carries the MSB part Y).
+    struct HoveredMarker { bool matched = false; int32_t textId = 0; float posY = 0.0f; };
+    HoveredMarker hovered_marker(void *rowptr);
+    // Snapshot of the hidden set for the overlay manager.
+    struct HiddenMarkerInfo { uint64_t key; int32_t textId; uint16_t iconId; int32_t region; uint8_t cat; };
+    std::vector<HiddenMarkerInfo> manual_hidden_snapshot();
+    size_t manual_hidden_count();
+    void unhide_marker(uint64_t key);   // remove one from the hidden set
+    void clear_manual_hidden();         // remove all
+    void load_manual_hidden(const std::filesystem::path &path);  // at startup
+    void save_manual_hidden(const std::filesystem::path &path);  // low-level write
+    void set_hidden_file(const std::filesystem::path &path);     // set persist target once
+    void persist_manual_hidden();                                // save to the set target
 
     // Force World Map fragment markers visible regardless of require_map_fragments
     // (config::worldMapsIgnoreFragments). Call AFTER apply_map_logic. Idempotent.

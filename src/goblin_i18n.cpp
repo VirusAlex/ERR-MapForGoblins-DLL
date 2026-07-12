@@ -110,6 +110,14 @@ Language goblin::i18n::language_from_steam(std::string_view steam_language)
         return Language::TraditionalChinese;
     if (s == "korean" || s == "koreana" || s == "ko" || s == "kr" || s == "ko-kr" || s == "ko_kr")
         return Language::Korean;
+    if (s == "russian" || s == "ru" || s == "ru-ru" || s == "ru_ru")
+        return Language::Russian;
+    if (s == "german" || s == "de" || s == "de-de" || s == "de_de")
+        return Language::German;
+    if (s == "french" || s == "fr" || s == "fr-fr" || s == "fr_fr")
+        return Language::French;
+    if (s == "spanish" || s == "latam" || s == "es" || s == "es-es" || s == "es_es" || s == "es-419")
+        return Language::Spanish;
     return Language::English;
 }
 
@@ -124,6 +132,11 @@ std::string goblin::i18n::normalize_language_config(std::string_view config_valu
     if (s == "tchinese" || s == "traditional" || s == "traditional_chinese" ||
         s == "zhotw" || s == "zh-tw" || s == "zh_hant") return "tchinese";
     if (s == "korean" || s == "ko" || s == "kor" || s == "korean_language") return "korean";
+    if (s == "russian" || s == "ru" || s == "rus") return "russian";
+    if (s == "german" || s == "de" || s == "deu" || s == "ger" || s == "deutsch") return "german";
+    if (s == "french" || s == "fr" || s == "fra" || s == "fre" || s == "francais") return "french";
+    if (s == "spanish" || s == "es" || s == "esp" || s == "spa" || s == "latam" ||
+        s == "espanol") return "spanish";
     return "english";
 }
 
@@ -133,6 +146,10 @@ Language goblin::i18n::language_from_config(std::string_view config_value)
     if (s == "schinese") return Language::SimplifiedChinese;
     if (s == "tchinese") return Language::TraditionalChinese;
     if (s == "korean") return Language::Korean;
+    if (s == "russian") return Language::Russian;
+    if (s == "german") return Language::German;
+    if (s == "french") return Language::French;
+    if (s == "spanish") return Language::Spanish;
     if (s == "auto") return cached_auto_language();
     return Language::English;
 }
@@ -149,6 +166,10 @@ const char *goblin::i18n::language_code(Language language)
     case Language::SimplifiedChinese: return "schinese";
     case Language::TraditionalChinese: return "tchinese";
     case Language::Korean: return "korean";
+    case Language::Russian: return "russian";
+    case Language::German: return "german";
+    case Language::French: return "french";
+    case Language::Spanish: return "spanish";
     default: return "english";
     }
 }
@@ -164,6 +185,12 @@ const char *goblin::i18n::language_option_label(std::string_view config_value, L
         return pick(language, "Traditional Chinese", "繁體中文", "繁體中文", "중국어 번체");
     if (s == "korean")
         return pick(language, "Korean", "韩语", "韓語", "한국어");
+    // New Latin/Cyrillic locales: show each in its own name (endonym), which reads
+    // the same regardless of the current UI language and needs no CJK glyphs.
+    if (s == "russian") return "Русский";
+    if (s == "german") return "Deutsch";
+    if (s == "french") return "Français";
+    if (s == "spanish") return "Español";
     return "English";
 }
 
@@ -180,6 +207,10 @@ const char *goblin::i18n::language_preview_label(std::string_view config_value, 
         return pick(language, "Auto: Traditional Chinese", "自动：繁體中文", "自動：繁體中文", "자동: 중국어 번체");
     case Language::Korean:
         return pick(language, "Auto: Korean", "自动：韩语", "自動：韓語", "자동: 한국어");
+    case Language::Russian: return "Auto: Русский";
+    case Language::German: return "Auto: Deutsch";
+    case Language::French: return "Auto: Français";
+    case Language::Spanish: return "Auto: Español";
     default:
         return pick(language, "Auto: English", "自动：English", "自動：English", "자동: English");
     }

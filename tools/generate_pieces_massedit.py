@@ -93,6 +93,9 @@ def generate_massedit(items, item_name, text_id, icon_id, start_row_id, output_f
             lines.append(f"param WorldMapPointParam: id {row_id}: gridXNo: = {gridX};")
 
         lines.append(f"param WorldMapPointParam: id {row_id}: posX: = {x:.3f};")
+        y = item.get('y', 0.0)
+        if y != 0.0:  # carry source MSB Y (posY is unused by the game; the hover overlay reads it for height)
+            lines.append(f"param WorldMapPointParam: id {row_id}: posY: = {y:.3f};")
         lines.append(f"param WorldMapPointParam: id {row_id}: posZ: = {z:.3f};")
         # Offset-encode goods ID (500M) to avoid collision with PlaceName IDs
         lines.append(f"param WorldMapPointParam: id {row_id}: textId1: = {text_id + 500000000};")

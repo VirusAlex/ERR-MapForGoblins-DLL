@@ -22,8 +22,18 @@ I18N_DIR = ROOT / "i18n"
 HPP = ROOT / "src" / "goblin_i18n.hpp"
 OUT = ROOT / "src" / "generated_shared" / "goblin_i18n_strings.cpp"
 
-LOCALES = [("English", "en.json"), ("SimplifiedChinese", "schinese.json"),
-           ("TraditionalChinese", "tchinese.json"), ("Korean", "korean.json")]
+# (Language enum name, bundle filename, C-identifier suffix). English is the
+# fallback base (no name tables emitted); every other locale gets full tables.
+# To add a language: add its enum value in goblin_i18n.hpp, a bundle JSON here,
+# and one row below - the emit + bundle() switch are generated from this list.
+LOCALES = [("English", "en.json", "EN"),
+           ("SimplifiedChinese", "schinese.json", "SC"),
+           ("TraditionalChinese", "tchinese.json", "TC"),
+           ("Korean", "korean.json", "KO"),
+           ("Russian", "russian.json", "RU"),
+           ("German", "german.json", "DE"),
+           ("French", "french.json", "FR"),
+           ("Spanish", "spanish.json", "ES")]
 CATEGORIES = ["texts", "toasts", "section_labels", "section_comments",
               "entry_labels", "entry_comments"]
 
@@ -62,7 +72,7 @@ def c_escape(s):
 
 # ── load bundles ──
 bundles = {}
-for lang, fn in LOCALES:
+for lang, fn, _suffix in LOCALES:
     p = I18N_DIR / fn
     if not p.exists():
         die(f"missing bundle: {p}")
@@ -91,7 +101,7 @@ for cat, ids_set in (("texts", text_ids_set), ("toasts", toast_ids_set)):
         errors.append(f"en.json[{cat}] has key '{k}' with no matching {('TextId' if cat=='texts' else 'ToastId')} enum value")
 
 # 2) every locale must have the exact same keys as en.json, in every category.
-for lang, _ in LOCALES:
+for lang, _fn, _suffix in LOCALES:
     if lang == "English":
         continue
     for cat in CATEGORIES:
@@ -137,8 +147,7 @@ parts.append("namespace")
 parts.append("{")
 
 # texts + toasts per locale (all locales), names only for non-English locales.
-for lang, _ in LOCALES:
-    suffix = {"English": "EN", "SimplifiedChinese": "SC", "TraditionalChinese": "TC", "Korean": "KO"}[lang]
+for lang, _fn, suffix in LOCALES:
     parts.append(text_array(f"TEXT_{suffix}", lang, text_ids, "TextId"))
     parts.append(toast_array(f"TOAST_{suffix}", lang, toast_ids))
     if lang != "English":
@@ -150,26 +159,25 @@ for lang, _ in LOCALES:
 
 parts.append("template <typename T, size_t N> constexpr size_t cnt(const T (&)[N]) { return N; }")
 parts.append("")
+# English is the fallback base: no name tables (callers fall back to the key).
 parts.append("const LocaleBundle BUNDLE_EN{TEXT_EN, cnt(TEXT_EN), TOAST_EN, cnt(TOAST_EN),")
 parts.append("    nullptr, 0, nullptr, 0, nullptr, 0, nullptr, 0};")
-parts.append("const LocaleBundle BUNDLE_SC{TEXT_SC, cnt(TEXT_SC), TOAST_SC, cnt(TOAST_SC),")
-parts.append("    SECT_LABELS_SC, cnt(SECT_LABELS_SC), SECT_COMMENTS_SC, cnt(SECT_COMMENTS_SC),")
-parts.append("    ENTRY_LABELS_SC, cnt(ENTRY_LABELS_SC), ENTRY_COMMENTS_SC, cnt(ENTRY_COMMENTS_SC)};")
-parts.append("const LocaleBundle BUNDLE_TC{TEXT_TC, cnt(TEXT_TC), TOAST_TC, cnt(TOAST_TC),")
-parts.append("    SECT_LABELS_TC, cnt(SECT_LABELS_TC), SECT_COMMENTS_TC, cnt(SECT_COMMENTS_TC),")
-parts.append("    ENTRY_LABELS_TC, cnt(ENTRY_LABELS_TC), ENTRY_COMMENTS_TC, cnt(ENTRY_COMMENTS_TC)};")
-parts.append("const LocaleBundle BUNDLE_KO{TEXT_KO, cnt(TEXT_KO), TOAST_KO, cnt(TOAST_KO),")
-parts.append("    SECT_LABELS_KO, cnt(SECT_LABELS_KO), SECT_COMMENTS_KO, cnt(SECT_COMMENTS_KO),")
-parts.append("    ENTRY_LABELS_KO, cnt(ENTRY_LABELS_KO), ENTRY_COMMENTS_KO, cnt(ENTRY_COMMENTS_KO)};")
+for lang, _fn, suffix in LOCALES:
+    if lang == "English":
+        continue
+    parts.append(f"const LocaleBundle BUNDLE_{suffix}{{TEXT_{suffix}, cnt(TEXT_{suffix}), TOAST_{suffix}, cnt(TOAST_{suffix}),")
+    parts.append(f"    SECT_LABELS_{suffix}, cnt(SECT_LABELS_{suffix}), SECT_COMMENTS_{suffix}, cnt(SECT_COMMENTS_{suffix}),")
+    parts.append(f"    ENTRY_LABELS_{suffix}, cnt(ENTRY_LABELS_{suffix}), ENTRY_COMMENTS_{suffix}, cnt(ENTRY_COMMENTS_{suffix})}};")
 parts.append("}  // namespace")
 parts.append("")
 parts.append("const LocaleBundle &bundle(Language language)")
 parts.append("{")
 parts.append("    switch (language)")
 parts.append("    {")
-parts.append("    case Language::SimplifiedChinese: return BUNDLE_SC;")
-parts.append("    case Language::TraditionalChinese: return BUNDLE_TC;")
-parts.append("    case Language::Korean: return BUNDLE_KO;")
+for lang, _fn, suffix in LOCALES:
+    if lang == "English":
+        continue
+    parts.append(f"    case Language::{lang}: return BUNDLE_{suffix};")
 parts.append("    default: return BUNDLE_EN;")
 parts.append("    }")
 parts.append("}")

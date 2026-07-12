@@ -88,6 +88,13 @@ SIGNATURES = [
         "critical": True,
         "refs": ["goblin_collected.cpp:124"],
     },
+    {
+        "name": "world_chr_man_slot",
+        "pattern": "48 8B 05 ?? ?? ?? ?? 48 85 C0 0F 84 ?? ?? ?? ?? 48 8B 98 08 E5 01 00",
+        "slot": (3, 7),
+        "critical": False,
+        "refs": ["goblin_collected.cpp:139"],
+    },
     # ---- GFX icon injection (no-gfx icon rendering) - load-bearing ----
     {
         "name": "gfx_ctor",
@@ -206,6 +213,18 @@ SIGNATURES = [
         "refs": ["goblin_map_timing.cpp:177"],
         "note": "Ends in a build-specific lea disp (B7 A3 16 02); expected to "
                 "shift on a game update - non-critical by design.",
+    },
+    {
+        "name": "map_placename_update",
+        "pattern": "40 55 56 57 41 54 41 55 41 56 41 57 48 8D 6C 24 D9 48 81 EC B0 00 00 00 "
+                   "48 C7 45 B7 FE FF FF FF 48 89 9C 24 08 01 00 00 48 8B 05 ?? ?? ?? ?? "
+                   "48 33 C4 48 89 45 1F 49 8B F8",
+        "slot": None,
+        "critical": False,
+        "refs": ["goblin_maphover.cpp"],
+        "note": "Map dialog per-frame 'name the focused pin' fn; RDX = hovered "
+                "WorldMapPointPinData. Drives marker hover-detect (manual hide / hover "
+                "overlay). Non-critical: a miss just disables hover, not core icons.",
     },
 ]
 

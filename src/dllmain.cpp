@@ -20,6 +20,7 @@
 #include "goblin_overlay.hpp"
 #include "goblin_map_timing.hpp"
 #include "goblin_gfx_probe.hpp"
+#include "goblin_maphover.hpp"
 
 #include "version.h"
 
@@ -111,6 +112,7 @@ static void init_live_loot()        { goblin::refresh_loot_from_itemlot(); }
 static void init_overlay()          { goblin::overlay::setup(); }
 static void init_map_timing()       { goblin::map_timing::setup(); }
 static void init_gfx_probe()        { goblin::gfx_probe::setup(); }
+static void init_maphover()         { goblin::maphover::setup(); }
 
 static void safe_init_step(InitFn fn, const char *name)
 {
@@ -141,6 +143,37 @@ static void setup_logger(std::filesystem::path log_file)
 
 static std::filesystem::path g_mod_folder;
 
+// Manual per-marker hide: on hide_marker_key, hide/unhide the marker under the map
+// cursor (goblin::maphover::hovered_row() -> our WorldMapPointParam row). Applies live
+// and persists. Runs on its own thread (like the other hotkeys).
+static void manual_hide_hotkey_loop()
+{
+    bool prev = false;
+    while (true)
+    {
+        std::this_thread::sleep_for(std::chrono::milliseconds(80));
+        if (!goblin::config::enableManualHide) { prev = false; continue; }
+        bool down = goblin::overlay::key_down(static_cast<int>(goblin::config::hideMarkerKey));
+        if (down && !prev)
+        {
+            void *row = goblin::maphover::hovered_row();
+            if (row)
+            {
+                goblin::ManualHideResult res = goblin::toggle_hovered_marker(row);
+                if (res.matched)
+                {
+                    goblin::reapply_live_settings();
+                    goblin::persist_manual_hidden();
+                    spdlog::info("[hide] marker textId={} -> {} ({} hidden total)",
+                                 res.textId, res.now_hidden ? "HIDDEN" : "shown",
+                                 goblin::manual_hidden_count());
+                }
+            }
+        }
+        prev = down;
+    }
+}
+
 static void setup_mod()
 {
     safe_init_step(&init_modutils,    "modutils::initialize");
@@ -161,6 +194,14 @@ static void setup_mod()
     // above past the worldmap movie load on fast Proton boots, which breaks icons).
     safe_init_step(&init_from_params, "from::params::initialize");
 
+    // Load the user's manually-hidden marker set BEFORE the first visibility apply,
+    // so hidden markers are already hidden on the first map open.
+    if (goblin::config::enableManualHide)
+    {
+        goblin::set_hidden_file(g_mod_folder / "MapForGoblins_hidden.txt");
+        goblin::load_manual_hidden(g_mod_folder / "MapForGoblins_hidden.txt");
+    }
+
     safe_init_step(&init_collected,       "collected::initialize");
     safe_init_step(&init_kindling,        "kindling::initialize");
     safe_init_step(&init_inject_entries,  "add_map_entries");
@@ -174,6 +215,7 @@ static void setup_mod()
     safe_init_step(&init_live_loot,       "refresh_loot_from_itemlot");
     safe_init_step(&init_overlay,         "overlay::setup");
     safe_init_step(&init_map_timing,      "map_timing::setup");
+    safe_init_step(&init_maphover,        "maphover::setup");  // marker hover detection (hide/overlay)
 
     try
     {
@@ -197,6 +239,12 @@ static void setup_mod()
     {
         std::thread(goblin::toggle_hotkey_loop).detach();
         spdlog::info("Icon toggle hotkey: VK 0x{:X}", goblin::config::toggleInjectionKey);
+    }
+
+    if (goblin::config::enableManualHide)
+    {
+        std::thread(manual_hide_hotkey_loop).detach();
+        spdlog::info("Manual marker-hide hotkey: VK 0x{:X}", goblin::config::hideMarkerKey);
     }
 
     // The watcher is the single owner of the WorldMapPointParam state - it

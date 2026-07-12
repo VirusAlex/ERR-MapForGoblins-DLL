@@ -158,6 +158,9 @@ namespace goblin
         // Marker dump (hotkey → dump beacon/stamp coords to file)
         extern bool enableMarkerDump;
         extern uint32_t markerDumpKey;  // Win32 VK_* code (default VK_F9 = 0x78)
+        extern bool enableManualHide;
+        extern uint32_t hideMarkerKey;  // Win32 VK_* code (default VK_DELETE = 0x2E)
+        extern bool enableHoverInfo;
 
         // ERSC-hosting workaround: hotkey toggles WorldMapPointParam +
         // PlaceName FMG between vanilla and expanded states. Press before
