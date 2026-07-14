@@ -26,9 +26,12 @@ Collected Rune Pieces, Ember Pieces and gathering nodes are automatically hidden
 
 ## Features
 
-- In-game mod menu (Dear ImGui on a DX12 Present hook): open with **F10** (keyboard) or **Y+R3** (gamepad) to toggle any icon category, flip the master switch, use Show all / Hide all, and copy a marker dump - no ini editing or alt-tab. Mouse/keyboard/controller input; category toggles take effect right away on the open map (some options apply on the next map open)
+- In-game overlay menu (Dear ImGui) in its own top-most window - D3D11 + DirectComposition, with a GDI layered fallback auto-selected on Proton/Wine; it does NOT hook the game's swapchain, so it coexists with ReShade / Special K / frame-gen overlays. Open with **F10** (keyboard) or **Y+R3** (gamepad). Tabs: **Settings** (toggle categories, master switch, Show all / Hide all, text-size + opacity sliders, `overlay_render_mode` surface/layered/swapchain), **Progress**, **Hidden**, **Debug**. Mouse/keyboard/controller; category toggles apply live on the open map
+- **Progress tab**: collected/total per region, grouped into The Lands Between / the Underground / Shadow of the Erdtree (minor caves/catacombs folded into their parent region); click a category to highlight only its uncollected markers on the live map (works regardless of the map-fragment gate)
+- **Manual per-marker hide**: hover a marker on the world map and press **Delete** (or gamepad **RB**) to hide it; the Hidden tab lists and restores them; the hidden set persists per save slot
+- Passive hover tooltip (near the cursor) showing the hovered marker's name and its height relative to you
 - ~9000 map icons across 60+ toggleable categories (configurable via INI or the overlay)
-- Map text sourced from existing in-game FMG entries (all 14 languages) via a MsgRepository hook - each marker redirects to a goods/weapon/armour/etc. name by ID, so translations come for free
+- Map text sourced from existing in-game FMG entries (all 14 languages) via a MsgRepository hook - each marker redirects to a goods/weapon/armour/etc. name by ID, so translations come for free; overlay UI is localized in 8 languages
 - Collected Rune/Ember Piece detection: GEOF singletons for unloaded tiles + CSWorldGeomMan flags for loaded tiles
 - [Item & Enemy Randomizer](https://www.nexusmods.com/eldenring/mods/428) support (vanilla build, on by default): loot markers read the loaded `ItemLotParam` from live memory at startup, so each shows the item actually placed by your seed (name + icon) and hides on the real light-point pickup - seed-agnostic, no per-seed data
 - Spoiler-free mode (`anonymous_loot` INI option): every loot marker shows a gray "?" icon and a generic localized label instead of the real item, for blind / randomizer runs
