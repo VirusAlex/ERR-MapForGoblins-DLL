@@ -315,7 +315,7 @@ static std::map<uint32_t, WGMSnapshot> read_wgm_snapshot()
 {
     std::map<uint32_t, WGMSnapshot> result;
 
-    uintptr_t game_base = (uintptr_t)GetModuleHandleA("eldenring.exe");
+    uintptr_t game_base = (uintptr_t)GetModuleHandleA(nullptr) /* main module = the game exe */;
     if (!game_base) return result;
 
     void *wgm = nullptr;
@@ -516,7 +516,7 @@ static std::vector<GEOFEntry> read_geof_from_memory()
 {
     std::vector<GEOFEntry> result;
 
-    uintptr_t game_base = (uintptr_t)GetModuleHandleA("eldenring.exe");
+    uintptr_t game_base = (uintptr_t)GetModuleHandleA(nullptr) /* main module = the game exe */;
     if (!game_base)
         return result;
 
@@ -716,7 +716,7 @@ void goblin::collected::register_param_ptr(uint64_t row_id, void *param_data)
 
 int goblin::collected::refresh()
 {
-    uintptr_t game_base = (uintptr_t)GetModuleHandleA("eldenring.exe");
+    uintptr_t game_base = (uintptr_t)GetModuleHandleA(nullptr) /* main module = the game exe */;
     if (!game_base)
         return 0;
     void *wgm_check = nullptr;

@@ -1734,7 +1734,7 @@ static void seh_dispatch_toast(uintptr_t er, bool icons_on)
 static void show_toggle_banner(bool icons_on)
 {
     static uintptr_t er = 0;
-    if (!er) er = reinterpret_cast<uintptr_t>(GetModuleHandleA("eldenring.exe"));
+    if (!er) er = reinterpret_cast<uintptr_t>(GetModuleHandleA(nullptr) /* main module = the game exe */);
     if (!er) return;
     spdlog::info("[TOAST] fire (icons {})", icons_on ? "ON" : "OFF");
     seh_dispatch_toast(er, icons_on);
@@ -1753,7 +1753,7 @@ static void seh_fire_trampoline(uintptr_t er, int tutorial_id)
 void goblin::show_codex_toast(int tutorial_id)
 {
     static uintptr_t er = 0;
-    if (!er) er = reinterpret_cast<uintptr_t>(GetModuleHandleA("eldenring.exe"));
+    if (!er) er = reinterpret_cast<uintptr_t>(GetModuleHandleA(nullptr) /* main module = the game exe */);
     if (!er) return;
     seh_fire_trampoline(er, tutorial_id);
 }

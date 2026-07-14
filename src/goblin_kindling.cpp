@@ -238,7 +238,7 @@ static uint32_t seh_read_dword(uintptr_t addr)
 
 static uintptr_t eldenring_base()
 {
-    HMODULE h = GetModuleHandleA("eldenring.exe");
+    HMODULE h = GetModuleHandleA(nullptr) /* main module = the game exe */;
     return reinterpret_cast<uintptr_t>(h);
 }
 

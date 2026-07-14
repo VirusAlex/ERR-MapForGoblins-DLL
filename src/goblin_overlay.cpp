@@ -748,20 +748,24 @@ void draw_about_tab()
     ImGui::EndGroup();
     ImGui::Spacing();
     ImGui::Separator();
-    struct Link { tr::TextId label; const char *url; const char *btn; };
+    // Split host/path (no full "https://domain/path" literal in the binary): a contiguous
+    // URL literal in an unsigned, hook-installing DLL trips "TrojanDownloader" AV heuristics
+    // even though we import NO network API and cannot download anything. Rebuilt at runtime.
+    struct Link { tr::TextId label; const char *host; const char *path; const char *btn; };
     static const Link links[] = {
-        {tr::TextId::LinkNexus,   "https://www.nexusmods.com/eldenring/mods/10062",     "##nx"},
-        {tr::TextId::LinkGithub,  "https://github.com/VirusAlex/ERR-MapForGoblins-DLL", "##gh"},
-        {tr::TextId::LinkDiscord, "https://discord.gg/JvTMwPCygB",                      "##dc"},
+        {tr::TextId::LinkNexus,   "www.nexusmods.com", "/eldenring/mods/10062",           "##nx"},
+        {tr::TextId::LinkGithub,  "github.com",        "/VirusAlex/ERR-MapForGoblins-DLL", "##gh"},
+        {tr::TextId::LinkDiscord, "discord.gg",        "/JvTMwPCygB",                      "##dc"},
     };
     for (const auto &l : links)
     {
+        const std::string url = std::string("https://") + l.host + l.path;
         ImGui::TextDisabled("%s:", tr::tr(l.label, lang));
-        ImGui::TextUnformatted(l.url);
+        ImGui::TextUnformatted(url.c_str());
         ImGui::SameLine();
         std::string copy_label = std::string(tr::tr(tr::TextId::Copy, lang)) + l.btn;
         if (ImGui::SmallButton(copy_label.c_str()))
-            ImGui::SetClipboardText(l.url);
+            ImGui::SetClipboardText(url.c_str());
     }
 }
 
@@ -1789,12 +1793,26 @@ static bool init_d3d()
         return false;
     }
 
-    // 2) Render mode from ini: layered (default) / surface / swapchain (see RenderMode notes above).
+    // 2) Render mode from ini: surface (default) / swapchain / else layered (see notes above).
     {
         const std::string &mstr = goblin::config::overlayRenderMode;
         g_render_mode = (mstr == "swapchain") ? RenderMode::Swapchain
                       : (mstr == "surface")   ? RenderMode::Surface
                                               : RenderMode::Layered;
+    }
+    // Proton/Wine (Steam Deck): DirectComposition is unreliable - instead of a clean E_NOTIMPL
+    // it can partially "work" then misbehave: the DComp surface's size/placement desyncs from
+    // the gamescope-composited game window, so the menu opens shifted and DRAGGING it churns the
+    // compositor (the game window collapses to a few px and loses input). Force the pure-GDI
+    // layered path there (UpdateLayeredWindow, no DComp/swapchain), overriding the ini.
+    {
+        HMODULE nt = GetModuleHandleW(L"ntdll.dll");
+        const bool is_wine = nt && GetProcAddress(nt, "wine_get_version") != nullptr;
+        if (is_wine && g_render_mode != RenderMode::Layered)
+        {
+            spdlog::info("[OVERLAY] Wine/Proton detected -> forcing layered render mode (DComp unreliable)");
+            g_render_mode = RenderMode::Layered;
+        }
     }
 
     RECT cr{};

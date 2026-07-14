@@ -20,10 +20,10 @@ static span<unsigned char> memory;
 
 void modutils::initialize()
 {
-    HMODULE module_handle = GetModuleHandleA("eldenring.exe");
+    HMODULE module_handle = GetModuleHandleA(nullptr); // main module = the game exe
     if (!module_handle)
     {
-        throw runtime_error("Failed to get handle for host process");
+        throw runtime_error("Failed to get base module handle");
     }
 
     wstring_convert<codecvt_utf8_utf16<wchar_t>, wchar_t> convert;
