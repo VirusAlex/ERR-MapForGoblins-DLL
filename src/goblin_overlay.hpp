@@ -1,5 +1,7 @@
 #pragma once
 
+#include <cstdint>
+
 // In-game config overlay (Dear ImGui in a SEPARATE transparent top-most window
 // with its own D3D11 + DirectComposition device, rendered on its own thread). It
 // does NOT touch the game's swapchain, so it is compatible with tools that wrap
@@ -18,4 +20,9 @@ namespace goblin::overlay
     // directly (foreground-only). Used by the marker-dump + icon master-toggle
     // hotkey loops in goblin_markers / goblin_inject.
     bool key_down(int vk);
+
+    // True while ALL buttons in `mask` (an XINPUT_GAMEPAD_* bitmask) are held on the
+    // active pad. Reads the overlay's polled pad state (updated each render frame), so it
+    // needs the overlay thread running (enable_overlay). Used by the manual marker-hide loop.
+    bool gamepad_mask_down(uint16_t mask);
 }

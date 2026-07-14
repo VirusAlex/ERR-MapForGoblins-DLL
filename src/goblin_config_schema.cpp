@@ -85,6 +85,7 @@ namespace goblin::config
     uint32_t markerDumpKey = 0x78; // VK_F9
     bool enableManualHide = true;
     uint32_t hideMarkerKey = 0x2E; // VK_DELETE
+    uint16_t hideMarkerGamepad = 0x0200; // XINPUT_GAMEPAD_RIGHT_SHOULDER (RB)
     bool enableHoverInfo = true;
     bool enableToggleHotkey = true;
     uint32_t toggleInjectionKey = 0x79; // VK_F10
@@ -134,7 +135,7 @@ namespace
             }},
 
             {"Key Items", nullptr, false, {
-                B("show_celestial_dew", showCelestialDew, "true", "Celestial Dew (for reversing Spirit Ashes upgrades)"),
+                B("show_celestial_dew", showCelestialDew, "true", "Celestial Dew (for Absolution at the Church of Vows)"),
                 B("show_cookbooks", showCookbooks, "true", "Cookbooks (crafting recipes)"),
                 B("show_crystal_tears", showCrystalTears, "true", "Crystal Tears (for Flask of Wondrous Physick)"),
                 B("show_great_runes", showGreatRunes, "true", "Great Runes (dropped by story bosses)"),
@@ -191,10 +192,10 @@ namespace
             {"Reforged",
              "Elden Ring Reforged-only content. Absent from the vanilla build.",
              ERR, {
-                BE("show_ember_pieces", showEmberPieces, "true", "ERR Ember Piece locations"),
-                BE("show_items_and_changes", showItemsAndChanges, "true", "ERR-added items: Oracle Effigy/Remedy, Starlight Tokens, Sealed Curios"),
-                BE("show_fortunes", showFortunes, "true", "ERR Fortune trinkets (12 types)"),
-                BE("show_rune_pieces", showRunePieces, "true", "ERR Rune Piece locations"),
+                BE("show_ember_pieces", showEmberPieces, "true", "Ember Piece locations"),
+                BE("show_items_and_changes", showItemsAndChanges, "true", "Added items: Oracle Effigy/Remedy, Starlight Tokens, Sealed Curios"),
+                BE("show_fortunes", showFortunes, "true", "Fortune trinkets (12 types)"),
+                BE("show_rune_pieces", showRunePieces, "true", "Rune Piece locations"),
             }},
 
             {"World", nullptr, false, {
@@ -208,7 +209,7 @@ namespace
                 B("show_stakes_of_marika", showStakesOfMarika, "true", "Stakes of Marika (respawn points)"),
                 B("show_summoning_pools", showSummoningPools, "true", "Summoning Pool (Martyr Effigy) locations"),
                 BE("show_kindling_spirits", showKindlingSpirits, "true",
-                   "ERR Kindling Spirits in Misty Forest - collect all 5 between rests for\nthe Kindling Spirit incantation. Markers hide once you have the incantation."),
+                   "Kindling Spirits in Misty Forest - collect all 5 between rests for\nthe Kindling Spirit incantation. Markers hide once you have the incantation."),
                 B("show_interactables", showInteractables, "true",
                   "Interactive world objects & puzzles: blue seal puzzles (unlock hidden\ncellars), light-flame interacts (Sellia chalices, Snow Town statues, Siofra\nRiver lanterns), and Hero's Tomb direction statues."),
                 B("show_world_maps", showWorldMaps, "true", "World Map fragment locations"),
@@ -277,6 +278,15 @@ namespace
                          "Keyboard toggle: OPENS the config overlay when enable_overlay is on, or\ntoggles ALL map icons on/off when the overlay is disabled. Default: F10.", false, "toggle_injection_key"},
                 IniEntry{"toggle_gamepad_combo", IniType::GamepadMask, &cfg::toggleGamepadMask, "Y+R3",
                          "Gamepad toggle, same role as toggle_key (opens the overlay, or toggles all\nicons if the overlay is disabled). Tokens joined with '+': A,B,X,Y,LB,RB,\nL3/LSTICK,R3/RSTICK,BACK/SELECT/VIEW,START/MENU,UP/DOWN/LEFT/RIGHT. Default: Y+R3.", false, nullptr},
+                // Marker-interaction options (shown at the bottom of the Settings tab, not Debug):
+                B("enable_manual_hide", enableManualHide, "true",
+                  "Let you hide individual markers: hover a marker on the world map and press\nhide_marker_key to hide it. Hidden markers persist across sessions; un-hide them\nfrom the in-game menu (Hidden markers section)."),
+                IniEntry{"hide_marker_key", IniType::VkKey, &cfg::hideMarkerKey, "Delete",
+                         "Key that hides the map marker currently under the cursor. Default: Delete.", false, nullptr},
+                IniEntry{"hide_marker_gamepad", IniType::GamepadMask, &cfg::hideMarkerGamepad, "RB",
+                         "Gamepad button that hides the map marker under the cursor (same as\nhide_marker_key). Tokens joined with '+'. Default: RB.", false, nullptr},
+                B("hover_info", enableHoverInfo, "true",
+                  "Show a small passive panel (top-left) while the world map is open and the\ncursor is over a marker: the marker's name and its height relative to you\n(\"N units above/below\"). Never captures input."),
             }},
 
             {"Debug",
@@ -287,12 +297,6 @@ namespace
                 B("enable_marker_dump", enableMarkerDump, "false", "Master switch for the marker dump hotkey"),
                 IniEntry{"marker_dump_key", IniType::VkKey, &cfg::markerDumpKey, "F9",
                          "Key to dump decoded markers to logs/MapForGoblins_markers.log. Default: F9.", false, nullptr},
-                B("enable_manual_hide", enableManualHide, "true",
-                  "Let you hide individual markers: hover a marker on the world map and press\nhide_marker_key to hide it. Hidden markers persist across sessions; un-hide them\nfrom the in-game menu (Hidden markers section)."),
-                IniEntry{"hide_marker_key", IniType::VkKey, &cfg::hideMarkerKey, "Delete",
-                         "Key that hides the map marker currently under the cursor. Default: Delete.", false, nullptr},
-                B("hover_info", enableHoverInfo, "true",
-                  "Show a small passive panel (top-left) while the world map is open and the\ncursor is over a marker: the marker's name and its height relative to you\n(\"N units above/below\"). Never captures input."),
             }},
         };
     }

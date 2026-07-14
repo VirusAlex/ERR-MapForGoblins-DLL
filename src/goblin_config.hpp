@@ -160,6 +160,7 @@ namespace goblin
         extern uint32_t markerDumpKey;  // Win32 VK_* code (default VK_F9 = 0x78)
         extern bool enableManualHide;
         extern uint32_t hideMarkerKey;  // Win32 VK_* code (default VK_DELETE = 0x2E)
+        extern uint16_t hideMarkerGamepad;  // XINPUT_GAMEPAD_* mask (default RB = 0x0200)
         extern bool enableHoverInfo;
 
         // ERSC-hosting workaround: hotkey toggles WorldMapPointParam +

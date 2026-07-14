@@ -147,6 +147,10 @@ add_library( MapForGoblins SHARED
   src/goblin_gfx_probe.cpp
   src/goblin_maphover.hpp
   src/goblin_maphover.cpp
+  src/goblin_mapproject.hpp
+  src/goblin_mapproject.cpp
+  src/goblin_worldmap_probe.hpp
+  src/goblin_worldmap_probe.cpp
   src/generated_shared/goblin_overlay_icons.hpp
   src/generated_shared/goblin_overlay_icons.cpp
   src/generated_shared/goblin_map_icons.hpp

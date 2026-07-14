@@ -347,7 +347,7 @@ STAGES = [
           also_scripts=['massedit_common.py', 'row_id_registry.py', 'icon_registry.py', 'map_categories.py']),
 
     Stage('generate_hero_tomb_statues',
-          inputs=[MSB_DIR, EVENT_DIR],
+          inputs=[MSB_DIR, EVENT_DIR, DATA / 'WorldMapPointParam.json'],
           outputs=[MASSEDIT_OUT / "World - Hero's Tomb Statues.MASSEDIT"],
           script='generate_hero_tomb_statues.py',
           also_scripts=['massedit_common.py', 'row_id_registry.py', 'icon_registry.py', 'map_categories.py']),

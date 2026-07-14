@@ -21,6 +21,7 @@
 #include "goblin_map_timing.hpp"
 #include "goblin_gfx_probe.hpp"
 #include "goblin_maphover.hpp"
+#include "goblin_worldmap_probe.hpp"
 
 #include "version.h"
 
@@ -113,6 +114,7 @@ static void init_overlay()          { goblin::overlay::setup(); }
 static void init_map_timing()       { goblin::map_timing::setup(); }
 static void init_gfx_probe()        { goblin::gfx_probe::setup(); }
 static void init_maphover()         { goblin::maphover::setup(); }
+static void init_worldmap_probe()   { goblin::worldmap_probe::setup(); }
 
 static void safe_init_step(InitFn fn, const char *name)
 {
@@ -153,7 +155,8 @@ static void manual_hide_hotkey_loop()
     {
         std::this_thread::sleep_for(std::chrono::milliseconds(80));
         if (!goblin::config::enableManualHide) { prev = false; continue; }
-        bool down = goblin::overlay::key_down(static_cast<int>(goblin::config::hideMarkerKey));
+        bool down = goblin::overlay::key_down(static_cast<int>(goblin::config::hideMarkerKey)) ||
+                    goblin::overlay::gamepad_mask_down(goblin::config::hideMarkerGamepad);
         if (down && !prev)
         {
             void *row = goblin::maphover::hovered_row();
@@ -163,6 +166,9 @@ static void manual_hide_hotkey_loop()
                 if (res.matched)
                 {
                     goblin::reapply_live_settings();
+                    // If that was the last shown marker of the focused category, drop focus.
+                    if (goblin::prune_focus_if_empty())
+                        goblin::reapply_live_settings();
                     goblin::persist_manual_hidden();
                     spdlog::info("[hide] marker textId={} -> {} ({} hidden total)",
                                  res.textId, res.now_hidden ? "HIDDEN" : "shown",
@@ -194,13 +200,12 @@ static void setup_mod()
     // above past the worldmap movie load on fast Proton boots, which breaks icons).
     safe_init_step(&init_from_params, "from::params::initialize");
 
-    // Load the user's manually-hidden marker set BEFORE the first visibility apply,
-    // so hidden markers are already hidden on the first map open.
+    // Manual hides are PER CHARACTER: the set lives in MapForGoblins_hidden_s<slot>.txt.
+    // We only register the folder here; the watcher loop loads the active character's file
+    // (and reloads on a character switch) via goblin::sync_hidden_slot(), because the save
+    // slot is unknown until a character is loaded (the first map open is always after that).
     if (goblin::config::enableManualHide)
-    {
-        goblin::set_hidden_file(g_mod_folder / "MapForGoblins_hidden.txt");
-        goblin::load_manual_hidden(g_mod_folder / "MapForGoblins_hidden.txt");
-    }
+        goblin::set_hidden_dir(g_mod_folder);
 
     safe_init_step(&init_collected,       "collected::initialize");
     safe_init_step(&init_kindling,        "kindling::initialize");
@@ -216,6 +221,7 @@ static void setup_mod()
     safe_init_step(&init_overlay,         "overlay::setup");
     safe_init_step(&init_map_timing,      "map_timing::setup");
     safe_init_step(&init_maphover,        "maphover::setup");  // marker hover detection (hide/overlay)
+    safe_init_step(&init_worldmap_probe,  "worldmap_probe::setup");  // fold non-overworld markers for overlay rings
 
     try
     {
@@ -317,6 +323,25 @@ static void setup_mod()
             prev_collected = cc;
             prev_kindling = kc;
             safe_apply_category_visibility_seh();
+        }
+
+        // Auto-clear a category focus once its last shown marker is gone (in-world pickup,
+        // flag, GEOF, etc.) so a stale "showing only ..." highlight doesn't stick around.
+        if (goblin::prune_focus_if_empty())
+            safe_apply_category_visibility_seh();
+
+        // Per-character manual hides: on a save-slot (character) switch, load that
+        // character's hidden set and reapply visibility.
+        if (goblin::config::enableManualHide)
+        {
+            try
+            {
+                if (goblin::sync_hidden_slot())
+                    safe_apply_category_visibility_seh();
+            }
+            catch (...)
+            {
+            }
         }
     }
 }

@@ -95,6 +95,42 @@ SIGNATURES = [
         "critical": False,
         "refs": ["goblin_collected.cpp:139"],
     },
+    {
+        "name": "worldmap_build_markers",
+        "pattern": "40 55 53 56 57 41 54 41 56 41 57 48 8B EC 48 83 EC 60 48 C7 45 D0 FE FF "
+                   "FF FF 4C 8B F9 8B 42 34",
+        "slot": None,
+        "critical": False,
+        "refs": ["goblin_maphover.cpp"],
+    },
+    {
+        "name": "worldmap_converter",
+        "pattern": "48 89 5C 24 08 48 89 6C 24 10 48 89 74 24 18 57 41 54 41 55 41 56 41 57 "
+                   "48 83 EC 20 33 DB 4D 8B F9 4D 8B E0 4C 8B EA 48 8B F1 48 39 99 80 02 00 00",
+        "slot": None,
+        "critical": False,
+        "refs": ["goblin_worldmap_probe.cpp"],
+    },
+    # ---- Map hover/projection vtable gates (resolved from each vtable's ctor lea) ----
+    {
+        "name": "maparea_vtable",
+        "pattern": "48 8D 05 ?? ?? ?? ?? 48 89 01 48 8D 79 70 48 8B 07 48 8B CF FF 50 08",
+        "slot": (3, 7),
+        "critical": False,
+        "refs": ["goblin_maphover.cpp"],
+        "note": "CS::WorldMapArea vtable (was RVA 0x2B2CB08). Gates the r8 the hover hook "
+                "publishes -> drives the map-layer highlight rings + overlay projection. "
+                "A miss just disables those, not core icons.",
+    },
+    {
+        "name": "pin_vtable",
+        "pattern": "48 8D 05 ?? ?? ?? ?? 48 89 06 48 89 BE 30 02 00 00",
+        "slot": (3, 7),
+        "critical": False,
+        "refs": ["goblin_maphover.cpp"],
+        "note": "CS::WorldMapPointPinData vtable (was RVA 0x2AD6688). Gates the hovered pin "
+                "-> marker hover-detect (manual hide / hover overlay). Miss disables hover.",
+    },
     # ---- GFX icon injection (no-gfx icon rendering) - load-bearing ----
     {
         "name": "gfx_ctor",
@@ -153,6 +189,17 @@ SIGNATURES = [
         "critical": True,
         "refs": ["goblin_gfx_probe.cpp:169"],
         "note": "_malloc_base (game static-CRT malloc). We allocate Scaleform-owned buffers (frame array/tag arrays/tags) here so the game's _free_base frees them on the same _crtheap; a foreign heap there = corruption (v2.0.4 crashes).",
+    },
+    # ---- Active save slot (per-character manual hides) - non-critical ----
+    {
+        "name": "game_man_slot",
+        "pattern": "48 8B 05 ?? ?? ?? ?? 80 B8 ?? ?? ?? ?? 0D 0F 94 C0 C3",
+        "slot": (3, 7),
+        "critical": False,
+        "refs": ["goblin_inject.cpp"],
+        "note": "GameMan singleton getter; GameMan+0xAC0 = active Save Slot (profile "
+                "index). Scopes manual marker-hides per character. A miss just disables "
+                "per-slot scoping (hides fall back to none), not core icons.",
     },
     # ---- Toast fallback (cosmetic on-screen popup) - non-critical ----
     {

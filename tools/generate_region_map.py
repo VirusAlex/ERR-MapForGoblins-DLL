@@ -62,6 +62,11 @@ def main():
     names = {}          # place_name_id -> english name
     name_to_pid = {}    # english name -> canonical place_name_id (dedup interior zones)
     skipped = 0
+    # Catacombs (m30) / caves (m31) / tunnels (m32) / divine towers (m34): simple minor
+    # dungeons that should NOT each become their own progress sub-zone. Fold them into the
+    # PARENT overworld region instead. (Big named interiors - m10 Stormveil, m14 Academy,
+    # m35 Shunning-Grounds, m39 Ruin-Strewn Precipice, DLC legacy - keep their own zone.)
+    MINOR_DUNGEON_AREAS = {30, 31, 32, 34}
     if SRC.exists():
         data = json.loads(SRC.read_text(encoding="utf-8"))
         for tile_key, v in data.items():
@@ -71,12 +76,40 @@ def main():
             area, gx, gz = int(m.group(1)), int(m.group(2)), int(m.group(3))
             if area > 255 or gx > 255 or gz > 255 or area == 60:
                 continue  # overworld keeps the coarse fragment grouping (DLL ignores area 60 here)
-            pid = v.get("subCategoryId") or 0
+            sub_pid = v.get("subCategoryId") or 0
+            sub_name = _clean(placenames.get(str(sub_pid), "")) or (v.get("subRegion") or "").strip()
+            tab_pid = v.get("tabId") or 0
+            tab_name = _clean(placenames.get(str(tab_pid), "")) or (v.get("majorRegion") or "").strip()
+            key = (area << 16) | (gx << 8) | gz
+
+            if area in MINOR_DUNGEON_AREAS:
+                # Prefer the grace's sub-region when it is ALREADY a known overworld region
+                # (its PlaceName id matches REGION_DEFS, so the marker MERGES into that region
+                # instead of spawning a per-cave zone); else its major region; else - for a
+                # dungeon genuinely inside a major zone (e.g. a Volcano Manor catacomb) - keep
+                # its own zone. Unlike the else-branch below we do NOT skip FRAGMENT_NAMES here:
+                # merging into that overworld region is exactly the goal.
+                if sub_name in FRAGMENT_NAMES and sub_pid > 0:
+                    pid, name = sub_pid, sub_name
+                elif tab_name in FRAGMENT_NAMES and tab_pid > 0:
+                    pid, name = tab_pid, tab_name
+                elif sub_pid > 0 and sub_name:
+                    pid, name = sub_pid, sub_name
+                else:
+                    skipped += 1
+                    continue
+                pid = name_to_pid.setdefault(name, pid)
+                tiles[key] = pid
+                names[pid] = name
+                continue
+
+            # Non-minor interiors (legacy dungeons, underground, DLC): keep their own zone.
+            pid = sub_pid
             if pid <= 0:
                 continue
             # Prefer the live PlaceName string (what lookup_text will show); this also
             # filters ids with no real PlaceName entry (they'd render unnamed).
-            name = _clean(placenames.get(str(pid), "")) or (v.get("subRegion") or "").strip()
+            name = sub_name
             if not name:
                 skipped += 1
                 continue  # unnamed -> fall back to fragment grouping
@@ -85,7 +118,6 @@ def main():
                 continue  # same zone the overworld/fragment grouping already yields -> avoid a duplicate
             # Dedup: two interior ids with the same name collapse to one canonical id.
             pid = name_to_pid.setdefault(name, pid)
-            key = (area << 16) | (gx << 8) | gz
             tiles[key] = pid
             names[pid] = name
     else:

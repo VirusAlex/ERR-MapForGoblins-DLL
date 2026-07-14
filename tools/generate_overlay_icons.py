@@ -208,6 +208,16 @@ def main():
     logo = logo.resize((LW, LH), Image.LANCZOS)
     logo_rgba = logo.tobytes()
 
+    # Focus-highlight ring, embedded as its own texture. The overlay draws it centered over
+    # each focused marker on the OPEN map (replaces the drawn amber ring). Its center is
+    # transparent (glow ring only), so it FRAMES the game icon. Source is ~1900px; embed a
+    # small copy (the overlay draws it at ~46 px). Straight RGBA (ImGui alpha-blends).
+    hl_src = PROJ / "assets" / "map_icons" / "custom" / "highlight.png"
+    hl = Image.open(hl_src).convert("RGBA")
+    HLS = 128
+    hl = hl.resize((HLS, HLS), Image.LANCZOS)
+    hl_rgba = hl.tobytes()
+
     # key -> (col, row)
     key_cells = []
     for key, icon in sorted(key_to_icon.items()):
@@ -240,6 +250,9 @@ def main():
         "    extern const int LOGO_W;\n"
         "    extern const int LOGO_H;\n"
         "    extern const unsigned char LOGO_RGBA[]; // LOGO_W*LOGO_H*4, row-major\n"
+        "    extern const int HIGHLIGHT_W;\n"
+        "    extern const int HIGHLIGHT_H;\n"
+        "    extern const unsigned char HIGHLIGHT_RGBA[]; // HIGHLIGHT_W*HIGHLIGHT_H*4, straight RGBA\n"
         "}\n", encoding="utf-8")
 
     with open(OUT_DIR / "goblin_overlay_icons.cpp", "w", encoding="utf-8", newline="\n") as f:
@@ -260,6 +273,12 @@ def main():
         f.write("const unsigned char LOGO_RGBA[] = {\n")
         for i in range(0, len(logo_rgba), 32):
             f.write(",".join(str(b) for b in logo_rgba[i:i + 32]) + ",\n")
+        f.write("};\n")
+        f.write(f"const int HIGHLIGHT_W = {HLS};\n")
+        f.write(f"const int HIGHLIGHT_H = {HLS};\n")
+        f.write("const unsigned char HIGHLIGHT_RGBA[] = {\n")
+        for i in range(0, len(hl_rgba), 32):
+            f.write(",".join(str(b) for b in hl_rgba[i:i + 32]) + ",\n")
         f.write("};\n")
         f.write("}\n")
 

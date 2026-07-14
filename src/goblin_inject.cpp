@@ -11,7 +11,6 @@
 #include "goblin_gfx_probe.hpp"
 #include "goblin_overlay.hpp"
 #include "goblin_progress.hpp"   // region_place_id (tag each CategoryRow for focus)
-#include "goblin_map_icons.hpp"  // MAP_ICON_GLOW_OFFSET (focus-highlight glow frame)
 #include "goblin_diag.hpp"
 #include "goblin/goblin_map_flags.hpp"
 #include "from/params.hpp"
@@ -29,6 +28,7 @@
 #include <set>
 #include <thread>
 #include <unordered_map>
+#include <unordered_set>
 #include <spdlog/spdlog.h>
 #include <vector>
 
@@ -74,20 +74,17 @@ struct CategoryRow
     from::paramdef::WORLD_MAP_POINT_PARAM_ST *p;
     Category cat;
     uint64_t row_id;         // dynamic row id (matches collected/kindling is_row_collected)
+    uint64_t original_row_id; // pre-remap id (matches MAP_ENTRIES.row_id / progress); 0 = vanilla
     unsigned baked_enable[8]; // textEnableFlagId1..8 as baked; restored when shown. ALL
                               // lines are gated, since the engine hides the icon only when
                               // EVERY text line (item / enemy / location) is hidden.
     unsigned baked_cleared;  // clearedEventFlagId as baked (for live hide_killed_bosses)
     unsigned baked_dis1;     // textDisableFlagId1 as baked
     unsigned baked_dis2;     // textDisableFlagId2 as baked
-    uint16_t src_icon;       // baked source iconId (pre-remap) - for the focus-highlight glow swap
     int32_t region_id;       // progress region PlaceName id (goblin::progress::region_place_id) for focus
     int32_t baked_text1;     // textId1 as baked (restored when focus removes a fabricated label)
     bool baked_notext;       // isEnableNoText as baked (restored after focus force-show)
     bool focus_text;         // true while focus fabricated a label on a textless row
-    bool glowing;            // true while focus swapped this row's icon to the glow variant
-    uint16_t pre_glow_icon;  // iconId before the glow swap (restored on un-focus; exact, so it
-                             // preserves whatever live_loot/anonymous_loot had set)
 };
 
 // textEnableFlagId1..8 of a row, as a pointer array (the paramdef has them as
@@ -118,7 +115,9 @@ static int32_t g_focus_region = -1;
 struct HiddenMeta { int32_t textId; uint16_t iconId; int32_t region; uint8_t cat; };
 static std::map<uint64_t, HiddenMeta> g_manual_hidden;
 static std::mutex g_manual_hidden_mtx;
-static std::filesystem::path g_hidden_file;  // where the set persists (set at init)
+static std::filesystem::path g_hidden_dir;   // folder holding the per-slot hide files
+static std::filesystem::path g_hidden_file;  // current slot's file (persist target)
+static int g_hidden_slot = -2;               // slot the loaded set belongs to (-2 = none synced yet)
 
 static uint64_t marker_key(const from::paramdef::WORLD_MAP_POINT_PARAM_ST *p)
 {
@@ -142,6 +141,48 @@ static bool is_manually_hidden(const from::paramdef::WORLD_MAP_POINT_PARAM_ST *p
     if (!p) return false;
     std::lock_guard<std::mutex> lk(g_manual_hidden_mtx);
     return g_manual_hidden.find(marker_key(p)) != g_manual_hidden.end();
+}
+
+// True if any of the row's live "hide when set" flags is currently set - i.e. the engine
+// is hiding this icon: textDisableFlagId1..8 (loot pickup; live-loot rewrites slot 1 to
+// the real getItemFlagId) or clearedEventFlagId (boss/hawk kill). Reads the LIVE param.
+static bool row_hidden_by_flag(const from::paramdef::WORLD_MAP_POINT_PARAM_ST *p)
+{
+    if (!p) return false;
+    const unsigned fl[9] = {p->textDisableFlagId1, p->textDisableFlagId2, p->textDisableFlagId3,
+                            p->textDisableFlagId4, p->textDisableFlagId5, p->textDisableFlagId6,
+                            p->textDisableFlagId7, p->textDisableFlagId8, p->clearedEventFlagId};
+    for (unsigned f : fl)
+        if (f != 0 && goblin::flag_is_set(f)) return true;
+    return false;
+}
+
+// True if a group-2 ENABLE gate is currently blocking this marker's icon: any live
+// textEnableFlag2IdN is a real flag that is NOT set. Group-2 gates a slot IN ADDITION to
+// group-1 (both must hold), applied uniformly across a row's populated slots. We set it
+// for the switched-chest pair (baked, e.g. Patches' Glass Shard vs Cloth on flag 3691:
+// the absent variant's gate is off) and post-story-event areas (runtime, apply_map_logic).
+// Either way an off gate means the game isn't drawing this icon.
+static bool row_group2_gate_off(const from::paramdef::WORLD_MAP_POINT_PARAM_ST *p)
+{
+    if (!p) return false;
+    const int g2[8] = {p->textEnableFlag2Id1, p->textEnableFlag2Id2, p->textEnableFlag2Id3,
+                       p->textEnableFlag2Id4, p->textEnableFlag2Id5, p->textEnableFlag2Id6,
+                       p->textEnableFlag2Id7, p->textEnableFlag2Id8};
+    for (int f : g2)
+        if (f > 0 && !goblin::flag_is_set(static_cast<uint32_t>(f))) return true;
+    return false;
+}
+
+// Single "is this marker's icon currently hidden?" test, shared by the focus-highlight
+// rings (skip hidden) and the region-progress count (a hidden marker counts as done):
+// collected (GEOF), kindling-collected, manually hidden, or a live hide/cleared flag set.
+static bool row_is_hidden(const CategoryRow &cr)
+{
+    return goblin::collected::is_row_collected(cr.row_id) ||
+           goblin::kindling::is_row_collected(cr.row_id) ||
+           is_manually_hidden(cr.p) ||
+           row_hidden_by_flag(cr.p);
 }
 
 // Live-loot: lot-backed injected rows. refresh_loot_from_itemlot() reads the
@@ -334,6 +375,81 @@ bool goblin::category_enabled(generated::Category cat)
     return is_category_enabled(cat);
 }
 
+// The ini config key ("show_*") for a category, so the Progress tab can reuse the exact
+// Settings-tab icon (draw_row_icon(key)) and localized label (entry_label(key)) instead
+// of the raw enum name. Keep in sync with is_category_enabled + the config schema.
+const char *goblin::category_config_key(generated::Category cat)
+{
+    using C = generated::Category;
+    switch (cat)
+    {
+    case C::EquipArmaments: return "show_armaments";
+    case C::EquipArmour: return "show_armour";
+    case C::EquipAshesOfWar: return "show_ashes_of_war";
+    case C::EquipSpirits: return "show_spirits";
+    case C::EquipTalismans: return "show_talismans";
+    case C::KeyCelestialDew: return "show_celestial_dew";
+    case C::KeyCookbooks: return "show_cookbooks";
+    case C::KeyCrystalTears: return "show_crystal_tears";
+    case C::KeyImbuedSwordKeys: return "show_imbued_sword_keys";
+    case C::KeyLarvalTears: return "show_larval_tears";
+    case C::KeyScadutreeFragments: return "show_scadutree_fragments";
+    case C::KeyGreatRunes: return "show_great_runes";
+    case C::KeyLostAshes: return "show_lost_ashes";
+    case C::KeyPotsNPerfumes: return "show_pots_n_perfumes";
+    case C::KeySeedsTears: return "show_seeds_tears";
+    case C::KeyWhetblades: return "show_whetblades";
+    case C::LootAmmo: return "show_ammo";
+    case C::LootBellBearings: return "show_bell_bearings";
+    case C::LootMerchantBellBearings: return "show_merchant_bell_bearings";
+    case C::LootConsumables: return "show_consumables";
+    case C::LootCraftingMaterials: return "show_crafting_materials";
+    case C::LootMPFingers: return "show_mp_fingers";
+    case C::LootMaterialNodes: return "show_material_nodes";
+    case C::LootReusables: return "show_reusables";
+    case C::LootSmithingStones: return "show_smithing_stones";
+    case C::LootSmithingStonesLow: return "show_smithing_stones_low";
+    case C::LootSmithingStonesRare: return "show_smithing_stones_rare";
+    case C::LootGoldenRunes: return "show_golden_runes";
+    case C::LootGoldenRunesLow: return "show_golden_runes_low";
+    case C::LootStoneswordKeys: return "show_stonesword_keys";
+    case C::LootThrowables: return "show_throwables";
+    case C::LootPrattlingPates: return "show_prattling_pates";
+    case C::LootRuneArcs: return "show_rune_arcs";
+    case C::LootDragonHearts: return "show_dragon_hearts";
+    case C::LootGloveworts: return "show_gloveworts";
+    case C::LootGreatGloveworts: return "show_great_gloveworts";
+    case C::LootGestures: return "show_gestures";
+    case C::LootGreases: return "show_greases";
+    case C::LootUtilities: return "show_utilities";
+    case C::LootStatBoosts: return "show_stat_boosts";
+    case C::ReforgedFortunes: return "show_fortunes";
+    case C::WorldHostileNPC: return "show_hostile_npc";
+    case C::MagicIncantations: return "show_incantations";
+    case C::MagicMemoryStones: return "show_memory_stones";
+    case C::MagicPrayerbooks: return "show_prayerbooks";
+    case C::MagicSorceries: return "show_sorceries";
+    case C::WorldBosses: return "show_bosses";
+    case C::QuestDeathroot: return "show_deathroot";
+    case C::QuestProgression: return "show_progression";
+    case C::QuestSeedbedCurses: return "show_seedbed_curses";
+    case C::ReforgedEmberPieces: return "show_ember_pieces";
+    case C::ReforgedItemsAndChanges: return "show_items_and_changes";
+    case C::ReforgedRunePieces: return "show_rune_pieces";
+    case C::WorldGraces: return "show_graces";
+    case C::WorldImpStatues: return "show_imp_statues";
+    case C::WorldMaps: return "show_world_maps";
+    case C::WorldPaintings: return "show_paintings";
+    case C::WorldSpiritSprings: return "show_spirit_springs";
+    case C::WorldSpiritspringHawks: return "show_spiritspring_hawks";
+    case C::WorldStakesOfMarika: return "show_stakes_of_marika";
+    case C::WorldSummoningPools: return "show_summoning_pools";
+    case C::WorldKindlingSpirits: return "show_kindling_spirits";
+    case C::WorldInteractables: return "show_interactables";
+    default: return nullptr;
+    }
+}
+
 void goblin::set_focus_category(int category_or_negative, int32_t region_place_id)
 {
     g_focus_category = category_or_negative;
@@ -344,42 +460,47 @@ void goblin::set_focus_category(int category_or_negative, int32_t region_place_i
 int goblin::focus_category() { return g_focus_category; }
 int32_t goblin::focus_region() { return g_focus_region; }
 
-// Focus-highlight pass. For the focused (category, region) UNCOLLECTED rows:
-//   - swap the icon to the glow-plate variant (injected_iconid(src + GLOW_OFFSET)),
-//     SAVING the pre-swap iconId so un-focus restores exactly what was there
-//     (works even under live_loot_icons / anonymous_loot, which set their own icon);
-//   - give TEXTLESS markers a "?" label + isEnableNoText and force the line on
-//     (a point with no text is dropped by the game), so none are missing.
-// Only touches focused rows and rows it previously glowed - never other rows'
-// icons - so it can run after apply_loot_settings without clobbering it.
-// Frame ids are stable across map reopens (compute_safe_base is constant), so the
-// saved pre_glow_icon stays valid.
+// Focus label pass. The on-map highlight itself is drawn by the overlay as a projected
+// ring (goblin::mapproject / focus_highlight_points); this pass only keeps the focused
+// markers' on-map ICONS present so a ring has something under it. For the focused
+// (category, region) UNCOLLECTED rows it gives TEXTLESS markers a "?" label +
+// isEnableNoText and forces the line on (a point with no text is dropped by the game),
+// then restores the baked text when the row leaves focus. Only touches rows it labelled,
+// so it can run after apply_loot_settings without clobbering it.
 void goblin::apply_focus_highlight()
 {
     const int focus = g_focus_category;
-    int n_cat = 0, n_region = 0, n_shown = 0, n_glow = 0, n_forced = 0;
+    int n_shown = 0, n_forced = 0;
     for (auto &cr : g_category_rows)
     {
         if (!cr.p) continue;
-        if (focus >= 0 && static_cast<int>(cr.cat) == focus) ++n_cat;
         const bool focused = focus >= 0 && static_cast<int>(cr.cat) == focus &&
                              cr.region_id == g_focus_region;
-        if (focused) ++n_region;
         const bool shown = focused && !collected::is_row_collected(cr.row_id) &&
                            !kindling::is_row_collected(cr.row_id);
 
         if (shown)
         {
             ++n_shown;
-            // Icon -> glow plate (save the current icon first so un-focus restores it exactly).
-            uint32_t glow = goblin::gfx_probe::injected_iconid(
-                cr.src_icon + goblin::generated::MAP_ICON_GLOW_OFFSET);
-            if (glow)
-            {
-                if (!cr.glowing) { cr.pre_glow_icon = cr.p->iconId; cr.glowing = true; }
-                cr.p->iconId = static_cast<decltype(cr.p->iconId)>(glow);
-                ++n_glow;
-            }
+            // Focus IGNORES require_map_fragments: force this marker visible so its
+            // highlight appears (and focus doesn't self-cancel) even in an undiscovered or
+            // post-event area, where apply_map_logic gated it - group-1 via eventFlagId, and
+            // group-2 via a STORY flag (SetSecondaryFlags, e.g. Leyndell Ashen Capital). We
+            // clear ONLY those discovery gates: a switched-chest group-2 gate is a different
+            // flag and stays (so a genuinely-absent variant isn't spuriously highlighted).
+            // apply_map_logic re-derives every gate on each reapply, so leaving focus
+            // restores them automatically - no explicit undo needed.
+            cr.p->eventFlagId = static_cast<decltype(cr.p->eventFlagId)>(goblin::flag::AlwaysOn);
+            auto unstory = [](auto &slot) {
+                if (slot == goblin::flag::StoryErdtreeOnFire ||
+                    slot == goblin::flag::StoryCharmBroken ||
+                    slot == goblin::flag::StorySealingTreeBurnt)
+                    slot = goblin::flag::AlwaysOn;
+            };
+            unstory(cr.p->textEnableFlag2Id1); unstory(cr.p->textEnableFlag2Id2);
+            unstory(cr.p->textEnableFlag2Id3); unstory(cr.p->textEnableFlag2Id4);
+            unstory(cr.p->textEnableFlag2Id5); unstory(cr.p->textEnableFlag2Id6);
+            unstory(cr.p->textEnableFlag2Id7); unstory(cr.p->textEnableFlag2Id8);
             // Textless rows: fabricate a "?" label + force the line on (textEnableFlagId
             // 0 = treated as On; NOT flag::AlwaysOn=6001, which is a real flag that must
             // be set, so it would HIDE the line). Text-having rows keep their baked gating.
@@ -392,22 +513,83 @@ void goblin::apply_focus_highlight()
                 cr.focus_text = true;
             }
         }
-        else
+        else if (cr.focus_text)
         {
-            if (cr.glowing) { cr.p->iconId = cr.pre_glow_icon; cr.glowing = false; }
-            if (cr.focus_text)
-            {
-                cr.p->textId1 = cr.baked_text1;
-                cr.p->isEnableNoText = cr.baked_notext;
-                cr.focus_text = false;
-            }
+            cr.p->textId1 = cr.baked_text1;
+            cr.p->isEnableNoText = cr.baked_notext;
+            cr.focus_text = false;
         }
     }
     if (focus >= 0)
-        spdlog::info("[focus] apply: cat={} region={} | catrows={} regionmatch={} "
-                     "shown={} glow={} forced={} (total category rows={})",
-                     focus, g_focus_region, n_cat, n_region, n_shown, n_glow, n_forced,
-                     g_category_rows.size());
+        spdlog::info("[focus] apply: cat={} region={} shown={} forced={} (rows={})",
+                     focus, g_focus_region, n_shown, n_forced, g_category_rows.size());
+}
+
+// World position of a row, from its live param (grid tile + local offset). The
+// affine pages (60/61/12) store gridNo*256 + pos in world units.
+static bool row_marker_info(const from::paramdef::WORLD_MAP_POINT_PARAM_ST *p,
+                            goblin::HighlightPoint &hp)
+{
+    __try
+    {
+        hp.area = p->areaNo;
+        hp.layer = p->dispMask00 ? 0 : (p->dispMask01 ? 1 : (p->dispMask02 ? 2 : 0xFF));
+        hp.gx = p->gridXNo;
+        hp.gz = p->gridZNo;
+        hp.px = p->posX;
+        hp.pz = p->posZ;
+        return true;
+    }
+    __except (EXCEPTION_EXECUTE_HANDLER) { return false; }
+}
+
+std::vector<goblin::HighlightPoint> goblin::focus_highlight_points()
+{
+    std::vector<HighlightPoint> out;
+    const int focus = g_focus_category;
+    if (focus < 0) return out;
+    for (auto &cr : g_category_rows)
+    {
+        if (!cr.p) continue;
+        if (static_cast<int>(cr.cat) != focus || cr.region_id != g_focus_region) continue;
+        // Only ring markers whose icon is actually shown: not collected/hidden, and not
+        // gated off by a group-2 ENABLE flag (switched-chest absent variant / pre-event area).
+        if (row_is_hidden(cr) || row_group2_gate_off(cr.p)) continue;
+        HighlightPoint hp{};
+        if (row_marker_info(cr.p, hp)) out.push_back(hp);
+    }
+    return out;
+}
+
+std::unordered_set<uint64_t> goblin::hidden_marker_original_ids()
+{
+    std::unordered_set<uint64_t> out;
+    for (const auto &cr : g_category_rows)
+        if (cr.original_row_id != 0 && row_is_hidden(cr))
+            out.insert(cr.original_row_id);
+    return out;
+}
+
+// True only if this row is MANUALLY hidden. Used to suppress our hover tooltip: after a
+// manual hide the engine keeps reporting the (now icon-less) pin as hovered until the
+// cursor moves, so the tooltip would linger. We must NOT use the broader row_is_hidden
+// here - a killed boss/done NPC/hawk sets clearedEventFlagId yet its icon is still drawn
+// (hideKilledBosses defaults off), and suppressing those tooltips is the regression we hit.
+// Collected/flag-hidden icons aren't drawn at all, so the engine never reports them hovered.
+bool goblin::is_row_ptr_hidden(void *rowptr)
+{
+    if (!rowptr) return false;
+    for (const auto &cr : g_category_rows)
+        if (cr.p == rowptr) return is_manually_hidden(cr.p);
+    return false;  // not one of ours
+}
+
+bool goblin::prune_focus_if_empty()
+{
+    if (g_focus_category < 0) return false;
+    if (!focus_highlight_points().empty()) return false;  // still something to show
+    set_focus_category(-1);
+    return true;
 }
 
 void goblin::inject_map_entries()
@@ -656,15 +838,14 @@ void goblin::inject_map_entries()
             cr.p = wp;
             cr.cat = all_rows[i].category;
             cr.row_id = static_cast<uint64_t>(all_rows[i].row_id);
+            cr.original_row_id = all_rows[i].original_row_id;
             cr.baked_cleared = wp->clearedEventFlagId;
             cr.baked_dis1 = wp->textDisableFlagId1;
             cr.baked_dis2 = wp->textDisableFlagId2;
-            cr.src_icon = wp->iconId;  // baked source icon (pre-remap); glow = injected_iconid(src+OFFSET)
             cr.region_id = goblin::progress::region_place_id(*wp);  // for region-scoped focus
             cr.baked_text1 = wp->textId1;
             cr.baked_notext = wp->isEnableNoText;
             cr.focus_text = false;
-            cr.glowing = false;
             unsigned *en[8];
             enable_flag_ptrs(wp, en);
             for (int k = 0; k < 8; ++k) cr.baked_enable[k] = *en[k];
@@ -1176,6 +1357,13 @@ goblin::HoveredMarker goblin::hovered_marker(void *rowptr)
             r.matched = true;
             r.textId = cr.p->textId1;
             r.posY = cr.p->posY;
+            HighlightPoint hp{};
+            if (row_marker_info(cr.p, hp))
+            {
+                r.area = hp.area;
+                r.world_x = static_cast<float>(hp.gx) * 256.0f + hp.px;
+                r.world_z = static_cast<float>(hp.gz) * 256.0f + hp.pz;
+            }
             return r;
         }
     return r;
@@ -1236,8 +1424,67 @@ void goblin::load_manual_hidden(const std::filesystem::path &path)
     catch (...) {}
 }
 
-void goblin::set_hidden_file(const std::filesystem::path &path) { g_hidden_file = path; }
+void goblin::set_hidden_dir(const std::filesystem::path &dir) { g_hidden_dir = dir; }
 void goblin::persist_manual_hidden() { if (!g_hidden_file.empty()) save_manual_hidden(g_hidden_file); }
+
+// GameMan .data slot, resolved by AOB (patch-resilient; NOT a hardcoded RVA - the static
+// slot moves on every game update). Pinned by the getter idiom
+// `mov rax,[rip+GameMan]; cmp byte[rax+imm],0x0D; setz al; ret`; {{3,7}} extracts the
+// slot address from the rip-relative mov. Resolved once, cached; 0 if not found.
+// (Source: Hexinton CE table AOB. Was hardcoded RVA 0x3D69918; live-verified.)
+static uintptr_t game_man_slot()
+{
+    static uintptr_t s = []() -> uintptr_t {
+        try
+        {
+            return reinterpret_cast<uintptr_t>(modutils::scan<void>(
+                {.aob = "48 8B 05 ?? ?? ?? ?? 80 B8 ?? ?? ?? ?? 0D 0F 94 C0 C3",
+                 .relative_offsets = {{3, 7}}}));
+        }
+        catch (...) { return 0; }
+    }();
+    return s;
+}
+
+int goblin::active_save_slot()
+{
+    // slot = *(int*)(GameMan + 0xAC0). -1 = no character loaded. GameMan+0xAC0 =
+    // "Save Slot (Profile Index)" per the Hexinton CE table. Live-verified 2026-07-13
+    // (1st character -> 0). A missing AOB (game update) degrades to -1 = no per-slot set.
+    const uintptr_t slotaddr = game_man_slot();
+    if (!slotaddr) return -1;
+    int slot = -1;
+    __try
+    {
+        void *gm = *reinterpret_cast<void **>(slotaddr);
+        if (gm) slot = *reinterpret_cast<int *>(reinterpret_cast<uint8_t *>(gm) + 0xAC0);
+    }
+    __except (EXCEPTION_EXECUTE_HANDLER) { return -1; }
+    return (slot >= 0 && slot <= 9) ? slot : -1;  // 0..9 valid; anything else = none
+}
+
+bool goblin::sync_hidden_slot()
+{
+    const int slot = active_save_slot();
+    if (slot == g_hidden_slot) return false;  // no character-switch since last check
+    g_hidden_slot = slot;
+    {
+        std::lock_guard<std::mutex> lk(g_manual_hidden_mtx);
+        g_manual_hidden.clear();
+    }
+    if (slot >= 0 && !g_hidden_dir.empty())
+    {
+        g_hidden_file = g_hidden_dir / ("MapForGoblins_hidden_s" + std::to_string(slot) + ".txt");
+        load_manual_hidden(g_hidden_file);  // per-character set (empty file -> empty set)
+        spdlog::info("[hide] active save slot {} -> {} ({} hidden loaded)", slot,
+                     g_hidden_file.filename().string(), manual_hidden_count());
+    }
+    else
+    {
+        g_hidden_file.clear();  // no character loaded: no persist target, empty set
+    }
+    return true;  // set changed -> caller reapplies visibility
+}
 
 // World Map fragment markers are only useful BEFORE you own that fragment, but the
 // require_map_fragments gate (apply_map_logic sets eventFlagId = the area's fragment

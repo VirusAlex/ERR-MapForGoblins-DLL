@@ -28,12 +28,16 @@ namespace goblin::progress
         int total = 0;
     };
 
+    // Coarse world grouping for the progress tab's three mega-sections.
+    enum class Mega : int { LandsBetween = 0, Dungeons = 1, ShadowLands = 2 };
+
     struct RegionProgress
     {
         int32_t place_name_id = 0;  // PlaceName id used for the localized name (0 = Other)
         std::string name;           // resolved UTF-8 name (localized, else English fallback)
         int collected = 0;          // region-wide collected / total (all categories)
         int total = 0;
+        Mega mega = Mega::LandsBetween;  // which mega-section this region belongs to
         CatCount cats[kCategoryCount];
     };
 
@@ -55,4 +59,7 @@ namespace goblin::progress
     // a marker's baked tile. Same logic the tab groups by; used by inject to tag
     // each CategoryRow so map "focus" can isolate one category IN one region.
     int32_t region_place_id(const from::paramdef::WORLD_MAP_POINT_PARAM_ST &data);
+
+    // Coarse mega-section (Lands Between / Dungeons / Shadow of the Erdtree) for a marker.
+    Mega region_mega(const from::paramdef::WORLD_MAP_POINT_PARAM_ST &data);
 }

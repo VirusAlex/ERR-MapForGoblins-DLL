@@ -2,6 +2,7 @@
 
 #include <cstdint>
 #include <filesystem>
+#include <unordered_set>
 #include <vector>
 
 // Forward-declare the generated Category enum instead of pulling the full
@@ -38,6 +39,40 @@ namespace goblin
     // Swap focused rows to the glow-highlight icon (and others back to normal).
     // Called by reapply_live_settings() and after remap_injected_icons().
     void apply_focus_highlight();
+
+    // World position of a marker to highlight on the open map, for the overlay's
+    // projected ring (replaces the baked glow-icon swap: no reopen needed). area is
+    // WorldMapPointParam.areaNo; world_x/z = gridNo*256 + pos. The overlay projects
+    // these via goblin::mapproject. Thread-safe snapshot (row set is stable between
+    // rebuilds; positions are read once here).
+    // layer = WorldMapPointParam dispMask bit (0=overworld/M00, 1=underground/M01,
+    // 2=DLC/M02, 0xFF=none) - the map layer this marker belongs to. The overlay draws it
+    // only when the displayed layer (goblin::maphover::map_layer) matches. gx/gz/px/pz are
+    // the RAW area-local grid + pos (the projector folds them per the marker's area).
+    struct HighlightPoint { uint8_t area; uint8_t layer; uint16_t gx; uint16_t gz; float px; float pz; };
+    // The current focus set (focus category+region) - only markers whose icon is
+    // currently SHOWN (not collected, not kindling-collected, not manually hidden, and
+    // no live hide/cleared flag set). Empty when no focus is active.
+    std::vector<HighlightPoint> focus_highlight_points();
+
+    // Original (pre-remap) row ids of injected markers whose icon is currently HIDDEN
+    // for any reason (collected / kindling / manually hidden / a live disable or cleared
+    // flag is set). The region-progress tab counts these as done. Reads the LIVE rows so
+    // live-loot flag rewrites and manual hide (both keyed on the live param) are seen.
+    std::unordered_set<uint64_t> hidden_marker_original_ids();
+
+    // True if the injected marker at this live WorldMapPointParam* is currently hidden
+    // (collected / kindling / manually hidden / live hide-flag). The hover tooltip uses
+    // it to stop showing a marker the instant it's hidden. False if not one of ours.
+    bool is_row_ptr_hidden(void *rowptr);
+
+    // If a category focus is active but NO shown marker remains in it (all collected /
+    // hidden), clear the focus. Returns true if it cleared (caller reapplies visibility).
+    bool prune_focus_if_empty();
+
+    // The ini config key ("show_*") for a category, or nullptr. Lets the Progress tab
+    // reuse the Settings-tab icon + localized entry label for each category.
+    const char *category_config_key(generated::Category cat);
 
     // Data pointers of MFG-injected WorldMapPointParam rows in the expanded
     // table. Populated by inject_map_entries(); consumed by
@@ -83,7 +118,8 @@ namespace goblin
     // Read-only lookup of the hovered marker (for the passive hover-info overlay):
     // matches the live row ptr to one of our injected rows and returns its name
     // textId + source world Y (WorldMapPointParam.posY carries the MSB part Y).
-    struct HoveredMarker { bool matched = false; int32_t textId = 0; float posY = 0.0f; };
+    struct HoveredMarker { bool matched = false; int32_t textId = 0; float posY = 0.0f;
+                           uint8_t area = 0; float world_x = 0.0f; float world_z = 0.0f; };
     HoveredMarker hovered_marker(void *rowptr);
     // Snapshot of the hidden set for the overlay manager.
     struct HiddenMarkerInfo { uint64_t key; int32_t textId; uint16_t iconId; int32_t region; uint8_t cat; };
@@ -91,10 +127,20 @@ namespace goblin
     size_t manual_hidden_count();
     void unhide_marker(uint64_t key);   // remove one from the hidden set
     void clear_manual_hidden();         // remove all
-    void load_manual_hidden(const std::filesystem::path &path);  // at startup
+    void load_manual_hidden(const std::filesystem::path &path);  // low-level read
     void save_manual_hidden(const std::filesystem::path &path);  // low-level write
-    void set_hidden_file(const std::filesystem::path &path);     // set persist target once
-    void persist_manual_hidden();                                // save to the set target
+    void set_hidden_dir(const std::filesystem::path &dir);       // folder for per-slot hide files
+    void persist_manual_hidden();                                // save to the current slot's file
+
+    // Active save-slot / profile index (0..9) of the loaded character, or -1 when none is
+    // loaded. Read live from GameMan (AOB-resolved slot, "game_man_slot") + 0xAC0
+    // ("Save Slot (Profile Index)"). SEH-guarded. Manual hides are scoped per slot.
+    int active_save_slot();
+    // If the active slot changed since the last call, switch the persist target to that
+    // slot's file (MapForGoblins_hidden_s<N>.txt) and reload the hidden set (empty when no
+    // character is loaded). Returns true if the set changed (caller should reapply
+    // visibility). Call from the watcher loop.
+    bool sync_hidden_slot();
 
     // Force World Map fragment markers visible regardless of require_map_fragments
     // (config::worldMapsIgnoreFragments). Call AFTER apply_map_logic. Idempotent.

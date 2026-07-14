@@ -146,22 +146,26 @@ parts.append("{")
 parts.append("namespace")
 parts.append("{")
 
-# texts + toasts per locale (all locales), names only for non-English locales.
+# texts + toasts per locale (all locales). LABEL tables for ALL locales incl. English
+# (English used to fall back to the raw snake_case key, which showed "show_spirits" etc. in
+# the UI); COMMENT tables only for non-English (English tooltips fall back to the schema
+# comment, which is the canonical English description).
 for lang, _fn, suffix in LOCALES:
     parts.append(text_array(f"TEXT_{suffix}", lang, text_ids, "TextId"))
     parts.append(toast_array(f"TOAST_{suffix}", lang, toast_ids))
+    parts.append(name_array(f"SECT_LABELS_{suffix}", lang, "section_labels"))
+    parts.append(name_array(f"ENTRY_LABELS_{suffix}", lang, "entry_labels"))
     if lang != "English":
-        parts.append(name_array(f"SECT_LABELS_{suffix}", lang, "section_labels"))
         parts.append(name_array(f"SECT_COMMENTS_{suffix}", lang, "section_comments"))
-        parts.append(name_array(f"ENTRY_LABELS_{suffix}", lang, "entry_labels"))
         parts.append(name_array(f"ENTRY_COMMENTS_{suffix}", lang, "entry_comments"))
     parts.append("")
 
 parts.append("template <typename T, size_t N> constexpr size_t cnt(const T (&)[N]) { return N; }")
 parts.append("")
-# English is the fallback base: no name tables (callers fall back to the key).
+# English: emit LABEL tables (so the UI shows human names, not keys); COMMENT tables stay
+# null so entry_comment/section_comment fall back to the canonical schema comment.
 parts.append("const LocaleBundle BUNDLE_EN{TEXT_EN, cnt(TEXT_EN), TOAST_EN, cnt(TOAST_EN),")
-parts.append("    nullptr, 0, nullptr, 0, nullptr, 0, nullptr, 0};")
+parts.append("    SECT_LABELS_EN, cnt(SECT_LABELS_EN), nullptr, 0, ENTRY_LABELS_EN, cnt(ENTRY_LABELS_EN), nullptr, 0};")
 for lang, _fn, suffix in LOCALES:
     if lang == "English":
         continue

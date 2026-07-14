@@ -48,10 +48,43 @@ _emevd = asm.GetType('SoulsFormats.EMEVD').GetMethod('Read',
 
 
 HERO_TOMB_TEMPLATE = 90005683
+import json
 import icon_registry
 import row_id_registry
 ICON_ID = icon_registry.iconid("hero_tomb_statues")  # single-layer MENU_MAP_85 (char 109)
 ROW_START = row_id_registry.base("World - Hero's Tomb Statues")  # z-order slot; see row_id_registry
+
+
+def load_grave_clear_flags():
+    """Map each grave's map-point eventFlagId -> that grave's CLEARED flag.
+
+    The statue template's X0_4 (params[0]) is the eventFlagId of the target Hero's
+    Grave's world-map point (a vanilla area-30/60 row in WorldMapPointParam). That
+    map point is the flag block 62xxx = "grave entrance DISCOVERED", which the game
+    also uses to delete the statue - i.e. the statue vanishes when you FIND the
+    grave, not when you finish it. Verified live: those 62xxx flags stay OFF after
+    clearing the dungeon, so keying our marker on X0_4 hides it too late/never for
+    a player who cares about "have I done this grave".
+
+    The grave's map-point row also encodes its CLEARED transition flag in
+    textDisableFlagId4 (the standard 30XXX800 dungeon-complete flag; falls back to
+    textId1*1000+800 for the one row that lays the fields out differently). Keying
+    the statue marker on THAT hides it exactly when the target grave is cleared.
+    Fully data-derived from the extracted param - no geometry, no hardcoding.
+    """
+    path = config.DATA_DIR / 'WorldMapPointParam.json'
+    out = {}
+    for r in json.load(open(path, encoding='utf-8')):
+        efid = r.get('eventFlagId') or 0
+        if efid <= 0:
+            continue
+        t1 = r.get('textId1') or 0
+        clear = r.get('textDisableFlagId4') or 0
+        if clear <= 0 and t1 > 0:
+            clear = t1 * 1000 + 800  # uniform dungeon-complete flag pattern
+        if clear > 0:
+            out[efid] = clear
+    return out
 
 
 def _read(reader, path, suf='.tmp'):
@@ -94,15 +127,17 @@ def main():
                 params = [struct.unpack_from('<I', ab, off)[0]
                           for off in range(8, len(ab) - 3, 4)]
                 if len(params) < 4: continue
-                # Hide on X0_4 (params[0]), NOT X12_4 (params[3]). Decompiling template
-                # 90005683 shows the statue is DELETED in-world when X0_4 turns ON, and
-                # that same branch SetEventFlag(X12_4, OFF) - so once the statue's content
-                # resolves the "activated" flag is cleared and a marker keyed on X12_4
-                # would linger forever. X0_4 tracks the statue's actual presence.
-                entity, flag = params[1], params[0]
+                # X0_4 (params[0]) is the target grave's map-point eventFlagId. The game
+                # deletes the statue when X0_4 turns ON = when the grave entrance is
+                # DISCOVERED (flag block 62xxx), NOT when the grave is cleared. We remap it
+                # to the grave's CLEARED flag below (load_grave_clear_flags) so the marker
+                # hides when the player finishes the grave. X12_4 is the "examined" flag -
+                # set on the action button before you've done the grave - so it hides too
+                # early. See load_grave_clear_flags() for the derivation.
+                entity, x0_4 = params[1], params[0]
                 if entity in seen: continue
                 seen.add(entity)
-                calls.append((src_tile, entity, flag))
+                calls.append((src_tile, entity, x0_4))
     print(f'  {len(calls)} Hero\'s Tomb statues found')
 
     # Pass 2: resolve entity → MSB position (entity may live in a different
@@ -134,13 +169,22 @@ def main():
                 except Exception: pass
     print(f'  {len(eid_index)} indexed entities')
 
+    # Grave map-point eventFlagId -> that grave's CLEARED flag (see loader docstring).
+    grave_clear = load_grave_clear_flags()
+    remapped = 0
+
     # Pass 3: emit MASSEDIT rows
     lines = []
     row_id = ROW_START
     written = 0
-    for src_tile, entity, flag in calls:
+    for src_tile, entity, x0_4 in calls:
         part = eid_index.get(entity)
         if not part: continue
+        # Remap X0_4 (grave DISCOVERED) -> grave CLEARED flag; fall back to X0_4 if the
+        # grave has no map-point row (keeps the old behaviour rather than never hiding).
+        flag = grave_clear.get(x0_4, x0_4)
+        if flag != x0_4:
+            remapped += 1
         area = part['area']
         gx = part['gx']
         gz = part['gz']
@@ -199,7 +243,8 @@ def main():
     out_path = OUT_DIR / "World - Hero's Tomb Statues.MASSEDIT"
     with open(out_path, 'w', encoding='utf-8') as f:
         f.write('\n'.join(lines) + '\n')
-    print(f'Written {written} Hero\'s Tomb statue markers to {out_path.name}')
+    print(f'Written {written} Hero\'s Tomb statue markers to {out_path.name} '
+          f'({remapped} keyed to grave-cleared flag, {written - remapped} fell back to X0_4)')
 
 
 if __name__ == '__main__':

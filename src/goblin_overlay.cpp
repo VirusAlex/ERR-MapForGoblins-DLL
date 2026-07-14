@@ -41,6 +41,7 @@
 #include "goblin_inject.hpp"
 #include "goblin_markers.hpp"
 #include "goblin_maphover.hpp"   // hovered_row() for the passive hover-info panel
+#include "goblin_mapproject.hpp" // world->screen projection for the highlight rings
 #include "goblin_messages.hpp"   // lookup_text() for the hovered marker's name
 #include "goblin_collected.hpp"  // read_player_pos() for the height readout
 #include "goblin_progress.hpp"
@@ -132,6 +133,8 @@ ID3D11Texture2D *g_atlas_tex = nullptr;   // category-icon atlas
 ID3D11ShaderResourceView *g_atlas_srv = nullptr;
 ID3D11Texture2D *g_logo_tex = nullptr;    // mod logo
 ID3D11ShaderResourceView *g_logo_srv = nullptr;
+ID3D11Texture2D *g_highlight_tex = nullptr;   // focus-highlight ring (drawn over markers)
+ID3D11ShaderResourceView *g_highlight_srv = nullptr;
 bool g_atlas_ready = false;
 
 // Dev "Icon Preview" (Debug tab): pick a PNG off disk, show it floating + centered with a transparent
@@ -150,6 +153,11 @@ static void open_preview_dialog(); // defined below (opens the file dialog on a 
 
 std::atomic<bool> g_running{false}; // overlay thread alive (teardown guard)
 std::atomic<bool> g_menu_open{false};
+// The game's real mouse cursor, captured from its SetCursor calls (hk_SetCursor). Declared
+// here (ahead of overlay_wndproc) so WM_SETCURSOR can re-assert it when the menu is closed.
+std::atomic<HCURSOR> g_game_cursor{nullptr};
+using SetCursor_t = HCURSOR(WINAPI *)(HCURSOR);
+SetCursor_t o_SetCursor = nullptr; // real SetCursor trampoline (bypasses our capture hook)
 // Open/close + rebind use GetAsyncKeyState polling (the game keeps focus -> reliable +
 // symmetric). Key leak into the game while the menu is open is blocked by a hook on
 // GetRawInputData (see hk_GetRawInputData). We never steal the game's focus.
@@ -392,6 +400,10 @@ void draw_section(const goblin::IniSection &sec, bool &changed)
                 continue; // shown as prominent sliders at the top of the Settings tab
             if (std::strncmp(e.key, "overlay_window_", 15) == 0)
                 continue; // auto-managed window geometry (saved on close) - not a UI control
+            if (std::strcmp(e.key, "enable_manual_hide") == 0 ||
+                std::strcmp(e.key, "hide_marker_key") == 0 ||
+                std::strcmp(e.key, "hide_marker_gamepad") == 0)
+                continue; // rendered at the TOP of the Hidden tab instead
             ImGui::PushID(e.key);
             if (std::strcmp(e.key, "fast_map_open") == 0)
             {
@@ -402,22 +414,58 @@ void draw_section(const goblin::IniSection &sec, bool &changed)
             draw_row_icon(e.key);
             const char *label = tr::entry_label(e.key, lang);
             bool hovered = false; // mouse hover OR keyboard/gamepad nav focus on this row
+
+            // Reserve a right-hand column for the dim ini-key code and WRAP the localized
+            // label within the remaining width, so neither the name nor the code is clipped
+            // by a narrow menu. The code is painted at the row's TOP-right via the draw list
+            // (independent of control height) so a label that wraps to 2+ lines can't shove it.
+            ImDrawList *row_dl = ImGui::GetWindowDrawList();
+            const ImVec2 row_top = ImGui::GetCursorScreenPos();
+            const float code_w = ImGui::CalcTextSize(e.key).x;
+            const float right_x = ImGui::GetWindowPos().x + ImGui::GetWindowContentRegionMax().x;
+            float wrap_x = ImGui::GetWindowContentRegionMax().x - code_w - ImGui::GetStyle().ItemSpacing.x * 2.0f;
+            if (wrap_x < 90.0f) wrap_x = 90.0f;  // floor for extremely narrow menus
+            auto wrapped_label = [&](bool dim) {
+                if (dim) ImGui::PushStyleColor(ImGuiCol_Text, ImGui::GetStyleColorVec4(ImGuiCol_TextDisabled));
+                ImGui::PushTextWrapPos(wrap_x);
+                ImGui::TextWrapped("%s", label);
+                ImGui::PopTextWrapPos();
+                if (dim) ImGui::PopStyleColor();
+            };
+            // Inline label for combo/slider/rebind rows: name on the SAME line as the control
+            // (labels are short, so there's room; no more dropping the control to a 2nd line).
+            auto inline_label = [&]() {
+                ImGui::AlignTextToFramePadding();
+                ImGui::TextUnformatted(label);
+                hovered = hovered || ImGui::IsItemHovered(ImGuiHoveredFlags_ForTooltip);
+                ImGui::SameLine();
+            };
+            // Width for an inline control: fill to the dim-code column (never negative).
+            auto inline_ctrl_w = [&]() {
+                float w = ImGui::GetContentRegionAvail().x - code_w - ImGui::GetStyle().ItemSpacing.x * 2.0f;
+                return w > 80.0f ? w : 80.0f;
+            };
+
             if (e.type == goblin::IniType::Bool)
             {
                 // Lock the overlay/hotkey master switches: unchecking enable_overlay would
                 // close the overlay with no way to reopen it, and enable_toggle_hotkey only
-                // matters when the overlay is OFF (when this menu isn't visible). We grey
-                // them but keep them NAVIGABLE (not BeginDisabled) so their tooltip is
-                // reachable by keyboard/gamepad; the toggle is ignored.
+                // matters when the overlay is OFF. We grey them but keep them navigable so
+                // their tooltip is reachable by keyboard/gamepad; the toggle is ignored.
                 const bool locked = std::strcmp(e.key, "enable_overlay") == 0 ||
                                     std::strcmp(e.key, "enable_toggle_hotkey") == 0;
                 bool v = *static_cast<bool *>(e.target);
-                if (locked)
-                    ImGui::PushStyleColor(ImGuiCol_Text, ImGui::GetStyleColorVec4(ImGuiCol_TextDisabled));
-                const bool clicked = ImGui::Checkbox(label, &v);
+                const bool box_clicked = ImGui::Checkbox("##k", &v);  // wrapped label drawn separately
                 hovered = ImGui::IsItemHovered(ImGuiHoveredFlags_ForTooltip);
-                if (locked) ImGui::PopStyleColor();
-                if (clicked && !locked) { *static_cast<bool *>(e.target) = v; changed = true; }
+                ImGui::SameLine();
+                wrapped_label(locked);
+                hovered = hovered || ImGui::IsItemHovered();
+                const bool label_clicked = ImGui::IsItemClicked();
+                if ((box_clicked || label_clicked) && !locked)
+                {
+                    *static_cast<bool *>(e.target) = box_clicked ? v : !v;
+                    changed = true;
+                }
                 if (locked)
                 {
                     ImGui::SameLine();
@@ -427,20 +475,24 @@ void draw_section(const goblin::IniSection &sec, bool &changed)
             }
             else if (e.type == goblin::IniType::U8)
             {
+                inline_label();
                 int v = *static_cast<uint8_t *>(e.target);
-                if (ImGui::SliderInt(label, &v, 0, 30))
+                ImGui::SetNextItemWidth(inline_ctrl_w());
+                if (ImGui::SliderInt("##k", &v, 0, 30))
                 {
                     *static_cast<uint8_t *>(e.target) =
                         static_cast<uint8_t>(v < 0 ? 0 : (v > 255 ? 255 : v));
                     changed = true;
                 }
-                hovered = ImGui::IsItemHovered(ImGuiHoveredFlags_ForTooltip);
+                hovered = hovered || ImGui::IsItemHovered(ImGuiHoveredFlags_ForTooltip);
             }
             else if (e.type == goblin::IniType::Language)
             {
+                inline_label();
                 std::string &value = *static_cast<std::string *>(e.target);
                 const char *preview = tr::language_preview_label(value, lang);
-                if (ImGui::BeginCombo(label, preview))
+                ImGui::SetNextItemWidth(inline_ctrl_w());
+                if (ImGui::BeginCombo("##k", preview))
                 {
                     const char *options[] = {"auto", "english", "schinese", "tchinese", "korean",
                                              "russian", "german", "french", "spanish"};
@@ -462,21 +514,37 @@ void draw_section(const goblin::IniSection &sec, bool &changed)
                     }
                     ImGui::EndCombo();
                 }
-                hovered = ImGui::IsItemHovered(ImGuiHoveredFlags_ForTooltip);
+                hovered = hovered || ImGui::IsItemHovered(ImGuiHoveredFlags_ForTooltip);
             }
-            else // VkKey / GamepadMask: show value + in-place rebind
+            else if (e.type == goblin::IniType::Text)
+            {
+                // The only Text entry is overlay_render_mode: a 3-way combo. Option names are
+                // technical (kept literal); the row label is the localized name beside it.
+                inline_label();
+                std::string &value = *static_cast<std::string *>(e.target);
+                ImGui::SetNextItemWidth(inline_ctrl_w());
+                if (ImGui::BeginCombo("##k", value.c_str()))
+                {
+                    for (const char *opt : {"surface", "layered", "swapchain"})
+                    {
+                        const bool sel = value == opt;
+                        if (ImGui::Selectable(opt, sel)) { value = opt; changed = true; }
+                        if (sel) ImGui::SetItemDefaultFocus();
+                    }
+                    ImGui::EndCombo();
+                }
+                hovered = hovered || ImGui::IsItemHovered(ImGuiHoveredFlags_ForTooltip);
+            }
+            else // VkKey / GamepadMask: name + value + in-place rebind, all on one line
             {
                 const bool is_key = e.type == goblin::IniType::VkKey;
                 const std::string val =
                     is_key ? fmt_vk(*static_cast<uint32_t *>(e.target))
                            : fmt_gamepad(*static_cast<uint16_t *>(e.target));
                 const bool capturing = g_rebind_mode.load() != 0 && g_rebind_target == e.target;
-                char label_buf[192];
-                std::snprintf(label_buf, sizeof label_buf, "%s = %s", label, val.c_str());
-                const float btn_w = 96.0f;
-                ImGui::Selectable(label_buf, false, 0,
-                                  ImVec2(ImGui::GetContentRegionAvail().x - btn_w, 0));
-                hovered = ImGui::IsItemHovered(ImGuiHoveredFlags_ForTooltip);
+                inline_label();
+                ImGui::AlignTextToFramePadding();
+                ImGui::Text("= %s", val.c_str());
                 ImGui::SameLine();
                 if (capturing)
                     ImGui::TextColored(ImVec4(1.0f, 0.84f, 0.38f, 1.0f), "%s",
@@ -491,6 +559,10 @@ void draw_section(const goblin::IniSection &sec, bool &changed)
                     g_rebind_mode.store(is_key ? 1 : 2);
                 }
             }
+            // Dim ini-key code painted at the row's top-right (all row types), so power users
+            // see the raw key while the localized name stays left and wraps under it.
+            row_dl->AddText(ImVec2(right_x - code_w, row_top.y),
+                            ImGui::GetColorU32(ImGuiCol_TextDisabled), e.key);
             if (e.comment && hovered)
                 ImGui::SetTooltip("%s", tr::entry_comment(e.key, e.comment, lang));
             ImGui::PopID();
@@ -516,18 +588,27 @@ void draw_settings_tab()
     // io.FontGlobalScale (applied each frame in render()); persisted to the
     // overlay_font_scale ini key by the auto-save on close. Rendered here (not via
     // draw_section) so it is easy to find; draw_section skips the schema entry.
+    auto slider_key = [](const char *key) {  // dim raw ini key, right-aligned on the row
+        ImGui::SameLine();
+        const float kw = ImGui::CalcTextSize(key).x;
+        const float rx = ImGui::GetWindowContentRegionMax().x - kw;
+        if (rx > ImGui::GetCursorPosX()) ImGui::SetCursorPosX(rx);
+        ImGui::TextDisabled("%s", key);
+    };
     ImGui::SetNextItemWidth(ImGui::GetFontSize() * 9.0f);
-    ImGui::SliderFloat("Overlay text size", &goblin::config::fontScale, 0.8f, 3.0f,
+    ImGui::SliderFloat(tr::tr(tr::TextId::OverlayTextSize, lang), &goblin::config::fontScale, 0.8f, 3.0f,
                        "%.2fx", ImGuiSliderFlags_AlwaysClamp);
     if (ImGui::IsItemHovered(ImGuiHoveredFlags_ForTooltip))
-        ImGui::SetTooltip("Scales the overlay menu text. Raise it on 4K / high-DPI screens.");
+        ImGui::SetTooltip("%s", tr::tr(tr::TextId::OverlayTextSizeTip, lang));
+    slider_key("overlay_font_scale");
 
     // Overlay panel opacity (window bg alpha). Persisted to overlay_opacity on close.
     ImGui::SetNextItemWidth(ImGui::GetFontSize() * 9.0f);
-    ImGui::SliderFloat("Overlay opacity", &goblin::config::overlayOpacity, 0.3f, 1.0f,
+    ImGui::SliderFloat(tr::tr(tr::TextId::OverlayOpacity, lang), &goblin::config::overlayOpacity, 0.3f, 1.0f,
                        "%.2f", ImGuiSliderFlags_AlwaysClamp);
     if (ImGui::IsItemHovered(ImGuiHoveredFlags_ForTooltip))
-        ImGui::SetTooltip("Menu panel transparency. Lower it to see more of the map behind the menu.");
+        ImGui::SetTooltip("%s", tr::tr(tr::TextId::OverlayOpacityTip, lang));
+    slider_key("overlay_opacity");
     ImGui::Separator();
 
     bool changed = false;
@@ -627,22 +708,21 @@ void draw_debug_tab()
         ImGui::TextDisabled("%s", tr::tr(tr::TextId::NoDumpYet, lang));
 
     ImGui::Separator();
-    ImGui::TextWrapped("Icon Preview: pick a PNG and see it floating + centered with a transparent "
-                       "background, at a chosen on-map size. Open the in-game map first, then open this "
-                       "overlay over it to compare your art against the live icons.");
-    if (ImGui::Button("Icon Preview..."))
+    ImGui::TextWrapped("%s", tr::tr(tr::TextId::IconPreviewHint, lang));
+    if (ImGui::Button(tr::tr(tr::TextId::IconPreviewOpen, lang)))
         open_preview_dialog();
     if (g_preview_srv)
     {
         ImGui::SameLine();
-        if (ImGui::Button("Close preview"))
+        if (ImGui::Button(tr::tr(tr::TextId::IconPreviewClose, lang)))
             g_preview_show.store(false);
         ImGui::SameLine();
-        if (!g_preview_show.load() && ImGui::Button("Show preview"))
+        if (!g_preview_show.load() && ImGui::Button(tr::tr(tr::TextId::IconPreviewShow, lang)))
             g_preview_show.store(true);
-        ImGui::SliderFloat("Preview size (px)", &g_preview_px, 8.0f, 256.0f, "%.0f");
-        ImGui::TextDisabled("source: %d x %d px", g_preview_w, g_preview_h);
+        ImGui::SliderFloat(tr::tr(tr::TextId::IconPreviewSize, lang), &g_preview_px, 8.0f, 256.0f, "%.0f");
+        ImGui::TextDisabled(tr::tr(tr::TextId::IconPreviewSource, lang), g_preview_w, g_preview_h);
     }
+
 }
 
 // ── About tab: version + links ──
@@ -741,27 +821,103 @@ static bool draw_category_bar(const char *name, int collected, int total,
     return clicked;
 }
 
-// ── Progress tab: per-region collected/total, broken down by category ──
-// Groups every baked marker into ~22 coarse regions (goblin_progress) and shows
-// an overall bar per region + a clickable bar per enabled category. Clicking a
-// category isolates its uncollected markers on the live map (goblin focus mode).
-// Manager for markers the user hid manually (hover a marker + press hide_marker_key).
-// Lists them with per-item Unhide + an Unhide-all button; changes apply live + persist.
-static void draw_hidden_markers_section()
+// Disabled-color text that WRAPS at the content edge (ImGui::TextDisabled does not wrap,
+// so long localized strings get clipped by a narrow menu). Used for header hints.
+static void text_disabled_wrapped(const char *s)
 {
-    if (!goblin::config::enableManualHide)
-        return;
+    ImGui::PushStyleColor(ImGuiCol_Text, ImGui::GetStyleColorVec4(ImGuiCol_TextDisabled));
+    ImGui::TextWrapped("%s", s);
+    ImGui::PopStyleColor();
+}
+
+// ── Hidden-markers tab: markers the user hid manually (hover + hide_marker_key) ──
+// Lists each with per-item Unhide + an Unhide-all button; changes apply live + persist.
+// Shows the localized item name + location (from the row's baked textId/region), NOT the
+// raw category enum + icon id.
+static void draw_hidden_tab()
+{
     namespace tr = goblin::i18n;
     const tr::Language lang = tr::current_language();
-    const auto hidden = goblin::manual_hidden_snapshot();
-    char hdr[96];
-    std::snprintf(hdr, sizeof hdr, "%s (%zu)###hiddenmarkers",
-                  tr::tr(tr::TextId::HiddenMarkers, lang), hidden.size());
-    if (!ImGui::CollapsingHeader(hdr))
+
+    // Manual-hide controls live at the TOP of this tab (moved off the Settings/Debug tabs):
+    // the enable toggle + the hide-marker key. Reuse each schema entry's comment as the
+    // English tooltip fallback (localized comments come from the i18n bundle).
+    auto find_entry = [](const char *key) -> const goblin::IniEntry * {
+        for (const auto &sec : goblin::ini_schema())
+            for (const auto &e : sec.entries)
+                if (std::strcmp(e.key, key) == 0) return &e;
+        return nullptr;
+    };
+    bool changed = false;
+    if (const auto *e = find_entry("enable_manual_hide"))
+    {
+        draw_row_icon(e->key);
+        bool v = *static_cast<bool *>(e->target);
+        if (ImGui::Checkbox(tr::entry_label(e->key, lang), &v))
+        {
+            *static_cast<bool *>(e->target) = v;
+            changed = true;
+        }
+        if (e->comment && ImGui::IsItemHovered(ImGuiHoveredFlags_ForTooltip))
+            ImGui::SetTooltip("%s", tr::entry_comment(e->key, e->comment, lang));
+    }
+    if (const auto *e = find_entry("hide_marker_key"))
+    {
+        draw_row_icon(e->key);
+        const std::string val = fmt_vk(*static_cast<uint32_t *>(e->target));
+        const bool capturing = g_rebind_mode.load() != 0 && g_rebind_target == e->target;
+        ImGui::AlignTextToFramePadding();
+        ImGui::Text("%s = %s", tr::entry_label(e->key, lang), val.c_str());
+        const bool hov = ImGui::IsItemHovered(ImGuiHoveredFlags_ForTooltip);
+        ImGui::SameLine();
+        if (capturing)
+            ImGui::TextColored(ImVec4(1.0f, 0.84f, 0.38f, 1.0f), "%s", tr::tr(tr::TextId::PressAKey, lang));
+        else if (ImGui::SmallButton(tr::entry_label("rebind", lang)))
+        {
+            g_rebind_target = e->target;
+            g_rebind_pad_accum = 0;
+            g_captured_vk.store(0);
+            g_captured_up.store(false);
+            g_rebind_mode.store(1);
+        }
+        if (e->comment && hov)
+            ImGui::SetTooltip("%s", tr::entry_comment(e->key, e->comment, lang));
+    }
+    if (const auto *e = find_entry("hide_marker_gamepad"))
+    {
+        draw_row_icon(e->key);
+        const std::string val = fmt_gamepad(*static_cast<uint16_t *>(e->target));
+        const bool capturing = g_rebind_mode.load() != 0 && g_rebind_target == e->target;
+        ImGui::AlignTextToFramePadding();
+        ImGui::Text("%s = %s", tr::entry_label(e->key, lang), val.c_str());
+        const bool hov = ImGui::IsItemHovered(ImGuiHoveredFlags_ForTooltip);
+        ImGui::SameLine();
+        if (capturing)
+            ImGui::TextColored(ImVec4(1.0f, 0.84f, 0.38f, 1.0f), "%s", tr::tr(tr::TextId::PressComboRelease, lang));
+        else if (ImGui::SmallButton(tr::entry_label("rebind", lang)))
+        {
+            g_rebind_target = e->target;
+            g_rebind_pad_accum = 0;
+            g_captured_vk.store(0);
+            g_captured_up.store(false);
+            g_rebind_mode.store(2);  // gamepad-combo capture
+        }
+        if (e->comment && hov)
+            ImGui::SetTooltip("%s", tr::entry_comment(e->key, e->comment, lang));
+    }
+    if (changed)
+        goblin::reapply_live_settings();
+    ImGui::Separator();
+
+    if (!goblin::config::enableManualHide)
+    {
+        text_disabled_wrapped(tr::tr(tr::TextId::HiddenDisabled, lang));
         return;
+    }
+    const auto hidden = goblin::manual_hidden_snapshot();
     if (hidden.empty())
     {
-        ImGui::TextDisabled("%s", tr::tr(tr::TextId::HiddenMarkersNone, lang));
+        text_disabled_wrapped(tr::tr(tr::TextId::HiddenMarkersNone, lang));
         return;
     }
     if (ImGui::Button(tr::tr(tr::TextId::UnhideAll, lang)))
@@ -772,6 +928,11 @@ static void draw_hidden_markers_section()
         return;  // snapshot is now stale; refresh next frame
     }
     ImGui::Separator();
+    ImGui::BeginChild("##hiddenscroll", ImVec2(0, 0), ImGuiChildFlags_NavFlattened);
+    auto to_utf8 = [](const wchar_t *w, char *out, int cap) {
+        if (w && *w) WideCharToMultiByte(CP_UTF8, 0, w, -1, out, cap, nullptr, nullptr);
+        else out[0] = '\0';
+    };
     int idx = 0;
     for (const auto &h : hidden)
     {
@@ -783,11 +944,81 @@ static void draw_hidden_markers_section()
             goblin::reapply_live_settings();
         }
         ImGui::SameLine();
-        const char *catn = goblin::markers::category_name(
-            static_cast<goblin::generated::Category>(h.cat));
-        ImGui::Text("%s  (icon %u)", catn ? catn : "?", static_cast<unsigned>(h.iconId));
+        const auto cat = static_cast<goblin::generated::Category>(h.cat);
+        const char *ckey = goblin::category_config_key(cat);
+        if (ckey) draw_row_icon(ckey);  // category icon + SameLine
+        const char *cname = ckey ? tr::entry_label(ckey, lang) : "?";
+        char name[256], loc[256];
+        to_utf8(goblin::lookup_text(h.textId), name, sizeof name);
+        to_utf8(h.region > 0 ? goblin::lookup_text(h.region) : nullptr, loc, sizeof loc);
+        // "Item - Location  (Category)"; fall back gracefully when a part is unresolved.
+        if (name[0] && loc[0])
+            ImGui::TextWrapped("%s  -  %s  (%s)", name, loc, cname);
+        else if (name[0])
+            ImGui::TextWrapped("%s  (%s)", name, cname);
+        else
+            ImGui::TextWrapped("%s", cname);
         ImGui::PopID();
     }
+    ImGui::EndChild();
+}
+
+// A region row rendered AS its progress bar: full-width, frame-height, clickable to
+// expand/collapse, with a collapse triangle + region name + count overlaid on a fill
+// proportional to completion (same look as the category bars). Collapse state persists
+// per region id in the window state storage. Returns true when the region is expanded.
+// (Arrow is drawn as a triangle via the draw list, NOT a font glyph: the overlay font
+// has no U+25B8/25BE, which would render as "?".)
+static bool draw_region_header(const char *name, int collected, int total, int region_id)
+{
+    char sel_id[32];
+    std::snprintf(sel_id, sizeof sel_id, "##reghdr%d", region_id);
+    ImGuiStorage *st = ImGui::GetStateStorage();
+    const ImGuiID key = ImGui::GetID(sel_id);
+    bool open = st->GetBool(key, false);
+
+    const float frac = total ? static_cast<float>(collected) / total : 0.0f;
+    const float w = ImGui::GetContentRegionAvail().x;
+    const float h = ImGui::GetFrameHeight();
+    const ImVec2 p0 = ImGui::GetCursorScreenPos();
+    const ImVec2 p1(p0.x + w, p0.y + h);
+
+    ImGui::PushStyleColor(ImGuiCol_Header, ImVec4(0, 0, 0, 0));
+    ImGui::PushStyleColor(ImGuiCol_HeaderHovered, ImVec4(0, 0, 0, 0));
+    ImGui::PushStyleColor(ImGuiCol_HeaderActive, ImVec4(0, 0, 0, 0));
+    const bool clicked = ImGui::Selectable(sel_id, false, ImGuiSelectableFlags_None, ImVec2(w, h));
+    ImGui::PopStyleColor(3);
+    const bool hovered = ImGui::IsItemHovered();
+    if (clicked) { open = !open; st->SetBool(key, open); }
+
+    ImDrawList *dl = ImGui::GetWindowDrawList();
+    const float rounding = 3.0f;
+    dl->AddRectFilled(p0, p1, ImGui::GetColorU32(ImGuiCol_FrameBg), rounding);
+    if (frac > 0.0f)
+    {
+        ImVec4 fc = progress_bar_color(frac);
+        if (hovered) { fc.x *= 1.15f; fc.y *= 1.15f; fc.z *= 1.15f; }
+        dl->AddRectFilled(p0, ImVec2(p0.x + w * frac, p1.y), ImGui::GetColorU32(fc), rounding);
+    }
+    dl->AddRect(p0, p1, ImGui::GetColorU32(ImGuiCol_Border), rounding);
+
+    const ImU32 txt = ImGui::GetColorU32(ImGuiCol_Text);
+    // Collapse triangle (right = collapsed, down = open), drawn as a filled tri.
+    const float fs = ImGui::GetFontSize();
+    const float cx = p0.x + 7.0f, cy = p0.y + h * 0.5f, a = fs * 0.32f;
+    if (open)
+        dl->AddTriangleFilled(ImVec2(cx - a, cy - a * 0.6f), ImVec2(cx + a, cy - a * 0.6f),
+                              ImVec2(cx, cy + a * 0.8f), txt);
+    else
+        dl->AddTriangleFilled(ImVec2(cx - a * 0.4f, cy - a), ImVec2(cx - a * 0.4f, cy + a),
+                              ImVec2(cx + a * 0.9f, cy), txt);
+    const float ty = p0.y + (h - fs) * 0.5f;
+    dl->AddText(ImVec2(p0.x + 20.0f, ty), txt, name);
+    char cnt[32];
+    std::snprintf(cnt, sizeof cnt, "%d/%d", collected, total);
+    const float cw = ImGui::CalcTextSize(cnt).x;
+    dl->AddText(ImVec2(p1.x - cw - 6.0f, ty), txt, cnt);
+    return open;
 }
 
 void draw_progress_tab()
@@ -799,25 +1030,27 @@ void draw_progress_tab()
     prog::rebuild_if_stale(ImGui::GetTime());
     const auto &regions = prog::snapshot();
 
-    ImGui::TextDisabled("%s", tr::tr(tr::TextId::ProgressHint, lang));
-    ImGui::TextDisabled("%s", tr::tr(tr::TextId::ProgressClickHint, lang));
-
-    draw_hidden_markers_section();
+    text_disabled_wrapped(tr::tr(tr::TextId::ProgressHint, lang));
+    text_disabled_wrapped(tr::tr(tr::TextId::ProgressClickHint, lang));
 
     // Active focus is a (category, region) pair.
     const int focusCat = goblin::focus_category();
     const int32_t focusReg = goblin::focus_region();
-    // Active-focus banner: which category+region the map is currently isolating.
+    // Active-focus banner: which category+region the map is currently isolating. Drawn in a
+    // FIXED-HEIGHT slot (always reserved, even when no filter is active) so toggling a filter
+    // never shifts the region list up/down. The same text is mirrored top-left on the screen.
+    const float bannerH = ImGui::GetTextLineHeightWithSpacing() * 2.0f + ImGui::GetFrameHeightWithSpacing();
+    ImGui::BeginChild("##focusbanner", ImVec2(0, bannerH), 0, ImGuiWindowFlags_NoScrollbar);
     if (focusCat >= 0)
     {
         const char *regName = "?";
         for (const auto &r : regions)
             if (r.place_name_id == focusReg) { regName = r.name.c_str(); break; }
+        const auto fcat = static_cast<goblin::generated::Category>(focusCat);
+        const char *fkey = goblin::category_config_key(fcat);
+        const char *fname = fkey ? tr::entry_label(fkey, lang) : goblin::markers::category_name(fcat);
         ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(0.90f, 0.78f, 0.35f, 1.0f));
-        ImGui::TextWrapped("%s %s - %s", tr::tr(tr::TextId::ProgressShowingOnly, lang),
-                           goblin::markers::category_name(
-                               static_cast<goblin::generated::Category>(focusCat)),
-                           regName);
+        ImGui::TextWrapped("%s %s - %s", tr::tr(tr::TextId::ProgressShowingOnly, lang), fname, regName);
         ImGui::PopStyleColor();
         if (ImGui::SmallButton(tr::tr(tr::TextId::ProgressFocusClear, lang)))
         {
@@ -825,6 +1058,7 @@ void draw_progress_tab()
             goblin::reapply_live_settings();
         }
     }
+    ImGui::EndChild();
     ImGui::Separator();
 
     // Clicking a category defers the focus change until after the draw loop.
@@ -833,6 +1067,7 @@ void draw_progress_tab()
 
     ImGui::BeginChild("##progscroll", ImVec2(0, 0), ImGuiChildFlags_NavFlattened);
     bool any = false;
+    int last_mega = -1;  // emit a mega-section header (Lands Between / Dungeons / Shadow) on change
     for (const auto &rp : regions)
     {
         // Region-wide visible totals: only categories currently shown (enabled)
@@ -849,18 +1084,28 @@ void draw_progress_tab()
         if (vis_tot == 0) continue;  // nothing enabled here
         any = true;
 
-        // ###id keeps the collapse state stable as the counts in the label change.
-        char header[256];
-        std::snprintf(header, sizeof(header), "%s  (%d/%d)###reg_%d",
-                      rp.name.c_str(), vis_coll, vis_tot, rp.place_name_id);
-        if (!ImGui::CollapsingHeader(header))
+        // Mega-section header (The Lands Between / Dungeons / Shadow of the Erdtree) whenever
+        // the group changes. Skipped for the trailing "Other" bucket (id < 0).
+        if (rp.place_name_id >= 0 && static_cast<int>(rp.mega) != last_mega)
+        {
+            last_mega = static_cast<int>(rp.mega);
+            const tr::TextId mid =
+                rp.mega == prog::Mega::LandsBetween ? tr::TextId::MegaLandsBetween :
+                rp.mega == prog::Mega::Dungeons     ? tr::TextId::MegaDungeons :
+                                                      tr::TextId::MegaShadow;
+            ImGui::Spacing();
+            ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(0.62f, 0.82f, 1.0f, 1.0f));
+            ImGui::SeparatorText(tr::tr(mid, lang));
+            ImGui::PopStyleColor();
+        }
+
+        // The region header IS its progress bar (fill by completion); click to expand.
+        // Collapse state persists per region id inside draw_region_header.
+        if (!draw_region_header(rp.name.c_str(), vis_coll, vis_tot, rp.place_name_id))
             continue;
 
-        const float rfrac = vis_tot ? static_cast<float>(vis_coll) / vis_tot : 0.0f;
-        ImGui::PushStyleColor(ImGuiCol_PlotHistogram, progress_bar_color(rfrac));
-        ImGui::ProgressBar(rfrac, ImVec2(-1.0f, 0.0f));
-        ImGui::PopStyleColor();
         ImGui::Spacing();
+        ImGui::Indent(14.0f);  // nest the per-category bars under their region
         for (int ci = 0; ci < prog::kCategoryCount; ++ci)
         {
             const auto cat = static_cast<goblin::generated::Category>(ci);
@@ -868,8 +1113,13 @@ void draw_progress_tab()
                 continue;
             const bool focused = (focusCat == ci && focusReg == rp.place_name_id);
             ImGui::PushID(rp.place_name_id * 128 + ci);
-            if (draw_category_bar(goblin::markers::category_name(cat),
-                                  rp.cats[ci].collected, rp.cats[ci].total,
+            // Reuse the Settings-tab icon + localized label for this category (via its
+            // config key); fall back to the raw enum name if a category has no key.
+            const char *ckey = goblin::category_config_key(cat);
+            const char *cname = ckey ? tr::entry_label(ckey, lang)
+                                     : goblin::markers::category_name(cat);
+            if (ckey) draw_row_icon(ckey);  // icon + SameLine; bar fills the rest of the row
+            if (draw_category_bar(cname, rp.cats[ci].collected, rp.cats[ci].total,
                                   focused, tr::tr(tr::TextId::ProgressClickHint, lang)))
             {
                 toggle_cat = ci;
@@ -877,9 +1127,11 @@ void draw_progress_tab()
             }
             ImGui::PopID();
         }
+        ImGui::Unindent(14.0f);
+        ImGui::Spacing();
     }
     if (!any)
-        ImGui::TextDisabled("(no markers to show - enable a category on the Settings tab)");
+        ImGui::TextDisabled("%s", tr::tr(tr::TextId::ProgressNoMarkers, lang));
     ImGui::EndChild();
 
     if (toggle_cat != -2)
@@ -969,8 +1221,8 @@ void draw_settings_window()
     {
         const bool lb = (g_pad.wButtons & XINPUT_GAMEPAD_LEFT_SHOULDER) != 0;
         const bool rb = (g_pad.wButtons & XINPUT_GAMEPAD_RIGHT_SHOULDER) != 0;
-        if (rb && !prev_rb) { cur_tab = (cur_tab + 1) % 4; forced_tab = cur_tab; }
-        if (lb && !prev_lb) { cur_tab = (cur_tab + 3) % 4; forced_tab = cur_tab; }
+        if (rb && !prev_rb) { cur_tab = (cur_tab + 1) % 5; forced_tab = cur_tab; }
+        if (lb && !prev_lb) { cur_tab = (cur_tab + 4) % 5; forced_tab = cur_tab; }
         prev_lb = lb; prev_rb = rb;
     }
     auto tab_flag = [&](int i) {
@@ -988,8 +1240,15 @@ void draw_settings_window()
     {
         if (ImGui::BeginTabItem(tr::tr(tr::TextId::TabSettings, lang), nullptr, tab_flag(0))) { draw_settings_tab(); ImGui::EndTabItem(); }
         if (ImGui::BeginTabItem(tr::tr(tr::TextId::TabProgress, lang), nullptr, tab_flag(1))) { draw_progress_tab(); ImGui::EndTabItem(); }
-        if (ImGui::BeginTabItem(tr::tr(tr::TextId::TabDebug, lang),    nullptr, tab_flag(2))) { draw_debug_tab();    ImGui::EndTabItem(); }
-        if (ImGui::BeginTabItem(tr::tr(tr::TextId::TabAbout, lang),    nullptr, tab_flag(3))) { draw_about_tab();    ImGui::EndTabItem(); }
+        {
+            // Hidden-markers tab title carries the live count, e.g. "Hidden (3)".
+            char htab[64];
+            std::snprintf(htab, sizeof htab, "%s (%zu)###tabhidden",
+                          tr::tr(tr::TextId::TabHidden, lang), goblin::manual_hidden_count());
+            if (ImGui::BeginTabItem(htab, nullptr, tab_flag(2))) { draw_hidden_tab(); ImGui::EndTabItem(); }
+        }
+        if (ImGui::BeginTabItem(tr::tr(tr::TextId::TabDebug, lang),    nullptr, tab_flag(3))) { draw_debug_tab();    ImGui::EndTabItem(); }
+        if (ImGui::BeginTabItem(tr::tr(tr::TextId::TabAbout, lang),    nullptr, tab_flag(4))) { draw_about_tab();    ImGui::EndTabItem(); }
 
         ImGui::EndTabBar();
     }
@@ -1015,12 +1274,23 @@ LRESULT CALLBACK overlay_wndproc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lPar
     switch (msg)
     {
     case WM_SETCURSOR:
-        // Hide the OS cursor over our client area (we draw ImGui's software cursor). Our
-        // window is a background window - without this the OS shows the IDC_APPSTARTING
-        // "background busy" cursor next to it. Handling it ourselves suppresses that.
         if (LOWORD(lParam) == HTCLIENT)
         {
-            SetCursor(nullptr);
+            // Use the trampoline (o_SetCursor), NOT SetCursor: the latter is hooked and would
+            // re-capture whatever we set here as "the game's cursor".
+            // Menu open: hide the OS cursor (we draw ImGui's software cursor).
+            if (g_menu_open.load())
+            {
+                if (o_SetCursor) o_SetCursor(nullptr);
+                return TRUE;
+            }
+            // Menu closed but the window is still shown (hover tooltip / highlight image).
+            // We must NOT fall through to DefWindowProc: with our window's class cursor null
+            // it paints the OS "background app" busy ring (blue spinner) over the map. Assert
+            // the game's real cursor instead - or a plain arrow until we've captured it, which
+            // happens on the game's first SetCursor call. Either way, never the busy ring.
+            HCURSOR gc = g_game_cursor.load();
+            if (o_SetCursor) o_SetCursor(gc ? gc : LoadCursorA(nullptr, IDC_ARROW));
             return TRUE;
         }
         return DefWindowProcW(hWnd, msg, wParam, lParam);
@@ -1281,6 +1551,8 @@ void try_upload_atlas()
     if (!atlas.empty())
         upload_rgba(atlas.data(), ATLAS_W, ATLAS_H, &g_atlas_tex, &g_atlas_srv);
     upload_rgba(LOGO_RGBA, LOGO_W, LOGO_H, &g_logo_tex, &g_logo_srv);
+    upload_rgba(goblin::overlay_icons::HIGHLIGHT_RGBA, goblin::overlay_icons::HIGHLIGHT_W,
+                goblin::overlay_icons::HIGHLIGHT_H, &g_highlight_tex, &g_highlight_srv);
     g_atlas_ready = true; // mark done even on partial failure (don't retry every frame)
 }
 
@@ -1756,6 +2028,10 @@ static void draw_hover_tooltip()
 {
     void *row = goblin::maphover::hovered_row();
     if (!row) return;
+    // Don't keep a tooltip on a marker that just got hidden (manual hide / pickup): its
+    // icon + highlight are gone, so the label must go too - even if the game still reports
+    // it as the focused pin until the cursor moves.
+    if (goblin::is_row_ptr_hidden(row)) return;
     goblin::HoveredMarker hm = goblin::hovered_marker(row);
     if (!hm.matched) return;
 
@@ -1791,6 +2067,84 @@ static void draw_hover_tooltip()
         }
     }
     ImGui::End();
+}
+
+// Top-left on-screen banner mirroring the progress-tab "Showing only: <category> - <region>"
+// filter text, so the active filter is visible on the map itself (not just inside the menu).
+// Drawn while a focus filter is active and the map is open. Informational (NoInputs).
+static void draw_focus_banner_onscreen()
+{
+    const int fc = goblin::focus_category();
+    if (fc < 0) return;
+    namespace tr = goblin::i18n;
+    const tr::Language lang = tr::current_language();
+    const int32_t fr = goblin::focus_region();
+    const char *regName = "?";
+    for (const auto &r : goblin::progress::snapshot())
+        if (r.place_name_id == fr) { regName = r.name.c_str(); break; }
+    const auto fcat = static_cast<goblin::generated::Category>(fc);
+    const char *fkey = goblin::category_config_key(fcat);
+    const char *fname = fkey ? tr::entry_label(fkey, lang) : goblin::markers::category_name(fcat);
+
+    ImGui::SetNextWindowPos(ImVec2(16.0f, 16.0f), ImGuiCond_Always);
+    ImGui::SetNextWindowBgAlpha(0.72f);
+    const ImGuiWindowFlags fl =
+        ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_AlwaysAutoResize |
+        ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoInputs | ImGuiWindowFlags_NoNav |
+        ImGuiWindowFlags_NoFocusOnAppearing | ImGuiWindowFlags_NoSavedSettings;
+    if (ImGui::Begin("##goblin_focus_banner", nullptr, fl))
+    {
+        ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(0.90f, 0.78f, 0.35f, 1.0f));
+        ImGui::Text("%s %s - %s", tr::tr(tr::TextId::ProgressShowingOnly, lang), fname, regName);
+        ImGui::PopStyleColor();
+        // Second line: how to clear the filter (the "Reset filter" button is in the menu).
+        ImGui::PushStyleColor(ImGuiCol_Text, ImGui::GetStyleColorVec4(ImGuiCol_TextDisabled));
+        ImGui::Text(tr::tr(tr::TextId::ProgressFocusResetHint, lang),
+                    tr::tr(tr::TextId::ProgressFocusClear, lang));
+        ImGui::PopStyleColor();
+    }
+    ImGui::End();
+}
+
+// On-map highlight footprint (screen px, edge length) of the highlight.png ring drawn
+// over each focused marker. Its center is transparent, so the ring frames the game icon.
+// Tune here if it reads too big/small relative to the game pins.
+static constexpr float HIGHLIGHT_PX = 46.0f;
+
+// Draw a highlight over each focused marker on the open world map: the embedded
+// highlight.png ring (transparent center) centered on the projected marker, so it frames
+// the game-rendered icon with no baked glow variants and no map reopen. Falls back to a
+// drawn amber ring only if the texture isn't ready yet. Uses the live dialog transform
+// (goblin::mapproject). Called between ImGui::NewFrame and Render while the map is open.
+static void draw_map_highlights()
+{
+    goblin::mapproject::MapView view;
+    if (!goblin::mapproject::read_view(view)) return;
+    const auto pts = goblin::focus_highlight_points();
+    if (pts.empty()) return;
+    const goblin::mapproject::Calib &c = goblin::mapproject::calib();
+    const float cw = static_cast<float>(g_back_w ? g_back_w : 1920);
+    const float chh = static_cast<float>(g_back_h ? g_back_h : 1080);
+    const int cur_layer = goblin::maphover::map_layer();  // 0=OW,1=UG,2=DLC (-1 unknown)
+    ImDrawList *dl = ImGui::GetForegroundDrawList();
+    const ImVec2 disp = ImGui::GetIO().DisplaySize;
+    const float r = HIGHLIGHT_PX * 0.5f;
+    const ImTextureID tex = reinterpret_cast<ImTextureID>(g_highlight_srv);
+    for (const auto &p : pts)
+    {
+        // Only draw markers on the currently displayed layer (dispMask vs current layer).
+        // Guard on a decoded 0..2 layer; if the current layer is unknown, draw all.
+        if (cur_layer >= 0 && cur_layer <= 2 && p.layer != cur_layer) continue;
+        float sx = 0, sy = 0;
+        if (!goblin::mapproject::project(p.area, p.gx, p.gz, p.px, p.pz, view, c, cw, chh, sx, sy))
+            continue;
+        // Cull off-screen (and wildly out-of-range) points cheaply.
+        if (sx < -64 || sy < -64 || sx > disp.x + 64 || sy > disp.y + 64) continue;
+        if (tex)
+            dl->AddImage(tex, ImVec2(sx - r, sy - r), ImVec2(sx + r, sy + r));
+        else
+            dl->AddCircle(ImVec2(sx, sy), 13.0f, IM_COL32(255, 216, 64, 235), 0, 2.5f);
+    }
 }
 
 static void render_frame(bool draw)
@@ -1923,6 +2277,17 @@ BOOL WINAPI hk_ClipCursor(const RECT *r)
     return o_ClipCursor(r);
 }
 
+// Remember the GAME's real cursor so we can restore it when the menu closes. While the
+// menu is open our WM_SETCURSOR sets the OS cursor to NULL (hidden) so only ImGui's
+// software cursor shows; the game does NOT re-set its cursor until a state change (e.g.
+// reopening the map), so without this the cursor stays invisible after closing the menu.
+// We record every non-null SetCursor the game makes and re-apply it on close.
+HCURSOR WINAPI hk_SetCursor(HCURSOR c)
+{
+    if (c) g_game_cursor.store(c);  // track the game's real cursor (ignore our own null-hide)
+    return o_SetCursor ? o_SetCursor(c) : c;
+}
+
 // While the menu is open, feed the GAME a NEUTRAL pad (connected, nothing pressed) so its
 // buttons do not leak into gameplay. We keep the real connect status + packet number so
 // the game keeps polling the slot - returning ERROR_DEVICE_NOT_CONNECTED makes games drop
@@ -1982,6 +2347,12 @@ void update_menu_toggle()
     {
         reset_rebind_state();
         goblin::save_config(goblin::g_ini_path);
+        // Restore the game's cursor: our WM_SETCURSOR hid the OS cursor (SetCursor NULL)
+        // while the menu was open, and the game won't re-set it until its next state
+        // change (map reopen). Re-apply the last cursor the game used so it's visible
+        // immediately on close (fixes the "cursor gone / system arrow until map reopen").
+        if (o_SetCursor && g_game_cursor.load())
+            o_SetCursor(g_game_cursor.load());
     }
     prev_open = open_now;
 }
@@ -2087,9 +2458,31 @@ void overlay_thread()
         // overlay window must also be shown for the passive hover-info panel, which
         // appears while the menu is CLOSED. Shown = (menu open OR marker hovered) AND
         // the game is focused.
+        // Highlight rings project onto the OPEN map even when the menu is closed and
+        // nothing is hovered (the focus-set highlight from the region-progress tab).
+        const bool projecting = goblin::focus_category() >= 0 &&
+                                goblin::maphover::map_dialog() != nullptr;
         {
             static bool win_shown = false;
-            const bool want = (open || hovering) && game_focused;
+            static bool win_clickthru = false;  // current WS_EX_TRANSPARENT state
+            const bool want = (open || hovering || projecting) && game_focused;
+            // Click-through UNLESS the menu is open. While the window is shown only for the
+            // hover tooltip / highlight rings (menu closed), it must be transparent to input
+            // so the GAME fully owns the cursor - otherwise our topmost window steals cursor
+            // ownership and the game cursor vanishes or flips to the system arrow (worse
+            // after a map reopen). When the menu opens we drop transparency so ImGui gets
+            // the mouse. Set the ex-style BEFORE showing so the first shown frame is right.
+            const bool clickthru = !open;
+            if (want && clickthru != win_clickthru)
+            {
+                LONG ex = GetWindowLongW(g_hwnd, GWL_EXSTYLE);
+                ex = clickthru ? (ex | WS_EX_TRANSPARENT) : (ex & ~WS_EX_TRANSPARENT);
+                SetWindowLongW(g_hwnd, GWL_EXSTYLE, ex);
+                // Flush the ex-style change so hit-testing picks it up immediately.
+                SetWindowPos(g_hwnd, nullptr, 0, 0, 0, 0,
+                             SWP_NOMOVE | SWP_NOSIZE | SWP_NOZORDER | SWP_NOACTIVATE | SWP_FRAMECHANGED);
+                win_clickthru = clickthru;
+            }
             if (want != win_shown)
             {
                 ShowWindow(g_hwnd, want ? SW_SHOWNOACTIVATE : SW_HIDE);
@@ -2116,20 +2509,23 @@ void overlay_thread()
                 ImGui::GetIO().FontGlobalScale = fs < 0.8f ? 0.8f : (fs > 3.0f ? 3.0f : fs);
             }
             ImGui::GetIO().MouseDrawCursor = true; // our window has no system cursor over the game
+            if (projecting) draw_map_highlights();
             draw_settings_window();
             draw_preview_window();
             ImGui::Render();
             render_frame(true);
         }
-        else if (hovering && game_focused)
+        else if ((hovering || projecting) && game_focused)
         {
-            // Menu closed but a marker is hovered on the open map: draw the passive
-            // hover-info panel. No input hook, no cursor - purely informational.
+            // Menu closed but the map is open: draw the passive hover-info panel and/or
+            // the projected highlight rings. No input hook, no cursor - informational.
             ImGui_ImplDX11_NewFrame();
             ImGui_ImplWin32_NewFrame();
             ImGui::NewFrame();
             ImGui::GetIO().MouseDrawCursor = false;
-            draw_hover_tooltip();
+            if (projecting) draw_map_highlights();
+            if (projecting) draw_focus_banner_onscreen();  // mirror the "showing only" filter text on screen
+            if (hovering) draw_hover_tooltip();
             ImGui::Render();
             render_frame(true);
         }
@@ -2158,6 +2554,8 @@ void teardown()
     if (g_atlas_tex) { g_atlas_tex->Release(); g_atlas_tex = nullptr; }
     if (g_logo_srv) { g_logo_srv->Release(); g_logo_srv = nullptr; }
     if (g_logo_tex) { g_logo_tex->Release(); g_logo_tex = nullptr; }
+    if (g_highlight_srv) { g_highlight_srv->Release(); g_highlight_srv = nullptr; }
+    if (g_highlight_tex) { g_highlight_tex->Release(); g_highlight_tex = nullptr; }
     if (g_preview_srv) { g_preview_srv->Release(); g_preview_srv = nullptr; }
     if (g_preview_tex) { g_preview_tex->Release(); g_preview_tex = nullptr; }
     if (g_rtv) { g_rtv->Release(); g_rtv = nullptr; }
@@ -2174,6 +2572,11 @@ void teardown()
 } // namespace
 
 bool goblin::overlay::key_down(int vk) { return kd(vk); }
+
+bool goblin::overlay::gamepad_mask_down(uint16_t mask)
+{
+    return g_pad_ok && mask != 0 && (g_pad.wButtons & mask) == mask;
+}
 
 void goblin::overlay::setup()
 {
@@ -2214,5 +2617,7 @@ void goblin::overlay::setup()
                  reinterpret_cast<void **>(&o_SetCursorPos));
         hook_api("ClipCursor", reinterpret_cast<void *>(&hk_ClipCursor),
                  reinterpret_cast<void **>(&o_ClipCursor));
+        hook_api("SetCursor", reinterpret_cast<void *>(&hk_SetCursor),
+                 reinterpret_cast<void **>(&o_SetCursor));
     }
 }

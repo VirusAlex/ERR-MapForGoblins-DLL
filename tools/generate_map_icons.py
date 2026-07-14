@@ -32,41 +32,6 @@ SIZE = 96   # normalize every icon to SIZE x SIZE. Placed with the grace matrix,
 # fallback if that never ran. A high value, safely above any worldmap's native charIds. NO gfx is read.
 FALLBACK_CHARID_BASE = 13764
 
-# Highlight ("focus") variants: for every icon we ALSO emit a glow version = the
-# icon composited onto assets/map_icons/custom/highlight.png (a red backing
-# plate + glow ring), at a larger normalized size so a focused pin reads bigger
-# and framed. Its srcIconId = base + GLOW_OFFSET, so the DLL fetches the glow
-# frame via injected_iconid(baseSrc + GLOW_OFFSET). Keep base+offset < 1024
-# (ICON_MAP_SIZE): base ids are < ~256, so 512 is safe.
-GLOW_OFFSET = 512
-GLOW_SIZE = 120          # normalized longest side (>SIZE=96 -> larger on the map)
-GLOW_INNER = 0.52        # the icon fills this fraction of the plate (its dark center)
-PLATE_PNG = g.ICON_ART_DIR / "highlight.png"
-_plate_cache = None
-
-
-def _plate():
-    global _plate_cache
-    if _plate_cache is None:
-        _plate_cache = Image.open(PLATE_PNG).convert("RGBA")
-    return _plate_cache
-
-
-def make_glow(icon_img):
-    """Composite `icon_img` centred on the highlight plate; return a normalized
-    (premultiplied, cropped) RGBA image at GLOW_SIZE for the focus highlight."""
-    WORK = 256
-    plate = _plate().resize((WORK, WORK), Image.LANCZOS)
-    inner = int(WORK * GLOW_INNER)
-    im = icon_img.convert("RGBA")
-    s = min(inner / im.width, inner / im.height)
-    iw, ih = max(1, round(im.width * s)), max(1, round(im.height * s))
-    icon = im.resize((iw, ih), Image.LANCZOS)
-    canvas = plate.copy()
-    canvas.alpha_composite(icon, ((WORK - iw) // 2, (WORK - ih) // 2))
-    return normalize(canvas, size=GLOW_SIZE)
-
-
 def icon_set():
     """Every iconId we build a tag for = the FULL registry icon set (profile-independent superset).
     Every marker's baked iconId is a registry slug's id (no hardcoded iconIds remain), so this covers
@@ -166,12 +131,6 @@ def main():
         entries.append((icon, body, mat))
         print(f"  iconId {icon:4} -> {norm.width:2}x{norm.height:2}px, tag {len(body)} bytes")
 
-        # Focus-highlight variant (icon on the glow plate) at srcIconId base+GLOW_OFFSET.
-        gnorm = make_glow(img)
-        gbody = lossless_body(gnorm)
-        gmat = icon_matrix(gnorm.width, gnorm.height)
-        entries.append((icon + GLOW_OFFSET, gbody, gmat))
-
     OUT_DIR.mkdir(parents=True, exist_ok=True)
     hpp = OUT_DIR / "goblin_map_icons.hpp"
     cpp = OUT_DIR / "goblin_map_icons.cpp"
@@ -187,9 +146,6 @@ def main():
         "    // DLL (compute_safe_base: above the loaded movie's native max). This constant is only used if\n"
         "    // that runtime computation never ran. No gfx is involved.\n"
         f"    inline constexpr unsigned MAP_ICON_CHARID_BASE = {base}u;\n"
-        "    // Focus-highlight glow variant: a marker's glow frame lives at srcIconId (baked icon +\n"
-        "    // MAP_ICON_GLOW_OFFSET). The DLL swaps focused pins to injected_iconid(base + this).\n"
-        f"    inline constexpr int MAP_ICON_GLOW_OFFSET = {GLOW_OFFSET};\n"
         "    // Each icon ships its TIGHT (alpha-cropped) bitmap tag PLUS its own placement matrix: the crop\n"
         "    // is tight so centering depends on each bitmap's W x H (no shared matrix). The DLL appends a\n"
         "    // frame placed with this matrix; the overlay atlas letterboxes the same tag into a square cell.\n"
