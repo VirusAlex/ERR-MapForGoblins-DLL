@@ -96,6 +96,13 @@ the required paths). The overhaul profiles stage a merged overlay-over-vanilla s
 first, since those overhauls ship a partial ModEngine overlay. `--convergence2`
 (The Convergence 2.x) still exists but is unpublished and not part of the default set.
 
+The vanilla profile reads `regulation.bin`, `map/mapstudio/*.msb.dcx`,
+`event/*.emevd.dcx` and `msg/*/*.msgbnd.dcx` from `game_dir`, with `eldenring.exe` and
+`oo2core_6_win64.dll` next to them; the overhaul profiles read the same files as the vanilla
+base under their overlay. A full UXM unpack has all of that; a partial one must include the
+files from `DLC.bdt` too, or the bake comes out without the Realm of Shadow markers (about
+1260 short - the pipeline warns `no Realm of Shadow maps`).
+
 Output: `builds/build[-<profile>]/Release/MapForGoblins.dll`; the ini is written by
 `mfg_inigen` at packaging time, and the DLL also creates/repairs it on first run.
 

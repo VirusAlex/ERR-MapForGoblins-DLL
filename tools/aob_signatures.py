@@ -553,9 +553,9 @@ SIGNATURES = [
                    "?? ?? ?? ?? 48 89 01 48",
         "slot": None,
         "critical": False,
-        "refs": ["goblin_map_timing.cpp:177"],
-        "note": "Ends in a build-specific lea disp (B7 A3 16 02); expected to "
-                "shift on a game update - non-critical by design.",
+        "refs": ["goblin_map_timing.cpp:340"],
+        "note": "Vtable lea disp wildcarded (it shifted on 1.17); the vtable store "
+                "after it (48 89 01 48) keeps it unique.",
     },
     # ---- Stall-probe cost counters (debug_logging diagnostics) - non-critical ----
     {
