@@ -62,6 +62,13 @@ data pipeline, the install method differs. The overhaul profiles (convergence2 /
 convergence3 / erte / goldenage / vins / reborn / graceborne) stage a merged overlay-over-vanilla
 source view first, since those overhauls ship a partial ModEngine overlay.
 
+The vanilla profile reads `regulation.bin`, `map/mapstudio/*.msb.dcx`,
+`event/*.emevd.dcx`, `msg/*/*.msgbnd.dcx` and `menu/02_120_worldmap.gfx` from
+`game_dir`, with `eldenring.exe` and `oo2core_6_win64.dll` next to them. A full
+UXM unpack has all of that; a partial one must include the files from `DLC.bdt`
+too, or the bake silently drops every Realm of Shadow marker (~5600 entries
+instead of ~6900).
+
 Output: `build/Release/MapForGoblins.dll` + `MapForGoblins.ini`
 
 ## Installation
