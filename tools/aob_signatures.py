@@ -254,12 +254,12 @@ SIGNATURES = [
         "name": "map_wmd_dtor_hook",
         "pattern": "48 89 4C 24 08 55 56 57 41 54 41 55 41 56 41 57 48 8B EC 48 83 EC 30 "
                    "48 C7 45 F0 FE FF FF FF 48 89 9C 24 88 00 00 00 48 8B F1 48 8D 05 "
-                   "B7 A3 16 02",
+                   "?? ?? ?? ?? 48 89 01 48 83 B9 B8 3E 00 00 00",
         "slot": None,
         "critical": False,
         "refs": ["goblin_map_timing.cpp:177"],
-        "note": "Ends in a build-specific lea disp (B7 A3 16 02); expected to "
-                "shift on a game update - non-critical by design.",
+        "note": "Vtable lea disp wildcarded (it shifted on 1.17); the trailing "
+                "cmp [rcx+3EB8],0 keeps it unique.",
     },
     {
         "name": "map_placename_update",
