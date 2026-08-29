@@ -18,6 +18,10 @@ set(GEN_DIR "${CMAKE_SOURCE_DIR}/src/${GENERATED_SUBDIR}")
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_INTERPROCEDURAL_OPTIMIZATION TRUE)
 
+# Fetched deps (minhook) still declare cmake_minimum_required < 3.5, which
+# CMake 4 rejects outright; opt them into the 3.5 policy floor.
+set(CMAKE_POLICY_VERSION_MINIMUM 3.5)
+
 include(FetchContent)
 
 FetchContent_Declare(minhook
