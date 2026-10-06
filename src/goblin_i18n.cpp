@@ -119,6 +119,8 @@ Language goblin::i18n::language_from_steam(std::string_view steam_language)
         return Language::French;
     if (s == "spanish" || s == "latam" || s == "es" || s == "es-es" || s == "es_es" || s == "es-419")
         return Language::Spanish;
+    if (s == "vietnamese" || s == "vi" || s == "vi-vn" || s == "vi_vn")
+        return Language::Vietnamese;
     return Language::English;
 }
 
@@ -138,6 +140,7 @@ std::string goblin::i18n::normalize_language_config(std::string_view config_valu
     if (s == "french" || s == "fr" || s == "fra" || s == "fre" || s == "francais") return "french";
     if (s == "spanish" || s == "es" || s == "esp" || s == "spa" || s == "latam" ||
         s == "espanol") return "spanish";
+    if (s == "vietnamese" || s == "vi" || s == "vie" || s == "vn" || s == "tiengviet") return "vietnamese";
     return "english";
 }
 
@@ -151,6 +154,7 @@ Language goblin::i18n::language_from_config(std::string_view config_value)
     if (s == "german") return Language::German;
     if (s == "french") return Language::French;
     if (s == "spanish") return Language::Spanish;
+    if (s == "vietnamese") return Language::Vietnamese;
     if (s == "auto") return cached_auto_language();
     return Language::English;
 }
@@ -171,6 +175,7 @@ const char *goblin::i18n::language_code(Language language)
     case Language::German: return "german";
     case Language::French: return "french";
     case Language::Spanish: return "spanish";
+    case Language::Vietnamese: return "vietnamese";
     default: return "english";
     }
 }
@@ -192,6 +197,7 @@ const char *goblin::i18n::language_option_label(std::string_view config_value, L
     if (s == "german") return "Deutsch";
     if (s == "french") return "Français";
     if (s == "spanish") return "Español";
+    if (s == "vietnamese") return "Tiếng Việt";
     return "English";
 }
 
@@ -212,6 +218,7 @@ const char *goblin::i18n::language_preview_label(std::string_view config_value, 
     case Language::German: return "Auto: Deutsch";
     case Language::French: return "Auto: Français";
     case Language::Spanish: return "Auto: Español";
+    case Language::Vietnamese: return "Auto: Tiếng Việt";
     default:
         return pick(language, "Auto: English", "自动：English", "自動：English", "자동: English");
     }

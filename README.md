@@ -55,7 +55,7 @@ Press **F10** (keyboard) or **Y+R3** (controller) to open the mod menu inside th
 - Hovering a marker shows a **small tooltip** with how far above or below you it is
 - **Focus** on your current location: markers of the map you are on are drawn bigger and brighter, markers of another map smaller and dimmer. Configurable in the mod menu
 - **Live marker de-overlapping**: overlapping icons are spread apart using only the markers visible at that moment, so a category you turn off frees its space
-- Every marker shows its location name, down to sub-areas (like Siofra Aqueduct / Siofra River). The mod uses the game's own strings, so everything is **localised** out of the box; the mod's own menu is translated into 8 languages
+- Every marker shows its location name, down to sub-areas (like Siofra Aqueduct / Siofra River). The mod uses the game's own strings, so everything is **localised** out of the box; the mod's own menu is translated into 9 languages (English, Chinese (Simplified/Traditional), Korean, Russian, German, French, Spanish, Vietnamese)
 - The INI maintains itself: if there's no file, it gets created; new options after an update are added automatically
 - **Item & Enemy Randomizer support** (vanilla build, on by default): loot markers read the loaded regulation at startup, so each one shows the item that's *actually* there - right name, right icon - and disappears when you pick up the real light point. Works with any seed, no per-seed setup
 - **Spoiler-free mode** (optional, `anonymous_loot` in the ini): every loot marker shows a plain "?" icon and a generic label instead of the real item - made for blind / randomizer runs

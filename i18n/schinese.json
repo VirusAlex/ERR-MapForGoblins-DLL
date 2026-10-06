@@ -301,7 +301,7 @@
         "live_loot_labels": "把每个战利品标记改名为当前 lot 实际给予的物品，使名称匹配随机器。\n会使用更多内存（把物品名复制到地图名称表中）。",
         "live_loot_icons": "让每个战利品标记使用当前 lot 实际物品的图标和类别，\n使图标和 show_* 开关匹配随机器。",
         "anonymous_loot": "无剧透：所有战利品标记显示灰色“?”和通用名称，而不显示真实物品。\n会覆盖 live_loot_labels/icons；标记仍会在拾取后隐藏。",
-        "ui_language": "本模组显示的一切文字的语言：游戏内菜单、覆盖层菜单、地图提示以及本文件的注释。\nauto 跟随 Steam 游戏语言；无法识别的语言回退为英文。\n可选值：auto, english, schinese, tchinese, korean, russian, german, french, spanish。\n标记上的物品名和地名来自游戏本身，始终保持游戏的语言，因为游戏只加载一种。\n游戏内菜单使用游戏自带的字体：在欧洲版游戏中选择中文或韩文，那里会显示为空白方块，\n而覆盖层自带字体，能够正常显示。标记上的敌人名称和这套覆盖层字体都在游戏加载时准备好，\n因此需要重启游戏才会改变。",
+        "ui_language": "本模组显示的一切文字的语言：游戏内菜单、覆盖层菜单、地图提示以及本文件的注释。\nauto 跟随 Steam 游戏语言；无法识别的语言回退为英文。\n可选值：auto, english, schinese, tchinese, korean, russian, german, french, spanish, vietnamese。\n标记上的物品名和地名来自游戏本身，始终保持游戏的语言，因为游戏只加载一种。\n游戏内菜单使用游戏自带的字体：在欧洲版游戏中选择中文或韩文，那里会显示为空白方块，\n而覆盖层自带字体，能够正常显示。标记上的敌人名称和这套覆盖层字体都在游戏加载时准备好，\n因此需要重启游戏才会改变。",
         "menu_enabled": "由下面的切换键打开的模组菜单。关闭后，同一按键改为开关全部地图图标，不会打开菜单；\n若 DX 挂钩冲突（Steam 叠加层/RTSS/GeForce Experience）或显卡驱动导致覆盖层菜单\n使游戏不稳定，也应关闭此项。",
         "enable_toggle_hotkey": "当菜单被禁用时，允许 toggle_key / toggle_gamepad_combo 开关所有地图图标。\n菜单启用时，这些按键会打开菜单。",
         "toggle_key": "键盘热键：menu_enabled 开启时打开设置菜单；菜单禁用时开关所有地图图标。\n默认：F10。",

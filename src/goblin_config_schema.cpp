@@ -316,7 +316,7 @@ namespace
                          "the map tooltip and this file's own comments. auto follows the Steam game\n"
                          "language; unrecognized languages fall back to English.\n"
                          "Values: auto, english, schinese, tchinese, korean, russian, german, french,\n"
-                         "spanish.\n"
+                         "spanish, vietnamese.\n"
                          "Item and place names on the markers come from the game itself and always\n"
                          "stay in the game's language, because the game loads only that one. The\n"
                          "in-game menu is drawn with the GAME's font: Chinese or Korean picked in a\n"

@@ -15,6 +15,7 @@ namespace goblin::i18n
         German,
         French,
         Spanish,
+        Vietnamese,
     };
 
     enum class TextId

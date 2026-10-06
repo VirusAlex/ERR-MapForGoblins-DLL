@@ -568,7 +568,7 @@ void draw_section(const goblin::IniSection &sec, bool &changed)
                 if (ImGui::BeginCombo("##k", preview))
                 {
                     const char *options[] = {"auto", "english", "schinese", "tchinese", "korean",
-                                             "russian", "german", "french", "spanish"};
+                                             "russian", "german", "french", "spanish", "vietnamese"};
                     const std::string normalized = tr::normalize_language_config(value);
                     const std::string selected_language = normalized == "auto"
                         ? tr::language_code(tr::current_language())
@@ -2408,6 +2408,7 @@ static bool init_d3d()
                 ImFontGlyphRangesBuilder b;
                 b.AddRanges(io.Fonts->GetGlyphRangesDefault());
                 b.AddRanges(io.Fonts->GetGlyphRangesCyrillic());
+                b.AddRanges(io.Fonts->GetGlyphRangesVietnamese());
                 b.BuildRanges(&base_ranges);
             }
             const char *base_fonts[] = {"C:\\Windows\\Fonts\\segoeui.ttf",
@@ -2951,6 +2952,7 @@ static void sc2_build_context_fonts()
             ImFontGlyphRangesBuilder b;
             b.AddRanges(io.Fonts->GetGlyphRangesDefault());
             b.AddRanges(io.Fonts->GetGlyphRangesCyrillic());
+            b.AddRanges(io.Fonts->GetGlyphRangesVietnamese());
             b.BuildRanges(&base_ranges);
         }
         const char *base_fonts[] = {"C:\\Windows\\Fonts\\segoeui.ttf",

@@ -102,7 +102,7 @@ namespace
 
     // The two ini values with a fixed option list (both mirror the overlay's combos).
     const char *const kLanguages[] = {"auto",    "english", "schinese", "tchinese", "korean",
-                                      "russian", "german",  "french",   "spanish"};
+                                      "russian", "german",  "french",   "spanish", "vietnamese"};
 
     // ── markup ───────────────────────────────────────────────────────────────────────
     // The row's text fields are html=1 EditText, and the setter the mod already uses

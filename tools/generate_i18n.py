@@ -37,7 +37,8 @@ LOCALES = [("English", "en.json", "EN"),
            ("Russian", "russian.json", "RU"),
            ("German", "german.json", "DE"),
            ("French", "french.json", "FR"),
-           ("Spanish", "spanish.json", "ES")]
+           ("Spanish", "spanish.json", "ES"),
+           ("Vietnamese", "vietnamese.json", "VI")]
 CATEGORIES = ["texts", "toasts", "section_labels", "section_comments",
               "entry_labels", "entry_comments"]
 
