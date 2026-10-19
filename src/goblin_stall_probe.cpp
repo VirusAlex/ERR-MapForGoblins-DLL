@@ -1,6 +1,7 @@
 #include "goblin_stall_probe.hpp"
 #include "goblin_anchors.hpp" // every base+RVA engine helper resolves through this
 #include "goblin_config.hpp"
+#include "goblin_map_api.hpp"
 #include "goblin_guarded.hpp" // faults we ask for must not be recorded as crashes
 
 #if MFG_STALL_PROFILER
@@ -3433,6 +3434,7 @@ namespace
         goblin::crashdiag::note_generation(g_v3_native.parent, g_v3_native.wrapper);
         v3_factory_clear_request(false);
         g_v3_native = V3NativeManager{};
+        goblin::map_api::reset_depths();
         v3_pulse_counters_reset(); // per generation, like the manager itself
     }
 
@@ -9976,6 +9978,7 @@ namespace
                 g_v3_native.by_row[s.point.original_row_id] =
                     g_v3_native.objects.size();
                 g_v3_native.objects.push_back(obj);
+                goblin::map_api::record_depth(s.point.original_row_id, s.depth);
                 const size_t created = g_v3_native.objects.size();
                 // The COMPLETION line always prints (one per rebuild, the field-report
                 // anchor for "markers vanished mid-session"); the start/progress ticks
@@ -12093,6 +12096,7 @@ uint32_t goblin::stall_probe::v3_detach_all_children()
                                      g_v3_native.seeded && !g_v3_native.completion_reported &&
                                      built_at_close + g_v3_native.failed < queued_at_close;
     g_v3_native.objects.clear();
+    goblin::map_api::reset_depths();
     g_v3_native.by_row.clear();
     g_v3_native.queued.clear();
     // The generation is GONE now, not merely detached, so the manager must not believe it still has

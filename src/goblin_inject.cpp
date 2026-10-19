@@ -4,6 +4,7 @@
 #include "goblin_collected.hpp"
 #include "goblin_kindling.hpp"
 #include "goblin_logic.hpp"
+#include "goblin_map_api.hpp"
 #include "goblin_config.hpp"
 #include "goblin_messages.hpp"
 #include "goblin_status_line.hpp" // the icons ON/OFF announcement
@@ -1586,6 +1587,7 @@ void goblin::inject_map_entries()
     g_param_injection_active = true;
 
     spdlog::debug("Map entries complete: {} total rows", total_rows);
+    goblin::map_api::publish_rows();
 }
 
 // Native settings-menu text ids in GR_MenuText.fmg (see goblin_inject.hpp).
@@ -2000,9 +2002,15 @@ static void refresh_deoverlap(int layer)
     }
 }
 
-std::vector<goblin::NativeMarkerPoint> goblin::native_marker_snapshot(int layer, bool include_hidden)
+namespace goblin
+{
+static std::vector<NativeMarkerPoint> collect_native_markers(int layer, bool include_hidden, NativeMarkerVisitor visitor, void *context)
 {
     std::vector<NativeMarkerPoint> out;
+    const auto emit = [&](const NativeMarkerPoint &point) {
+        if (visitor) visitor(point, context);
+        else out.push_back(point);
+    };
     if (layer < 0 || layer > 2) return out;
     // Master switch off: the hover pick and the focus rings want NOTHING back - an empty snapshot
     // is what keeps tooltips and rings off icons the player just switched away. The marker manager
@@ -2015,7 +2023,7 @@ std::vector<goblin::NativeMarkerPoint> goblin::native_marker_snapshot(int layer,
     // The layout lock is held from the refresh to the end of the loop: the loop reads g_vis and the
     // native_px/pz the refresh just wrote, and a second refresh on the other thread would move both.
     std::lock_guard<std::mutex> layout_lk(g_layout_mtx);
-    out.reserve(g_category_rows.size());
+    if (!visitor) out.reserve(g_category_rows.size());
     const int focus = g_focus_category;
     // Pull crowded markers apart FIRST, from the set that is visible on this layer right now, so the
     // positions emitted below already carry the spread. Everything downstream - the icon factory, the
@@ -2032,7 +2040,7 @@ std::vector<goblin::NativeMarkerPoint> goblin::native_marker_snapshot(int layer,
         const bool visible = !hidden && g_vis[idx] != 0;  // answered once, by the refresh above
         const int source_icon = goblin::gfx_probe::source_iconid(cr.p->iconId);
         if (source_icon < 0) continue;
-        out.push_back({cr.original_row_id, source_icon, cr.native_area, cr.native_layer,
+        emit({cr.original_row_id, source_icon, cr.native_area, cr.native_layer,
                        cr.native_gx, cr.native_gz, cr.native_px, cr.native_pz, visible,
                        cr.p});
         // Twin checkmark point for defeat-capable rows (bosses/NPC/hawks/...):
@@ -2048,7 +2056,7 @@ std::vector<goblin::NativeMarkerPoint> goblin::native_marker_snapshot(int layer,
         // textDisableFlagId - the twin follows it down via `visible`.)
         const unsigned cleared_flag = cr.p->clearedEventFlagId;
         if (cleared_flag != 0 && goblin::flag_is_set(cleared_flag))
-            out.push_back({cr.original_row_id | NATIVE_CLEARED_KEY_BIT,
+            emit({cr.original_row_id | NATIVE_CLEARED_KEY_BIT,
                            static_cast<int>(goblin::generated::CLEARED_ICON_ID),
                            cr.native_area, cr.native_layer,
                            cr.native_gx, cr.native_gz, cr.native_px, cr.native_pz,
@@ -2110,11 +2118,22 @@ std::vector<goblin::NativeMarkerPoint> goblin::native_marker_snapshot(int layer,
                 rp.pz = cr0.native_pz;
                 rp.visible = false;
             }
-            out.push_back(rp);
+            emit(rp);
         }
     }
     return out;
 }
+
+std::vector<NativeMarkerPoint> native_marker_snapshot(int layer, bool include_hidden)
+{
+    return collect_native_markers(layer, include_hidden, nullptr, nullptr);
+}
+
+void visit_native_markers(int layer, NativeMarkerVisitor visitor, void *context)
+{
+    if (visitor) (void)collect_native_markers(layer, false, visitor, context);
+}
+} // namespace goblin
 
 namespace
 {

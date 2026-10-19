@@ -115,6 +115,11 @@ namespace goblin
     // on without reopening the map); the hover pick and the rings want the default empty answer.
     std::vector<NativeMarkerPoint> native_marker_snapshot(int layer, bool include_hidden = false);
 
+    // Synchronous visitor under the layout lock; does not allocate an intermediate snapshot.
+    // The callback must not reenter layout functions or retain the point reference.
+    using NativeMarkerVisitor = void (*)(const NativeMarkerPoint &, void *);
+    void visit_native_markers(int layer, NativeMarkerVisitor visitor, void *context);
+
     // Live row of the VISIBLE native marker nearest the map reticle, within a
     // pin-sized radius - or nullptr. The reticle is NOT assumed to be the screen
     // centre: it is read from the map dialog when the game exposes it, and inferred
