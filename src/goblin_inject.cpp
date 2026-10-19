@@ -14,6 +14,7 @@
 #include "goblin_item_icons.hpp"
 #include "goblin_location_alt.hpp"
 #include "goblin_gfx_probe.hpp"
+#include "goblin_guarded.hpp" // the engine flag call's fault is an answer, not a crash
 #include <cstring>
 
 #include "version.h" // BUILD_NAME: the starting anchor
@@ -1919,29 +1920,37 @@ static bool native_row_visible(const CategoryRow &cr, int layer, int focus)
 // Placement is first-come on a stable order (row index), so the same visible set always produces the
 // same layout: a marker keeps its spot while its neighbours come and go, rather than the map
 // reshuffling itself every time something is collected.
-static void refresh_deoverlap(int layer)
+//
+// The pass itself is compute_layout: it reads the rows and the game's flags and writes ONLY its
+// outputs, so the map's shared layout (refresh_deoverlap, under g_layout_mtx) and the map API's
+// private one (api_marker_points, on the poll thread) are one algorithm without sharing any state.
+struct LayoutStats
 {
-    const auto t0 = std::chrono::steady_clock::now();
-    const int focus = g_focus_category;
-    g_vis.assign(g_category_rows.size(), 0);
-    size_t shown = 0;
-    for (size_t i = 0; i < g_category_rows.size(); ++i)
+    size_t shown = 0, crowded = 0, moved = 0, native_seeded = 0;
+};
+
+static void compute_layout(int layer, int focus, Occupancy &occ, std::vector<uint8_t> &vis,
+                           std::vector<float> &px, std::vector<float> &pz, LayoutStats &st)
+{
+    const size_t n = g_category_rows.size();
+    vis.assign(n, 0);
+    px.resize(n);
+    pz.resize(n);
+    for (size_t i = 0; i < n; ++i)
     {
-        CategoryRow &cr = g_category_rows[i];
-        cr.native_px = cr.anchor_px;
-        cr.native_pz = cr.anchor_pz;
-        if (native_row_visible(cr, layer, focus)) { g_vis[i] = 1; ++shown; }
+        const CategoryRow &cr = g_category_rows[i];
+        px[i] = cr.anchor_px;
+        pz[i] = cr.anchor_pz;
+        if (native_row_visible(cr, layer, focus)) { vis[i] = 1; ++st.shown; }
     }
 
-    static Occupancy occ;  // kept across refreshes to hold its buckets; cleared here
-    for (auto &kv : occ.cells) kv.second.clear();
+    for (auto &kv : occ.cells) kv.second.clear();  // the caller keeps it to hold its buckets
     // Lit graces reserve their spot FIRST. Once a grace is discovered our own grace marker
     // hides (baked_dis1 = the grace's lit flag) and the game stands its NATIVE clickable pin
     // there - built from BonfireWarpParam, not from any WMP row we could move, and it wins
     // the hover, so a marker left under it is invisible AND unreachable. Non-clickable native
     // marks (cave/church/tunnel WMP rows) are deliberately NOT reserved: our icons draw above
     // those and should stay put.
-    size_t native_seeded = 0;
     for (const CategoryRow &cr : g_category_rows)
     {
         if (cr.cat != Category::WorldGraces || cr.native_layer != layer) continue;
@@ -1950,13 +1959,12 @@ static void refresh_deoverlap(int layer)
         const uint64_t tile = (static_cast<uint64_t>(cr.native_area) << 40) |
                               (static_cast<uint64_t>(cr.native_gx) << 20) | cr.native_gz;
         occ.take(tile, cr.anchor_px, cr.anchor_pz, cr.anchor_px, cr.anchor_pz);
-        ++native_seeded;
+        ++st.native_seeded;
     }
-    size_t moved = 0, crowded = 0;
-    for (size_t i = 0; i < g_category_rows.size(); ++i)
+    for (size_t i = 0; i < n; ++i)
     {
-        if (!g_vis[i]) continue;
-        CategoryRow &cr = g_category_rows[i];
+        if (!vis[i]) continue;
+        const CategoryRow &cr = g_category_rows[i];
         if (cr.native_area == 99) continue;  // parked/hidden coordinate trick
         const uint64_t tile = (static_cast<uint64_t>(cr.native_area) << 40) |
                               (static_cast<uint64_t>(cr.native_gx) << 20) | cr.native_gz;
@@ -1967,7 +1975,7 @@ static void refresh_deoverlap(int layer)
             occ.take(tile, cr.anchor_px, cr.anchor_pz, cr.anchor_px, cr.anchor_pz);
             continue;
         }
-        ++crowded;
+        ++st.crowded;
         // Join the lattice of whoever is already standing here, so a crowd comes out as one grid
         // rather than as overlapping grids of its own members.
         float ax = cr.anchor_px, az = cr.anchor_pz;
@@ -1980,13 +1988,29 @@ static void refresh_deoverlap(int layer)
             spiral_offset(k, ox, oz);
             const float x = ax + ox, z = az + oz;
             if (!occ.free_at(tile, x, z)) continue;
-            cr.native_px = x;
-            cr.native_pz = z;
+            px[i] = x;
+            pz[i] = z;
             occ.take(tile, x, z, ax, az);
             placed = true;
-            ++moved;
+            ++st.moved;
         }
         if (!placed) occ.take(tile, cr.anchor_px, cr.anchor_pz, ax, az);  // give up rather than search forever
+    }
+}
+
+// The map's shared layout: compute_layout into g_vis and the rows' native_px/native_pz. Caller holds
+// g_layout_mtx.
+static void refresh_deoverlap(int layer)
+{
+    const auto t0 = std::chrono::steady_clock::now();
+    static Occupancy occ;  // kept across refreshes to hold its buckets
+    static std::vector<float> px, pz;
+    LayoutStats st;
+    compute_layout(layer, g_focus_category, occ, g_vis, px, pz, st);
+    for (size_t i = 0; i < g_category_rows.size(); ++i)
+    {
+        g_category_rows[i].native_px = px[i];
+        g_category_rows[i].native_pz = pz[i];
     }
     g_vis_layer = layer;
     // Timed, not assumed: this runs on the map UI thread, so its cost is the thing to know. Said on
@@ -1999,19 +2023,14 @@ static void refresh_deoverlap(int layer)
         if (s_said == 0) s_said = 1;
         spdlog::info("[deoverlap] layer {}: {} of {} markers visible, {} of them had company, {} moved "
                      "aside, {} lit graces reserved, in {} us (spacing {}u)",
-                     layer, shown, g_category_rows.size(), crowded, moved, native_seeded, us, kMinDist);
+                     layer, st.shown, g_category_rows.size(), st.crowded, st.moved, st.native_seeded, us,
+                     kMinDist);
     }
 }
 
-namespace goblin
-{
-static std::vector<NativeMarkerPoint> collect_native_markers(int layer, bool include_hidden, NativeMarkerVisitor visitor, void *context)
+std::vector<goblin::NativeMarkerPoint> goblin::native_marker_snapshot(int layer, bool include_hidden)
 {
     std::vector<NativeMarkerPoint> out;
-    const auto emit = [&](const NativeMarkerPoint &point) {
-        if (visitor) visitor(point, context);
-        else out.push_back(point);
-    };
     if (layer < 0 || layer > 2) return out;
     // Master switch off: the hover pick and the focus rings want NOTHING back - an empty snapshot
     // is what keeps tooltips and rings off icons the player just switched away. The marker manager
@@ -2024,7 +2043,7 @@ static std::vector<NativeMarkerPoint> collect_native_markers(int layer, bool inc
     // The layout lock is held from the refresh to the end of the loop: the loop reads g_vis and the
     // native_px/pz the refresh just wrote, and a second refresh on the other thread would move both.
     std::lock_guard<std::mutex> layout_lk(g_layout_mtx);
-    if (!visitor) out.reserve(g_category_rows.size());
+    out.reserve(g_category_rows.size());
     const int focus = g_focus_category;
     // Pull crowded markers apart FIRST, from the set that is visible on this layer right now, so the
     // positions emitted below already carry the spread. Everything downstream - the icon factory, the
@@ -2041,7 +2060,7 @@ static std::vector<NativeMarkerPoint> collect_native_markers(int layer, bool inc
         const bool visible = !hidden && g_vis[idx] != 0;  // answered once, by the refresh above
         const int source_icon = goblin::gfx_probe::source_iconid(cr.p->iconId);
         if (source_icon < 0) continue;
-        emit({cr.original_row_id, source_icon, cr.native_area, cr.native_layer,
+        out.push_back({cr.original_row_id, source_icon, cr.native_area, cr.native_layer,
                        cr.native_gx, cr.native_gz, cr.native_px, cr.native_pz, visible,
                        cr.p});
         // Twin checkmark point for defeat-capable rows (bosses/NPC/hawks/...):
@@ -2057,7 +2076,7 @@ static std::vector<NativeMarkerPoint> collect_native_markers(int layer, bool inc
         // textDisableFlagId - the twin follows it down via `visible`.)
         const unsigned cleared_flag = cr.p->clearedEventFlagId;
         if (cleared_flag != 0 && goblin::flag_is_set(cleared_flag))
-            emit({cr.original_row_id | NATIVE_CLEARED_KEY_BIT,
+            out.push_back({cr.original_row_id | NATIVE_CLEARED_KEY_BIT,
                            static_cast<int>(goblin::generated::CLEARED_ICON_ID),
                            cr.native_area, cr.native_layer,
                            cr.native_gx, cr.native_gz, cr.native_px, cr.native_pz,
@@ -2119,22 +2138,61 @@ static std::vector<NativeMarkerPoint> collect_native_markers(int layer, bool inc
                 rp.pz = cr0.native_pz;
                 rp.visible = false;
             }
-            emit(rp);
+            out.push_back(rp);
         }
     }
     return out;
 }
 
-std::vector<NativeMarkerPoint> native_marker_snapshot(int layer, bool include_hidden)
+void goblin::api_marker_points(int layer, std::vector<NativeMarkerPoint> &out)
 {
-    return collect_native_markers(layer, include_hidden, nullptr, nullptr);
+    out.clear();
+    if (layer < 0 || layer > 2 || icons_hidden()) return;
+    // Private to this function and to its one caller, the poll thread (map_api::maintain): the map's
+    // own refreshes never wait for this pass and never see its result.
+    static Occupancy occ;
+    static std::vector<uint8_t> vis;
+    static std::vector<float> px, pz;
+    LayoutStats st;
+    const int focus = g_focus_category;
+    compute_layout(layer, focus, occ, vis, px, pz, st);
+    const bool ringable = focus_active() &&
+        goblin::gfx_probe::injected_iconid(static_cast<int>(goblin::generated::HIGHLIGHT_ICON_ID)) != 0;
+    size_t rings = 0;
+    out.reserve(st.shown + st.shown / 4 + (ringable ? NATIVE_RING_POOL : 0));
+    // source_iconid scans the frame table; a layer shows thousands of markers but a few dozen icons.
+    static std::unordered_map<uint32_t, int> source_of;
+    source_of.clear();
+    for (size_t i = 0; i < g_category_rows.size(); ++i)
+    {
+        if (!vis[i]) continue;  // what the map draws on this layer, and nothing else
+        const CategoryRow &cr = g_category_rows[i];
+        if (cr.native_area == 99) continue;  // parked off the map: nothing to show where it "is"
+        const uint32_t frame = cr.p->iconId;
+        auto known = source_of.find(frame);
+        if (known == source_of.end())
+            known = source_of.emplace(frame, goblin::gfx_probe::source_iconid(frame)).first;
+        const int source_icon = known->second;
+        if (source_icon >= 0)
+        {
+            out.push_back({cr.original_row_id, source_icon, cr.native_area, cr.native_layer, cr.native_gx,
+                           cr.native_gz, px[i], pz[i], true, cr.p});
+            // The cleared badge the map stacks on a defeated boss / NPC / hawk (see the snapshot).
+            const unsigned cleared_flag = cr.p->clearedEventFlagId;
+            if (cleared_flag != 0 && goblin::flag_is_set(cleared_flag))
+                out.push_back({cr.original_row_id | NATIVE_CLEARED_KEY_BIT,
+                               static_cast<int>(goblin::generated::CLEARED_ICON_ID), cr.native_area,
+                               cr.native_layer, cr.native_gx, cr.native_gz, px[i], pz[i], true, cr.p});
+        }
+        // A focus ring on each focused marker, keyed like the map's ring pool so a ring's draw order
+        // can be looked up the same way; the pool's size caps them as it caps the map's. Counted over
+        // the same rows as the map's rings (focus_highlight_points_locked), whatever their icon.
+        if (ringable && rings < NATIVE_RING_POOL && row_in_focus(cr, focus))
+            out.push_back({NATIVE_HIGHLIGHT_KEY_BIT | rings++,
+                           static_cast<int>(goblin::generated::HIGHLIGHT_ICON_ID), cr.native_area,
+                           cr.native_layer, cr.native_gx, cr.native_gz, px[i], pz[i], true, nullptr});
+    }
 }
-
-void visit_native_markers(int layer, NativeMarkerVisitor visitor, void *context)
-{
-    if (visitor) (void)collect_native_markers(layer, false, visitor, context);
-}
-} // namespace goblin
 
 namespace
 {
@@ -2928,6 +2986,9 @@ void goblin::reapply_live_settings()
     apply_focus_highlight();               // LAST: focus glow-icon + force-visible must win over
                                            // apply_loot_settings (which rewrites loot iconId) and the
                                            // category/fragment enable-flag gating above.
+    // And once more now the rows are final: a reader on another thread (the map's merge, the map
+    // API's snapshot) that read the rows half-rewritten after the first bump reads them again.
+    g_visibility_epoch.fetch_add(1, std::memory_order_release);
 }
 
 void goblin::set_icons_hidden(bool hidden)
@@ -3017,6 +3078,27 @@ static OrPairIsFlagFn g_orp_is_flag = nullptr;
 static void **g_orp_event_man_slot = nullptr;
 static bool g_orp_resolve_tried = false;
 
+// The engine's own flag lookup, guarded. Its callers run on the map thread, the overlay, the poll
+// thread (the map API's snapshot) and the watcher - at the main menu and through loading screens too,
+// where the flag manager is torn down and rebuilt. A fault there reads as "flag not set" instead of
+// taking the game down; the world-state watcher used to be the only caller wrapped this way. The
+// guarded depth keeps such an answered fault out of the crash log (goblin_guarded.hpp).
+static bool orp_is_flag_guarded(void *event_man, uint32_t flag_id)
+{
+    bool set = false;
+    ++goblin::guarded::depth;
+    __try
+    {
+        set = g_orp_is_flag(event_man, &flag_id);
+    }
+    __except (EXCEPTION_EXECUTE_HANDLER)
+    {
+        set = false;
+    }
+    --goblin::guarded::depth;
+    return set;
+}
+
 static bool orp_flag_set(uint32_t flag_id)
 {
     if (!g_orp_resolve_tried)
@@ -3035,8 +3117,7 @@ static bool orp_flag_set(uint32_t flag_id)
     if (!g_orp_is_flag || !g_orp_event_man_slot) return false;
     void *event_man = *g_orp_event_man_slot;
     if (!event_man) return false;
-    uint32_t id = flag_id;
-    return g_orp_is_flag(event_man, &id);
+    return orp_is_flag_guarded(event_man, flag_id);
 }
 
 // Public event-flag query (Progress tab). Guards flag 0, which the game treats

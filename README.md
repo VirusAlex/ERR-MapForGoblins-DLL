@@ -185,7 +185,8 @@ MapForGoblins/
 │   ├── KNOWLEDGE_EN.md     Knowledge base (English)
 │   ├── KNOWLEDGE_RU.md     Knowledge base (Russian)
 │   └── geom_collection_tracking.md  Geom object collection detection
-├── sdk/                    Menu add-on API header (preview; the host is not compiled into current builds)
+├── sdk/                    Headers for other mods: the map API (mfg_map_api.h) and the menu add-on API
+│                           (mfg_menu_api.h, preview; its host is not compiled into current builds)
 ├── cmake/                  Build-identity stamping
 ├── builds/                 CMake build trees, one per profile (gitignored)
 ├── releases/               Packaged snapshots and releases (gitignored)
@@ -199,6 +200,7 @@ MapForGoblins/
 - [Knowledge Base (EN)](docs/KNOWLEDGE_EN.md) / [База знаний (RU)](docs/KNOWLEDGE_RU.md) - DLL architecture, data formats, research notes
 - [Geom Collection Tracking](docs/geom_collection_tracking.md) - how collected Rune Pieces are detected from process memory
 - [Tools README](tools/README.md) - Python script documentation and usage
+- [Map API](sdk/mfg_map_api.h) - for another DLL mod: read the markers MapForGoblins draws (positions after de-overlap, icons, draw order) through the exported `MfgGetMapAPI`
 
 ## Credits
 

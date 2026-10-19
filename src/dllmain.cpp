@@ -19,6 +19,7 @@
 #include "goblin_inject.hpp"
 #include "goblin_kindling.hpp"
 #include "goblin_logic.hpp"
+#include "goblin_map_api.hpp"  // maintain(): the map API's snapshots, built on this thread
 #include "goblin_map_blob.hpp" // load_map_data(), which every MAP_ENTRIES reader depends on
 #include "goblin_markers.hpp"
 #include "goblin_names_blob.hpp" // load_name_tables(): ENEMY_NAMES + ITEM_NAME_FALLBACK
@@ -144,6 +145,21 @@ static bool safe_world_state_changed_seh()
             spdlog::info("[state] flag {} is now {} ({} markers follow it)", changes[i].flag,
                          changes[i].now_on ? "ON" : "OFF", changes[i].markers);
     return n != 0;
+}
+
+// The map API's snapshot reads our marker rows, and they live in the param file the GAME owns: on
+// the way out of the game it is freed under this thread (2026-10-19: a quit with a reader attached
+// faulted in native_row_visible on a freed row). maintain() itself waits for a character in the
+// world; this catches the race that check cannot close.
+static void safe_map_api_maintain_seh()
+{
+    __try
+    {
+        goblin::map_api::maintain();
+    }
+    __except (EXCEPTION_EXECUTE_HANDLER)
+    {
+    }
 }
 
 static void safe_gfx_tick_seh()
@@ -1189,6 +1205,9 @@ static void setup_mod()
                 std::chrono::duration_cast<std::chrono::microseconds>(poll_time - prev_poll).count();
         }
         prev_poll = poll_time;
+        // The map API's snapshots (sdk/mfg_map_api.h): built here, never on a reader's call. Returns
+        // at once unless a reader asked for a layer in the last few seconds.
+        safe_map_api_maintain_seh();
         TickSplit split{};
         int64_t lap_mark = tc_on ? qpc_now() : 0;
         auto lap = [&](TickPart part) {
