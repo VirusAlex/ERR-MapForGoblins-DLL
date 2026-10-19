@@ -239,6 +239,7 @@ This project builds on the work of many people and projects:
 - **[yeousherang](https://github.com/yeousherang)** - Korean overlay localization.
 - **[EuanMorgan](https://github.com/EuanMorgan)** - game 1.17 build fixes: the CMake 4 policy floor for MinHook, the map-close hook signature note and the vanilla profile's build inputs.
 - **[AnThanhLe](https://github.com/AnThanhLe)** - Vietnamese overlay localization.
+- **[soarqin](https://github.com/soarqin)** - the map API (`sdk/mfg_map_api.h`) that lets other mods read the markers MapForGoblins draws.
 
 ### Community
 
