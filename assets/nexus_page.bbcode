@@ -17,9 +17,9 @@ This mod supports many overhauls, pick the one for your game:
 [*][b]ERR version[/b], for the [url=https://www.nexusmods.com/eldenring/mods/541]ERR[/url]. ~9700 icons, including the ERR-specific stuff (Rune Pieces, Ember Pieces, Kindling Spirits, unique loot etc).[/*]
 [*][b]Convergence version[/b], for [url=https://www.nexusmods.com/eldenring/mods/3419]The Convergence[/url] (3.x, me3), ~8700 icons. The mod includes the new/relocated loot, new bosses and reworked zones.[/*]
 [*][b]ERTE version[/b], for the [url=https://www.nexusmods.com/eldenring/mods/2747]ERTE[/url], ~8800 icons.[/*]
-[*][b]Golden Age version[/b], for the [url=https://afdian.com/a/moke16864]Elden Ring Golden Age[/url] overhaul (me3), ~7600 icons.[/*]
+[*][b]Golden Age version[/b], for the [url=https://afdian.com/a/moke16864]Elden Ring Golden Age[/url] overhaul (me3), ~7500 icons.[/*]
 [*][b]ELDEN VINS version[/b], for the [url=https://www.nexusmods.com/eldenring/mods/4709]ELDEN VINS[/url] overhaul (me3), ~8000 icons.[/*]
-[*][b]Elden Ring Reborn version[/b], for the [url=https://www.nexusmods.com/eldenring/mods/2202]Elden Ring Reborn[/url] overhaul, ~7600 icons.[/*]
+[*][b]Elden Ring Reborn version[/b], for the [url=https://www.nexusmods.com/eldenring/mods/2202]Elden Ring Reborn[/url] overhaul (me3), ~7500 icons.[/*]
 [*][b]Graceborne version[/b], for the [url=https://www.nexusmods.com/eldenring/mods/5207]Graceborne[/url] Bloodborne-inspired overhaul (me3), ~7400 icons.[/*]
 [*][b]DM Throne version[/b], for the [url=https://www.patreon.com/cw/puyuan]Dark Moon: Throne[/url] overhaul (me3), ~7500 icons.[/*]
 [/list]
@@ -163,17 +163,16 @@ path = "mod/dll/MapForGoblins.dll"[/code][/*]
 [/list]
 An ELDEN VINS update replaces the .me3 profile, so after updating the overhaul add the entry again.[/spoiler]
 
-[color=#ec6d13][size=4][b]Elden Ring Reborn[/b][/size][/color] (ModEngine2)
-[spoiler]Elden Ring Reborn ships its own [b]ModEngine2[/b].
+[color=#ec6d13][size=4][b]Elden Ring Reborn[/b][/size][/color] (me3)
+[spoiler]Elden Ring Reborn launches through [b]me3[/b] with its [b]RebornConfiguration.me3[/b] profile.
 [list=1]
-[*]Copy [b]MapForGoblins.dll[/b] and [b]MapForGoblins.ini[/b] into the Reborn folder (next to its config_eldenring.toml and "Click To Play Reborn!.bat")[/*]
-[*]In [b][color=#ec6d13]config_eldenring.toml[/color][/b] add the DLL to external_dlls:
-[code]external_dlls = [
-...existing entries...,
-"MapForGoblins.dll",
-][/code][/*]
-[*]Launch via "Click To Play Reborn!.bat"[/*]
-[/list][/spoiler]
+[*]Copy [b]MapForGoblins.dll[/b] and [b]MapForGoblins.ini[/b] into the Reborn folder (next to RebornConfiguration.me3)[/*]
+[*]Open [b][color=#ec6d13]RebornConfiguration.me3[/color][/b] in a text editor and add a new [color=#f2995a][[natives]][/color] section at the end:
+[code][[natives]]
+path = 'MapForGoblins.dll'[/code][/*]
+[*]Launch Reborn with its launcher .bat as usual[/*]
+[/list]
+Reborn used to launch through ModEngine2: an external_dlls entry in config_eldenring.toml is no longer read, use the [[natives]] entry instead. If a Reborn update replaces RebornConfiguration.me3, add the entry again.[/spoiler]
 
 [color=#ec6d13][size=4][b]Graceborne[/b][/size][/color] (me3)
 [spoiler]Graceborne launches through its [b].me3[/b] profile (launch.me3) and serves the mod from its [b]mod[/b] folder.
@@ -202,7 +201,7 @@ A Throne update replaces the .me3 profile, so after updating the overhaul add th
 [*]Vanilla version: a DLL loader - [url=https://github.com/garyttierney/me3/releases]ModEngine3[/url], [url=https://github.com/soulsmods/ModEngine2/releases]ModEngine2[/url], or [url=https://www.nexusmods.com/eldenring/mods/117]Elden Mod Loader[/url][/*]
 [*]ERR version: [url=https://www.nexusmods.com/eldenring/mods/541]ERR[/url] itself, nothing else. The mod loads through ERR's own loader.[/*]
 [*][url=https://www.nexusmods.com/eldenring/mods/3419]The Convergence[/url] / [url=https://www.nexusmods.com/eldenring/mods/2747]ERTE[/url] / [url=https://afdian.com/a/moke16864]Golden Age[/url] / [url=https://www.nexusmods.com/eldenring/mods/4709]ELDEN VINS[/url] / [url=https://www.nexusmods.com/eldenring/mods/5207]Graceborne[/url] / [url=https://www.patreon.com/cw/puyuan]Dark Moon: Throne[/url] versions: the matching overhaul installed (me3). Shadow of the Erdtree is required by the overhauls themselves.[/*]
-[*][url=https://www.nexusmods.com/eldenring/mods/2202]Elden Ring Reborn[/url] version: an installed Elden Ring Reborn (it ships its own ModEngine2). Shadow of the Erdtree is required by the overhaul itself.[/*]
+[*][url=https://www.nexusmods.com/eldenring/mods/2202]Elden Ring Reborn[/url] version: an installed Elden Ring Reborn (it ships its own me3). Shadow of the Erdtree is required by the overhaul itself.[/*]
 [*][color=#ff0000][b][size=4]OFFLINE ONLY.[/size][/b][/color] Mod loaders disable EAC, so the "Inappropriate activity detected" message at launch is normal.[/*]
 [/list]
 
@@ -225,6 +224,9 @@ The mod is open source: [url=https://github.com/VirusAlex/ERR-MapForGoblins-DLL]
 [*][b][url=https://www.nexusmods.com/profile/corvianNoctis]corvianNoctis[/url][/b] for the [url=https://www.nexusmods.com/eldenring/mods/5207]Graceborne[/url][/*]
 [*][b][url=https://next.nexusmods.com/profile/YunWuLian1]yun-wulian[/url][/b] for the Chinese (Simplified & Traditional) overlay localization and an in-menu multi-controller gamepad fix[/*]
 [*][b][url=https://github.com/yeousherang]yeousherang[/url][/b] for the Korean overlay localization[/*]
+[*][b][url=https://github.com/AnThanhLe]AnThanhLe[/url][/b] for the Vietnamese overlay localization[/*]
+[*][b][url=https://github.com/soarqin]soarqin[/url][/b] for the map API that lets other mods read the markers this mod draws[/*]
+[*][b][url=https://github.com/EuanMorgan]EuanMorgan[/url][/b] for the game 1.17 build fixes[/*]
 [*][b]vawser[/b] for [url=https://github.com/vawser/Smithbox]Smithbox[/url] / SoulsFormats, used for all the data extraction[/*]
 [*][b]ThomasJClark[/b] for [url=https://github.com/ThomasJClark/elden-ring-glorious-merchant]glorious-merchant[/url], a great reference for DLL param injection[/*]
 [*][b]Dasaav-dsv[/b] (Pattern16, libER), [b]vswarte[/b] (fromsoftware-rs), [b]TsudaKageyu[/b] (MinHook), [b]gabime[/b] (spdlog), [b]metayeti[/b] (mINI), [b]ocornut[/b] (Dear ImGui)[/*]

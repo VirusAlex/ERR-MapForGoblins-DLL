@@ -17,26 +17,25 @@ slightly off until this mod is updated too.
 ============================================================
 Install (into an existing Elden Ring Reborn install)
 ============================================================
-Elden Ring Reborn runs on ModEngine2 (Click To Play Reborn!.bat).
+Elden Ring Reborn launches through me3 with its RebornConfiguration.me3
+profile (the launcher .bat in the Reborn folder starts it).
 1. Copy MapForGoblins.dll and MapForGoblins.ini into your
-   "Elden Ring Reborn" folder (next to config_eldenring.toml and
-   Click To Play Reborn!.bat).
-2. Open config_eldenring.toml in a text editor and, under [modengine],
-   add the DLL to the external_dlls list:
-       external_dlls = [
-           ...existing entries...,
-           "MapForGoblins.dll",
-       ]
-3. Launch via Click To Play Reborn!.bat as usual.
+   "Elden Ring Reborn" folder (next to RebornConfiguration.me3).
+2. Open RebornConfiguration.me3 in a text editor and add a new
+   [[natives]] section at the end:
+       [[natives]]
+       path = 'MapForGoblins.dll'
+3. Launch Reborn with its launcher .bat as usual.
+If a Reborn update replaces RebornConfiguration.me3, add the entry again.
 
 ============================================================
 Updating from an older version
 ============================================================
 Replace MapForGoblins.dll with this one (keep your MapForGoblins.ini -
-new options are added automatically). This version uses no gfx file: if
-you set up an older version, you can DELETE the old MapForGoblins asset
-folder (the "menu" folder / 02_120_worldmap.gfx) and remove its "mods"
-entry from config_eldenring.toml - only the external_dlls entry is needed.
+new options are added automatically). Reborn used to launch through
+ModEngine2 (config_eldenring.toml); since it moved to me3, an
+external_dlls entry there is no longer read - add the [[natives]] entry
+from the Install section to RebornConfiguration.me3 instead.
 
 ============================================================
 Settings & notes
